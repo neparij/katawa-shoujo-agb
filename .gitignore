@@ -1,0 +1,11 @@
+.idea/
+.qt/
+.qtc_clangd/
+*.iws
+build/
+.idea_modules/
+.DS_Store
+*.gba
+*.elf
+*.sav
+katawa.creator.user
