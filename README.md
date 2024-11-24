@@ -44,5 +44,5 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano fra
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License**. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License**. See the [LICENSE](LICENSE.md) file for details.
 
