@@ -20,9 +20,10 @@
 #include "constants.h"
 #include "globals.h"
 
-#include "script_a0_test.cpp"
-#include "script_a1_monday.cpp"
-#include "script_a1_tuesday.cpp"
+#include "scripts/script_a0_test.h"
+#include "scripts/script_a1_monday.h"
+#include "scripts/script_a1_tuesday.h"
+#include "scripts/script_a1_wednesday.h"
 
 
 
@@ -46,11 +47,12 @@ int main()
 
 
     // Debug menu stuff
-    bn::string<32> title("Katawa Shouho v0.0.1+00092");
+    bn::string<32> title("Katawa Shouho v0.0.1+00098");
     bn::string<32> author("ported by: NeParij");
     bn::string<24> play_a0_test_scene("Test Scene");
     bn::string<24> play_a1_monday("Act 1. Monday");
     bn::string<24> play_a1_tuesday("Act 1. Tuesday");
+    bn::string<24> play_a1_wednesday("Act 1. Wednesday");
     bn::string<24> play_all("Play all available");
     bn::string<24> debug_mem("Debug memory: ");
     bn::string<24> debug_dia("Debug dialogbox: ");
@@ -69,12 +71,12 @@ int main()
                 if (bn::keypad::up_pressed()) {
                     select--;
                     if (select < 0) {
-                        select = 5;
+                        select = 6;
                     }
                 } else if (bn::keypad::down_pressed()) {
                     select++;
                 }
-                select = select % 6;
+                select = select % 7;
 
                 _text_sprites.clear();
 
@@ -83,22 +85,23 @@ int main()
                 _text_generator->generate(0, -72+12, author, _text_sprites);
 
                 _text_generator->set_left_alignment();
-                _text_generator->generate(-ks::device::screen_width_half + 4, -32, bn::string<24>(select == 0 ? "> " : "  ") + play_a0_test_scene, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, -16, bn::string<24>(select == 1 ? "> " : "  ") + play_a1_monday, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 0, bn::string<24>(select == 2 ? "> " : "  ") + play_a1_tuesday, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 16 + 20, bn::string<24>(select == 3 ? "> " : "  ") + play_all, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 32 + 20, bn::string<24>(select == 4 ? "> " : "  ") + debug_mem + bn::to_string<8>(ks_globals::show_memory_debug), _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 48 + 20, bn::string<24>(select == 5 ? "> " : "  ") + debug_dia + bn::to_string<8>(ks_globals::show_dialog_debug), _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, -32 + (12 * 0), bn::string<24>(select == 0 ? "> " : "  ") + play_a0_test_scene, _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, -32 + (12 * 1), bn::string<24>(select == 1 ? "> " : "  ") + play_a1_monday, _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, -32 + (12 * 2), bn::string<24>(select == 2 ? "> " : "  ") + play_a1_tuesday, _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, -32 + (12 * 3), bn::string<24>(select == 3 ? "> " : "  ") + play_a1_wednesday, _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, 16 + 20, bn::string<24>(select == 4 ? "> " : "  ") + play_all, _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, 32 + 20, bn::string<24>(select == 5 ? "> " : "  ") + debug_mem + bn::to_string<8>(ks_globals::show_memory_debug), _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, 48 + 20, bn::string<24>(select == 6 ? "> " : "  ") + debug_dia + bn::to_string<8>(ks_globals::show_dialog_debug), _text_sprites);
 
                 bn::core::update();
             }
 
-            if (select < 4) {
+            if (select < 5) {
                 selected = true;
-            } else if (select == 4) {
+            } else if (select == 5) {
                 ks_globals::show_memory_debug = !ks_globals::show_memory_debug;
                 bn::core::update();
-            } else if (select == 5) {
+            } else if (select == 6) {
                 ks_globals::show_dialog_debug = !ks_globals::show_dialog_debug;
                 bn::core::update();
             }
@@ -108,19 +111,24 @@ int main()
         _text_sprites.clear();
 
         if (select == 0) {
-            scene__a0_actname();
+            ks::scene__a0_actname();
             bn::core::update();
         } else if (select == 1) {
-            scene__a1_monday();
+            ks::scene__a1_monday();
             bn::core::update();
         } else if (select == 2) {
-            scene__a1_tuesday();
+            ks::scene__a1_tuesday();
             bn::core::update();
         } else if (select == 3) {
-            // Play all scenes
-            scene__a1_monday();
+            ks::scene__a1_wednesday();
             bn::core::update();
-            scene__a1_tuesday();
+        } else if (select == 4) {
+            // Play all scenes
+            ks::scene__a1_monday();
+            bn::core::update();
+            ks::scene__a1_tuesday();
+            bn::core::update();
+            ks::scene__a1_wednesday();
             bn::core::update();
         }
     }

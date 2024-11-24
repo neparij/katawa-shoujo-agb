@@ -11,11 +11,12 @@ enum class SequenceType {
     Dialog = 2,
     Music = 3,
     MusicStop = 4,
-    Sprite = 5,
-    Assignment = 6,
-    Menu = 7,
-    RunLabel = 8,
-    // RunLabelFinish = 7,
+    MusicNotFound = 5,
+    Sprite = 6,
+    Assignment = 7,
+    Menu = 8,
+    RunLabel = 9,
+    // RunLabelFinish = -1,
 };
 
 class SequenceItem {

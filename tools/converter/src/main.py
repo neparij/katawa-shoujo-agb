@@ -20,14 +20,14 @@ def main():
 
     if args.command == "scenario":
         input_file = args.input
-        output_file = os.path.basename(input_file).split('.')[0]
+        output_file = os.path.basename(input_file).split('.')[0].replace("-", "_")
 
         print(f"Processing scenario file: {input_file}")
         reader = ScenarioReader(input_file)
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, "out", scenario)
+        writer = ScenarioWriter(output_file, "../../../src/scripts", scenario)
         writer.write()
         pass
 

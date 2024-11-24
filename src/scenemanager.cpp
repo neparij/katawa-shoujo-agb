@@ -7,6 +7,7 @@
 #include "sequence/runlabelfinishitem.h"
 
 #include "variable_16x16_sprite_font.h"
+#include "bn_music_items.h"
 
 
 namespace ks {
@@ -139,6 +140,12 @@ void SceneManager::processNext() {
                     if (bn::music::playing()) {
                         bn::music::stop();
                     }
+                } else if (_current_sequence->type() == ks::SequenceType::MusicNotFound) {
+                    auto* music_not_found = static_cast<ks::MusicNotFoundItem*>(_current_sequence);
+                    if (bn::music::playing()) {
+                        bn::music::stop();
+                    }
+                    bn::music::play(bn::music_items::not_found, 1.0, false);
                 } else if (_current_sequence->type() == ks::SequenceType::Background) {
                     auto* background_item = static_cast<ks::BackgroundItem*>(_current_sequence);
                     _bg.reset();

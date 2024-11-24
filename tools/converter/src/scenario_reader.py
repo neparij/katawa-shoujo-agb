@@ -21,6 +21,7 @@ class ScenarioReader:
         self.scenario_file = scenario_file
         self.scenario: List[SequenceGroup] = []
         self.stack: ScenarioScriptStack = ScenarioScriptStack()
+        self.initial_name = None
 
     def read(self) -> List[SequenceGroup]:
         with open(self.scenario_file, 'r', encoding="utf-8") as f:
@@ -115,13 +116,22 @@ class ScenarioReader:
 
             if self.stack.size() > 0:
                 name = f"{self.stack.current_label().name}__{name}"
-                self.stack.current().add_sequence_item(RunLabelItem(name, True))
+                self.stack.current().add_sequence_item(RunLabelItem(name, self.initial_name and name.startswith(self.initial_name)))
+                # if self.initial_found:
+                #     self.stack.current().add_sequence_item(RunLabelItem(name))
+                # else:
+                #     self.stack.current().add_sequence_item(RunLabelItem(name, True))
             else:
                 name = f"scene__{name}"
 
             print("Label: ", name)
 
-            self.stack.push(SequenceGroup(name, SequenceGroupType.LABEL, True), current_indent)
+            if not self.initial_name:
+                self.initial_name = name
+                self.stack.push(SequenceGroup(name, SequenceGroupType.LABEL, True, True), current_indent)
+            else:
+                self.stack.push(SequenceGroup(name, SequenceGroupType.LABEL, name.startswith(self.initial_name)), current_indent)
+
         elif stripped_line == "return":
             self.stack.current().add_sequence_item(ReturnItem())
         elif stripped_line.startswith("if "):
@@ -171,12 +181,12 @@ class ScenarioReader:
 
         elif stripped_line.startswith("call "):
             skip = False
-            if "act_op(" in stripped_line or "call screen " in stripped_line:
+            if "act_op(" in stripped_line or "call screen " or "call timeskip " in stripped_line:
                 skip = True
             if not skip:
                 # Inline calls in menu blocks
                 function_name = stripped_line.split("call ", 1)[1].strip()
-                self.stack.current().add_sequence_item(RunLabelItem(sanitize_function_name(function_name)))
+                self.stack.current().add_sequence_item(RunLabelItem(sanitize_function_name(f"scene__{function_name}"), False))
 
         elif stripped_line.startswith("scene bg"):
             parts = stripped_line.split()
@@ -189,7 +199,7 @@ class ScenarioReader:
             print(event_bg_name)
             # REMOVES TEMP
             # TODO: use specs
-            event_bg_name = event_bg_name.replace("_start", "").replace("_move", "").replace("_end", "")
+            event_bg_name = event_bg_name.replace("_start", "").replace("_move", "").replace("_end", "").replace("_zoomout", "")
             self.stack.current().add_sequence_item(BackgroundItem(event_bg_name))
 
         elif stripped_line.startswith("play music"):

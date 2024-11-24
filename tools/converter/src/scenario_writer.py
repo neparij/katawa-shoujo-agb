@@ -22,6 +22,22 @@ class ScenarioWriter:
         self.output_dir = output_dir
         self.scenario = scenario
 
+        # TODO: refactor this
+        self.unprocessed_music = [
+            "music_another",
+            "music_comedy",
+            "music_daily",
+            "music_emi",
+            "music_kenji",
+            "music_nurse",
+            "music_pearly",
+            "music_rain",
+            "music_running",
+            "music_serene",
+            "music_soothing",
+            "music_tension"
+        ]
+
         self.backgrounds = []
         self.events = []
         self.music = []
@@ -36,16 +52,16 @@ class ScenarioWriter:
         define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
         h_code = [
             # Include SequenceItem headers
-            include_header("sequence/assignmentitem"),
-            include_header("sequence/backgrounditem"),
-            include_header("sequence/dialogitem"),
-            include_header("sequence/menuitem"),
-            include_header("sequence/musicitem"),
-            include_header("sequence/runlabelfinishitem"),
-            include_header("sequence/runlabelitem"),
-            include_header("sequence/spriteitem"),
+            include_header("../sequence/assignmentitem"),
+            include_header("../sequence/backgrounditem"),
+            include_header("../sequence/dialogitem"),
+            include_header("../sequence/menuitem"),
+            include_header("../sequence/musicitem"),
+            include_header("../sequence/runlabelfinishitem"),
+            include_header("../sequence/runlabelitem"),
+            include_header("../sequence/spriteitem"),
             # Include common stuff
-            include_header("scenemanager"),
+            include_header("../scenemanager"),
             # Include common BN stuff
             include_header("bn_music_items")
         ]
@@ -75,42 +91,41 @@ class ScenarioWriter:
         h_code.append(namespace("\n".join(function_declarations), "ks"))
 
         with open(f"{os.path.join(self.output_dir, self.filename)}.h", "w") as h_file:
-            h_file.write(defined("\n".join(h_code), define_name))
+            h_file.write(defined("\n".join(h_code), define_name, "KS"))
 
     def write_source(self):
         cpp_code = [
-            include_header(f"{self.filename}.h"),
+            include_header(f"{self.filename}"),
         ]
         functions = []
 
         for label in self.get_labels():
             sequences = []
+            if label.is_called_inline and not label.is_initial:
+                sequences.append(comment("POTENTIAL MEMLEAK!!!! better to provide it globally."))
+                sequences.append("bn::optional<bn::regular_bg_ptr> main_bg;")
+                sequences.append("ks::SceneManager scene(main_bg);\n")
             for sequence in label.sequence:
                 sequences.extend(self.process_sequence(label, sequence))
+            if label.is_called_inline and not label.is_initial:
+                sequences.append("scene.start();\n")
+                sequences.extend([
+                    "while(!scene.is_finished()) {",
+                    "    scene.update();",
+                    "    bn::core::update();",
+                    "}"
+                ])
             functions.append(f"{label_signature(label)} {{\n{indented_l(sequences)}\n}}")
-
-        # matching_scenario_item = next((item for item in self.scenario if item.name == condition.function_callback),
-        #                               None)
-        # code = [
-        #     f'// bn::vector<ks::ConditionItem, {len(matching_scenario_item.conditions)}> {condition.function_callback};'
-        # cnum = 0
-        # for variant in matching_scenario_item.conditions:
-        #     code.append(
-        #         f'// {condition.function_callback}.push_back(ks::ConditionItem(\"{variant.condition}\", &{condition.function_callback}_{cnum}));')
-        #     cnum += 1
-        # code.append(f'// scene.add_condition({condition.function_callback});')
-        # return code
-
-
 
         for menu in self.get_menus():
             sequences = []
             for sequence in menu.sequence:
                 sequences.extend(self.process_sequence(menu, sequence))
-            sequences.append(f'bn::vector<ks::AnswerItem, {len(menu.conditions)}> answers;')
+            sequences.append(f'// bn::vector<ks::AnswerItem, {len(menu.conditions)}> answers;')
             for answer in menu.conditions:
-                sequences.append(f'answers.push_back(ks::AnswerItem("{answer.condition}", &{answer.function_callback}));')
-            sequences.append(f'scene.add_sequence(ks::MenuItem(answers);')
+                sequences.append(
+                    f'// answers.push_back(ks::AnswerItem("{answer.condition}", &{answer.function_callback}));')
+            sequences.append(f'// scene.add_sequence(ks::MenuItem(answers);')
             functions.append(f"{menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
 
             for answer in menu.conditions:
@@ -186,26 +201,29 @@ class ScenarioWriter:
 
     def precess_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
         if dialog.actor_ref:
-            return [f'scene.add_sequence(ks::DialogItem("{dialog.actor_ref}", "{dialog.message}"));']
+            return [f'scene.add_sequence(ks::DialogItem("{dialog.actor_ref}", \"{dialog.message}\"));']
         elif dialog.actor:
-            return [f'scene.add_sequence(ks::DialogItem("{dialog.actor}", "{dialog.message}"));']
+            return [f'scene.add_sequence(ks::DialogItem("{dialog.actor}", \"{dialog.message}\"));']
         else:
-            return [f'scene.add_sequence(ks::DialogItem("", "{dialog.message}"));']
+            return [f'scene.add_sequence(ks::DialogItem("", \"{dialog.message}\"));']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
-        return [f'scene.add_sequence(ks::RunLabelItem(&{menu.function_callback});']
-
+        return [f'scene.add_sequence(ks::RunLabelItem(&{menu.function_callback}));']
 
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
         if music.action == MusicAction.PLAY:
-            if music.music and not music.music in self.music:
+            if music.music and not music.music in self.music and music.music not in self.unprocessed_music:
                 self.music.append(music.music)
+            if music.music in self.unprocessed_music:
+                return [f'scene.add_sequence(ks::MusicNotFoundItem());']
             return [f'scene.add_sequence(ks::MusicItem(bn::music_items::{music.music}));']
         elif music.action == MusicAction.STOP:
-            return [f'scene.add_sequence(ks::MusicStopItem();']
+            return [f'scene.add_sequence(ks::MusicStopItem());']
         return []
 
     def process_sequence_return(self, group, ret: ReturnItem) -> List[str]:
+        if group.is_called_inline:
+            return []
         return [f'return;']
 
     def process_sequence_run_label(self, group: SequenceGroup, run_label: RunLabelItem) -> List[str]:
@@ -215,7 +233,7 @@ class ScenarioWriter:
                 'bn::core::update();'
             ]
         else:
-            return [f'scene.add_sequence(ks::RunLabelItem(&{run_label.function_callback});']
+            return [f'scene.add_sequence(ks::RunLabelItem(&{run_label.function_callback}));']
 
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
         if not show.sprite in self.sprites:
@@ -230,8 +248,8 @@ class ScenarioWriter:
             raise TypeError("Unknown ShowEvent type")
 
 
-def defined(code, define_name, suffix=""):
-    define_name = f"{define_name}{f"_{suffix}" if suffix else ""}"
+def defined(code, define_name, prefix="", suffix=""):
+    define_name = f"{f"{prefix}_" if prefix else ""}{define_name}{f"_{suffix}" if suffix else ""}"
     return f"#ifndef {define_name}\n#define {define_name}\n\n{code}\n\n#endif // {define_name}"
 
 
@@ -268,6 +286,7 @@ def menu_signature(group: SequenceGroup):
 
 def answer_signature(group: SequenceGroup, answer: ConditionWrapper):
     return f"void {group.name}_{sanitize_function_name(answer.condition)}(ks::SceneManager& scene)"
+
 
 def condition_signature(group: SequenceGroup, num: int):
     return f"void {group.name}_{num}(ks::SceneManager& scene)"

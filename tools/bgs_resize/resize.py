@@ -3,7 +3,7 @@ import json
 from PIL import Image, ImageOps
 
 PINK_COLOR = (255, 0, 255)  # Pink background color
-OUTPUT_DIR = "evout"  # Output directory
+# OUTPUT_DIR = "evout"  # Output directory
 
 
 def resize_images_in_directory(input_dir):
@@ -45,6 +45,9 @@ def process_image(input_path, output_path):
     # Convert to 255-color palette
     palette_image = pink_background.convert("P", palette=Image.ADAPTIVE, colors=255)
 
+    # # Convert to 63-color palette
+    # palette_image = pink_background.convert("P", palette=Image.ADAPTIVE, colors=63)
+
     # Get the current palette data
     palette = palette_image.getpalette()
     palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
@@ -82,5 +85,11 @@ def create_json_metadata(image_path):
 
 
 if __name__ == "__main__":
-    input_directory = "/Users/n.laptev/development/ksre/game/event/Lilly_supercg"  # Replace with your input directory path
+    OUTPUT_DIR = "evout"
+    input_directory = "/Users/n.laptev/development/ksre/game/event/Lilly_supercg"
+    resize_images_in_directory(input_directory)
+    input_directory = "/Users/n.laptev/development/ksre/game/event"
+    resize_images_in_directory(input_directory)
+    OUTPUT_DIR = "out"
+    input_directory = "/Users/n.laptev/development/ksre/game/bgs"
     resize_images_in_directory(input_directory)

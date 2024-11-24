@@ -20,13 +20,14 @@ class ConditionWrapper:
         return f"ConditionWrapper(condition={self.condition}, sequence={self.sequence})"
 
 class SequenceGroup:
-    def __init__(self, name, t: SequenceGroupType, is_called_inline = False):
+    def __init__(self, name, t: SequenceGroupType, is_called_inline = False, is_initial = False):
         self.name = name
         self.type = t
         self.sequence: List[SequenceItem] = []
         self.translation_identifiers: List[str] = []
         self.conditions: List[ConditionWrapper] = []
         self.is_called_inline = is_called_inline
+        self.is_initial = is_initial
 
     def __str__(self):
         return f"SequenceGroup(name={self.name}, type={self.type}, sequence={self.sequence}, translation_identifiers={self.translation_identifiers}, conditions={self.conditions})"
