@@ -53,7 +53,7 @@ class ScenarioReader:
         md5.update((line + "\r\n").encode("utf-8"))
         label = self.stack.current_label()
         if label:
-            tl_fixed_name = label.name.replace("scene__", "").replace("__", "_", -1)
+            tl_fixed_name = label.name
             base = f"{tl_fixed_name}_{md5.hexdigest()[:8]}"
         else:
             base = md5.hexdigest()[:8]
@@ -88,8 +88,6 @@ class ScenarioReader:
     def pop_stack_if_unindented(self, current_indent, next_line):
         has_conditional_operator = next_line.startswith("if ") or next_line.startswith("elif ") or next_line.startswith(
             "else:")
-        if has_conditional_operator:
-            print(f"Has conditional operator: {next_line}")
         while self.stack.size() > 0 and self.stack.current_indent() >= current_indent and not has_conditional_operator:
             stack_type = self.stack.current().type
             if stack_type == SequenceGroupType.CONDITION:
@@ -120,20 +118,17 @@ class ScenarioReader:
 
         if stripped_line.startswith("label "):
             label_name = stripped_line.split("label ", 1)[1].strip(":")
+            if label_name.startswith("."):
+                label_name = label_name[1:]
+                if self.stack.size() == 0:
+                    raise Exception("Initial label cannot be a relative label")
             name = sanitize_function_name(label_name)
 
             if self.stack.size() > 0:
-                # name = f"{self.stack.current_label().name}__{name}"
-                name = f"{self.stack.parent_label().name}__{name}"
+                name = f"{self.stack.parent_label().name}_{name}"
                 self.stack.current().add_sequence_item(RunLabelItem(name, self.initial_name and name.startswith(self.initial_name)))
-                # if self.initial_found:
-                #     self.stack.current().add_sequence_item(RunLabelItem(name))
-                # else:
-                #     self.stack.current().add_sequence_item(RunLabelItem(name, True))
             else:
-                name = f"scene__{name}"
-
-            print("Label: ", name)
+                name = name
 
             if not self.initial_name:
                 self.initial_name = name
@@ -200,12 +195,12 @@ class ScenarioReader:
 
         elif stripped_line.startswith("call "):
             skip = False
-            if "act_op(" in stripped_line or "call screen " or "call timeskip " in stripped_line:
+            if "act_op(" in stripped_line or "call screen " in stripped_line or "call timeskip" in stripped_line:
                 skip = True
             if not skip:
                 # Inline calls in menu blocks
                 function_name = stripped_line.split("call ", 1)[1].strip()
-                self.stack.current().add_sequence_item(RunLabelItem(sanitize_function_name(f"scene__{function_name}"), False))
+                self.stack.current().add_sequence_item(RunLabelItem(sanitize_function_name(function_name), False))
             return
 
         elif stripped_line.startswith("scene bg"):
@@ -217,7 +212,6 @@ class ScenarioReader:
         elif stripped_line.startswith("scene ev"):
             parts = stripped_line.split()
             event_bg_name = parts[2]
-            print(event_bg_name)
             # REMOVES TEMP
             # TODO: use specs
             event_bg_name = event_bg_name.replace("_start", "").replace("_move", "").replace("_end", "").replace("_zoomout", "")
@@ -273,8 +267,6 @@ class ScenarioReader:
 
             if dialog_match_str or dialog_match_ref or narration_match:
                 if self.translation:
-                    print(stripped_line)
-                    print(self.stack.current())
                     stripped_line = self.translation.translations[dialog_hash]
                     dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"$", stripped_line)
                     dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"$", stripped_line)

@@ -2,7 +2,7 @@
 namespace ks {
     class ScriptA1TuesdayEn : public ScriptA1Tuesday {
         public:
-            static void scene__a1_tuesday__smalltalk() {
+            static void a1_tuesday_smalltalk() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -329,9 +329,9 @@ namespace ks {
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::hanako, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("", "During afternoon classes, the long haired girl comes back and sits down in her seat without a word."));
                 scene.add_sequence(ks::DialogItem("", "Again, no one seems to notice, or if they do, no one says anything. I want to ask Misha about it, but I don't want to be nosy."));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_tuesday__smalltalk__condition_0;
-                // scene__a1_tuesday__smalltalk__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::scene__a1_tuesday__smalltalk__condition_0_0));
-                // scene.add_condition(scene__a1_tuesday__smalltalk__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_tuesday_smalltalk__condition_0;
+                // a1_tuesday_smalltalk__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::a1_tuesday_smalltalk__condition_0_0));
+                // scene.add_condition(a1_tuesday_smalltalk__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -339,7 +339,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_tuesday__risk_vs_reward() {
+            static void a1_tuesday_risk_vs_reward() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -443,7 +443,7 @@ namespace ks {
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::shizu, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("shi", "…"));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::misha, ks::SpriteEventType::None));
-                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::scene__a1_tuesday__risk_vs_reward__menu_question_0(scene);}));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1_tuesday_risk_vs_reward__menu_question_0(scene);}));
                 scene.add_sequence(ks::DialogItem("", "I take a glance at the clock on the wall and realize I've spent far longer playing Risk than I expected."));
                 scene.add_sequence(ks::DialogItem("hi", "Sorry, I think I have to go. I wanted to go to the library. It's not closed yet, is it?"));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::shizu, ks::SpriteEventType::None));
@@ -459,9 +459,9 @@ namespace ks {
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::misha, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("mi", "Bye bye!"));
                 scene.add_sequence(ks::MusicStopItem());
-                // bn::vector<ks::ConditionItem, 1> scene__a1_tuesday__risk_vs_reward__condition_0;
-                // scene__a1_tuesday__risk_vs_reward__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::scene__a1_tuesday__risk_vs_reward__condition_0_0));
-                // scene.add_condition(scene__a1_tuesday__risk_vs_reward__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_tuesday_risk_vs_reward__condition_0;
+                // a1_tuesday_risk_vs_reward__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::a1_tuesday_risk_vs_reward__condition_0_0));
+                // scene.add_condition(a1_tuesday_risk_vs_reward__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -469,7 +469,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_tuesday__pseudo_tea_cosy() {
+            static void a1_tuesday_pseudo_tea_cosy() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -724,9 +724,9 @@ namespace ks {
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::lilly, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("li", "Very well. Meanwhile, Yuuko, I would have those books if it's all right with you."));
                 scene.add_sequence(ks::MusicStopItem());
-                // bn::vector<ks::ConditionItem, 1> scene__a1_tuesday__pseudo_tea_cosy__condition_0;
-                // scene__a1_tuesday__pseudo_tea_cosy__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::scene__a1_tuesday__pseudo_tea_cosy__condition_0_0));
-                // scene.add_condition(scene__a1_tuesday__pseudo_tea_cosy__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_tuesday_pseudo_tea_cosy__condition_0;
+                // a1_tuesday_pseudo_tea_cosy__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::a1_tuesday_pseudo_tea_cosy__condition_0_0));
+                // scene.add_condition(a1_tuesday_pseudo_tea_cosy__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -734,7 +734,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_tuesday__shared_library() {
+            static void a1_tuesday_shared_library() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -763,7 +763,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "This is the first time I've seen her this close. Underneath her long, dense bangs, I can see that part of her face, at least a third if not a half, is pretty badly scarred."));
                 scene.add_sequence(ks::DialogItem("", "My eyes are immediately drawn to the scars, subconsciously peeking past her hair until they meet her own eyes."));
                 scene.add_sequence(ks::DialogItem("", "For a second, I am shocked, and divert my eyes to the book in her hands, before I realize that looking away probably only makes it worse."));
-                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::scene__a1_tuesday__shared_library__menu_question_0(scene);}));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1_tuesday_shared_library__menu_question_0(scene);}));
                 scene.add_sequence(ks::DialogItem("ha", "I…"));
                 scene.add_sequence(ks::DialogItem("ha", "I… I…"));
                 scene.add_sequence(ks::DialogItem("hi", "I…?"));
@@ -800,10 +800,10 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("hi", "Did I do something wrong?"));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::yuuko, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("yu", "What did you do?"));
-                // bn::vector<ks::ConditionItem, 2> scene__a1_tuesday__shared_library__condition_0;
-                // scene__a1_tuesday__shared_library__condition_0.push_back(ks::ConditionItem(""Hi! I'm new here. Hisao Nakai. We're in the same class." in choices", &ScriptA1TuesdayEn::scene__a1_tuesday__shared_library__condition_0_0));
-                // scene__a1_tuesday__shared_library__condition_0.push_back(ks::ConditionItem("None", &ScriptA1TuesdayEn::scene__a1_tuesday__shared_library__condition_0_1));
-                // scene.add_condition(scene__a1_tuesday__shared_library__condition_0);
+                // bn::vector<ks::ConditionItem, 2> a1_tuesday_shared_library__condition_0;
+                // a1_tuesday_shared_library__condition_0.push_back(ks::ConditionItem(""Hi! I'm new here. Hisao Nakai. We're in the same class." in choices", &ScriptA1TuesdayEn::a1_tuesday_shared_library__condition_0_0));
+                // a1_tuesday_shared_library__condition_0.push_back(ks::ConditionItem("None", &ScriptA1TuesdayEn::a1_tuesday_shared_library__condition_0_1));
+                // scene.add_condition(a1_tuesday_shared_library__condition_0);
                 scene.add_sequence(ks::DialogItem("hi", "But how should I deal with these people? Forcing myself to act overly casually only makes me feel phony."));
                 scene.add_sequence(ks::DialogItem("hi", "Like I was supposed to be ignoring the elephant in the room."));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::yuuko, ks::SpriteEventType::None));
@@ -828,9 +828,9 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "But she doesn't say anything else, and just checks out my books for me."));
                 scene.add_sequence(ks::DialogItem("", "I guess this is what they call 'tact.'"));
                 scene.add_sequence(ks::MusicStopItem());
-                // bn::vector<ks::ConditionItem, 1> scene__a1_tuesday__shared_library__condition_1;
-                // scene__a1_tuesday__shared_library__condition_1.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::scene__a1_tuesday__shared_library__condition_1_0));
-                // scene.add_condition(scene__a1_tuesday__shared_library__condition_1);
+                // bn::vector<ks::ConditionItem, 1> a1_tuesday_shared_library__condition_1;
+                // a1_tuesday_shared_library__condition_1.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::a1_tuesday_shared_library__condition_1_0));
+                // scene.add_condition(a1_tuesday_shared_library__condition_1);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -838,7 +838,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_tuesday__bizarre_and_surreal() {
+            static void a1_tuesday_bizarre_and_surreal() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -904,7 +904,7 @@ namespace ks {
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::kenji, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("ke", "A girl? A cute one?"));
                 scene.add_sequence(ks::DialogItem("", "Cute? That's a hard question. She had a nice body and really beautiful hair… but the face…"));
-                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::scene__a1_tuesday__bizarre_and_surreal__menu_question_0(scene);}));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1_tuesday_bizarre_and_surreal__menu_question_0(scene);}));
                 scene.add_sequence(ks::DialogItem("ke", "There are a lot of cute girls here. A strangely disproportionate amount… I believe this is one of the dark secrets of this school."));
                 scene.add_sequence(ks::DialogItem("ke", "I tried to warn you man, but did you listen…?"));
                 scene.add_sequence(ks::DialogItem("", "I don't remember any such warning."));
@@ -984,9 +984,9 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "If nothing else, the scenery is beautiful."));
                 scene.add_sequence(ks::DialogItem("", "I open one eye, seeing the schoolbooks and bottles of pills arranged side-by-side on my desktop."));
                 scene.add_sequence(ks::DialogItem("", "Maybe this place is too much like a normal school, after all."));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_tuesday__bizarre_and_surreal__condition_0;
-                // scene__a1_tuesday__bizarre_and_surreal__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::scene__a1_tuesday__bizarre_and_surreal__condition_0_0));
-                // scene.add_condition(scene__a1_tuesday__bizarre_and_surreal__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_tuesday_bizarre_and_surreal__condition_0;
+                // a1_tuesday_bizarre_and_surreal__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayEn::a1_tuesday_bizarre_and_surreal__condition_0_0));
+                // scene.add_condition(a1_tuesday_bizarre_and_surreal__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -994,19 +994,19 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_tuesday() {
-                scene__a1_tuesday__smalltalk();
+            static void a1_tuesday() {
+                a1_tuesday_smalltalk();
                 bn::core::update();
-                scene__a1_tuesday__risk_vs_reward();
+                a1_tuesday_risk_vs_reward();
                 bn::core::update();
-                scene__a1_tuesday__pseudo_tea_cosy();
+                a1_tuesday_pseudo_tea_cosy();
                 bn::core::update();
-                scene__a1_tuesday__shared_library();
+                a1_tuesday_shared_library();
                 bn::core::update();
-                scene__a1_tuesday__bizarre_and_surreal();
+                a1_tuesday_bizarre_and_surreal();
                 bn::core::update();
             }
-            static void scene__a1c3o1(ks::SceneManager& scene) {
+            static void a1c3o1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("", "She is either really mocking me, or trying to trick me."));
                 scene.add_sequence(ks::DialogItem("", "I have nothing else to lose, though, so I might as well try something different."));
                 scene.add_sequence(ks::DialogItem("", "Maybe if I spread out my forces and try to control more territories, I can recoup the advantage."));
@@ -1063,7 +1063,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Shizune smiles at that in a mischievous way that feels like twisting the knife in the wound of my loss."));
                 return;
             }
-            static void scene__a1c3o2(ks::SceneManager& scene) {
+            static void a1c3o2(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("", "It's likely that she's just trying to psych me out."));
                 scene.add_sequence(ks::DialogItem("", "Looking at the board again, I have a pretty good defense set up, and I'm not going to wreck it doing something reckless."));
                 scene.add_sequence(ks::DialogItem("", "A few turns later, I lose the game anyway."));
@@ -1123,14 +1123,14 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("mi", "Awww, that's cold, Hicchan…"));
                 return;
             }
-            static void scene__a1c4o1(ks::SceneManager& scene) {
+            static void a1c4o1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Hi! I'm new here. Hisao Nakai. We're in the same class."));
                 scene.add_sequence(ks::DialogItem("", "…"));
                 scene.add_sequence(ks::DialogItem("hi", "Umm… I just transferred here the other day. Maybe you don't remember?"));
                 scene.add_sequence(ks::DialogItem("", "…"));
-                // bn::vector<ks::ConditionItem, 1> scene__a1c4o1__condition_0;
-                // scene__a1c4o1__condition_0.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1TuesdayEn::scene__a1c4o1__condition_0_0));
-                // scene.add_condition(scene__a1c4o1__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1c4o1__condition_0;
+                // a1c4o1__condition_0.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1TuesdayEn::a1c4o1__condition_0_0));
+                // scene.add_condition(a1c4o1__condition_0);
                 scene.add_sequence(ks::BackgroundItem(bn::regular_bg_items::hana_library));
                 scene.add_sequence(ks::DialogItem("", "The girl still doesn't say a word, but simply stares at me, wide-eyed."));
                 scene.add_sequence(ks::DialogItem("hi", "I'm still getting used to the place so I'm trying to meet as many people as I can."));
@@ -1165,7 +1165,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("hi", "I mean… ehh… I didn't mean it like that…"));
                 return;
             }
-            static void scene__a1c4o2(ks::SceneManager& scene) {
+            static void a1c4o2(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Sorry, I didn't mean to startle you."));
                 scene.add_sequence(ks::DialogItem("ha_", "It… it's okay."));
                 scene.add_sequence(ks::DialogItem("", "The girl certainly doesn't look like it's okay, but I let it slide."));
@@ -1208,63 +1208,66 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "She stands up forcefully from the beanbag and takes a deep breath."));
                 return;
             }
-            static void scene__a1c5o1(ks::SceneManager& scene) {
+            static void a1c5o1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Yeah, cute I guess."));
                 scene.add_sequence(ks::DialogItem("ke", "I knew it!"));
                 return;
             }
-            static void scene__a1c5o2(ks::SceneManager& scene) {
+            static void a1c5o2(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Not exactly cute, no."));
                 scene.add_sequence(ks::DialogItem("ke", "Hmm…"));
                 return;
             }
-            static void scene__a1_tuesday__risk_vs_reward__menu_question_0(ks::SceneManager& scene) {
+            static void a1_tuesday_risk_vs_reward__menu_question_0(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("mi", "She says you have no chance if you keep playing like this, no you won't~!"));
                 // bn::vector<ks::AnswerItem, 2> answers;
-                // answers.push_back(ks::AnswerItem("She has a point. Attack aggressively!", &ScriptA1TuesdayEn::scene__a1_tuesday__risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively));
-                // answers.push_back(ks::AnswerItem("It's a trap, it's smarter to play defensively here.", &ScriptA1TuesdayEn::scene__a1_tuesday__risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here));
+                // answers.push_back(ks::AnswerItem("She has a point. Attack aggressively!", &ScriptA1TuesdayEn::a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively));
+                // answers.push_back(ks::AnswerItem("It's a trap, it's smarter to play defensively here.", &ScriptA1TuesdayEn::a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here));
                 // scene.add_sequence(ks::MenuItem(answers);
             }
-            static void scene__a1_tuesday__risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively(ks::SceneManager& scene) {
+            static void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively(ks::SceneManager& scene) {
                 // scene.add_sequence(ks::AssignmentItem("attraction_sc += 1"));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1c3o1(scene);}));
             }
-            static void scene__a1_tuesday__risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here(ks::SceneManager& scene) {
-            
+            static void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here(ks::SceneManager& scene) {
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1c3o2(scene);}));
             }
-            static void scene__a1_tuesday__shared_library__menu_question_0(ks::SceneManager& scene) {
+            static void a1_tuesday_shared_library__menu_question_0(ks::SceneManager& scene) {
                 // bn::vector<ks::AnswerItem, 2> answers;
-                // answers.push_back(ks::AnswerItem("Hi! I'm new here. Hisao Nakai. We're in the same class.", &ScriptA1TuesdayEn::scene__a1_tuesday__shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class));
-                // answers.push_back(ks::AnswerItem("I'm sorry, I didn't mean to startle you.", &ScriptA1TuesdayEn::scene__a1_tuesday__shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you));
+                // answers.push_back(ks::AnswerItem("Hi! I'm new here. Hisao Nakai. We're in the same class.", &ScriptA1TuesdayEn::a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class));
+                // answers.push_back(ks::AnswerItem("I'm sorry, I didn't mean to startle you.", &ScriptA1TuesdayEn::a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you));
                 // scene.add_sequence(ks::MenuItem(answers);
             }
-            static void scene__a1_tuesday__shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class(ks::SceneManager& scene) {
-            
+            static void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class(ks::SceneManager& scene) {
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1c4o1(scene);}));
             }
-            static void scene__a1_tuesday__shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you(ks::SceneManager& scene) {
+            static void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you(ks::SceneManager& scene) {
                 // scene.add_sequence(ks::AssignmentItem("attraction_hanako += 1"));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1c4o2(scene);}));
             }
-            static void scene__a1_tuesday__bizarre_and_surreal__menu_question_0(ks::SceneManager& scene) {
+            static void a1_tuesday_bizarre_and_surreal__menu_question_0(ks::SceneManager& scene) {
                 // bn::vector<ks::AnswerItem, 2> answers;
-                // answers.push_back(ks::AnswerItem("She was cute.", &ScriptA1TuesdayEn::scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_was_cute));
-                // answers.push_back(ks::AnswerItem("She wasn't cute.", &ScriptA1TuesdayEn::scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_wasnt_cute));
+                // answers.push_back(ks::AnswerItem("She was cute.", &ScriptA1TuesdayEn::a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute));
+                // answers.push_back(ks::AnswerItem("She wasn't cute.", &ScriptA1TuesdayEn::a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute));
                 // scene.add_sequence(ks::MenuItem(answers);
             }
-            static void scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_was_cute(ks::SceneManager& scene) {
+            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute(ks::SceneManager& scene) {
                 // scene.add_sequence(ks::AssignmentItem("attraction_hanako += 1"));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1c5o1(scene);}));
             }
-            static void scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_wasnt_cute(ks::SceneManager& scene) {
-            
+            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute(ks::SceneManager& scene) {
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1TuesdayEn::a1c5o2(scene);}));
             }
-            static void scene__a1_tuesday__smalltalk__condition_0_0(ks::SceneManager& scene) {
+            static void a1_tuesday_smalltalk__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_tuesday__risk_vs_reward__condition_0_0(ks::SceneManager& scene) {
+            static void a1_tuesday_risk_vs_reward__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_tuesday__pseudo_tea_cosy__condition_0_0(ks::SceneManager& scene) {
+            static void a1_tuesday_pseudo_tea_cosy__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_tuesday__shared_library__condition_0_0(ks::SceneManager& scene) {
+            static void a1_tuesday_shared_library__condition_0_0(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Nothing! I just… talked to her. Tried to get to know her. Didn't even manage to get started."));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::yuuko, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("", "Yuuko sighs and looks awfully bothered, even more so than she did before."));
@@ -1278,7 +1281,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Everyone has their own problems, or else they wouldn't be here."));
                 scene.add_sequence(ks::DialogItem("", "Perhaps I was being a little tactless after all."));
             }
-            static void scene__a1_tuesday__shared_library__condition_0_1(ks::SceneManager& scene) {
+            static void a1_tuesday_shared_library__condition_0_1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Nothing! I was just looking for some books and then she got this fit and ran off."));
                 scene.add_sequence(ks::DialogItem("hi", "The most offending thing I can think of was that I might've looked at her general direction a few times."));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::yuuko, ks::SpriteEventType::None));
@@ -1289,13 +1292,13 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Yuuko doesn't sound all that convincing. Then again, maybe this is just the norm around here."));
                 scene.add_sequence(ks::DialogItem("", "Everyone has their own problems, or else they wouldn't be here."));
             }
-            static void scene__a1_tuesday__shared_library__condition_1_0(ks::SceneManager& scene) {
+            static void a1_tuesday_shared_library__condition_1_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_tuesday__bizarre_and_surreal__condition_0_0(ks::SceneManager& scene) {
+            static void a1_tuesday_bizarre_and_surreal__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1c4o1__condition_0_0(ks::SceneManager& scene) {
+            static void a1c4o1__condition_0_0(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "I did a self-introduction too."));
                 scene.add_sequence(ks::DialogItem("", "…"));
             }

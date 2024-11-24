@@ -22,6 +22,11 @@ def main():
         help="Script name (i.e. \"script-a4-rin\")",
     )
     scenario_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources"
+    )
+    scenario_parser.add_argument(
         "--translation",
         required=False,
         help="Translation key (de, es, fr, ru, zh_hans)"
@@ -31,11 +36,13 @@ def main():
 
     if args.command == "script":
         ksre_path = args.source
+        ksagb_path = args.outdir
         script_name = args.script
         locale = args.translation
 
         rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
         rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, f"{script_name}.rpy") if locale else None
+        gba_scripts_path = os.path.join(ksagb_path, "src", "scripts")
         output_file = script_name.replace("-", "_")
 
         tl = None
@@ -49,7 +56,7 @@ def main():
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, f"../../../src/scripts/", scenario, locale)
+        writer = ScenarioWriter(output_file, gba_scripts_path, scenario, locale)
         writer.write()
         pass
 

@@ -120,24 +120,24 @@ int main()
         _text_sprites.clear();
 
         if (select == 0) {
-            ks::ScriptA0TestEn::scene__a0_actname();
+            ks::ScriptA0TestEn::a0_actname();
             bn::core::update();
         } else if (select == 1) {
-            !alt_lang ? ks::ScriptA1MondayEn::scene__a1_monday() : ks::ScriptA1MondayRu::scene__a1_monday();
+            !alt_lang ? ks::ScriptA1MondayEn::a1_monday() : ks::ScriptA1MondayRu::a1_monday();
             bn::core::update();
         } else if (select == 2) {
-            !alt_lang ? ks::ScriptA1TuesdayEn::scene__a1_tuesday() : ks::ScriptA1TuesdayRu::scene__a1_tuesday();
+            !alt_lang ? ks::ScriptA1TuesdayEn::a1_tuesday() : ks::ScriptA1TuesdayRu::a1_tuesday();
             bn::core::update();
         } else if (select == 3) {
-            !alt_lang ? ks::ScriptA1WednesdayEn::scene__a1_wednesday() :ks::ScriptA1WednesdayRu::scene__a1_wednesday();
+            !alt_lang ? ks::ScriptA1WednesdayEn::a1_wednesday() :ks::ScriptA1WednesdayRu::a1_wednesday();
             bn::core::update();
         } else if (select == 4) {
             // Play all scenes
-            !alt_lang ? ks::ScriptA1MondayEn::scene__a1_monday() : ks::ScriptA1MondayRu::scene__a1_monday();
+            !alt_lang ? ks::ScriptA1MondayEn::a1_monday() : ks::ScriptA1MondayRu::a1_monday();
             bn::core::update();
-            !alt_lang ? ks::ScriptA1TuesdayEn::scene__a1_tuesday() : ks::ScriptA1TuesdayRu::scene__a1_tuesday();
+            !alt_lang ? ks::ScriptA1TuesdayEn::a1_tuesday() : ks::ScriptA1TuesdayRu::a1_tuesday();
             bn::core::update();
-            !alt_lang ? ks::ScriptA1WednesdayEn::scene__a1_wednesday() :ks::ScriptA1WednesdayRu::scene__a1_wednesday();
+            !alt_lang ? ks::ScriptA1WednesdayEn::a1_wednesday() :ks::ScriptA1WednesdayRu::a1_wednesday();
             bn::core::update();
         }
     }

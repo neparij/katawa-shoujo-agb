@@ -2,7 +2,7 @@
 namespace ks {
     class ScriptA1MondayRu : public ScriptA1Monday {
         public:
-            static void scene__a1_monday__out_cold() {
+            static void a1_monday_out_cold() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -77,9 +77,9 @@ namespace ks {
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::passoutOP1, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("n", "{vspace=210}Полог из голых ветвей, хмурое зимнее небо, Иванако, бегущая ко мне, – весь мир вокруг погружается во тьму."));
                 scene.add_sequence(ks::DialogItem("n", "{vspace=30}Последнее, что я успеваю запомнить, прежде чем меня поглощает забытьё, – голос Иванако, зовущий на помощь, и непрерывный шум ветвей на ветру…"));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_monday__out_cold__condition_0;
-                // scene__a1_monday__out_cold__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::scene__a1_monday__out_cold__condition_0_0));
-                // scene.add_condition(scene__a1_monday__out_cold__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_monday_out_cold__condition_0;
+                // a1_monday_out_cold__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_out_cold__condition_0_0));
+                // scene.add_condition(a1_monday_out_cold__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -87,7 +87,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_monday__bundle_of_hisao() {
+            static void a1_monday_bundle_of_hisao() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -204,9 +204,9 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Новое начало – не так уж и плохо."));
                 scene.add_sequence(ks::DialogItem("", "Это всё, о чём я могу думать, чтобы заставить себя пережить это. По крайней мере, у меня остаётся ещё хоть что-то, даже спецшкола всё же лучше, чем ничего. Это новое начало, не всё потеряно. Я не могу позволить себе думать иначе."));
                 scene.add_sequence(ks::DialogItem("", "Я хотя бы должен увидеть, на что будет похожа моя новая жизнь."));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_monday__bundle_of_hisao__condition_0;
-                // scene__a1_monday__bundle_of_hisao__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::scene__a1_monday__bundle_of_hisao__condition_0_0));
-                // scene.add_condition(scene__a1_monday__bundle_of_hisao__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_monday_bundle_of_hisao__condition_0;
+                // a1_monday_bundle_of_hisao__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_bundle_of_hisao__condition_0_0));
+                // scene.add_condition(a1_monday_bundle_of_hisao__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -214,7 +214,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_monday__gateway_effect() {
+            static void a1_monday_gateway_effect() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -265,7 +265,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Ждут меня? Я не люблю быть в центре внимания, но, думаю, в подобной ситуации это неизбежно."));
                 scene.add_sequence(ks::DialogItem("", "Беспокойство о том, какой мне окажут приём, снова заставляет меня нервничать."));
                 scene.add_sequence(ks::DialogItem("", "В результате я пропускаю мимо ушей практически всё, что говорит мне учитель."));
-                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::scene__a1_monday__gateway_effect__menu_question_0(scene);}));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::a1_monday_gateway_effect__menu_question_0(scene);}));
                 scene.add_sequence(ks::BackgroundItem(bn::regular_bg_items::school_staircase2));
                 scene.add_sequence(ks::DialogItem("", "Когда я поднимаюсь за учителем по лестнице, сердце бешеным стуком в груди напоминает о причине моего появления здесь."));
                 scene.add_sequence(ks::BackgroundItem(bn::regular_bg_items::school_hallway3));
@@ -276,9 +276,9 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("mu", "Всем доброе утро. Извиняюсь, что снова опоздал."));
                 scene.add_sequence(ks::MusicStopItem());
                 scene.add_sequence(ks::DialogItem("", "У самых дверей меня охватывает сомнение."));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_monday__gateway_effect__condition_0;
-                // scene__a1_monday__gateway_effect__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::scene__a1_monday__gateway_effect__condition_0_0));
-                // scene.add_condition(scene__a1_monday__gateway_effect__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_monday_gateway_effect__condition_0;
+                // a1_monday_gateway_effect__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_gateway_effect__condition_0_0));
+                // scene.add_condition(a1_monday_gateway_effect__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -286,7 +286,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_monday__enter_stage_left() {
+            static void a1_monday_enter_stage_left() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -309,10 +309,10 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Она довольно мила, как и её соседка – весёлого вида девчонка с розовыми волосами. Её трудно не заметить – не знаю, как я не обратил на неё внимания, когда вошёл в класс…"));
                 scene.add_sequence(ks::DialogItem("mu", "…пожалуйста, поприветствуйте нашего нового ученика."));
                 scene.add_sequence(ks::DialogItem("", "Он начинает аплодировать, и все вторят ему, кроме однорукой девочки в первом ряду. Стараясь скрыть свою растерянность, я благодарю их поклоном за эти незаслуженные аплодисменты."));
-                // bn::vector<ks::ConditionItem, 2> scene__a1_monday__enter_stage_left__condition_0;
-                // scene__a1_monday__enter_stage_left__condition_0.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1MondayRu::scene__a1_monday__enter_stage_left__condition_0_0));
-                // scene__a1_monday__enter_stage_left__condition_0.push_back(ks::ConditionItem("None", &ScriptA1MondayRu::scene__a1_monday__enter_stage_left__condition_0_1));
-                // scene.add_condition(scene__a1_monday__enter_stage_left__condition_0);
+                // bn::vector<ks::ConditionItem, 2> a1_monday_enter_stage_left__condition_0;
+                // a1_monday_enter_stage_left__condition_0.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_0_0));
+                // a1_monday_enter_stage_left__condition_0.push_back(ks::ConditionItem("None", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_0_1));
+                // scene.add_condition(a1_monday_enter_stage_left__condition_0);
                 scene.add_sequence(ks::BackgroundItem(bn::regular_bg_items::hisao_class));
                 scene.add_sequence(ks::DialogItem("", "Я слушаю, как учитель бубнит о том, что нам стоит подружиться, а сам смотрю по сторонам."));
                 scene.add_sequence(ks::DialogItem("", "Кажется, все внимательно его слушают, и, когда он заканчивает, снова ему хлопают, что выглядит довольно странно."));
@@ -365,10 +365,10 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("shi", "…"));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::misha, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("mi", "Ты ведь новый ученик, да? Конечно же да, Ситтян! Если бы он им не был, то не было бы смысла в том его выступлении перед классом, правильно? Правильно~!"));
-                // bn::vector<ks::ConditionItem, 2> scene__a1_monday__enter_stage_left__condition_1;
-                // scene__a1_monday__enter_stage_left__condition_1.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1MondayRu::scene__a1_monday__enter_stage_left__condition_1_0));
-                // scene__a1_monday__enter_stage_left__condition_1.push_back(ks::ConditionItem("None", &ScriptA1MondayRu::scene__a1_monday__enter_stage_left__condition_1_1));
-                // scene.add_condition(scene__a1_monday__enter_stage_left__condition_1);
+                // bn::vector<ks::ConditionItem, 2> a1_monday_enter_stage_left__condition_1;
+                // a1_monday_enter_stage_left__condition_1.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_1_0));
+                // a1_monday_enter_stage_left__condition_1.push_back(ks::ConditionItem("None", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_1_1));
+                // scene.add_condition(a1_monday_enter_stage_left__condition_1);
                 scene.add_sequence(ks::DialogItem("mi", "Мы знали, что должен прийти новенький, но не думали, что это будет сегодня. Так скоро! Да, Хиттян?"));
                 scene.add_sequence(ks::DialogItem("", "Хиттян?.."));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::misha, ks::SpriteEventType::None));
@@ -469,9 +469,9 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "На башне с часами бьёт колокол, возвещая конец урока. Время ланча."));
                 scene.add_sequence(ks::BackgroundItem(bn::regular_bg_items::school_hallway3));
                 scene.add_sequence(ks::DialogItem("", "Мне ничего не остаётся, кроме как последовать за Мишей, которая ведёт меня в коридор и дальше, вниз по лестнице."));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_monday__enter_stage_left__condition_2;
-                // scene__a1_monday__enter_stage_left__condition_2.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::scene__a1_monday__enter_stage_left__condition_2_0));
-                // scene.add_condition(scene__a1_monday__enter_stage_left__condition_2);
+                // bn::vector<ks::ConditionItem, 1> a1_monday_enter_stage_left__condition_2;
+                // a1_monday_enter_stage_left__condition_2.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_2_0));
+                // scene.add_condition(a1_monday_enter_stage_left__condition_2);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -479,7 +479,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_monday__in_the_nursery() {
+            static void a1_monday_in_the_nursery() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -510,7 +510,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("hi", "Например?"));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::misha, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("mi", "О чём угодно! Ведь мы твои проводники, так что не стесняйся спрашивать, если есть о чём~!"));
-                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::scene__a1_monday__in_the_nursery__menu_question_0(scene);}));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::a1_monday_in_the_nursery__menu_question_0(scene);}));
                 scene.add_sequence(ks::DialogItem("", "Девочки начинают оживлённо жестикулировать, косясь на меня, но Миша воздерживается от перевода."));
                 scene.add_sequence(ks::DialogItem("", "Может, обсуждают какие-то девчачьи секреты?"));
                 scene.add_sequence(ks::DialogItem("", "…"));
@@ -647,9 +647,9 @@ namespace ks {
                 scene.add_sequence(ks::BackgroundItem(bn::regular_bg_items::school_nursehall));
                 scene.add_sequence(ks::MusicStopItem());
                 scene.add_sequence(ks::DialogItem("", "Меня выпроваживают так быстро, что я даже не успеваю опомниться. И правда, краткий визит."));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_monday__in_the_nursery__condition_0;
-                // scene__a1_monday__in_the_nursery__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::scene__a1_monday__in_the_nursery__condition_0_0));
-                // scene.add_condition(scene__a1_monday__in_the_nursery__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_monday_in_the_nursery__condition_0;
+                // a1_monday_in_the_nursery__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_in_the_nursery__condition_0_0));
+                // scene.add_condition(a1_monday_in_the_nursery__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -657,7 +657,7 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_monday__nobodys_room() {
+            static void a1_monday_nobodys_room() {
                 // POTENTIAL MEMLEAK!!!! better to provide it globally.
                 bn::optional<bn::regular_bg_ptr> main_bg;
                 ks::SceneManager scene(main_bg);
@@ -777,9 +777,9 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Скоро потолок превращается в смутную тень и начинает выглядеть как любой другой потолок ночью, оставшись единственной вещью, которую я ещё могу различить."));
                 scene.add_sequence(ks::DialogItem("", "Ночь зовёт меня в сон, и я снова чувствую, как по моей спине ползёт холод от страха и неизвестности."));
                 scene.add_sequence(ks::DialogItem("", "Я уплываю всё дальше от знакомого мне мира."));
-                // bn::vector<ks::ConditionItem, 1> scene__a1_monday__nobodys_room__condition_0;
-                // scene__a1_monday__nobodys_room__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::scene__a1_monday__nobodys_room__condition_0_0));
-                // scene.add_condition(scene__a1_monday__nobodys_room__condition_0);
+                // bn::vector<ks::ConditionItem, 1> a1_monday_nobodys_room__condition_0;
+                // a1_monday_nobodys_room__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_nobodys_room__condition_0_0));
+                // scene.add_condition(a1_monday_nobodys_room__condition_0);
                 scene.start();
             
                 while(!scene.is_finished()) {
@@ -787,28 +787,28 @@ namespace ks {
                     bn::core::update();
                 }
             }
-            static void scene__a1_monday() {
-                scene__a1_monday__out_cold();
+            static void a1_monday() {
+                a1_monday_out_cold();
                 bn::core::update();
-                scene__a1_monday__bundle_of_hisao();
+                a1_monday_bundle_of_hisao();
                 bn::core::update();
-                scene__a1_monday__gateway_effect();
+                a1_monday_gateway_effect();
                 bn::core::update();
-                scene__a1_monday__enter_stage_left();
+                a1_monday_enter_stage_left();
                 bn::core::update();
-                scene__a1_monday__in_the_nursery();
+                a1_monday_in_the_nursery();
                 bn::core::update();
-                scene__a1_monday__nobodys_room();
+                a1_monday_nobodys_room();
                 bn::core::update();
             }
-            static void scene__a1c1o1(ks::SceneManager& scene) {
+            static void a1c1o1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Зачем? Это обязательно?"));
                 scene.add_sequence(ks::DialogItem("mu", "Конечно нет. Поэтому я и спрашиваю."));
                 scene.add_sequence(ks::DialogItem("hi", "Ладно."));
                 scene.add_sequence(ks::DialogItem("mu", "Ну, тогда пойдём."));
                 return;
             }
-            static void scene__a1c1o2(ks::SceneManager& scene) {
+            static void a1c1o2(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Да, конечно. В смысле, мне кажется, что так принято."));
                 scene.add_sequence(ks::DialogItem("mu", "Разумеется. Просто не все любят быть в центре внимания."));
                 scene.add_sequence(ks::DialogItem("", "Наверное, я как раз из таких людей, но лучше бы мне произвести первое впечатление самостоятельно."));
@@ -816,7 +816,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("mu", "Ну, тогда пойдём."));
                 return;
             }
-            static void scene__a1c2o1(ks::SceneManager& scene) {
+            static void a1c2o1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Ах да. В этой школе есть библиотека? В последнее время я увлёкся чтением, так что хотел бы туда сходить."));
                 scene.add_sequence(ks::DialogItem("", "Миша одаряет меня хмурым взглядом, дающим понять, что она не считает чтение здоровой привычкой, но затем улыбка снова возвращается к ней."));
                 scene.add_sequence(ks::DialogItem("mi", "Есть~! На втором этаже, мы потом тебе покажем!"));
@@ -824,14 +824,14 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Я возвращаюсь к еде, а девочки тем временем общаются между собой."));
                 return;
             }
-            static void scene__a1c2o2(ks::SceneManager& scene) {
+            static void a1c2o2(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("", "Сидзунэ меня интересует, и мне хочется спросить что-нибудь о ней."));
                 scene.add_sequence(ks::DialogItem("", "Но ведь я не могу спрашивать о чём-то столь личном, правильно?"));
                 scene.add_sequence(ks::DialogItem("", "Хм…"));
                 scene.add_sequence(ks::DialogItem("", "Я не могу придумать другого вопроса, поэтому просто возвращаюсь к еде, а девочки тем временем общаются между собой."));
                 return;
             }
-            static void scene__a1c2o3(ks::SceneManager& scene) {
+            static void a1c2o3(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("hi", "Честно говоря, на ум ничего не приходит."));
                 // scene.add_sequence(ks::SpriteItem(bn::sprite_items::misha, ks::SpriteEventType::None));
                 scene.add_sequence(ks::DialogItem("mi", "О! Значит, мы были хорошими проводниками, правда, правда~?"));
@@ -843,45 +843,49 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "На их избыточный энтузиазм я качаю головой и сосредотачиваюсь на еде."));
                 return;
             }
-            static void scene__a1_monday__gateway_effect__menu_question_0(ks::SceneManager& scene) {
+            static void a1_monday_gateway_effect__menu_question_0(ks::SceneManager& scene) {
                 // bn::vector<ks::AnswerItem, 2> answers;
-                // answers.push_back(ks::AnswerItem("Why?", &ScriptA1MondayRu::scene__a1_monday__gateway_effect__menu_question_0_why));
-                // answers.push_back(ks::AnswerItem("Yeah, of course.", &ScriptA1MondayRu::scene__a1_monday__gateway_effect__menu_question_0_yeah_of_course));
+                // answers.push_back(ks::AnswerItem("Why?", &ScriptA1MondayRu::a1_monday_gateway_effect__menu_question_0_why));
+                // answers.push_back(ks::AnswerItem("Yeah, of course.", &ScriptA1MondayRu::a1_monday_gateway_effect__menu_question_0_yeah_of_course));
                 // scene.add_sequence(ks::MenuItem(answers);
             }
-            static void scene__a1_monday__gateway_effect__menu_question_0_why(ks::SceneManager& scene) {
+            static void a1_monday_gateway_effect__menu_question_0_why(ks::SceneManager& scene) {
                 // scene.add_sequence(ks::AssignmentItem("wanted_introduce = False"));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::a1c1o1(scene);}));
             }
-            static void scene__a1_monday__gateway_effect__menu_question_0_yeah_of_course(ks::SceneManager& scene) {
+            static void a1_monday_gateway_effect__menu_question_0_yeah_of_course(ks::SceneManager& scene) {
                 // scene.add_sequence(ks::AssignmentItem("wanted_introduce = True"));
                 // scene.add_sequence(ks::AssignmentItem("attraction_sc += 1"));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::a1c1o2(scene);}));
             }
-            static void scene__a1_monday__in_the_nursery__menu_question_0(ks::SceneManager& scene) {
+            static void a1_monday_in_the_nursery__menu_question_0(ks::SceneManager& scene) {
                 // bn::vector<ks::AnswerItem, 3> answers;
-                // answers.push_back(ks::AnswerItem("Ask about the library.", &ScriptA1MondayRu::scene__a1_monday__in_the_nursery__menu_question_0_ask_about_the_library));
-                // answers.push_back(ks::AnswerItem("Ask about Shizune's deafness.", &ScriptA1MondayRu::scene__a1_monday__in_the_nursery__menu_question_0_ask_about_shizunes_deafness));
-                // answers.push_back(ks::AnswerItem("I think I got everything I need to know.", &ScriptA1MondayRu::scene__a1_monday__in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know));
+                // answers.push_back(ks::AnswerItem("Ask about the library.", &ScriptA1MondayRu::a1_monday_in_the_nursery__menu_question_0_ask_about_the_library));
+                // answers.push_back(ks::AnswerItem("Ask about Shizune's deafness.", &ScriptA1MondayRu::a1_monday_in_the_nursery__menu_question_0_ask_about_shizunes_deafness));
+                // answers.push_back(ks::AnswerItem("I think I got everything I need to know.", &ScriptA1MondayRu::a1_monday_in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know));
                 // scene.add_sequence(ks::MenuItem(answers);
             }
-            static void scene__a1_monday__in_the_nursery__menu_question_0_ask_about_the_library(ks::SceneManager& scene) {
+            static void a1_monday_in_the_nursery__menu_question_0_ask_about_the_library(ks::SceneManager& scene) {
                 // scene.add_sequence(ks::AssignmentItem("attraction_hanako += 1"));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::a1c2o1(scene);}));
             }
-            static void scene__a1_monday__in_the_nursery__menu_question_0_ask_about_shizunes_deafness(ks::SceneManager& scene) {
-            
+            static void a1_monday_in_the_nursery__menu_question_0_ask_about_shizunes_deafness(ks::SceneManager& scene) {
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::a1c2o2(scene);}));
             }
-            static void scene__a1_monday__in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know(ks::SceneManager& scene) {
+            static void a1_monday_in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know(ks::SceneManager& scene) {
                 // scene.add_sequence(ks::AssignmentItem("attraction_sc += 1"));
+                scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayRu::a1c2o3(scene);}));
             }
-            static void scene__a1_monday__out_cold__condition_0_0(ks::SceneManager& scene) {
+            static void a1_monday_out_cold__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_monday__bundle_of_hisao__condition_0_0(ks::SceneManager& scene) {
+            static void a1_monday_bundle_of_hisao__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_monday__gateway_effect__condition_0_0(ks::SceneManager& scene) {
+            static void a1_monday_gateway_effect__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_monday__enter_stage_left__condition_0_0(ks::SceneManager& scene) {
+            static void a1_monday_enter_stage_left__condition_0_0(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("", "После этого в классе повисает пауза, намекающая мне, что следует наконец что-то сказать."));
                 scene.add_sequence(ks::DialogItem("hi", "Ну… Я – Хисао Накай."));
                 scene.add_sequence(ks::DialogItem("", "И что ещё?"));
@@ -892,7 +896,7 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Впрочем, кажется, все вполне удовлетворены и той малостью, что я рассказал. Несколько девочек перешёптываются, бросая на меня взгляды. Могло быть и хуже."));
                 scene.add_sequence(ks::DialogItem("", "…"));
             }
-            static void scene__a1_monday__enter_stage_left__condition_0_1(ks::SceneManager& scene) {
+            static void a1_monday_enter_stage_left__condition_0_1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("", "После этого в классе повисает пауза, которую никто не торопится прервать."));
                 scene.add_sequence(ks::DialogItem("", "Учитель понимает, что пора сказать что-нибудь ещё. Он неразборчиво произносит моё имя и умолкает, потеряв настрой."));
                 scene.add_sequence(ks::DialogItem("", "После этого он пытается рассказать обо мне классу, но никто не проявляет особого интереса."));
@@ -900,21 +904,21 @@ namespace ks {
                 scene.add_sequence(ks::DialogItem("", "Вероятно, поняв, что толком ничего обо мне не знает, он заканчивает тем, что снова перевирает моё имя и просит написать его на доске."));
                 scene.add_sequence(ks::DialogItem("", "Я делаю это и поворачиваюсь к классу, чувствуя себя идиотом."));
             }
-            static void scene__a1_monday__enter_stage_left__condition_1_0(ks::SceneManager& scene) {
+            static void a1_monday_enter_stage_left__condition_1_0(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("mi", "Похоже, он очень интересный человек, правда~?"));
             }
-            static void scene__a1_monday__enter_stage_left__condition_1_1(ks::SceneManager& scene) {
+            static void a1_monday_enter_stage_left__condition_1_1(ks::SceneManager& scene) {
                 scene.add_sequence(ks::DialogItem("", "Миша окидывает меня странным взглядом, а затем продолжает."));
                 scene.add_sequence(ks::DialogItem("mi", "Мы о нём почти ничего не знаем, но, наверное, узнаем позже."));
                 scene.add_sequence(ks::DialogItem("", "Всё же мне следовало рассказать о себе самостоятельно. Что угодно – это позволило бы сложить первое впечатление о себе куда лучше, чем невнятное бормотание учителя и путаница с именем."));
             }
-            static void scene__a1_monday__enter_stage_left__condition_2_0(ks::SceneManager& scene) {
+            static void a1_monday_enter_stage_left__condition_2_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_monday__in_the_nursery__condition_0_0(ks::SceneManager& scene) {
+            static void a1_monday_in_the_nursery__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
-            static void scene__a1_monday__nobodys_room__condition_0_0(ks::SceneManager& scene) {
+            static void a1_monday_nobodys_room__condition_0_0(ks::SceneManager& scene) {
                 return;
             }
     };

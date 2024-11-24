@@ -218,8 +218,6 @@ class ScenarioWriter:
             return [f'scene.add_sequence(ks::DialogItem("", \"{dialog.message}\"));']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
-        # return [f'scene.add_sequence(ks::RunLabelItem(&{self.get_class_name()}::{menu.function_callback}));']
-        # scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayEn::scene__a1_monday__out_cold();}));
         return [f'scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}(scene);}}));']
 
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
