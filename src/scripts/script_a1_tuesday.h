@@ -30,38 +30,42 @@
 #include "bn_regular_bg_items_school_dormhisao_ss.h"
 #include "bn_regular_bg_items_hana_library.h"
 namespace ks {
-    // Labels
-    void scene__a1_tuesday__smalltalk();
-    void scene__a1_tuesday__risk_vs_reward();
-    void scene__a1_tuesday__pseudo_tea_cosy();
-    void scene__a1_tuesday__shared_library();
-    void scene__a1_tuesday__bizarre_and_surreal();
-    void scene__a1_tuesday();
-    void scene__a1c3o1(ks::SceneManager& scene);
-    void scene__a1c3o2(ks::SceneManager& scene);
-    void scene__a1c4o1(ks::SceneManager& scene);
-    void scene__a1c4o2(ks::SceneManager& scene);
-    void scene__a1c5o1(ks::SceneManager& scene);
-    void scene__a1c5o2(ks::SceneManager& scene);
-    // Choice functions
-    void scene__a1_tuesday__risk_vs_reward__menu_question_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively(ks::SceneManager& scene);
-    void scene__a1_tuesday__risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here(ks::SceneManager& scene);
-    void scene__a1_tuesday__shared_library__menu_question_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class(ks::SceneManager& scene);
-    void scene__a1_tuesday__shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you(ks::SceneManager& scene);
-    void scene__a1_tuesday__bizarre_and_surreal__menu_question_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_was_cute(ks::SceneManager& scene);
-    void scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_wasnt_cute(ks::SceneManager& scene);
-    // Conditions
-    void scene__a1_tuesday__smalltalk__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__risk_vs_reward__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__pseudo_tea_cosy__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__shared_library__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__shared_library__condition_0_1(ks::SceneManager& scene);
-    void scene__a1_tuesday__shared_library__condition_1_0(ks::SceneManager& scene);
-    void scene__a1_tuesday__bizarre_and_surreal__condition_0_0(ks::SceneManager& scene);
-    void scene__a1c4o1__condition_0_0(ks::SceneManager& scene);
+    class ScriptA1Tuesday {
+        public:
+            virtual ~ScriptA1Tuesday() = default;
+            // Labels
+            static void scene__a1_tuesday__smalltalk();
+            static void scene__a1_tuesday__risk_vs_reward();
+            static void scene__a1_tuesday__pseudo_tea_cosy();
+            static void scene__a1_tuesday__shared_library();
+            static void scene__a1_tuesday__bizarre_and_surreal();
+            static void scene__a1_tuesday();
+            static void scene__a1c3o1(ks::SceneManager& scene);
+            static void scene__a1c3o2(ks::SceneManager& scene);
+            static void scene__a1c4o1(ks::SceneManager& scene);
+            static void scene__a1c4o2(ks::SceneManager& scene);
+            static void scene__a1c5o1(ks::SceneManager& scene);
+            static void scene__a1c5o2(ks::SceneManager& scene);
+            // Choice functions
+            static void scene__a1_tuesday__risk_vs_reward__menu_question_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively(ks::SceneManager& scene);
+            static void scene__a1_tuesday__risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here(ks::SceneManager& scene);
+            static void scene__a1_tuesday__shared_library__menu_question_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class(ks::SceneManager& scene);
+            static void scene__a1_tuesday__shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you(ks::SceneManager& scene);
+            static void scene__a1_tuesday__bizarre_and_surreal__menu_question_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_was_cute(ks::SceneManager& scene);
+            static void scene__a1_tuesday__bizarre_and_surreal__menu_question_0_she_wasnt_cute(ks::SceneManager& scene);
+            // Conditions
+            static void scene__a1_tuesday__smalltalk__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__risk_vs_reward__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__pseudo_tea_cosy__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__shared_library__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__shared_library__condition_0_1(ks::SceneManager& scene);
+            static void scene__a1_tuesday__shared_library__condition_1_0(ks::SceneManager& scene);
+            static void scene__a1_tuesday__bizarre_and_surreal__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1c4o1__condition_0_0(ks::SceneManager& scene);
+    };
 }
 
 #endif // KS_SCRIPT_A1_TUESDAY

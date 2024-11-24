@@ -1,5 +1,4 @@
 import os
-from tokenize import group
 from typing import List, cast
 
 from src.dto.assignment_item import AssignmentItem
@@ -15,12 +14,14 @@ from src.dto.show_item import ShowItem, ShowEvent
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name
 
+DEFAULT_LOCALE = "en"
 
 class ScenarioWriter:
-    def __init__(self, filename: str, output_dir: str, scenario: List[SequenceGroup]):
+    def __init__(self, filename: str, output_dir: str, scenario: List[SequenceGroup], locale: str = DEFAULT_LOCALE):
         self.filename = filename
         self.output_dir = output_dir
         self.scenario = scenario
+        self.locale = locale if locale else DEFAULT_LOCALE
 
         # TODO: refactor this
         self.unprocessed_music = [
@@ -46,7 +47,8 @@ class ScenarioWriter:
     def write(self):
         os.makedirs(os.path.dirname(os.path.join(self.output_dir, self.filename)), exist_ok=True)
         self.write_source()
-        self.write_header()
+        if self.locale == DEFAULT_LOCALE:
+            self.write_header()
 
     def write_header(self):
         define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
@@ -69,26 +71,31 @@ class ScenarioWriter:
         for background in self.backgrounds:
             h_code.append(include_header(background, "bn_regular_bg_items_"))
 
-        function_declarations = []
+        function_declarations = [
+            f'virtual ~{self.get_interface_name()}() = default;',
+        ]
 
         function_declarations.append(comment("Labels"))
         for label in self.get_labels():
-            function_declarations.append(f"{label_signature(label)};")
+            function_declarations.append(f"static {label_signature(label)};")
 
         function_declarations.append(comment("Choice functions"))
         for menu in self.get_menus():
-            function_declarations.append(f"{menu_signature(menu)};")
+            function_declarations.append(f"static {menu_signature(menu)};")
             for answer in menu.conditions:
-                function_declarations.append(f"{answer_signature(menu, answer)};")
+                function_declarations.append(f"static {answer_signature(menu, answer)};")
 
         function_declarations.append(comment("Conditions"))
         for condition in self.get_conditions():
             cnum = 0
             for variant in condition.conditions:
-                function_declarations.append(f"{condition_signature(condition, cnum)};")
+                function_declarations.append(f"static {condition_signature(condition, cnum)};")
                 cnum += 1
 
-        h_code.append(namespace("\n".join(function_declarations), "ks"))
+        public_functions = as_public("\n".join(function_declarations))
+        class_code = as_class(public_functions, self.get_interface_name())
+
+        h_code.append(namespace(class_code, "ks"))
 
         with open(f"{os.path.join(self.output_dir, self.filename)}.h", "w") as h_file:
             h_file.write(defined("\n".join(h_code), define_name, "KS"))
@@ -115,7 +122,7 @@ class ScenarioWriter:
                     "    bn::core::update();",
                     "}"
                 ])
-            functions.append(f"{label_signature(label)} {{\n{indented_l(sequences)}\n}}")
+            functions.append(f"static {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
 
         for menu in self.get_menus():
             sequences = []
@@ -124,15 +131,15 @@ class ScenarioWriter:
             sequences.append(f'// bn::vector<ks::AnswerItem, {len(menu.conditions)}> answers;')
             for answer in menu.conditions:
                 sequences.append(
-                    f'// answers.push_back(ks::AnswerItem("{answer.condition}", &{answer.function_callback}));')
+                    f'// answers.push_back(ks::AnswerItem("{answer.condition}", &{self.get_class_name()}::{answer.function_callback}));')
             sequences.append(f'// scene.add_sequence(ks::MenuItem(answers);')
-            functions.append(f"{menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
+            functions.append(f"static {menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
 
             for answer in menu.conditions:
                 sequences = []
                 for seq in answer.sequence:
                     sequences.extend(self.process_sequence(menu, seq))
-                functions.append(f"{answer_signature(menu, answer)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"static {answer_signature(menu, answer)} {{\n{indented_l(sequences)}\n}}")
 
         for condition in self.get_conditions():
             cnum = 0
@@ -140,12 +147,15 @@ class ScenarioWriter:
                 sequences = []
                 for seq in variant.sequence:
                     sequences.extend(self.process_sequence(condition, seq))
-                functions.append(f"{condition_signature(condition, cnum)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"static {condition_signature(condition, cnum)} {{\n{indented_l(sequences)}\n}}")
                 cnum += 1
 
-        cpp_code.append(namespace("\n".join(functions), "ks"))
+        functions = as_public("\n".join(functions))
+        class_code = as_class(functions, self.get_class_name(), self.get_interface_name())
 
-        with open(f"{os.path.join(self.output_dir, self.filename)}.cpp", "w") as cpp_file:
+        cpp_code.append(namespace(class_code, "ks"))
+
+        with open(f"{os.path.join(self.output_dir, self.filename)}{self.locale_suffix()}.cpp", "w") as cpp_file:
             cpp_file.write("\n".join(cpp_code))
 
     def get_labels(self) -> List[SequenceGroup]:
@@ -194,7 +204,7 @@ class ScenarioWriter:
         cnum = 0
         for variant in matching_scenario_item.conditions:
             code.append(
-                f'// {condition.function_callback}.push_back(ks::ConditionItem(\"{variant.condition}\", &{condition.function_callback}_{cnum}));')
+                f'// {condition.function_callback}.push_back(ks::ConditionItem(\"{variant.condition}\", &{self.get_class_name()}::{condition.function_callback}_{cnum}));')
             cnum += 1
         code.append(f'// scene.add_condition({condition.function_callback});')
         return code
@@ -208,7 +218,9 @@ class ScenarioWriter:
             return [f'scene.add_sequence(ks::DialogItem("", \"{dialog.message}\"));']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
-        return [f'scene.add_sequence(ks::RunLabelItem(&{menu.function_callback}));']
+        # return [f'scene.add_sequence(ks::RunLabelItem(&{self.get_class_name()}::{menu.function_callback}));']
+        # scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){ScriptA1MondayEn::scene__a1_monday__out_cold();}));
+        return [f'scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}(scene);}}));']
 
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
         if music.action == MusicAction.PLAY:
@@ -233,7 +245,9 @@ class ScenarioWriter:
                 'bn::core::update();'
             ]
         else:
-            return [f'scene.add_sequence(ks::RunLabelItem(&{run_label.function_callback}));']
+            # return [f'scene.add_sequence(ks::RunLabelItem(&{self.get_class_name()}::{run_label.function_callback}));']
+            # return [f'scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}();}}));']
+            return[f'scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{run_label.function_callback}(scene);}}));']
 
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
         if not show.sprite in self.sprites:
@@ -247,6 +261,15 @@ class ScenarioWriter:
         else:
             raise TypeError("Unknown ShowEvent type")
 
+    def locale_suffix(self):
+        return f"_{self.locale}" if self.locale else ""
+
+    def get_class_name(self):
+        return to_pascal_case(f'{self.filename}{self.locale_suffix()}')
+
+    def get_interface_name(self):
+        return to_pascal_case(self.filename)
+
 
 def defined(code, define_name, prefix="", suffix=""):
     define_name = f"{f"{prefix}_" if prefix else ""}{define_name}{f"_{suffix}" if suffix else ""}"
@@ -255,6 +278,13 @@ def defined(code, define_name, prefix="", suffix=""):
 
 def namespace(code, name=""):
     return f"namespace {name} {{\n{indented(code)}\n}}"
+
+
+def as_class(code, class_name="", extends_name=""):
+    return f"class {class_name}{f" : public {extends_name}" if extends_name else ""} {{\n{indented(code)}\n}};"
+
+def as_public(code):
+    return f"public:\n{indented(code)}"
 
 
 def include_header(header, prefix="", suffix=""):
@@ -290,3 +320,6 @@ def answer_signature(group: SequenceGroup, answer: ConditionWrapper):
 
 def condition_signature(group: SequenceGroup, num: int):
     return f"void {group.name}_{num}(ks::SceneManager& scene)"
+
+def to_pascal_case(s: str) -> str:
+    return ''.join(word.capitalize() for word in s.split('_'))

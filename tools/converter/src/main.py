@@ -3,31 +3,53 @@ import os
 
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
+from src.translation_reader import TranslationReader
 
 
 def main():
     parser = argparse.ArgumentParser(description="Katawa Shoujo GBA: Converter toolset")
     subparsers = parser.add_subparsers(dest="command", required=True, help="Available commands")
 
-    scenario_parser = subparsers.add_parser("scenario", help="Scenario converter")
+    scenario_parser = subparsers.add_parser("script", help="Script converter")
     scenario_parser.add_argument(
-        "--input",
+        "--source",
         required=True,
-        help="Path to rpy scenario file"
+        help="Path to KS:RE sources"
+    )
+    scenario_parser.add_argument(
+        "--script",
+        required=True,
+        help="Script name (i.e. \"script-a4-rin\")",
+    )
+    scenario_parser.add_argument(
+        "--translation",
+        required=False,
+        help="Translation key (de, es, fr, ru, zh_hans)"
     )
 
     args = parser.parse_args()
 
-    if args.command == "scenario":
-        input_file = args.input
-        output_file = os.path.basename(input_file).split('.')[0].replace("-", "_")
+    if args.command == "script":
+        ksre_path = args.source
+        script_name = args.script
+        locale = args.translation
 
-        print(f"Processing scenario file: {input_file}")
-        reader = ScenarioReader(input_file)
+        rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
+        rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, f"{script_name}.rpy") if locale else None
+        output_file = script_name.replace("-", "_")
+
+        tl = None
+        if rpy_translation_file:
+            print(f"Processing translation file: {rpy_translation_file}")
+            reader = TranslationReader(locale, rpy_translation_file)
+            tl = reader.read()
+
+        print(f"Processing scenario file: {rpy_scenario_file}")
+        reader = ScenarioReader(rpy_scenario_file, tl)
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, "../../../src/scripts", scenario)
+        writer = ScenarioWriter(output_file, f"../../../src/scripts/", scenario, locale)
         writer.write()
         pass
 

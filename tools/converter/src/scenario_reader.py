@@ -13,15 +13,18 @@ from src.dto.run_label_item import RunLabelItem
 from src.dto.show_item import ShowEvent, ShowItem
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
+from src.translation.translation_container import TranslationContainer
 from src.utils import sanitize_function_name
 
 
 class ScenarioReader:
-    def __init__(self, scenario_file):
+    def __init__(self, scenario_file, translation: TranslationContainer):
         self.scenario_file = scenario_file
+        self.translation = translation
         self.scenario: List[SequenceGroup] = []
         self.stack: ScenarioScriptStack = ScenarioScriptStack()
         self.initial_name = None
+        self._hack_nvl_cleared = False
 
     def read(self) -> List[SequenceGroup]:
         with open(self.scenario_file, 'r', encoding="utf-8") as f:
@@ -50,14 +53,16 @@ class ScenarioReader:
         md5.update((line + "\r\n").encode("utf-8"))
         label = self.stack.current_label()
         if label:
-            result = f"{label.name}__{md5.hexdigest()[:8]}"
+            tl_fixed_name = label.name.replace("scene__", "").replace("__", "_", -1)
+            base = f"{tl_fixed_name}_{md5.hexdigest()[:8]}"
         else:
-            result = md5.hexdigest()[:8]
+            base = md5.hexdigest()[:8]
+        result = base
 
         i = 0
         while result in label.translation_identifiers:
             i += 1
-            result = f"{result}_{i}"
+            result = f"{base}_{i}"
 
         label.translation_identifiers.append(result)
         return result
@@ -110,12 +115,16 @@ class ScenarioReader:
 
         self.pop_stack_if_unindented(current_indent, stripped_line)
 
+        _hack_prepend_dialog_nvl_clear = self._hack_nvl_cleared
+        self._hack_nvl_cleared = False
+
         if stripped_line.startswith("label "):
             label_name = stripped_line.split("label ", 1)[1].strip(":")
             name = sanitize_function_name(label_name)
 
             if self.stack.size() > 0:
-                name = f"{self.stack.current_label().name}__{name}"
+                # name = f"{self.stack.current_label().name}__{name}"
+                name = f"{self.stack.parent_label().name}__{name}"
                 self.stack.current().add_sequence_item(RunLabelItem(name, self.initial_name and name.startswith(self.initial_name)))
                 # if self.initial_found:
                 #     self.stack.current().add_sequence_item(RunLabelItem(name))
@@ -131,9 +140,12 @@ class ScenarioReader:
                 self.stack.push(SequenceGroup(name, SequenceGroupType.LABEL, True, True), current_indent)
             else:
                 self.stack.push(SequenceGroup(name, SequenceGroupType.LABEL, name.startswith(self.initial_name)), current_indent)
+            return
 
         elif stripped_line == "return":
             self.stack.current().add_sequence_item(ReturnItem())
+            return
+
         elif stripped_line.startswith("if "):
             condition = stripped_line.split("if ", 1)[1].strip(":")
             if self.stack:
@@ -146,17 +158,20 @@ class ScenarioReader:
             condition_stack = SequenceGroup(name, SequenceGroupType.CONDITION)
             condition_stack.add_condition(condition)
             self.stack.push(condition_stack, current_indent)
+            return
 
         elif stripped_line.startswith("elif "):
             condition = stripped_line.split("elif ", 1)[1].strip(":")
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Elif block outside of condition block")
             self.stack.current().add_condition(condition)
+            return
 
         elif stripped_line.startswith("else:"):
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Else block outside of condition block")
             self.stack.current().add_condition()
+            return
 
         elif stripped_line.startswith("menu:"):
             if self.stack:
@@ -166,6 +181,8 @@ class ScenarioReader:
 
             self.stack.current().add_sequence_item(MenuItem(name))
             self.stack.push(SequenceGroup(name, SequenceGroupType.MENU), current_indent)
+            return
+
         elif self.stack.current().type == SequenceGroupType.MENU and stripped_line.startswith("\""):
             # Parse menu choice
             match = re.match(r"\"(.*)\":", stripped_line)
@@ -173,11 +190,13 @@ class ScenarioReader:
                 choice_text = match.group(1)
                 self.stack.current().add_condition(choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
                 # self.stack.push(SequenceGroup(f"{self.stack.current().name}_{sanitize_function_name(choice_text)}", SequenceGroupType.MENU), current_indent)
+            return
 
         elif stripped_line.startswith("$ "):
             # Inline assignments in menu blocks
             command = stripped_line[2:].strip()
             self.stack.current().add_sequence_item(AssignmentItem(command))
+            return
 
         elif stripped_line.startswith("call "):
             skip = False
@@ -187,11 +206,13 @@ class ScenarioReader:
                 # Inline calls in menu blocks
                 function_name = stripped_line.split("call ", 1)[1].strip()
                 self.stack.current().add_sequence_item(RunLabelItem(sanitize_function_name(f"scene__{function_name}"), False))
+            return
 
         elif stripped_line.startswith("scene bg"):
             parts = stripped_line.split()
             scene_bg_name = parts[2]
             self.stack.current().add_sequence_item(BackgroundItem(scene_bg_name))
+            return
 
         elif stripped_line.startswith("scene ev"):
             parts = stripped_line.split()
@@ -201,6 +222,7 @@ class ScenarioReader:
             # TODO: use specs
             event_bg_name = event_bg_name.replace("_start", "").replace("_move", "").replace("_end", "").replace("_zoomout", "")
             self.stack.current().add_sequence_item(BackgroundItem(event_bg_name))
+            return
 
         elif stripped_line.startswith("play music"):
             parts = stripped_line.split()
@@ -210,6 +232,7 @@ class ScenarioReader:
             self.stack.current().add_sequence_item(
                 MusicItem(MusicAction.PLAY, music_name, MusicEffect.FADEIN if fadein_match else MusicEffect.NONE,
                           fadein_time))
+            return
 
         elif stripped_line.startswith("stop music"):
             fadeout_match = re.search(r"fadeout (\d+\.\d+)", stripped_line)
@@ -217,6 +240,7 @@ class ScenarioReader:
             self.stack.current().add_sequence_item(
                 MusicItem(MusicAction.STOP, "", MusicEffect.FADEOUT if fadeout_match else MusicEffect.NONE,
                           fadeout_time))
+            return
 
         elif stripped_line.startswith("show "):
             parts = stripped_line.split()
@@ -224,20 +248,48 @@ class ScenarioReader:
 
             event_type = ShowEvent.CHARACTER_CHANGE if "with charachange" in stripped_line else ShowEvent.NONE
             self.stack.current().add_sequence_item(ShowItem(sprite_name, event_type))
+            return
+
+        elif stripped_line.startswith("nvl "):
+            parts = stripped_line.split()
+            action_name = parts[1]
+            if action_name == "clear":
+                self._hack_nvl_cleared = True
+            return
 
         else:
-            dialog_match_str = re.match(r"\"(\w+)\"\s+\"(.*)\"", stripped_line)
-            dialog_match_ref = re.match(r"(\w+)\s+\"(.*)\"", stripped_line)
-            narration_match = re.match(r"\"(.*)\"", stripped_line)
+
+            hashing_contents = stripped_line
+            if _hack_prepend_dialog_nvl_clear:
+                hashing_contents = f"nvl clear\r\n{hashing_contents}"
+            if self.stack.current().type == SequenceGroupType.MENU:
+                hashing_contents = f"{hashing_contents} nointeract"
+
+            dialog_hash = self.calculate_tl_hash(hashing_contents)
+
+            dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"$", stripped_line)
+            dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"$", stripped_line)
+            narration_match = re.match(r"^\"(.*)\"$", stripped_line)
+
+            if dialog_match_str or dialog_match_ref or narration_match:
+                if self.translation:
+                    print(stripped_line)
+                    print(self.stack.current())
+                    stripped_line = self.translation.translations[dialog_hash]
+                    dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"$", stripped_line)
+                    dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"$", stripped_line)
+                    narration_match = re.match(r"^\"(.*)\"$", stripped_line)
+
             if dialog_match_str:
                 actor, dialog = dialog_match_str.groups()
                 self.stack.current().add_sequence_item(
-                    DialogItem(self.calculate_tl_hash(stripped_line), actor, dialog.strip()))
+                    DialogItem(dialog_hash, actor, dialog.strip()))
             elif dialog_match_ref:
                 actor, dialog = dialog_match_ref.groups()
                 self.stack.current().add_sequence_item(
-                    DialogItem(self.calculate_tl_hash(stripped_line), "", dialog.strip(), actor))
+                    DialogItem(dialog_hash, "", dialog.strip(), actor))
             elif narration_match:
                 narration = narration_match.group(1)
                 self.stack.current().add_sequence_item(
-                    DialogItem(self.calculate_tl_hash(stripped_line), "", narration.strip()))
+                    DialogItem(dialog_hash, "", narration.strip()))
+            return

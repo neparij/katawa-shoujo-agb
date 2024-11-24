@@ -122,7 +122,7 @@ namespace ks
                         continue;
                     }
 
-                    bn::string<64> message;
+                    bn::string<128> message;
                     if (_text_render_line != line_index) {
                         message = line;
                     } else {
@@ -177,7 +177,7 @@ namespace ks
         int _text_render_ticks;
         ks::DialogItem* _item;
         bn::string<16> _title;
-        bn::string<64> _messages[32];
+        bn::string<128> _messages[32];
         int _messages_lengths[32];
         int _message_lines_count;
         bool _is_dirty = true;
@@ -192,8 +192,8 @@ namespace ks
             // int line_width = 0;
             int line_index = 0;
 
-            bn::string<64> line_buffer = "";
-            bn::string<64> word_buffer = "";
+            bn::string<128> line_buffer = "";
+            bn::string<128> word_buffer = "";
 
             int line_buffer_w = 0;
             int word_buffer_w = 0;
@@ -335,8 +335,8 @@ namespace ks
             return output_string;
         };
 
-        bn::string<64> utf8_substring(const char* str, int char_count) {
-            bn::string<64> result;
+        bn::string<128> utf8_substring(const char* str, int char_count) {
+            bn::string<128> result;
             int current_count = 0;
 
             for (const char* ptr = str; *ptr != '\0'; ++ptr) {

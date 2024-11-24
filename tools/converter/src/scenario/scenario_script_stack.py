@@ -13,6 +13,12 @@ class ScenarioScriptStack:
                 return entry[0]
         return None
 
+    def parent_label(self):
+        for entry in self.stack:
+            if entry[0].type == SequenceGroupType.LABEL:
+                return entry[0]
+        return None
+
     def current_indent(self):
         if len(self.stack) == 0:
             return 0

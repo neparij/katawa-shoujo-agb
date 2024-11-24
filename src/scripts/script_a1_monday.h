@@ -31,38 +31,42 @@
 #include "bn_regular_bg_items_school_dormhisao_ss.h"
 #include "bn_regular_bg_items_school_dormhisao_ni.h"
 namespace ks {
-    // Labels
-    void scene__a1_monday__out_cold();
-    void scene__a1_monday__bundle_of_hisao();
-    void scene__a1_monday__gateway_effect();
-    void scene__a1_monday__enter_stage_left();
-    void scene__a1_monday__in_the_nursery();
-    void scene__a1_monday__nobodys_room();
-    void scene__a1_monday();
-    void scene__a1c1o1(ks::SceneManager& scene);
-    void scene__a1c1o2(ks::SceneManager& scene);
-    void scene__a1c2o1(ks::SceneManager& scene);
-    void scene__a1c2o2(ks::SceneManager& scene);
-    void scene__a1c2o3(ks::SceneManager& scene);
-    // Choice functions
-    void scene__a1_monday__gateway_effect__menu_question_0(ks::SceneManager& scene);
-    void scene__a1_monday__gateway_effect__menu_question_0_why(ks::SceneManager& scene);
-    void scene__a1_monday__gateway_effect__menu_question_0_yeah_of_course(ks::SceneManager& scene);
-    void scene__a1_monday__in_the_nursery__menu_question_0(ks::SceneManager& scene);
-    void scene__a1_monday__in_the_nursery__menu_question_0_ask_about_the_library(ks::SceneManager& scene);
-    void scene__a1_monday__in_the_nursery__menu_question_0_ask_about_shizunes_deafness(ks::SceneManager& scene);
-    void scene__a1_monday__in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know(ks::SceneManager& scene);
-    // Conditions
-    void scene__a1_monday__out_cold__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_monday__bundle_of_hisao__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_monday__gateway_effect__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_monday__enter_stage_left__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_monday__enter_stage_left__condition_0_1(ks::SceneManager& scene);
-    void scene__a1_monday__enter_stage_left__condition_1_0(ks::SceneManager& scene);
-    void scene__a1_monday__enter_stage_left__condition_1_1(ks::SceneManager& scene);
-    void scene__a1_monday__enter_stage_left__condition_2_0(ks::SceneManager& scene);
-    void scene__a1_monday__in_the_nursery__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_monday__nobodys_room__condition_0_0(ks::SceneManager& scene);
+    class ScriptA1Monday {
+        public:
+            virtual ~ScriptA1Monday() = default;
+            // Labels
+            static void scene__a1_monday__out_cold();
+            static void scene__a1_monday__bundle_of_hisao();
+            static void scene__a1_monday__gateway_effect();
+            static void scene__a1_monday__enter_stage_left();
+            static void scene__a1_monday__in_the_nursery();
+            static void scene__a1_monday__nobodys_room();
+            static void scene__a1_monday();
+            static void scene__a1c1o1(ks::SceneManager& scene);
+            static void scene__a1c1o2(ks::SceneManager& scene);
+            static void scene__a1c2o1(ks::SceneManager& scene);
+            static void scene__a1c2o2(ks::SceneManager& scene);
+            static void scene__a1c2o3(ks::SceneManager& scene);
+            // Choice functions
+            static void scene__a1_monday__gateway_effect__menu_question_0(ks::SceneManager& scene);
+            static void scene__a1_monday__gateway_effect__menu_question_0_why(ks::SceneManager& scene);
+            static void scene__a1_monday__gateway_effect__menu_question_0_yeah_of_course(ks::SceneManager& scene);
+            static void scene__a1_monday__in_the_nursery__menu_question_0(ks::SceneManager& scene);
+            static void scene__a1_monday__in_the_nursery__menu_question_0_ask_about_the_library(ks::SceneManager& scene);
+            static void scene__a1_monday__in_the_nursery__menu_question_0_ask_about_shizunes_deafness(ks::SceneManager& scene);
+            static void scene__a1_monday__in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know(ks::SceneManager& scene);
+            // Conditions
+            static void scene__a1_monday__out_cold__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_monday__bundle_of_hisao__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_monday__gateway_effect__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_monday__enter_stage_left__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_monday__enter_stage_left__condition_0_1(ks::SceneManager& scene);
+            static void scene__a1_monday__enter_stage_left__condition_1_0(ks::SceneManager& scene);
+            static void scene__a1_monday__enter_stage_left__condition_1_1(ks::SceneManager& scene);
+            static void scene__a1_monday__enter_stage_left__condition_2_0(ks::SceneManager& scene);
+            static void scene__a1_monday__in_the_nursery__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_monday__nobodys_room__condition_0_0(ks::SceneManager& scene);
+    };
 }
 
 #endif // KS_SCRIPT_A1_MONDAY

@@ -13,14 +13,18 @@
 #include "bn_music_items.h"
 #include "bn_regular_bg_items_op_snowywoods.h"
 namespace ks {
-    // Labels
-    void scene__a0_actname__scene1();
-    void scene__a0_actname();
-    void scene__a0e1(ks::SceneManager& scene);
-    // Choice functions
-    // Conditions
-    void scene__a0_actname__scene1__condition_0_0(ks::SceneManager& scene);
-    void scene__a0_actname__scene1__condition_0_1(ks::SceneManager& scene);
+    class ScriptA0Test {
+        public:
+            virtual ~ScriptA0Test() = default;
+            // Labels
+            static void scene__a0_actname__scene1();
+            static void scene__a0_actname();
+            static void scene__a0e1(ks::SceneManager& scene);
+            // Choice functions
+            // Conditions
+            static void scene__a0_actname__scene1__condition_0_0(ks::SceneManager& scene);
+            static void scene__a0_actname__scene1__condition_0_1(ks::SceneManager& scene);
+    };
 }
 
 #endif // KS_SCRIPT_A0_TEST

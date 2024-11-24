@@ -9,6 +9,7 @@ namespace ks {
 class RunLabelItem : public ks::SequenceItem {
 public:
     explicit RunLabelItem(void(*callback)(ks::SceneManager& scene));
+    // explicit RunLabelItem(void(*callback)(ks::SceneManager&));
 
     SequenceType type() const override;
     SequenceItem* clone() const override;
@@ -18,6 +19,7 @@ public:
 
 private:
     void(*_callback)(ks::SceneManager& scene);
+    // void(*_callback)(ks::SceneManager&);
 };
 
 } // namespace ks

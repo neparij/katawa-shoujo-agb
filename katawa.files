@@ -17,6 +17,7 @@ src/scenemanager.h
 src/script_a0_test.cpp
 src/script_a1_monday.cpp
 src/script_a1_tuesday.cpp
+src/scripts/script_a1_monday_ru.cpp
 src/sequence/assignmentitem.cpp
 src/sequence/backgrounditem.cpp
 src/sequence/dialogitem.cpp

@@ -31,45 +31,49 @@
 #include "bn_regular_bg_items_school_dormext_start_ss.h"
 #include "bn_regular_bg_items_school_dormext_half_ni.h"
 namespace ks {
-    // Labels
-    void scene__a1_wednesday__lunch_evolution_theory__short_sharp_shock();
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__detour_ahead();
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__sip_p1__it_builds_character();
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__sip_p1();
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute();
-    void scene__a1_wednesday__lunch_evolution_theory();
-    void scene__a1_wednesday__a_private_lunch();
-    void scene__a1_wednesday__waylay();
-    void scene__a1_wednesday__the_other_green();
-    void scene__a1_wednesday();
-    void scene__separate_of_sss_and_mc(ks::SceneManager& scene);
-    void scene__a1c6o1(ks::SceneManager& scene);
-    void scene__a1c6o2(ks::SceneManager& scene);
-    void scene__a1c6o3(ks::SceneManager& scene);
-    void scene__a1c7o1(ks::SceneManager& scene);
-    void scene__a1c7o2(ks::SceneManager& scene);
-    // Choice functions
-    void scene__a1_wednesday__lunch_evolution_theory__menu_question_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__menu_question_0_read_my_book(ks::SceneManager& scene);
-    void scene__a1_wednesday__waylay__menu_question_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__waylay__menu_question_0_yes(ks::SceneManager& scene);
-    void scene__a1_wednesday__waylay__menu_question_0_maybe(ks::SceneManager& scene);
-    // Conditions
-    void scene__a1_wednesday__lunch_evolution_theory__short_sharp_shock__condition_0__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__short_sharp_shock__condition_0__condition_0_1(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__short_sharp_shock__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__short_sharp_shock__condition_0_1(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__detour_ahead__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__detour_ahead__condition_0_1(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__sip_p1__it_builds_character__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__sip_p1__condition_0__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__sip_p1__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__condition_0__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__meet_cute__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__lunch_evolution_theory__menu_question_0__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__a_private_lunch__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__waylay__condition_0_0(ks::SceneManager& scene);
-    void scene__a1_wednesday__the_other_green__condition_0_0(ks::SceneManager& scene);
+    class ScriptA1Wednesday {
+        public:
+            virtual ~ScriptA1Wednesday() = default;
+            // Labels
+            static void scene__a1_wednesday__short_sharp_shock();
+            static void scene__a1_wednesday__detour_ahead();
+            static void scene__a1_wednesday__it_builds_character();
+            static void scene__a1_wednesday__sip_p1();
+            static void scene__a1_wednesday__meet_cute();
+            static void scene__a1_wednesday__lunch_evolution_theory();
+            static void scene__a1_wednesday__a_private_lunch();
+            static void scene__a1_wednesday__waylay();
+            static void scene__a1_wednesday__the_other_green();
+            static void scene__a1_wednesday();
+            static void scene__separate_of_sss_and_mc(ks::SceneManager& scene);
+            static void scene__a1c6o1(ks::SceneManager& scene);
+            static void scene__a1c6o2(ks::SceneManager& scene);
+            static void scene__a1c6o3(ks::SceneManager& scene);
+            static void scene__a1c7o1(ks::SceneManager& scene);
+            static void scene__a1c7o2(ks::SceneManager& scene);
+            // Choice functions
+            static void scene__a1_wednesday__lunch_evolution_theory__menu_question_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__lunch_evolution_theory__menu_question_0_read_my_book(ks::SceneManager& scene);
+            static void scene__a1_wednesday__waylay__menu_question_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__waylay__menu_question_0_yes(ks::SceneManager& scene);
+            static void scene__a1_wednesday__waylay__menu_question_0_maybe(ks::SceneManager& scene);
+            // Conditions
+            static void scene__a1_wednesday__short_sharp_shock__condition_0__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__short_sharp_shock__condition_0__condition_0_1(ks::SceneManager& scene);
+            static void scene__a1_wednesday__short_sharp_shock__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__short_sharp_shock__condition_0_1(ks::SceneManager& scene);
+            static void scene__a1_wednesday__detour_ahead__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__detour_ahead__condition_0_1(ks::SceneManager& scene);
+            static void scene__a1_wednesday__it_builds_character__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__sip_p1__condition_0__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__sip_p1__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__meet_cute__condition_0__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__meet_cute__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__lunch_evolution_theory__menu_question_0__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__a_private_lunch__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__waylay__condition_0_0(ks::SceneManager& scene);
+            static void scene__a1_wednesday__the_other_green__condition_0_0(ks::SceneManager& scene);
+    };
 }
 
 #endif // KS_SCRIPT_A1_WEDNESDAY
