@@ -82,7 +82,9 @@ namespace ks
                     _is_dirty = true;
                 }
                 if (bn::keypad::a_pressed()) {
-                    _text_render_line = _message_lines_count - 1;
+                    // The message is still rendering, but user decide to show the page immediately
+                    int page_last_line = bn::min((_text_render_page + 1) * ks::defaults::text_render_max_lines_count, _message_lines_count) - 1;
+                    _text_render_line = page_last_line;
                     _text_render_char = _messages_lengths[_text_render_line] - 1;
                     _text_render_timer.restart();
                 }
@@ -184,17 +186,13 @@ namespace ks
 
         void _set_messages(const bn::string<512>& message)
         {
-            for (auto& m : _messages)
-            {
+            for (auto& m : _messages) {
                 m.clear();
             }
 
-            // int line_width = 0;
             int line_index = 0;
-
             bn::string<128> line_buffer = "";
             bn::string<128> word_buffer = "";
-
             int line_buffer_w = 0;
             int word_buffer_w = 0;
             const int max_width = ks::device::screen_width - 10;
@@ -202,66 +200,84 @@ namespace ks
             auto utf8_message = string_to_utf8_characters(message);
 
             for (auto u8char : utf8_message) {
-                if (u8char.data() == 10) {
+                if (u8char.data() == 10) { // Handle newline
                     if (!word_buffer.empty()) {
-                        line_buffer.append(word_buffer); // Append pending word to the current line
+                        line_buffer.append(word_buffer);
+                        line_buffer_w += word_buffer_w;
                         word_buffer.clear();
                         word_buffer_w = 0;
                     }
-                    _messages[line_index] = line_buffer; // Save current line
-                    _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
-                    line_index++;
-                    line_buffer.clear();
-                    line_buffer_w = 0;
+                    if (!line_buffer.empty()) {
+                        _messages[line_index] = line_buffer;
+                        _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
+                        line_index++;
+                        line_buffer.clear();
+                        line_buffer_w = 0;
+                    }
                     continue;
                 }
 
                 int char_width = get_character_width(u8char);
-                if (u8char.data() == 32 && line_buffer_w + word_buffer_w >= max_width) {
-                    // Too much for this line. Dispose the line buffer and keep word buffer for the next line.
-                    _messages[line_index] = line_buffer;
-                    _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
-                    line_index++;
-                    line_buffer.clear();
-                    line_buffer_w = 0;
 
-                    word_buffer.append(utf8_character_to_string(u8char));
-                    word_buffer_w += char_width;
-                    if (word_buffer.length() > 0 && word_buffer.at(0) == 32) {
-                        // Remove the first white-space.
-                        word_buffer = word_buffer.substr(1, word_buffer.length() - 1);
-                        word_buffer_w -= char_width;
+                if (line_buffer_w + word_buffer_w + char_width > max_width) {
+                    if (!line_buffer.empty()) {
+                        _messages[line_index] = line_buffer;
+                        _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
+                        line_index++;
+                        line_buffer.clear();
+                        line_buffer_w = 0;
                     }
-                } else if (u8char.data() == 32) {
-                    // This is a space. We need to transfer word buffer to line, and remain the space char in word buffer.
+
+                    if (!word_buffer.empty()) {
+                        // Trim leading whitespace if it exists
+                        if (word_buffer.at(0) == 32) {
+                            word_buffer = word_buffer.substr(1, word_buffer.length() - 1);
+                            word_buffer_w -= get_character_width(bn::utf8_character(" "));
+                        }
+
+                        // Add trimmed word buffer to a new line
+                        line_buffer = word_buffer;
+                        line_buffer_w = word_buffer_w;
+                        word_buffer.clear();
+                        word_buffer_w = 0;
+                    }
+                }
+
+                if (u8char.data() == 32) { // Space character
                     line_buffer.append(word_buffer);
                     line_buffer_w += word_buffer_w;
                     word_buffer.clear();
                     word_buffer.append(utf8_character_to_string(u8char));
                     word_buffer_w = char_width;
-                } else {
-                    // This is a printable character. Just append it.
+                } else { // Regular character
                     word_buffer.append(utf8_character_to_string(u8char));
                     word_buffer_w += char_width;
                 }
             }
-            if (!word_buffer.empty()) {
-                if (line_buffer_w + word_buffer_w >= max_width) {
-                    _messages[line_index] = line_buffer;
-                    _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
-                    line_index++;
 
-                    if (word_buffer.length() > 0 && word_buffer.at(0) == 32) {
-                        // Remove the first white-space.
-                        word_buffer = word_buffer.substr(1, word_buffer.length() - 1);
+            // Append remaining buffers
+            if (!word_buffer.empty()) {
+                if (line_buffer_w + word_buffer_w > max_width) {
+                    if (!line_buffer.empty()) {
+                        _messages[line_index] = line_buffer;
+                        _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
+                        line_index++;
                     }
-                    _messages[line_index] = word_buffer;
-                    _messages_lengths[line_index] = utf8_length(word_buffer.c_str());
+                    // Trim leading whitespace in the word buffer
+                    if (word_buffer.at(0) == 32) {
+                        word_buffer = word_buffer.substr(1, word_buffer.length() - 1);
+                        word_buffer_w -= get_character_width(bn::utf8_character(" "));
+                    }
+                    line_buffer = word_buffer;
+                    line_buffer_w = word_buffer_w;
                 } else {
                     line_buffer.append(word_buffer);
-                    _messages[line_index] = line_buffer;
-                    _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
                 }
+            }
+
+            if (!line_buffer.empty()) {
+                _messages[line_index] = line_buffer;
+                _messages_lengths[line_index] = utf8_length(line_buffer.c_str());
             }
 
             _message_lines_count = line_index + 1;
@@ -275,6 +291,9 @@ namespace ks
                 index = c.data() - 32;
             } else {
                 index = _font.utf8_characters_ref().index(c);
+                if (index == -1) {
+                    BN_ERROR("Wrong char index");
+                }
             }
 
             return _font.character_widths_ref()[index];

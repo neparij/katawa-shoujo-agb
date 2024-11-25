@@ -76,12 +76,12 @@ int main()
                 if (bn::keypad::up_pressed()) {
                     select--;
                     if (select < 0) {
-                        select = 6;
+                        select = 7;
                     }
                 } else if (bn::keypad::down_pressed()) {
                     select++;
                 }
-                select = select % 7;
+                select = select % 8;
 
                 _text_sprites.clear();
 
@@ -101,6 +101,7 @@ int main()
 
                 bn::core::update();
             }
+            bn::core::update();
 
             if (select < 5) {
                 selected = true;
