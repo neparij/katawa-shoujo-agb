@@ -30,37 +30,23 @@ ADDITIONAL = [
     "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю",
     "я", "ё"
 ]
+ADDITIONAL = sorted(ADDITIONAL, key=lambda char: ord(char))
+# Print the sorted list
+print("Sorted ADDITIONAL array by UTF-8 character code:")
+formatted_output = ', '.join(f'"{char}"' for char in ADDITIONAL)
+print(f"constexpr bn::utf8_character variable_16x16_sprite_font_utf8_characters[] = {{\n    {formatted_output}\n}};")
+
 CHARACTERS = BASIC_LATIN + ''.join(ADDITIONAL)
 CHAR_WIDTHS = [str(CHAR_SPACE_WIDTH) + ",     // Space"]
 
 ImageDraw.fontmode = "1"
 
-# def draw_text_with_outline(draw, position, text, font, text_color, outline_color, outline_width=1):
-#     """
-#     Draw text with an outline or shadow.
-#     """
-#     x, y = position
-#     # Draw outline by drawing the text multiple times around the main text
-#     for dx in range(-outline_width, outline_width + 1):
-#         for dy in range(-outline_width, outline_width + 1):
-#             if dx != 0 or dy != 0:  # Skip the center
-#                 draw.text((x + dx, y + dy), text, font=font, fill=outline_color, anchor="lm")
-
-#     # Draw the main text
-#     draw.fontmode = "1"
-#     draw.text(position, text, font=font, fill=text_color, anchor="lm")
-
-#     # Calculate width
-#     char_width = math.ceil(font.getlength(text))
-
-#     if text == "\\":
-#         text = "Backslash"
-#     CHAR_WIDTHS.append(str(min(CHAR_WIDTH, char_width + 1)) + ",    // " + text)
-
 def draw_text_with_shadow(draw, position, text, font, text_color, outline_color, outline_width=1):
 
     # Calculate width
-    char_width = font.getlength(text)
+    # char_width = font.getlength(text)
+    char_bbox = font.getbbox(text)
+    char_width = char_bbox[2] - char_bbox[0]
 
     x, y = position
     # Draw shadow

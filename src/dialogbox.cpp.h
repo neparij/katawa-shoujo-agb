@@ -269,6 +269,7 @@ namespace ks
 
         constexpr int get_character_width(const bn::utf8_character& c)
         {
+            // TODO: INVESTIGATE CHARS
             int index;
             if (c.data() < 127) {
                 index = c.data() - 32;
