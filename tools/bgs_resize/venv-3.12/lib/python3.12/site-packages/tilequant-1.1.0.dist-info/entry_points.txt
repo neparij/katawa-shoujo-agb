@@ -1,0 +1,2 @@
+[console_scripts]
+tilequant = tilequant.cli:main

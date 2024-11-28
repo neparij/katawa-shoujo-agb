@@ -1,3 +1,5 @@
 include
+include/sprite_metas
 build
-../butano/butano/include
+../afska_butano/butano/include
+/opt/devkitpro/libgba/include

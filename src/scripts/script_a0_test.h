@@ -10,7 +10,6 @@
 #include "../sequence/runlabelitem.h"
 #include "../sequence/spriteitem.h"
 #include "../scenemanager.h"
-#include "bn_music_items.h"
 #include "bn_regular_bg_items_op_snowywoods.h"
 namespace ks {
     class ScriptA0Test {
@@ -19,11 +18,11 @@ namespace ks {
             // Labels
             static void a0_actname_scene1();
             static void a0_actname();
-            static void a0e1(ks::SceneManager& scene);
+            static void a0e1(const ks::SceneManager scene);
             // Choice functions
             // Conditions
-            static void a0_actname_scene1__condition_0_0(ks::SceneManager& scene);
-            static void a0_actname_scene1__condition_0_1(ks::SceneManager& scene);
+            static void a0_actname_scene1__condition_0_0(const ks::SceneManager scene);
+            static void a0_actname_scene1__condition_0_1(const ks::SceneManager scene);
     };
 }
 

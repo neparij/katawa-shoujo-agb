@@ -30,24 +30,41 @@
 #---------------------------------------------------------------------------------------------------------------------
 TARGET      	:=  $(notdir $(CURDIR))
 BUILD       	:=  build
-LIBBUTANO   	:=  ../butano/butano
+LIBBUTANO   	:=  ../afska_butano/butano
 PYTHON      	:=  python3
-SOURCES     	:=  src src/sequence src/scripts ../butano/common/src
-INCLUDES    	:=  include ../butano/common/include
-DATA        	:=
-GRAPHICS    	:=  graphics graphics/bgs graphics/event ../butano/common/graphics
-AUDIO       	:=  audio audio/bgm ../butano/common/audio
-DMGAUDIO    	:=  dmg_audio ../butano/common/dmg_audio
+SOURCES     	:=  ../butano/common/src \
+		    src \
+		    src/sequence \
+		    src/scripts \
+		    src/utils \
+		    src/utils/gbfs \
+		    src/gsmplayer \
+		    src/gsmplayer/core
+INCLUDES    	:=  include \
+					include/sprite_metas \
+					../butano/common/include
+DATA        	:=  video
+VIDEO			:=  video
+GRAPHICS    	:=  graphics \
+					graphics/bgs \
+					graphics/event \
+					graphics/characters/shizu \
+					graphics/characters/misha \
+					graphics/characters/rin \
+					graphics/video/temp_emi_imgs/converted \
+					../butano/common/graphics
+AUDIO       	:=  audio
+DMGAUDIO    	:=  dmg_audio
 ROMTITLE    	:=  KATAWASHOUJO
 ROMCODE     	:=  NPKS
-USERFLAGS   	:=  
-USERCXXFLAGS	:=  
+USERFLAGS   	:=  # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
+USERCXXFLAGS	:=  # -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections
 USERASFLAGS 	:=  
-USERLDFLAGS 	:=  
-USERLIBDIRS 	:=  
-USERLIBS    	:=  
-DEFAULTLIBS 	:=  
-STACKTRACE		:=	
+USERLDFLAGS 	:=  -Wl,--print-memory-usage #-Wl,--gc-sections -Wl,--print-memory-usage
+USERLIBDIRS 	:=  $(DEVKITPRO)/libgba
+USERLIBS    	:=  -lmm -lgba
+DEFAULTLIBS 	:=  false
+STACKTRACE	:=	
 USERBUILD   	:=  
 EXTTOOL     	:=  
 
@@ -58,7 +75,39 @@ ifndef LIBBUTANOABS
 	export LIBBUTANOABS	:=	$(realpath $(LIBBUTANO))
 endif
 
+VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
+# export OFILES_BIN := $(addsuffix .o,$(VIDEOBINFILES))
+# export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+
+
+
+
 #---------------------------------------------------------------------------------------------------------------------
 # Include main makefile:
 #---------------------------------------------------------------------------------------------------------------------
 include $(LIBBUTANOABS)/butano.mak
+# export OFILES := $(OFILES_BIN) $(OFILES)
+# export OFILES := $(OFILES_BIN) $(OFILES)
+
+#---------------------------------------------------------------------------------
+# use CXX for linking C++ projects, CC for standard C
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(CPPFILES)),)
+#---------------------------------------------------------------------------------
+	export LD	:=	$(CC)
+#---------------------------------------------------------------------------------
+else
+#---------------------------------------------------------------------------------
+	export LD	:=	$(CXX)
+#---------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------
+
+
+#---------------------------------------------------------------------------------
+# This rule links in binary data with the .bin extension
+#---------------------------------------------------------------------------------
+%.agmv.o %_agmv.h :	%.agmv
+#---------------------------------------------------------------------------------
+		@echo $(notdir $<)
+		@$(bin2o)

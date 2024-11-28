@@ -9,16 +9,16 @@ namespace ks {
 
 class MusicItem : public ks::SequenceItem {
 public:
-    explicit MusicItem(const bn::music_item& item);
-    explicit MusicItem(const bn::music_item& item, bn::fixed fade);
+    explicit MusicItem(const char* item);
+    explicit MusicItem(const char* item, bn::fixed fade);
 
     SequenceType type() const override;
     SequenceItem* clone() const override;
-    const bn::music_item& item() const;
+    const char* item() const;
     bool finished() const override;
 
 private:
-    bn::music_item _item;
+    const char* _item;
 };
 
 class MusicStopItem : public ks::SequenceItem {

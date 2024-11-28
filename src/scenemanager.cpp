@@ -1,319 +1,200 @@
 #include "scenemanager.h"
 #include "bn_music.h"
+#include "bn_regular_bg_actions.h"
+#include "bn_sprite_actions.h"
+#include "bn_blending_actions.h"
 #include "sequence/backgrounditem.h"
 #include "sequence/istartitem.h"
 #include "sequence/musicitem.h"
 #include "sequence/runlabelitem.h"
 #include "sequence/runlabelfinishitem.h"
 
+#include "utils/scenario_reader.h"
 #include "variable_16x16_sprite_font.h"
-#include "bn_music_items.h"
+
+#include "globals.h"
+
+#include <BN_LOG.h>
+// #include "bn_music_items.h"
 
 
 namespace ks {
 
-SceneManager::SceneManager(bn::optional<bn::regular_bg_ptr>& bg_ptr)
-    : _bg(bg_ptr)
-{
-    _text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
-    _dialog = new ks::DialogBox(_text_generator, variable_16x16_sprite_font);
+bn::optional<bn::regular_bg_ptr> main_background;
+bn::optional<bn::regular_bg_ptr> secondary_background;
+bn::vector<character_visuals_ptr, 4> character_visuals;
+bn::vector<bn::optional<bn::sprite_palette_ptr>, 2> character_palettes;
 
-    hold_iterator();
+ks::DialogBox* dialog;
+
+void SceneManager::reset() {
+    while (character_visuals.size() < character_visuals.max_size()) {
+        character_visuals.push_back(character_visuals_ptr());
+    }
+    while (character_palettes.size() < character_palettes.max_size()) {
+        character_palettes.push_back(bn::optional<bn::sprite_palette_ptr>());
+    }
+    for (auto visual : character_visuals) {
+        visual.background.reset();
+        visual.sprite.reset();
+        // visual.sprite_palette.reset();
+    }
+
+    // character_visuals.clear();
 }
 
-// SceneManager::~SceneManager() {
-//     for (auto iterator : _iterators) {
-//         for (auto* sequence : iterator) {
-//             delete sequence;
-//         }
-//     }
-//     _iterators.clear();
-//     _label_statuses.clear();
+void SceneManager::set_background(const bn::regular_bg_item& bg) {
+    // TODO: rewrite to support "scene" token
+    // temporaly hide chars
+    // for (auto visual : character_visuals) {
+    //     visual.background.reset();
+    //     visual.sprite.reset();
+    // }
+    for (int i = 0; i < character_visuals.size(); i++) {
+        hide_character(i, false);
+    }
 
-//     delete _dialog;
-//     delete _text_generator;
-// }
+    main_background.reset();
+    main_background = bg.create_bg(0, 0);
+    main_background->set_z_order(10);
 
-SceneManager::~SceneManager() {
-    // Delete all sequences in all iterators:
-    for (auto iterator : _iterators) {
-        for (auto* sequence : iterator) {
-            delete sequence;
+    ks::globals::main_update();
+}
+
+void SceneManager::show_dialog(const ks::SceneManager* scene, bn::string<16> actor, int tl_key) {
+    auto message = ks::scenario::gbfs_reader::get_tl(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
+    dialog->show(actor, message);
+    while (!dialog->is_finished()) {
+        dialog->update();
+        ks::globals::main_update();
+    }
+}
+
+void SceneManager::show_character(const int character_index,
+                                  const bn::regular_bg_item& bg,
+                                  const bn::sprite_item& sprite,
+                                  const ks::character_sprite_meta& sprite_meta,
+                                  const int position_x,
+                                  const int position_y,
+                                  const bool position_change) {
+    bool was_shown_before = character_visuals.at(character_index).background.has_value();
+    if (position_change && !was_shown_before) {
+        character_visuals.at(character_index).position_x = position_x;
+        character_visuals.at(character_index).position_y = position_y;
+    }
+    if (!was_shown_before) {
+        dialog->hide_blend();
+    }
+
+    character_visuals.at(character_index).background.reset();
+    character_visuals.at(character_index).background = bg.create_bg(character_visuals.at(character_index).position_x,
+                                                                    character_visuals.at(character_index).position_y);
+    character_visuals.at(character_index).background->set_z_order(0);
+
+    character_visuals.at(character_index).sprite.reset();
+    character_visuals.at(character_index).sprite = sprite.create_sprite(character_visuals.at(character_index).position_x + sprite_meta.offset_x,
+                                                                        character_visuals.at(character_index).position_y + sprite_meta.offset_y);
+    character_visuals.at(character_index).offset_x = sprite_meta.offset_x;
+    character_visuals.at(character_index).offset_y = sprite_meta.offset_y;
+    character_visuals.at(character_index).sprite->set_z_order(-5);
+
+    if (!was_shown_before) {
+        bn::blending::set_transparency_alpha(0);
+        auto spr_alpha_action = bn::blending_transparency_alpha_to_action(20, 1);
+        character_visuals.at(character_index).sprite->set_blending_enabled(true);
+        character_visuals.at(character_index).background->set_blending_enabled(true);
+        while (!spr_alpha_action.done()) {
+            spr_alpha_action.update();
+
+            ks::globals::main_update();
         }
-    }
-    _iterators.clear();
-
-    // Clear label statuses
-    _label_statuses.clear();
-
-    // Delete current sequence if not already part of iterators
-    if (_current_sequence) {
-        delete _current_sequence;
-        _current_sequence = nullptr;
+        character_visuals.at(character_index).sprite->set_blending_enabled(false);
+        character_visuals.at(character_index).background->set_blending_enabled(false);
+        spr_alpha_action.reset();
     }
 
-    // Delete dialog and text generator
-    delete _dialog;
-    _dialog = nullptr;
+    ks::globals::main_update();
 
-    delete _text_generator;
-    _text_generator = nullptr;
-}
-
-
-void SceneManager::hold_iterator() {
-    auto iterator = bn::vector<ks::SequenceItem*, ks::system::interator_size>();
-    _iterators.push_back(iterator);
-};
-
-// void SceneManager::release_iterator() {
-//     _iterators.pop_back();
-// };
-
-void SceneManager::release_iterator() {
-    if (!_iterators.empty()) {
-        auto& current_iterator = _iterators.back();
-
-        // Delete all sequences in the iterator:
-        for (auto* sequence : current_iterator) {
-            delete sequence;  // Free allocated memory
-        }
-
-        current_iterator.clear();  // Clear the iterator contents
-        _iterators.pop_back();     // Remove the iterator itself
-    }
-}
-
-// void SceneManager::add_sequence(const ks::SequenceItem& item) {
-//     auto& current_iterator = _iterators.back();
-//     current_iterator.insert(current_iterator.begin(), item.clone());
-// }
-void SceneManager::add_sequence(const ks::SequenceItem& item) {
-    if (!_iterators.empty()) {
-        auto& current_iterator = _iterators.back();
-        current_iterator.insert(current_iterator.begin(), item.clone());
-    }
-}
-
-void SceneManager::start() {
-    processNext();
-}
-
-void SceneManager::update() {
-    _dialog->update();
-    processNext();
-}
-
-bool SceneManager::is_label_finished(int label_id) {
-    // return _label_statuses.at(label_id);
-    return true;
-}
-
-void SceneManager::finish_label(int label_id) {
-    // _label_statuses.at(label_id) = true;
-}
-
-void SceneManager::processNext() {
-    while (!_iterators.empty()) {
-        auto& current_iterator = _iterators.back();
-
-        // If the current sequence is finished or nullptr, move to the next sequence:
-        if (_current_sequence == nullptr || _current_sequence->finished()) {
-            if (!current_iterator.empty()) {
-                delete _current_sequence;  // Free the finished sequence
-                _current_sequence = current_iterator.back();
-                current_iterator.pop_back();
-
-                // Process the current sequence as before:
-                if (_current_sequence->type() == ks::SequenceType::RunLabel) {
-                    auto* run_label_item = static_cast<ks::RunLabelItem*>(_current_sequence);
-                    hold_iterator();
-                    run_label_item->run(*this);
-                } else if (_current_sequence->type() == ks::SequenceType::Dialog) {
-                    auto* dialog_item = static_cast<ks::DialogItem*>(_current_sequence);
-                    _dialog->show(dialog_item);
-                } else if (_current_sequence->type() == ks::SequenceType::Music) {
-                    auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-                    music_item->item().play(1.0);
-                } else if (_current_sequence->type() == ks::SequenceType::MusicStop) {
-                    auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-                    if (bn::music::playing()) {
-                        bn::music::stop();
-                    }
-                } else if (_current_sequence->type() == ks::SequenceType::MusicNotFound) {
-                    auto* music_not_found = static_cast<ks::MusicNotFoundItem*>(_current_sequence);
-                    if (bn::music::playing()) {
-                        bn::music::stop();
-                    }
-                    bn::music::play(bn::music_items::not_found, 1.0, false);
-                } else if (_current_sequence->type() == ks::SequenceType::Background) {
-                    auto* background_item = static_cast<ks::BackgroundItem*>(_current_sequence);
-                    _bg.reset();
-                    _bg = background_item->item().create_bg(0, 0);
-                }
-
-                // If the current sequence is finished, reset it:
-                if (_current_sequence->finished()) {
-                    _current_sequence = nullptr;
-                }
-            } else {
-                // If the current iterator is empty, release it:
-                release_iterator();
-            }
-        } else {
-            break;  // Stop if the current sequence is not finished
-        }
+    if (position_change && was_shown_before) {
+        set_character_position(character_index, position_x, position_y);
     }
 
-    // Finish if no iterators are left:
-    if (_iterators.empty()) {
-        finish();
+}
+
+void SceneManager::show_character(const int character_index,
+                                  const bn::regular_bg_item& bg,
+                                  const bn::sprite_item& sprite,
+                                  const ks::character_sprite_meta& sprite_meta,
+                                  const int position_x,
+                                  const int position_y) {
+    show_character(character_index, bg, sprite, sprite_meta, position_x, position_y, true);
+}
+
+void SceneManager::show_character(const int character_index,
+                                  const bn::regular_bg_item& bg,
+                                  const bn::sprite_item& sprite,
+                                  const ks::character_sprite_meta& sprite_meta) {
+    show_character(character_index, bg, sprite, sprite_meta, 0, 0, false);
+}
+
+void SceneManager::set_character_position(const int character_index,
+                                          const int position_x,
+                                          const int position_y) {
+    character_visuals.at(character_index).position_x = position_x;
+    character_visuals.at(character_index).position_y = position_y;
+
+    character_visuals.at(character_index).bg_move_action = bn::regular_bg_move_to_action(character_visuals.at(character_index).background.value(),
+                                                                                      20,
+                                                                                      position_x,
+                                                                                      position_y);
+    character_visuals.at(character_index).spr_move_action = bn::sprite_move_to_action(character_visuals.at(character_index).sprite.value(),
+                                                                                      20,
+                                                                                      position_x + character_visuals.at(character_index).offset_x,
+                                                                                      position_y + character_visuals.at(character_index).offset_y);
+
+    while (!character_visuals.at(character_index).bg_move_action->done() &&
+           !character_visuals.at(character_index).spr_move_action->done()) {
+        character_visuals.at(character_index).bg_move_action->update();
+        character_visuals.at(character_index).spr_move_action->update();
+        ks::globals::main_update();
+    }
+    character_visuals.at(character_index).bg_move_action.reset();
+    character_visuals.at(character_index).spr_move_action.reset();
+}
+
+void SceneManager::hide_character(const int character_index, const bool need_update) {
+    // delete character_visuals.at(character_index).sprite_item_ptr;
+    character_visuals.at(character_index).background.reset();
+    character_visuals.at(character_index).sprite.reset();
+    character_visuals.at(character_index).position_x = 0;
+    character_visuals.at(character_index).position_y = 0;
+    // delete &character_visuals.at(character_index).background_item_ptr;
+    if (need_update) {
+        ks::globals::main_update();
     }
 }
 
-// void SceneManager::processNext() {
-//     if (_iterators.empty()) {
-//         finish();
-//         return;
-//     }
+void SceneManager::hide_character(const int character_index) {
+    hide_character(character_index, true);
+}
 
-//     auto& current_iterator = _iterators.back();
+void SceneManager::music_play(const char* filename) {
+    music_play(filename, 0);
+}
 
-//     // If _current_sequence is finished or nullptr, process the next item:
-//     if (_current_sequence == nullptr || _current_sequence->finished()) {
-//         if (!current_iterator.empty()) {
-//             _current_sequence = current_iterator.back();
-//             current_iterator.pop_back(); // Remove the item after assigning to _current_sequence
+void SceneManager::music_play(const char* filename, bn::fixed fade) {
+    if (player_isPlaying()) {
+        player_stop();
+    }
+    player_playGSM(filename);
+    player_setLoop(true);
+    ks::globals::main_update();
+}
 
-//             // Process the sequence based on its type:
-//             if (_current_sequence->type() == ks::SequenceType::RunLabel) {
-//                 auto* run_label_item = static_cast<ks::RunLabelItem*>(_current_sequence);
-//                 hold_iterator();
-//                 run_label_item->run(*this);
-//             } else if (_current_sequence->type() == ks::SequenceType::Dialog) {
-//                 auto* dialog_item = static_cast<ks::DialogItem*>(_current_sequence);
-//                 _dialog->show(dialog_item);
-//             } else if (_current_sequence->type() == ks::SequenceType::Music) {
-//                 auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-//                 music_item->item().play(1.0);
-//             } else if (_current_sequence->type() == ks::SequenceType::MusicStop) {
-//                 auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-//                 if (bn::music::playing()) {
-//                     bn::music::stop();
-//                 }
-//             } else if (_current_sequence->type() == ks::SequenceType::Background) {
-//                 auto* background_item = static_cast<ks::BackgroundItem*>(_current_sequence);
-//                 _bg.reset();
-//                 _bg = background_item->item().create_bg(0, 0);
-//             }
-
-//             // Reset _current_sequence after processing:
-//             if (_current_sequence->finished()) {
-//                 _current_sequence = nullptr;
-//             }
-
-//         } else {
-//             release_iterator();
-//             processNext();
-//         }
-//     }
-// }
-
-// void SceneManager::processNext() {
-//     if (_iterators.empty()) {
-//         finish();
-//         return;
-//     }
-
-//     auto& current_iterator = _iterators.back();
-
-//     // If _current_sequence is finished or nullptr, process the next item:
-//     if (_current_sequence == nullptr || _current_sequence->finished()) {
-//         if (!current_iterator.empty()) {
-//             _current_sequence = current_iterator.back();
-//             current_iterator.pop_back(); // Remove the item after assigning to _current_sequence
-
-//             // Process the sequence based on its type:
-//             if (_current_sequence->type() == ks::SequenceType::RunLabel) {
-//                 auto* run_label_item = static_cast<ks::RunLabelItem*>(_current_sequence);
-//                 hold_iterator();
-//                 run_label_item->run(*this);
-//             } else if (_current_sequence->type() == ks::SequenceType::Dialog) {
-//                 auto* dialog_item = static_cast<ks::DialogItem*>(_current_sequence);
-//                 _dialog->show(dialog_item);
-//             } else if (_current_sequence->type() == ks::SequenceType::Music) {
-//                 auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-//                 music_item->item().play(1.0);
-//             } else if (_current_sequence->type() == ks::SequenceType::MusicStop) {
-//                 auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-//                 if (bn::music::playing()) {
-//                     bn::music::stop();
-//                 }
-//             } else if (_current_sequence->type() == ks::SequenceType::Background) {
-//                 auto* background_item = static_cast<ks::BackgroundItem*>(_current_sequence);
-//                 _bg.reset();
-//                 _bg = background_item->item().create_bg(0, 0);
-//             }
-
-//             // Reset _current_sequence after processing:
-//             // if (_current_sequence->finished()) {
-//                 // release_iterator();
-//                 // _current_sequence = nullptr;
-//             // }
-
-//         } else {
-//             release_iterator();
-//             processNext();
-//         }
-//     }
-// }
-
-// Possible that would works
-// void SceneManager::processNext() {
-//     while (!_iterators.empty()) {
-//         auto& current_iterator = _iterators.back();
-
-//         if (_current_sequence == nullptr || _current_sequence->finished()) {
-//             if (!current_iterator.empty()) {
-//                 _current_sequence = current_iterator.back();
-//                 current_iterator.pop_back();
-
-//                 // Process the sequence as before...
-//                 if (_current_sequence->type() == ks::SequenceType::RunLabel) {
-//                     auto* run_label_item = static_cast<ks::RunLabelItem*>(_current_sequence);
-//                     hold_iterator();
-//                     run_label_item->run(*this);
-//                 } else if (_current_sequence->type() == ks::SequenceType::Dialog) {
-//                     auto* dialog_item = static_cast<ks::DialogItem*>(_current_sequence);
-//                     _dialog->show(dialog_item);
-//                 } else if (_current_sequence->type() == ks::SequenceType::Music) {
-//                     auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-//                     music_item->item().play(1.0);
-//                 } else if (_current_sequence->type() == ks::SequenceType::MusicStop) {
-//                     auto* music_item = static_cast<ks::MusicItem*>(_current_sequence);
-//                     if (bn::music::playing()) {
-//                         bn::music::stop();
-//                     }
-//                 } else if (_current_sequence->type() == ks::SequenceType::Background) {
-//                     auto* background_item = static_cast<ks::BackgroundItem*>(_current_sequence);
-//                     _bg.reset();
-//                     _bg = background_item->item().create_bg(0, 0);
-//                 }
-
-//                 if (_current_sequence->finished()) {
-//                     _current_sequence = nullptr;
-//                 }
-//             } else {
-//                 release_iterator();
-//             }
-//         } else {
-//             break;  // Stop processing if current sequence is not finished
-//         }
-//     }
-
-//     if (_iterators.empty()) {
-//         finish();
-//     }
-// }
+void SceneManager::music_stop() {
+    if (player_isPlaying()) {
+        player_stop();
+    }
+}
 
 } // namespace ks

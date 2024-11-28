@@ -21,7 +21,7 @@ public:
 
 private:
     bn::string<16> _title;
-    bn::string<512> _message;
+    bn::string<8> _message;
     bool _finished = false;
 };
 

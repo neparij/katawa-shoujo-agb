@@ -8,6 +8,7 @@ src/dialogitem.cpp.h
 src/dynamicvector.cpp
 src/globals.cpp
 src/globals.h
+src/gsm_player.h
 src/main.cpp
 src/menuitem.cpp.h
 src/musicitem.cpp.h
@@ -30,4 +31,10 @@ src/sequence/runlabelfinishitem.h
 src/sequence/runlabelitem.cpp
 src/sequence/spriteitem.cpp
 src/sequenceitem.cpp
+src/sprite_meta.h
 src/spriteitem.cpp.h
+src/utils/gbfs_scenario_tl.cpp
+src/utils/gbfs_scenario_tl.h
+src/utils/main_updates.cpp.h
+src/utils/scenario_reader.h
+src/vidtest.cpp.h

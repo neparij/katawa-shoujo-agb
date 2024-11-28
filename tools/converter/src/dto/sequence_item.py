@@ -12,6 +12,7 @@ class SequenceType(Enum):
     RETURN = "return"
     RUN_LABEL = "run_label"
     SHOW = "show"
+    HIDE = "hide"
 
 
 class SequenceItem(ABC):
