@@ -1,9 +1,13 @@
 import argparse
 import os
+from time import sleep
+from typing import List
 
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
 from src.translation_reader import TranslationReader
+from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSprite, CharacterSpritesGroup, \
+    CharacterSpritesWriter
 
 
 def main():
@@ -32,6 +36,23 @@ def main():
         help="Translation key (de, es, fr, ru, zh_hans)"
     )
 
+    character_sprites_parser = subparsers.add_parser("character-sprites", help="Character sprites converter")
+    character_sprites_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to KS:RE sources"
+    )
+    character_sprites_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources"
+    )
+    character_sprites_parser.add_argument(
+        "--character",
+        required=False,
+        help="Character sprites directory name (i.e. \"rinpan\")",
+    )
+
     args = parser.parse_args()
 
     if args.command == "script":
@@ -43,6 +64,7 @@ def main():
         rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
         rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, f"{script_name}.rpy") if locale else None
         gba_scripts_path = os.path.join(ksagb_path, "src", "scripts")
+        gbfs_path = os.path.join(ksagb_path, "gbfs_files")
         output_file = script_name.replace("-", "_")
 
         tl = None
@@ -56,9 +78,33 @@ def main():
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, gba_scripts_path, scenario, locale)
+        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, scenario, locale)
+        # writer.clean()
         writer.write()
-        pass
+        exit(0)
+
+    if args.command == "character-sprites":
+        ksre_path = args.source
+        ksagb_path = args.outdir
+
+        ksre_character_sprites_path = os.path.join(ksre_path, "game", "sprites")
+
+        print(f"Processing character sprites: {ksre_character_sprites_path}")
+        reader = CharacterSpritesReader(ksre_character_sprites_path)
+        character_sprites_groups: List[CharacterSpritesGroup] = []
+        if not args.character:
+            character_sprites_groups = reader.process_all()
+        elif args.character == "shizu":
+            character_sprites_groups = reader.process_shizu()
+
+        group_counter = 1
+        for group in character_sprites_groups:
+            print(f"{group_counter}/{len(character_sprites_groups)} - Processing character group: {group}")
+            writer = CharacterSpritesWriter(os.path.join(ksagb_path, "graphics", "characters", group.character_name),
+                                            os.path.join(ksagb_path, "include", "sprite_metas"))
+            writer.write(group)
+            group_counter += 1
+        exit(0)
 
 if __name__ == "__main__":
     main()

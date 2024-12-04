@@ -6,11 +6,12 @@ from src.dto.assignment_item import AssignmentItem
 from src.dto.background_item import BackgroundItem
 from src.dto.condition_item import ConditionItem
 from src.dto.dialog_item import DialogItem
+from src.dto.hide_item import HideEvent, HideItem
 from src.dto.menu_item import MenuItem
 from src.dto.music_item import MusicItem, MusicAction, MusicEffect
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
-from src.dto.show_item import ShowEvent, ShowItem
+from src.dto.show_item import ShowEvent, ShowItem, ShowPosition
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
@@ -104,6 +105,7 @@ class ScenarioReader:
         for line, current_indent in line_pack:
            self.process_line(line, current_indent)
         line_pack.clear()
+        # TODO: process show sequence with "at" clause here!
 
     def process_line(self, line, current_indent):
         stripped_line = line.strip()
@@ -206,6 +208,9 @@ class ScenarioReader:
         elif stripped_line.startswith("scene bg"):
             parts = stripped_line.split()
             scene_bg_name = parts[2]
+            if scene_bg_name.endswith("mural_start"):
+                # TODO: add missing backgrounds
+                return
             self.stack.current().add_sequence_item(BackgroundItem(scene_bg_name))
             return
 
@@ -239,9 +244,38 @@ class ScenarioReader:
         elif stripped_line.startswith("show "):
             parts = stripped_line.split()
             sprite_name = parts[1]
+            variant_name = parts[2].removesuffix(":") if len(parts) > 2 and parts[2] not in ["at", "with"] else None
 
             event_type = ShowEvent.CHARACTER_CHANGE if "with charachange" in stripped_line else ShowEvent.NONE
-            self.stack.current().add_sequence_item(ShowItem(sprite_name, event_type))
+
+            if "at twoleft" in stripped_line:
+                position = ShowPosition.TWOLEFT
+            elif "at tworight" in stripped_line:
+                position = ShowPosition.TWORIGHT
+            elif "at closeleft" in stripped_line:
+                position = ShowPosition.CLOSELEFT
+            elif "at closeright" in stripped_line:
+                position = ShowPosition.CLOSERIGHT
+            elif "at offscreenleft" in stripped_line:
+                position = ShowPosition.OFFSCREENLEFT
+            elif "at offscreenright" in stripped_line:
+                position = ShowPosition.OFFSCREENRIGHT
+            elif "at left" in stripped_line:
+                position = ShowPosition.LEFT
+            elif "at right" in stripped_line:
+                position = ShowPosition.RIGHT
+            else:
+                position = ShowPosition.DEFAULT
+
+            self.stack.current().add_sequence_item(ShowItem(sprite_name, variant_name, event_type, position))
+            return
+
+        elif stripped_line.startswith("hide "):
+            parts = stripped_line.split()
+            sprite_name = parts[1]
+
+            event_type = HideEvent.CHARACTER_EXIT if "with charaexit" in stripped_line else HideEvent.NONE
+            self.stack.current().add_sequence_item(HideItem(sprite_name, event_type))
             return
 
         elif stripped_line.startswith("nvl "):
@@ -261,8 +295,8 @@ class ScenarioReader:
 
             dialog_hash = self.calculate_tl_hash(hashing_contents)
 
-            dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"$", stripped_line)
-            dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"$", stripped_line)
+            dialog_match_str = re.match(r"^\"(.+)\"\s+\"(.*)\"$", stripped_line)
+            dialog_match_ref = re.match(r"^(.+)\s+\"(.*)\"$", stripped_line)
             narration_match = re.match(r"^\"(.*)\"$", stripped_line)
 
             if dialog_match_str or dialog_match_ref or narration_match:
@@ -275,13 +309,13 @@ class ScenarioReader:
             if dialog_match_str:
                 actor, dialog = dialog_match_str.groups()
                 self.stack.current().add_sequence_item(
-                    DialogItem(dialog_hash, actor, dialog.strip()))
+                    DialogItem(dialog_hash, actor, dialog.strip().replace("\\n", "\n")))
             elif dialog_match_ref:
                 actor, dialog = dialog_match_ref.groups()
                 self.stack.current().add_sequence_item(
-                    DialogItem(dialog_hash, "", dialog.strip(), actor))
+                    DialogItem(dialog_hash, "", dialog.strip().replace("\\n", "\n"), actor))
             elif narration_match:
                 narration = narration_match.group(1)
                 self.stack.current().add_sequence_item(
-                    DialogItem(dialog_hash, "", narration.strip()))
+                    DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n")))
             return

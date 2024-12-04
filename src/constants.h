@@ -12,7 +12,8 @@ namespace ks
 
 
     namespace defaults {
-        const int text_render_char_ticks = 10000;
+        const int text_render_char_ticks = 15000;
+        const int text_render_skip_ticks = 10000;
         const int text_render_max_lines_count = 3;
     } // namespace defaults
 

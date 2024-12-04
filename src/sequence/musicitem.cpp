@@ -3,10 +3,10 @@
 namespace ks {
 
 // MusicItem implementation
-MusicItem::MusicItem(const bn::music_item& item)
+MusicItem::MusicItem(const char* item)
     : _item(item) {}
 
-MusicItem::MusicItem(const bn::music_item& item, bn::fixed fade)
+MusicItem::MusicItem(const char* item, bn::fixed fade)
     : _item(item) {}
 
 SequenceType MusicItem::type() const {
@@ -17,7 +17,7 @@ SequenceItem* MusicItem::clone() const {
     return new MusicItem(*this);
 }
 
-const bn::music_item& MusicItem::item() const {
+const char* MusicItem::item() const {
     return _item;
 }
 
