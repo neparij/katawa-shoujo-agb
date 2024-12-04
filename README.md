@@ -2,8 +2,10 @@
 
 A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano framework](https://github.com/GValiente/butano). Includes Python tools to convert assets and scripts from the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
 
-![Katawa Shoujo - Game Boy Advance Port (screenshot)](site/agb-ks-screenshot.png)
+![Katawa Shoujo - Game Boy Advance Port (event screenshot)](site/agb-ks-screenshot-1.png)
 
+![Katawa Shoujo - Game Boy Advance Port (dialog screenshot - en)](site/agb-ks-screenshot-2-en.png)
+![Katawa Shoujo - Game Boy Advance Port (dialog screenshot - ru)](site/agb-ks-screenshot-2-ru.png)
 ---
 
 ## Features
@@ -22,7 +24,8 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano fra
      sudo dkp-pacman -S devkitARM
      ```
    - Verify: `arm-none-eabi-gcc --version`
-2. **Python 3.9+** for tools.
+2. **Python 3.12** for tools.
+3. **Butano** [afska's fork](https://github.com/afska/butano)
 
 ---
 
@@ -40,7 +43,10 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano fra
 
 - **[Four Leaf Studios](https://www.katawa-shoujo.com)** for creating *Katawa Shoujo*.
 - **[Butano Framework](https://github.com/GValiente/butano)** by GValiente for the GBA development framework.
-- **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** for the great adaptation Katana Shoujo to the modern Ren'Py engine.
+- **[afska](https://github.com/afska)** for GSM Player integration for Butano
+- **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
+- **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the video player.
+- **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** by **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katana Shoujo to the modern Ren'Py engine.
 
 ---
 
