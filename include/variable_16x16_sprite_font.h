@@ -17,7 +17,7 @@ constexpr bn::utf8_character variable_16x16_sprite_font_utf8_characters[] = {
 constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     6,     // Space
     4,    // !
-    5,    // "
+    6,    // "
     8,    // #
     8,    // $
     10,    // %
@@ -35,12 +35,12 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     5,    // 1
     8,    // 2
     8,    // 3
-    9,    // 4
+    8,    // 4
     8,    // 5
-    8,    // 6
+    7,    // 6
     8,    // 7
     8,    // 8
-    8,    // 9
+    9,    // 9
     4,    // :
     4,    // ;
     8,    // <
@@ -54,16 +54,16 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     9,    // D
     7,    // E
     7,    // F
-    9,    // G
+    10,    // G
     9,    // H
     4,    // I
-    6,    // J
+    7,    // J
     8,    // K
     6,    // L
     11,    // M
     8,    // N
     9,    // O
-    8,    // P
+    7,    // P
     10,    // Q
     8,    // R
     8,    // S
@@ -76,11 +76,11 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     8,    // Z
     5,    // [
     7,    // Backslash
-    5,    // ]
+    4,    // ]
     8,    // ^
     7,    // _
     4,    // `
-    6,    // a
+    7,    // a
     7,    // b
     6,    // c
     7,    // d
@@ -88,10 +88,10 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     6,    // f
     7,    // g
     6,    // h
-    3,    // i
+    4,    // i
     6,    // j
     7,    // k
-    3,    // l
+    4,    // l
     9,    // m
     6,    // n
     7,    // o
@@ -100,14 +100,14 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     6,    // r
     6,    // s
     7,    // t
-    6,    // u
+    7,    // u
     6,    // v
     8,    // w
     6,    // x
     7,    // y
     6,    // z
     5,    // {
-    5,    // |
+    4,    // |
     5,    // }
     6,    // ~
     4,    // ¡
@@ -117,7 +117,7 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     9,    // Á
     7,    // É
     4,    // Í
-    9,    // Ñ
+    8,    // Ñ
     9,    // Ó
     8,    // Ú
     8,    // Ü
@@ -126,8 +126,8 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     4,    // í
     6,    // ñ
     7,    // ó
-    6,    // ú
-    6,    // ü
+    7,    // ú
+    7,    // ü
     7,    // Ё
     9,    // А
     8,    // Б
@@ -135,7 +135,7 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     7,    // Г
     9,    // Д
     7,    // Е
-    13,    // Ж
+    12,    // Ж
     8,    // З
     8,    // И
     8,    // Й
@@ -145,32 +145,32 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     9,    // Н
     9,    // О
     8,    // П
-    8,    // Р
+    7,    // Р
     9,    // С
     8,    // Т
     8,    // У
     12,    // Ф
     10,    // Х
-    9,    // Ц
-    8,    // Ч
-    12,    // Ш
+    8,    // Ц
+    7,    // Ч
+    11,    // Ш
     13,    // Щ
     10,    // Ъ
     10,    // Ы
     8,    // Ь
     8,    // Э
     12,    // Ю
-    8,    // Я
-    6,    // а
-    6,    // б
-    6,    // в
+    7,    // Я
+    7,    // а
+    7,    // б
+    7,    // в
     6,    // г
     7,    // д
     7,    // е
     10,    // ж
     7,    // з
-    6,    // и
-    6,    // й
+    7,    // и
+    7,    // й
     7,    // к
     6,    // л
     8,    // м
@@ -184,7 +184,7 @@ constexpr int8_t variable_16x16_sprite_font_character_widths[] = {
     10,    // ф
     6,    // х
     7,    // ц
-    6,    // ч
+    7,    // ч
     9,    // ш
     10,    // щ
     8,    // ъ

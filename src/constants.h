@@ -12,9 +12,11 @@ namespace ks
 
 
     namespace defaults {
-        const int text_render_char_ticks = 15000;
+        const int text_render_char_ticks = 13000;
         const int text_render_skip_ticks = 10000;
         const int text_render_max_lines_count = 3;
+        const double answer_camera_duration_multiplier = 1.3;
+        const int answer_camera_bounds_pause_count = 70;
     } // namespace defaults
 
     namespace system {

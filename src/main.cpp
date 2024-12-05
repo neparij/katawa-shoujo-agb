@@ -282,7 +282,7 @@ int main()
             // ks::globals::main_update();
         }
 
-        ks::SceneManager::reset();
+        ks::SceneManager::free_resources();
         ks::main_background.reset();
         ks::secondary_background.reset();
         ks::dialog->reset();

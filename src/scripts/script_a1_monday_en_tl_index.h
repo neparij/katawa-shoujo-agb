@@ -492,24 +492,29 @@ constexpr unsigned int script_a1_monday_en_intl[] = {
     0x9F4E, // Misha positively beams, and so does Shizune after a quick translation.
     0x9F95, // I shake my head at their somewhat exaggerated enthusiasm, and shift my focus on the food.
     0x9FEF, // Do you want to introduce yourself to the class?
-    0xA01F, // Hmm, I wonder…
-    0xA030, // A collective silence tells me that I should open my mouth now.
-    0xA06F, // So… I'm Hisao Nakai.
-    0xA086, // And after that?
-    0xA096, // My hobbies are reading and soccer. I hope to get along well with everyone even though I'm a new student.
-    0xA0FF, // I'm being so boring. This is exactly like every self-introduction ever. I should say something more. Something more exciting.
-    0xA17D, // I end up saying nothing, and the teacher picks up from there.
-    0xA1BB, // Everyone seems to be satisfied even with what little I said, though. A few girls are whispering to each other, throwing glances at me. It could've gone worse.
-    0xA25A, // After the applause, there is a brief silence that nobody seems to want to be responsible for breaking.
-    0xA2C1, // The teacher soon realizes that he should probably say something. He opens up with some unintelligible noise, shuts up as he loses his momentum, and then starts introducing me.
-    0xA371, // Nobody seems to be too interested.
-    0xA394, // Maybe I should've said yes to the self-introduction thing.
-    0xA3CF, // Probably realizing he doesn't know anything about me, he just ends up saying my name wrong again, and asks me to write it on the blackboard.
-    0xA45C, // I do that, and turn back to face the class, feeling awkward.
-    0xA499, // He seems like a very interesting person, doesn't he~!
-    0xA4CF, // Misha looks at me with a weird expression, then continues.
-    0xA50A, // We don't know much about him, but maybe we'll find out later.
-    0xA548, // Maybe I should've introduced myself after all. Anything would've given a better first impression than the teacher's drone and fumbling with my name.
+    0xA01F, // Why?
+    0xA024, // Yeah, of course.
+    0xA035, // Hmm, I wonder…
+    0xA046, // Ask about the library.
+    0xA05D, // Ask about Shizune's deafness.
+    0xA07B, // I think I got everything I need to know.
+    0xA0A4, // A collective silence tells me that I should open my mouth now.
+    0xA0E3, // So… I'm Hisao Nakai.
+    0xA0FA, // And after that?
+    0xA10A, // My hobbies are reading and soccer. I hope to get along well with everyone even though I'm a new student.
+    0xA173, // I'm being so boring. This is exactly like every self-introduction ever. I should say something more. Something more exciting.
+    0xA1F1, // I end up saying nothing, and the teacher picks up from there.
+    0xA22F, // Everyone seems to be satisfied even with what little I said, though. A few girls are whispering to each other, throwing glances at me. It could've gone worse.
+    0xA2CE, // After the applause, there is a brief silence that nobody seems to want to be responsible for breaking.
+    0xA335, // The teacher soon realizes that he should probably say something. He opens up with some unintelligible noise, shuts up as he loses his momentum, and then starts introducing me.
+    0xA3E5, // Nobody seems to be too interested.
+    0xA408, // Maybe I should've said yes to the self-introduction thing.
+    0xA443, // Probably realizing he doesn't know anything about me, he just ends up saying my name wrong again, and asks me to write it on the blackboard.
+    0xA4D0, // I do that, and turn back to face the class, feeling awkward.
+    0xA50D, // He seems like a very interesting person, doesn't he~!
+    0xA543, // Misha looks at me with a weird expression, then continues.
+    0xA57E, // We don't know much about him, but maybe we'll find out later.
+    0xA5BC, // Maybe I should've introduced myself after all. Anything would've given a better first impression than the teacher's drone and fumbling with my name.
 };
 
 #endif // KS_SCRIPT_A1_MONDAY_EN_TL_INDEX

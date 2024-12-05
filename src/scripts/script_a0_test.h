@@ -18,11 +18,11 @@ namespace ks {
             // Labels
             static void a0_actname_scene1();
             static void a0_actname();
-            static void a0e1(const ks::SceneManager scene);
+            static void a0e1();
             // Choice functions
             // Conditions
-            static void a0_actname_scene1__condition_0_0(const ks::SceneManager scene);
-            static void a0_actname_scene1__condition_0_1(const ks::SceneManager scene);
+            static void a0_actname_scene1__condition_0_0();
+            static void a0_actname_scene1__condition_0_1();
     };
 }
 

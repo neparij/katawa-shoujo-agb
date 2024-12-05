@@ -39,6 +39,18 @@ namespace ks {
                 return fff;
                 // auto outf = bn::string_view(fff);
             }
+
+            inline bn::string<128> get_short_tl(const char* script, const char* locale, unsigned int offset) {
+                // u32 cursor = 0x0A2F;
+                u32 cursor = offset;
+                auto filename = bn::string<32>(script).append(".").append(locale).c_str();
+                auto data = (u8*)gbfs_get_obj(fs, filename, &src_len);
+                // const char* text = (const char*)&data[offset];
+
+                auto fff = parse_string(data, &cursor, src_len);
+                return fff;
+                // auto outf = bn::string_view(fff);
+            }
         }
     }
 }

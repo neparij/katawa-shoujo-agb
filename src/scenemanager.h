@@ -34,13 +34,6 @@ struct character_visuals_ptr
     int offset_y;
 };
 
-extern bn::optional<bn::regular_bg_ptr> main_background;
-extern bn::optional<bn::regular_bg_ptr> secondary_background;
-extern bn::vector<character_visuals_ptr, 4> character_visuals;
-extern bn::vector<bn::optional<bn::sprite_palette_ptr>, 2> character_palettes;
-
-extern ks::DialogBox* dialog;
-
 class SceneManager {
 public:
     constexpr SceneManager(const char* scenario, const char* locale, const unsigned int* translations)
@@ -48,9 +41,12 @@ public:
     constexpr ~SceneManager() = default;
 
     // Acions
-    static void reset();
+    static void free_resources();
+    static void set(const ks::SceneManager instance);
     static void set_background(const bn::regular_bg_item& bg);
-    static void show_dialog(const ks::SceneManager* scene, bn::string<16> actor, int tl_key);
+    static void show_dialog(bn::string<16> actor, int tl_key);
+    static void show_dialog_question(bn::vector<int, 5> answers);
+    static int get_dialog_question_answer();
     static void show_character(const int character_index,
                                const bn::regular_bg_item& bg,
                                const bn::sprite_item& sprite,
@@ -87,6 +83,14 @@ private:
     const char* _locale;
     const unsigned int* _script_tl_index;
 };
+
+extern bn::optional<ks::SceneManager> scene;
+extern ks::DialogBox* dialog;
+extern bn::optional<bn::regular_bg_ptr> main_background;
+extern bn::optional<bn::regular_bg_ptr> secondary_background;
+extern bn::vector<character_visuals_ptr, 4> character_visuals;
+extern bn::vector<bn::optional<bn::sprite_palette_ptr>, 2> character_palettes;
+
 
 } // namespace ks
 

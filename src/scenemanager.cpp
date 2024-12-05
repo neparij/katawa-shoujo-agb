@@ -20,14 +20,14 @@
 
 namespace ks {
 
+bn::optional<ks::SceneManager> scene;
+ks::DialogBox* dialog;
 bn::optional<bn::regular_bg_ptr> main_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
 bn::vector<character_visuals_ptr, 4> character_visuals;
 bn::vector<bn::optional<bn::sprite_palette_ptr>, 2> character_palettes;
 
-ks::DialogBox* dialog;
-
-void SceneManager::reset() {
+void SceneManager::free_resources() {
     while (character_visuals.size() < character_visuals.max_size()) {
         character_visuals.push_back(character_visuals_ptr());
     }
@@ -41,6 +41,11 @@ void SceneManager::reset() {
     }
 
     // character_visuals.clear();
+}
+
+void SceneManager::set(const ks::SceneManager instance) {
+    scene.reset();
+    scene = instance;
 }
 
 void SceneManager::set_background(const bn::regular_bg_item& bg) {
@@ -61,13 +66,32 @@ void SceneManager::set_background(const bn::regular_bg_item& bg) {
     ks::globals::main_update();
 }
 
-void SceneManager::show_dialog(const ks::SceneManager* scene, bn::string<16> actor, int tl_key) {
+void SceneManager::show_dialog(bn::string<16> actor, int tl_key) {
     auto message = ks::scenario::gbfs_reader::get_tl(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
     dialog->show(actor, message);
     while (!dialog->is_finished()) {
         dialog->update();
         ks::globals::main_update();
     }
+}
+
+void SceneManager::show_dialog_question(bn::vector<int, 5> answers) {
+    bn::vector<bn::string<128>, 5> answers_messages;
+    for (int i = 0; i < answers.size(); i++) {
+        auto message = ks::scenario::gbfs_reader::get_short_tl(scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i)]);
+        BN_LOG("Message ", i, ": ", message);
+        answers_messages.push_back(message);
+    }
+    dialog->show_question(answers_messages);
+    while (!dialog->is_finished()) {
+        dialog->update();
+        ks::globals::main_update();
+    }
+    answers_messages.clear();
+}
+
+int SceneManager::get_dialog_question_answer() {
+    return dialog->get_answer_index();
 }
 
 void SceneManager::show_character(const int character_index,

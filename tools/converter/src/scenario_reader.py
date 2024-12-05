@@ -185,7 +185,10 @@ class ScenarioReader:
             match = re.match(r"\"(.*)\":", stripped_line)
             if match:
                 choice_text = match.group(1)
-                self.stack.current().add_condition(choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
+                choice_text_translated = None
+                if self.translation and choice_text in self.translation.strings:
+                    choice_text_translated = self.translation.strings[choice_text]
+                self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
                 # self.stack.push(SequenceGroup(f"{self.stack.current().name}_{sanitize_function_name(choice_text)}", SequenceGroupType.MENU), current_indent)
             return
 
@@ -295,16 +298,16 @@ class ScenarioReader:
 
             dialog_hash = self.calculate_tl_hash(hashing_contents)
 
-            dialog_match_str = re.match(r"^\"(.+)\"\s+\"(.*)\"$", stripped_line)
-            dialog_match_ref = re.match(r"^(.+)\s+\"(.*)\"$", stripped_line)
-            narration_match = re.match(r"^\"(.*)\"$", stripped_line)
+            dialog_match_str = re.match(r"^\"(.+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+            dialog_match_ref = re.match(r"^(.+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+            narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
 
             if dialog_match_str or dialog_match_ref or narration_match:
                 if self.translation:
                     stripped_line = self.translation.translations[dialog_hash]
-                    dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"$", stripped_line)
-                    dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"$", stripped_line)
-                    narration_match = re.match(r"^\"(.*)\"$", stripped_line)
+                    dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+                    dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+                    narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
 
             if dialog_match_str:
                 actor, dialog = dialog_match_str.groups()

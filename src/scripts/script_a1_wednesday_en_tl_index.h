@@ -862,39 +862,41 @@ constexpr unsigned int script_a1_wednesday_en_intl[] = {
     0x11162, // What's up with him? As if a day or two would make that much of a difference.
     0x111AF, // I didn't do anything at the hospital either.
     0x111DC, // Yeah, okay. Sorry.
-    0x111EF, // Can you promise me to be more serious about this from now on?
-    0x1122D, // So, let's hurry, Hicchan~! To have lunch!
-    0x11257, // We promise it'll be great!
-    0x11272, // I'll take your word for it. What kind of a place is it?
-    0x112AA, // A restaurant, or something?
-    0x112C6, // It's a teahouse, Hicchan~!
-    0x112E1, // A teahouse… that sounds kind of fancy.
-    0x1130A, // Why are you looking at your wallet, Hicchan? It's okay, if you don't have any money we'll cover for you~!
-    0x11374, // That's really nice of you. Thanks.
-    0x11397, // It's okay, Hicchan! After all, we're friends, right, Hicchan?
-    0x113D5, // It's only been three days. Are we really friends that quickly?
-    0x11414, // Heh. But, hearing that makes me happy.
-    0x1143B, // Ah, it's only for today, though, and only if you accept right now! Do you want to go, Hicchan?
-    0x1149A, // I start wondering if this is some kind of trap. Is this Misha's suggestion or Shizune's? This is important. I'm still a little apprehensive about the possible motives of a girl whose favorite pastime is the game of world domination.
-    0x11583, // No, I'm just being paranoid. Actually, they have grown on me already, and I do have to go to town sometime. So why not now, with them?
-    0x1160A, // I've never actually been to a teahouse before. All my expectations are from what I've seen about them on TV. But those are period dramas, and these are modern times. It might just be a regular café, and they're just calling it a teahouse.
-    0x116FA, // Either way, I'm curious about that, too, so there's another reason for me to join them.
-    0x11752, // Sure.
-    0x11758, // That's great, Hicchan~! That's great, that's great! Yay~!
-    0x11792, // Misha hops up and down briefly to show how happy she is, which causes a few heads to turn towards us. Shizune opts for a polite, tiny clap that lasts for all of two seconds before she goes back to looking stoic as usual.
-    0x1186F, // Would it kill you to be a little happier, Shizune?
-    0x118A2, // Oh? I wasn't aware that Hicchan was a king. Hahahaha~!
-    0x118D9, // Shizune pushes her glasses up as Misha delivers her message totally without sarcasm. I guess it would sting more if she could say it with the intent Shizune meant behind it, so for once I'm happy to have Misha as a barrier between us.
-    0x119C4, // I'm not telling you to jump for joy just because I'm having lunch with you. I'm not that arrogant.
-    0x11A27, // She seems to accept this, and we head for town with Shizune leading the way.
-    0x11A74, // We have to run now, there is an important student council meeting regarding the festival. And we finally decided where to eat~!
-    0x11AF4, // Too bad you can't join, but this lunch meeting is only for council members.
-    0x11B40, // We can take you there some other time! Oh, but that'd be like a date, wouldn't it?
-    0x11B93, // The girls leave for downstairs.
-    0x11BB3, // I didn't manage to get far from the third floor hallway before all this commotion struck, literally. I should get going as well.
-    0x11C34, // The lunch and the afternoon class pass uneventfully.
-    0x11C69, // I read most of the book I had started yesterday, and eat some of the mostly inedible offerings of the cafeteria.
-    0x11CDA, // The class is tiresome.
+    0x111EF, // Read my book.
+    0x111FD, // Can you promise me to be more serious about this from now on?
+    0x1123B, // Maybe.
+    0x11242, // So, let's hurry, Hicchan~! To have lunch!
+    0x1126C, // We promise it'll be great!
+    0x11287, // I'll take your word for it. What kind of a place is it?
+    0x112BF, // A restaurant, or something?
+    0x112DB, // It's a teahouse, Hicchan~!
+    0x112F6, // A teahouse… that sounds kind of fancy.
+    0x1131F, // Why are you looking at your wallet, Hicchan? It's okay, if you don't have any money we'll cover for you~!
+    0x11389, // That's really nice of you. Thanks.
+    0x113AC, // It's okay, Hicchan! After all, we're friends, right, Hicchan?
+    0x113EA, // It's only been three days. Are we really friends that quickly?
+    0x11429, // Heh. But, hearing that makes me happy.
+    0x11450, // Ah, it's only for today, though, and only if you accept right now! Do you want to go, Hicchan?
+    0x114AF, // I start wondering if this is some kind of trap. Is this Misha's suggestion or Shizune's? This is important. I'm still a little apprehensive about the possible motives of a girl whose favorite pastime is the game of world domination.
+    0x11598, // No, I'm just being paranoid. Actually, they have grown on me already, and I do have to go to town sometime. So why not now, with them?
+    0x1161F, // I've never actually been to a teahouse before. All my expectations are from what I've seen about them on TV. But those are period dramas, and these are modern times. It might just be a regular café, and they're just calling it a teahouse.
+    0x1170F, // Either way, I'm curious about that, too, so there's another reason for me to join them.
+    0x11767, // Sure.
+    0x1176D, // That's great, Hicchan~! That's great, that's great! Yay~!
+    0x117A7, // Misha hops up and down briefly to show how happy she is, which causes a few heads to turn towards us. Shizune opts for a polite, tiny clap that lasts for all of two seconds before she goes back to looking stoic as usual.
+    0x11884, // Would it kill you to be a little happier, Shizune?
+    0x118B7, // Oh? I wasn't aware that Hicchan was a king. Hahahaha~!
+    0x118EE, // Shizune pushes her glasses up as Misha delivers her message totally without sarcasm. I guess it would sting more if she could say it with the intent Shizune meant behind it, so for once I'm happy to have Misha as a barrier between us.
+    0x119D9, // I'm not telling you to jump for joy just because I'm having lunch with you. I'm not that arrogant.
+    0x11A3C, // She seems to accept this, and we head for town with Shizune leading the way.
+    0x11A89, // We have to run now, there is an important student council meeting regarding the festival. And we finally decided where to eat~!
+    0x11B09, // Too bad you can't join, but this lunch meeting is only for council members.
+    0x11B55, // We can take you there some other time! Oh, but that'd be like a date, wouldn't it?
+    0x11BA8, // The girls leave for downstairs.
+    0x11BC8, // I didn't manage to get far from the third floor hallway before all this commotion struck, literally. I should get going as well.
+    0x11C49, // The lunch and the afternoon class pass uneventfully.
+    0x11C7E, // I read most of the book I had started yesterday, and eat some of the mostly inedible offerings of the cafeteria.
+    0x11CEF, // The class is tiresome.
 };
 
 #endif // KS_SCRIPT_A1_WEDNESDAY_EN_TL_INDEX

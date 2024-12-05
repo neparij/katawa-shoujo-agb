@@ -84,31 +84,31 @@ namespace ks {
             static void a1_tuesday_shared_library();
             static void a1_tuesday_bizarre_and_surreal();
             static void a1_tuesday();
-            static void a1c3o1(const ks::SceneManager scene);
-            static void a1c3o2(const ks::SceneManager scene);
-            static void a1c4o1(const ks::SceneManager scene);
-            static void a1c4o2(const ks::SceneManager scene);
-            static void a1c5o1(const ks::SceneManager scene);
-            static void a1c5o2(const ks::SceneManager scene);
+            static void a1c3o1();
+            static void a1c3o2();
+            static void a1c4o1();
+            static void a1c4o2();
+            static void a1c5o1();
+            static void a1c5o2();
             // Choice functions
-            static void a1_tuesday_risk_vs_reward__menu_question_0(const ks::SceneManager scene);
-            static void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively(const ks::SceneManager scene);
-            static void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here(const ks::SceneManager scene);
-            static void a1_tuesday_shared_library__menu_question_0(const ks::SceneManager scene);
-            static void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class(const ks::SceneManager scene);
-            static void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you(const ks::SceneManager scene);
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0(const ks::SceneManager scene);
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute(const ks::SceneManager scene);
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute(const ks::SceneManager scene);
+            static void a1_tuesday_risk_vs_reward__menu_question_0();
+            static void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively();
+            static void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here();
+            static void a1_tuesday_shared_library__menu_question_0();
+            static void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class();
+            static void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you();
+            static void a1_tuesday_bizarre_and_surreal__menu_question_0();
+            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute();
+            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute();
             // Conditions
-            static void a1_tuesday_smalltalk__condition_0_0(const ks::SceneManager scene);
-            static void a1_tuesday_risk_vs_reward__condition_0_0(const ks::SceneManager scene);
-            static void a1_tuesday_pseudo_tea_cosy__condition_0_0(const ks::SceneManager scene);
-            static void a1_tuesday_shared_library__condition_0_0(const ks::SceneManager scene);
-            static void a1_tuesday_shared_library__condition_0_1(const ks::SceneManager scene);
-            static void a1_tuesday_shared_library__condition_1_0(const ks::SceneManager scene);
-            static void a1_tuesday_bizarre_and_surreal__condition_0_0(const ks::SceneManager scene);
-            static void a1c4o1__condition_0_0(const ks::SceneManager scene);
+            static void a1_tuesday_smalltalk__condition_0_0();
+            static void a1_tuesday_risk_vs_reward__condition_0_0();
+            static void a1_tuesday_pseudo_tea_cosy__condition_0_0();
+            static void a1_tuesday_shared_library__condition_0_0();
+            static void a1_tuesday_shared_library__condition_0_1();
+            static void a1_tuesday_shared_library__condition_1_0();
+            static void a1_tuesday_bizarre_and_surreal__condition_0_0();
+            static void a1c4o1__condition_0_0();
     };
 }
 

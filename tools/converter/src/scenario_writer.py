@@ -143,10 +143,9 @@ class ScenarioWriter:
         for label in self.get_labels():
             sequences = []
             if label.is_called_inline and not label.is_initial:
-                sequences.append(comment("POTENTIAL MEMLEAK!!!! better to provide it globally."))
-                sequences.append("// bn::optional<bn::regular_bg_ptr> main_bg;")
-                sequences.append(f'constexpr ks::SceneManager scene = ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl);\n')
-                sequences.append(f'ks::SceneManager::reset();')
+                sequences.append(f'ks::SceneManager::free_resources();')
+            elif label.is_initial:
+                sequences.append(f'ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl));\n')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -166,11 +165,39 @@ class ScenarioWriter:
                 sequence_code = self.process_sequence(menu, sequence)
                 if sequence_code:
                     sequences.extend(sequence_code)
-            sequences.append(f'// bn::vector<ks::AnswerItem, {len(menu.conditions)}> answers;')
+            answers_indexes = []
+
+            sequences.append(f'bn::vector<int, 5> answers;')
             for answer in menu.conditions:
+                tl_index = self.tl_indexes.get(answer.condition)
+
+                if tl_index is None:  # Only process if the id is not already in the index
+                    for i, tl in enumerate(self.tl_list):
+                        if answer.condition == tl:  # Check for duplicate message
+                            tl_index = i
+                            break
+                    else:  # If no duplicate is found
+                        tl_index = len(self.tl_list)
+                        self.tl_list.append(answer.condition)  # Add the message to the list
+
+                    self.tl_indexes[answer.condition] = tl_index  # Store the index for the id
+                answers_indexes.append(str(tl_index))
                 sequences.append(
-                    f'// answers.push_back(ks::AnswerItem("{answer.condition}", &{self.get_class_name()}::{answer.function_callback}));')
-            sequences.append(f'// scene.add_sequence(ks::MenuItem(answers);')
+                    f'answers.push_back({tl_index});')
+
+            sequences.append(f'ks::SceneManager::show_dialog_question(answers);')
+            sequences.append(f'int answer = ks::SceneManager::get_dialog_question_answer();')
+
+            answer_callbacks = []
+            for answer in menu.conditions:
+                answer_callbacks.append(f'if (answer == {len(answer_callbacks)}) {{\n'
+                                        # f'    delete &answers;\n'
+                                        f'    {self.get_class_name()}::{answer.function_callback}();\n'
+                                        # f'    {answer.function_callback}();\n'
+                                        f'}}')
+
+            sequences.append(indented(" else ".join(answer_callbacks)))
+
             functions.append(f"static {menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
 
             for answer in menu.conditions:
@@ -290,16 +317,17 @@ class ScenarioWriter:
             self.tl_indexes[dialog.id] = tl_index  # Store the index for the id
 
         if dialog.actor_ref:
-            return [f'ks::SceneManager::show_dialog(&scene, "{dialog.actor_ref}", {tl_index});']
+            return [f'ks::SceneManager::show_dialog("{dialog.actor_ref}", {tl_index});']
             # return [f'scene.add_dialog("{dialog.actor_ref}", \"{resulted_hash}\");']
         elif dialog.actor:
-            return [f'ks::SceneManager::show_dialog(&scene, "{dialog.actor}", {tl_index});']
+            return [f'ks::SceneManager::show_dialog("{dialog.actor}", {tl_index});']
         else:
-            return [f'ks::SceneManager::show_dialog(&scene, "", {tl_index});']
+            return [f'ks::SceneManager::show_dialog("", {tl_index});']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
         return [
-            f'{self.get_class_name()}::{menu.function_callback}(scene);']
+            f'{self.get_class_name()}::{menu.function_callback}();']
+            # f'{menu.function_callback}();']
         # return [
         #     f'// scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}(scene);}}));']
 
@@ -329,7 +357,8 @@ class ScenarioWriter:
         else:
             # return [f'scene.add_sequence(ks::RunLabelItem(&{self.get_class_name()}::{run_label.function_callback}));']
             # return [f'scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}();}}));']
-            return [f'{self.get_class_name()}::{run_label.function_callback}(scene);']
+            return [f'{self.get_class_name()}::{run_label.function_callback}();']
+            # return [f'{run_label.function_callback}();']
             # return [
             #     f'// scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{run_label.function_callback}(scene);}}));']
 
@@ -350,16 +379,16 @@ class ScenarioWriter:
                 position = (60, 0)
             elif show.position == ShowPosition.OFFSCREENLEFT:
                 # TODO: Calculate bsed on sprite width
-                position = (-120 -0, 0)
+                position = (-120 - 0, 0)
             elif show.position == ShowPosition.OFFSCREENRIGHT:
                 # TODO: Calculate bsed on sprite width
-                position = (120 +0, 0)
+                position = (120 + 0, 0)
             elif show.position == ShowPosition.LEFT:
                 # TODO: Calculate bsed on sprite width
-                position = (-120 +40, 0)
+                position = (-120 + 40, 0)
             elif show.position == ShowPosition.RIGHT:
                 # TODO: Calculate bsed on sprite width
-                position = (120 -40, 0)
+                position = (120 - 40, 0)
             elif show.position == ShowPosition.DEFAULT:
                 position = (0, 0)
             else:
@@ -395,10 +424,10 @@ class ScenarioWriter:
                         f'ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name}, {position[0]}, {position[1]});')
                 return result
             if show.position != ShowPosition.DEFAULT:
-                result.append(f'ks::SceneManager::set_character_position({character_index}, {position[0]}, {position[1]});')
+                result.append(
+                    f'ks::SceneManager::set_character_position({character_index}, {position[0]}, {position[1]});')
 
             return result
-
 
         # if show.event == ShowEvent.CHARACTER_CHANGE:
         #     return [
@@ -463,19 +492,19 @@ def label_signature(group: SequenceGroup):
     if group.is_called_inline:
         return f"void {group.name}()"
     else:
-        return f"void {group.name}(const ks::SceneManager scene)"
+        return f"void {group.name}()"
 
 
 def menu_signature(group: SequenceGroup):
-    return f"void {group.name}(const ks::SceneManager scene)"
+    return f"void {group.name}()"
 
 
 def answer_signature(group: SequenceGroup, answer: ConditionWrapper):
-    return f"void {group.name}_{sanitize_function_name(answer.condition)}(const ks::SceneManager scene)"
+    return f"void {answer.function_callback}()"
 
 
 def condition_signature(group: SequenceGroup, num: int):
-    return f"void {group.name}_{num}(const ks::SceneManager scene)"
+    return f"void {group.name}_{num}()"
 
 
 def to_pascal_case(s: str) -> str:

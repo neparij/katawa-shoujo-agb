@@ -685,21 +685,26 @@ constexpr unsigned int script_a1_tuesday_en_intl[] = {
     0xD512, // Not exactly cute, no.
     0xD528, // Hmm…
     0xD52F, // She says you have no chance if you keep playing like this, no you won't~!
-    0xD579, // Nothing! I just… talked to her. Tried to get to know her. Didn't even manage to get started.
-    0xD5D8, // Yuuko sighs and looks awfully bothered, even more so than she did before.
-    0xD622, // I guess you weren't 'wrong' so much as 'tactless.'
-    0xD655, // Tactless?
-    0xD65F, // That girl is a bit of a special case. It's like she never really talks to anyone.
-    0xD6B1, // Isn't that a bit… strange?
-    0xD6CE, // I wonder… It's just how she is, I think.
-    0xD6F9, // Yuuko doesn't sound all that convincing. Then again, maybe this is just the norm around here.
-    0xD757, // Everyone has their own problems, or else they wouldn't be here.
-    0xD797, // Perhaps I was being a little tactless after all.
-    0xD7C8, // Nothing! I was just looking for some books and then she got this fit and ran off.
-    0xD81A, // The most offending thing I can think of was that I might've looked at her general direction a few times.
-    0xD883, // Well, she is a very timid girl.
-    0xD8A3, // You have to be very careful around her. She can be very jumpy, I think, and she's not accustomed to talking with other people.
-    0xD922, // I did a self-introduction too.
+    0xD579, // She has a point. Attack aggressively!
+    0xD59F, // It's a trap, it's smarter to play defensively here.
+    0xD5D3, // I'm sorry, I didn't mean to startle you.
+    0xD5FC, // She was cute.
+    0xD60A, // She wasn't cute.
+    0xD61B, // Nothing! I just… talked to her. Tried to get to know her. Didn't even manage to get started.
+    0xD67A, // Yuuko sighs and looks awfully bothered, even more so than she did before.
+    0xD6C4, // I guess you weren't 'wrong' so much as 'tactless.'
+    0xD6F7, // Tactless?
+    0xD701, // That girl is a bit of a special case. It's like she never really talks to anyone.
+    0xD753, // Isn't that a bit… strange?
+    0xD770, // I wonder… It's just how she is, I think.
+    0xD79B, // Yuuko doesn't sound all that convincing. Then again, maybe this is just the norm around here.
+    0xD7F9, // Everyone has their own problems, or else they wouldn't be here.
+    0xD839, // Perhaps I was being a little tactless after all.
+    0xD86A, // Nothing! I was just looking for some books and then she got this fit and ran off.
+    0xD8BC, // The most offending thing I can think of was that I might've looked at her general direction a few times.
+    0xD925, // Well, she is a very timid girl.
+    0xD945, // You have to be very careful around her. She can be very jumpy, I think, and she's not accustomed to talking with other people.
+    0xD9C4, // I did a self-introduction too.
 };
 
 #endif // KS_SCRIPT_A1_TUESDAY_EN_TL_INDEX
