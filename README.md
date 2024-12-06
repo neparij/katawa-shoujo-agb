@@ -52,7 +52,7 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano fra
 - **[afska](https://github.com/afska)** for GSM Player integration for Butano
 - **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
 - **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the video player.
-- **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** by **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katana Shoujo to the modern Ren'Py engine.
+- **[Katawa Shoujo: Re-Engineered](https://codeberg.org/fhs/katawa-shoujo-re-engineered)** by **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katawa Shoujo to the modern Ren'Py engine.
 
 ---
 
