@@ -34,12 +34,13 @@ LIBBUTANO   	:=  ../afska_butano/butano
 PYTHON      	:=  python3
 SOURCES     	:=  ../butano/common/src \
 		    src \
+                    src/gsmplayer \
+                    src/gsmplayer/core \
+                    src/savefile \
+                    src/scripts \
 		    src/sequence \
-		    src/scripts \
 		    src/utils \
-		    src/utils/gbfs \
-		    src/gsmplayer \
-		    src/gsmplayer/core
+                    src/utils/gbfs
 INCLUDES    	:=  include \
 					include/sprite_metas \
 					../butano/common/include

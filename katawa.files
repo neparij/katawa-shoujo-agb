@@ -13,6 +13,8 @@ src/main.cpp
 src/menuitem.cpp.h
 src/musicitem.cpp.h
 src/runlabelitem.cpp.h
+src/savefile/save_file.cpp
+src/savefile/save_file.h
 src/scenemanager.cpp
 src/scenemanager.h
 src/script_a0_test.cpp
