@@ -13,9 +13,10 @@ namespace ks {
 
 
             static u32 src_len = 0;
-            inline bn::string<512> parse_string(u8* source, u32* cursor, u32 max_length) {
-                bn::string<512> result;
 
+            template <int MaxSize>
+            inline bn::string<MaxSize> parse_string(u8* source, u32* cursor, u32 max_length) {
+                bn::string<MaxSize> result;
                 for (u32 i = 0; i < max_length; i++) {
                     char c = source[*cursor];
                     (*cursor)++;
@@ -24,32 +25,16 @@ namespace ks {
                     }
                     result.push_back(c);  // Append character to result
                 }
-
                 return result;
             }
 
-            inline bn::string<512> get_tl(const char* script, const char* locale, unsigned int offset) {
-                // u32 cursor = 0x0A2F;
+            template <int MaxSize>
+            inline bn::string<MaxSize> get_tl(const char* script, const char* locale, unsigned int offset) {
                 u32 cursor = offset;
                 auto filename = bn::string<32>(script).append(".").append(locale).c_str();
                 auto data = (u8*)gbfs_get_obj(fs, filename, &src_len);
-                // const char* text = (const char*)&data[offset];
-
-                auto fff = parse_string(data, &cursor, src_len);
-                return fff;
-                // auto outf = bn::string_view(fff);
-            }
-
-            inline bn::string<128> get_short_tl(const char* script, const char* locale, unsigned int offset) {
-                // u32 cursor = 0x0A2F;
-                u32 cursor = offset;
-                auto filename = bn::string<32>(script).append(".").append(locale).c_str();
-                auto data = (u8*)gbfs_get_obj(fs, filename, &src_len);
-                // const char* text = (const char*)&data[offset];
-
-                auto fff = parse_string(data, &cursor, src_len);
-                return fff;
-                // auto outf = bn::string_view(fff);
+                auto parsed_string = parse_string<MaxSize>(data, &cursor, src_len);
+                return parsed_string;
             }
         }
     }

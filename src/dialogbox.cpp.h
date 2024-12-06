@@ -41,6 +41,13 @@
 
 namespace ks
 {
+    enum class DialogState {
+        Idle,
+        Writing,
+        WaitingForInput,
+        QuestionActive,
+    };
+
     class DialogBox
     {
     public:
@@ -183,17 +190,6 @@ namespace ks
             talkbox4 = bn::sprite_items::ui_talkbox4.create_sprite(-ks::device::screen_width_half + 32 + 192, ks::device::screen_height_half - 32);
 
             set_blending(true);
-
-            // if (ks::globals::show_memory_debug) {
-            //     _text_generator->set_one_sprite_per_character(false);
-            //     _debug_sprites.clear();
-            //     _text_generator->generate(-116, -72, bn::to_string<32>("IWRAM stack::") + bn::to_string<32>(bn::memory::used_stack_iwram()), _debug_sprites);
-            //     _text_generator->generate(-116, -72+12, bn::to_string<32>("IWRAM static::") + bn::to_string<32>(bn::memory::used_static_iwram()), _debug_sprites);
-            //     _text_generator->generate(-116, -72+24, bn::to_string<32>("EWRAM static::") + bn::to_string<32>(bn::memory::used_static_ewram()), _debug_sprites);
-            //     _text_generator->generate(-116, -72+36, bn::to_string<32>("EWRAM alloc::") + bn::to_string<32>(bn::memory::used_alloc_ewram()), _debug_sprites);
-            //     _text_generator->generate(-116, -72+48, bn::to_string<32>("EWRAM avail::") + bn::to_string<32>(bn::memory::available_alloc_ewram()), _debug_sprites);
-            // }
-
             _actor = actor;
             _remaining_message = message;
 

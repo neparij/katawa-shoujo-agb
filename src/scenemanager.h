@@ -5,16 +5,10 @@
 #include "bn_regular_bg_actions.h"
 #include "bn_sprite_actions.h"
 #include "bn_blending_actions.h"
-#include "sequence/sequenceitem.h"
 #include "dialogbox.cpp.h"
 #include <bn_regular_bg_ptr.h>
 #include "bn_sprite_palette_ptr.h"
 #include "character_sprite_meta.h"
-
-#include "gsmplayer/player.h"
-#include "gsmplayer/player_sfx.h"
-#include "utils/gbfs/gbfs.h"
-
 
 namespace ks {
 

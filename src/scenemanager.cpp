@@ -1,21 +1,12 @@
 #include "scenemanager.h"
-#include "bn_music.h"
 #include "bn_regular_bg_actions.h"
+#include "bn_regular_bg_item.h"
 #include "bn_sprite_actions.h"
 #include "bn_blending_actions.h"
-#include "sequence/backgrounditem.h"
-#include "sequence/istartitem.h"
-#include "sequence/musicitem.h"
-#include "sequence/runlabelitem.h"
-#include "sequence/runlabelfinishitem.h"
-
-#include "utils/scenario_reader.h"
-#include "variable_16x16_sprite_font.h"
-
 #include "globals.h"
-
+#include "gsmplayer/player.h"
+#include "utils/scenario_reader.h"
 #include <BN_LOG.h>
-// #include "bn_music_items.h"
 
 
 namespace ks {
@@ -67,7 +58,7 @@ void SceneManager::set_background(const bn::regular_bg_item& bg) {
 }
 
 void SceneManager::show_dialog(bn::string<16> actor, int tl_key) {
-    auto message = ks::scenario::gbfs_reader::get_tl(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
+    auto message = ks::scenario::gbfs_reader::get_tl<512>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
     dialog->show(actor, message);
     while (!dialog->is_finished()) {
         dialog->update();
@@ -78,7 +69,7 @@ void SceneManager::show_dialog(bn::string<16> actor, int tl_key) {
 void SceneManager::show_dialog_question(bn::vector<int, 5> answers) {
     bn::vector<bn::string<128>, 5> answers_messages;
     for (int i = 0; i < answers.size(); i++) {
-        auto message = ks::scenario::gbfs_reader::get_short_tl(scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i)]);
+        auto message = ks::scenario::gbfs_reader::get_tl<128>(scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i)]);
         BN_LOG("Message ", i, ": ", message);
         answers_messages.push_back(message);
     }

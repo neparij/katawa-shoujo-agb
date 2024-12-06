@@ -1,11 +1,17 @@
+![Katawa Shoujo - Game Boy Advance Port](site/logo-github-nobg.png)
+
 # Katawa Shoujo - Game Boy Advance Port
 
 A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano framework](https://github.com/GValiente/butano). Includes Python tools to convert assets and scripts from the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
 
-![Katawa Shoujo - Game Boy Advance Port (event screenshot)](site/agb-ks-screenshot-1.png)
+<div style="display: flex; justify-content: flex-start;">
+    <img src="site/agb-ks-screenshot-1.png" alt="Katawa Shoujo - Game Boy Advance Port (event screenshot)" style="width: 50%;">
+</div>
+<div style="display: flex; justify-content: flex-start;">
+    <img src="site/agb-ks-screenshot-2-en.png" alt="Katawa Shoujo - Game Boy Advance Port (dialog screenshot - en)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-2-ru.png" alt="Katawa Shoujo - Game Boy Advance Port (dialog screenshot - ru)" style="width: 50%;">
+</div>
 
-![Katawa Shoujo - Game Boy Advance Port (dialog screenshot - en)](site/agb-ks-screenshot-2-en.png)
-![Katawa Shoujo - Game Boy Advance Port (dialog screenshot - ru)](site/agb-ks-screenshot-2-ru.png)
 ---
 
 ## Features

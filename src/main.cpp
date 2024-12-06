@@ -2,29 +2,18 @@
 #include "bn_sram.h"
 #include "bn_keypad.h"
 #include "bn_bg_palettes.h"
-#include "bn_music.h"
 
 #include "bn_string.h"
 #include "bn_sprite_text_generator.h"
-
-#include "sequence/backgrounditem.h"
-#include "sequence/menuitem.h"
-#include "sequence/musicitem.h"
-#include "sequence/runlabelitem.h"
-// #include "sequence/runlabelfinishitem.h"
 #include "variable_16x16_sprite_font.h"
 
 
-#include "bn_blending.h"
 #include "bn_bg_palettes.h"
-#include "bn_regular_bg_builder.h"
 #include "scenemanager.h"
 #include "constants.h"
 #include "globals.h"
 
 
-#include "bn_regular_bg_items_school_dormhallway.h"
-#include "bn_regular_bg_items_school_dormhisao_ss.h"
 #include "vidtest.cpp.h"
 
 
@@ -35,26 +24,9 @@
 #include "scripts/script_a1_tuesday_ru.cpp"
 #include "scripts/script_a1_wednesday_en.cpp"
 #include "scripts/script_a1_wednesday_ru.cpp"
-
-
-
 #include "gsmplayer/player.h"
-#include "gsmplayer/player_sfx.h"
-#include "utils/gbfs/gbfs.h"
 
-
-#include "bn_regular_bg_items_op_snowywoods.h"
-#include "bn_regular_bg_items_other_iwanako.h"
-
-
-
-#include "bn_sprite_affine_mat_actions.h"
-#include "bn_sprite_double_size_mode.h"
-#include "bn_sprite_items_tearoom_lillyhisao_sunset_tl.h"
-#include "bn_sprite_items_tearoom_lillyhisao_sunset_tr.h"
-#include "bn_sprite_items_tearoom_lillyhisao_sunset_bl.h"
-#include "bn_sprite_items_tearoom_lillyhisao_sunset_br.h"
-
+#include "bn_sprite_items_hanako.h"
 #include <BN_LOG.h>
 
 #define SFX_TEST "vinyl.pcm"
@@ -120,7 +92,7 @@ int main()
     bn::sram::read(cart_sram_data);
     if (cart_sram_data.format_tag != expected_format_tag) {
         cart_sram_data.format_tag = expected_format_tag;
-        cart_sram_data.video_shown = false;
+        cart_sram_data.video_shown = true;
         bn::sram::clear(bn::sram::size());
         bn::sram::write(cart_sram_data);
     }
@@ -141,10 +113,6 @@ int main()
 
     }
     // BN_BARRIER;
-
-
-    player_init();
-    player_playGSM("music_happiness.gsm");
 
     // while (true) {
     //     ks::globals::main_update();
@@ -169,6 +137,7 @@ int main()
     ks::dialog = new ks::DialogBox(_text_generator, variable_16x16_sprite_font);
 
     bn::vector<bn::sprite_ptr, 64> _text_sprites;
+    bn::optional<bn::sprite_ptr> _bottom_icon;
     while(true)
     {
         int select = 1;
@@ -179,21 +148,21 @@ int main()
         player_playGSM("music_menus.gsm");
         player_setLoop(true);
 
-        // BN_LOG("TEST");
+        _bottom_icon.reset();
+        _bottom_icon = bn::sprite_items::hanako.create_sprite(ks::device::screen_width_half - 32, ks::device::screen_height_half - 32);
         ks::globals::main_update();
-        // bn::music::play(bn::music_items::wiosna, 0.5);
 
         while (!scene_selected) {
             if (bn::keypad::up_pressed()) {
                 need_update = true;
                 select--;
                 if (select < 0) {
-                    select = 7;
+                    select = 6;
                 }
             }
             if (bn::keypad::down_pressed()) {
                 need_update = true;
-                select = ++select % 8;
+                select = ++select % 7;
             }
             if (bn::keypad::a_pressed()) {
                 need_update = true;
@@ -201,8 +170,6 @@ int main()
                     alt_lang = !alt_lang;
                     ks::globals::use_alt_lang = alt_lang;
                 } else if (select == 6) {
-                    ks::globals::show_memory_debug = !ks::globals::show_memory_debug;
-                } else if (select == 7) {
                     sram_data cart_sram_data;
                     bn::sram::read(cart_sram_data);
                     cart_sram_data.video_shown = false;
@@ -217,7 +184,7 @@ int main()
                 need_update = false;
 
                 // Debug menu stuff
-                bn::string<64> title("Katawa Shouho v0.1.3+00571 (Shicchan)");
+                bn::string<64> title("Katawa Shouho v0.1.3+00609");
                 bn::string<64> author(alt_lang ? "порт от NeParij" : "ported by: NeParij");
                 bn::string<64> play_a0_test_scene(alt_lang ? "Тестовая сцена" : "Test Scene");
                 bn::string<64> play_a1_monday(alt_lang ? "Акт 1. Понедельник" : "Act 1. Monday");
@@ -225,7 +192,6 @@ int main()
                 bn::string<64> play_a1_wednesday(alt_lang ? "Акт 1. Среда" : "Act 1. Wednesday");
                 bn::string<64> play_all(alt_lang ? "Играть все доступные" : "Play all available");
                 bn::string<64> language(alt_lang ? "Язык: " : "Language: ");
-                bn::string<64> debug_mem(alt_lang ? "Отладка памяти: " : "Debug memory: ");
                 bn::string<64> play_video(alt_lang ? "Воспроизвести видео" : "Play video");
 
                 _text_sprites.clear();
@@ -241,13 +207,13 @@ int main()
                 _text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 3), bn::string<64>(select == 3 ? "> " : "  ") + play_a1_wednesday, _text_sprites);
                 _text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 4), bn::string<64>(select == 4 ? "> " : "  ") + play_all, _text_sprites);
                 _text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 0), bn::string<64>(select == 5 ? "> " : "  ") + language + (alt_lang ? "Русский" : "English"), _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 1), bn::string<64>(select == 6 ? "> " : "  ") + debug_mem + bn::to_string<8>(ks::globals::show_memory_debug), _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 2), bn::string<64>(select == 7 ? "> " : "  ") + play_video, _text_sprites);
+                _text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 1), bn::string<64>(select == 6 ? "> " : "  ") + play_video, _text_sprites);
             }
             ks::globals::main_update();
         }
 
         _text_sprites.clear();
+        _bottom_icon.reset();
         player_stop();
 
 
