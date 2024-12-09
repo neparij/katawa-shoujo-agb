@@ -15,7 +15,7 @@ bn::optional<ks::SceneManager> scene;
 ks::DialogBox* dialog;
 bn::optional<bn::regular_bg_ptr> main_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
-bn::vector<character_visuals_ptr, 4> character_visuals;
+bn::vector<character_visuals_ptr, 8> character_visuals;
 bn::vector<bn::optional<bn::sprite_palette_ptr>, 2> character_palettes;
 ks::saves::SaveSlotProgressData progress;
 bool in_replay = false;
@@ -127,7 +127,7 @@ void SceneManager::show_character(const int character_index,
         }
         character_visuals.at(character_index).sprite->set_blending_enabled(false);
         character_visuals.at(character_index).background->set_blending_enabled(false);
-        spr_alpha_action.reset();
+        // spr_alpha_action.reset();
     }
 
     ks::globals::main_update();
@@ -160,23 +160,25 @@ void SceneManager::set_character_position(const int character_index,
     character_visuals.at(character_index).position_x = position_x;
     character_visuals.at(character_index).position_y = position_y;
 
-    character_visuals.at(character_index).bg_move_action = bn::regular_bg_move_to_action(character_visuals.at(character_index).background.value(),
+    auto bg_move_action = bn::regular_bg_move_to_action(character_visuals.at(character_index).background.value(),
                                                                                       20,
                                                                                       position_x,
                                                                                       position_y);
-    character_visuals.at(character_index).spr_move_action = bn::sprite_move_to_action(character_visuals.at(character_index).sprite.value(),
+    auto spr_move_action = bn::sprite_move_to_action(character_visuals.at(character_index).sprite.value(),
                                                                                       20,
                                                                                       position_x + character_visuals.at(character_index).offset_x,
                                                                                       position_y + character_visuals.at(character_index).offset_y);
 
-    while (!character_visuals.at(character_index).bg_move_action->done() &&
-           !character_visuals.at(character_index).spr_move_action->done()) {
-        character_visuals.at(character_index).bg_move_action->update();
-        character_visuals.at(character_index).spr_move_action->update();
+    while (!bg_move_action.done() &&
+           !spr_move_action.done()) {
+        bg_move_action.update();
+        spr_move_action.update();
         ks::globals::main_update();
     }
-    character_visuals.at(character_index).bg_move_action.reset();
-    character_visuals.at(character_index).spr_move_action.reset();
+    // bg_move_action.reset();
+    // spr_move_action.reset();
+    // delete &bg_move_action;
+    // delete &spr_move_action;
 }
 
 void SceneManager::hide_character(const int character_index, const bool need_update) {
