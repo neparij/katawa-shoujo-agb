@@ -19,6 +19,7 @@ namespace ks {
             // Act 1 data
             unsigned char attraction_hanako;
             unsigned char attraction_sc;
+            bool im_new_here; // That's hardcoded string from scenario 'Hi! I'm new here. Hisao Nakai. We're in the same class.' in choices
             bool talk_with_hanako;
             bool wait_for_shizu;
             bool promised;
@@ -86,6 +87,9 @@ namespace ks {
         };
 
         extern SaveFileData data;
+
+        void load();
+        void save();
     }
 }
 

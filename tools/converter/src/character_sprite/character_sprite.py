@@ -23,10 +23,34 @@ class CharacterSprite:
                 f"IsNaked: {self.nude}\n"
                 f"OriginalFilename: {self.original_filename}\n")
 
+class CharacterDisplayableReplacements:
+    @staticmethod
+    def lilly(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("basic_arablush_paj", "basic1_arablush_paj")  # hands behind
+                .replace("basic_ara_paj", "basic1_ara_paj") #hands behind
+                .replace("basic_ara", "basic2_ara") #hands joyful
+                .replace("basic_emb_paj", "basic1_emb_paj")  # hands behind
+                .replace("basic_emb", "basic2_emb")  # hands joyful
+                .replace("basic_giggle_paj", "basic1_giggle_paj")  # hands behind
+                .replace("basic_giggle", "basic2_giggle")  # hands joyful
+                .replace("basic_listen_paj", "basic1_listen_paj")  # hands behind
+                .replace("basic_listen", "basic3_listen")  # hands breast
+                .replace("basic_oops_paj", "basic1_oops_paj")  # hands behind
+                .replace("basic_oops", "basic3_oops")  # hands breast
+                .replace("basic_planned_paj", "basic1_planned_paj")  # hands behind
+                .replace("basic_planned", "basic2_planned")  # hands joyful
+                .replace("basic_pout_paj", "basic1_pout_paj")  # hands behind
+                .replace("basic_satisfied_paj", "basic1_satisfied_paj")  # hands behind
+                .replace("basic_satisfied", "basic3_satisfied")  # hands breast
+                .replace("basic_surprised", "basic3_surprised" if not "_paj" in displayable_name else "basic_surprised")  # hands breast if not in _paj outfit
+                )
+
 
 class CharacterSpritesGroup:
     def __init__(self, character_name: str, pose: str, outfit: str | None, base_emotion: str | None,
-                 base_emotion_offset: tuple[int, int], base_emotion_size: tuple[int, int] = (32, 32)):
+                 base_emotion_offset: tuple[int, int], base_emotion_size: tuple[int, int] = (32, 32),
+                 base_origin_offset: int = 0):
         self.character_name = character_name
         self.pose = pose
         self.outfit = outfit
@@ -34,6 +58,7 @@ class CharacterSpritesGroup:
         self.base_emotion = base_emotion
         self.base_emotion_size = base_emotion_size
         self.base_emotion_offset = base_emotion_offset
+        self.base_origin_offset = base_origin_offset
 
     def __str__(self):
         return (f"Name: {self.character_name}\n"
@@ -52,9 +77,10 @@ class CharacterSpritesReader:
         self.character_groups: List[CharacterSpritesGroup] = []
 
     def process_all(self) -> List[CharacterSpritesGroup]:
-        self.process_shizu()
-        self.process_misha()
-        self.process_rin()
+        # self.process_shizu()
+        # self.process_misha()
+        # self.process_rin()
+        self.process_lilly()
         return self.character_groups
 
     def process_shizu(self) -> List[CharacterSpritesGroup]:
@@ -96,14 +122,46 @@ class CharacterSpritesReader:
         self._process_character("rin", nude_if=lambda basename: False)
         return self.character_groups
 
+    def process_lilly(self) -> List[CharacterSpritesGroup]:
+
+        # CUSTOM POSES FOR LILLY
+        # basic  — hands down (DEFAULT)
+        # basic1 — hands behind
+        # basic2 — hands joyful
+        # basic3 — hands breast
+
+        self.character_groups.append(CharacterSpritesGroup("lilly", "back", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "back", None, "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", "paj", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", None, "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic1", "paj", "ara", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic2", "cas", "ara", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic2", None, "ara", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic3", "cas", "listen", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic3", None, "listen", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "behind", "nak", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "behind", None, "cheerful", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "cane", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "cane", None, "smileclosed", (112, 64), base_origin_offset=-48))
+
+        self._process_character("lilly",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.lilly(filename),
+                                nude_if=lambda basename: basename.endswith("nak"))
+        return self.character_groups
+
     def _process_character(self,
                            character_key: str,
                            regex: str = r'(?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?\.png$',
+                           filename_replacements=None,
                            nude_if=None):
         character_dir = os.path.join(self.input_dir, character_key)
         image_files = [f for f in os.listdir(character_dir) if f.lower().endswith('.png')]
         for filename in image_files:
-            character = _from_filename(filename, regex, nude_if)
+            resulted_filename = filename
+            if filename_replacements:
+                resulted_filename = filename_replacements(filename)
+            character = _from_filename(resulted_filename, regex, nude_if)
             character.original_filename = filename
             character.original_path = os.path.join(character_dir, filename)
             character_group = next(
@@ -115,7 +173,7 @@ class CharacterSpritesReader:
                 raise Exception(f"Character group not found for"
                                 f" \"{character.character_name}"
                                 f" {character.pose}"
-                                f" {character.outfit}\"")
+                                f" {character.outfit}\" for emotion \"{character.emotion}\"")
             character_group.add_sprite(character)
 
 
@@ -126,20 +184,20 @@ class CharacterSpritesWriter:
 
     def write(self, group: CharacterSpritesGroup):
         default_sprite = next((sprite for sprite in group.sprites if sprite.emotion == group.base_emotion), group.sprites[0])
-        self.write_character_background(default_sprite, group.base_emotion_size, group.base_emotion_offset)
+        self.write_character_background(default_sprite, group.base_emotion_size, group.base_emotion_offset, group.base_origin_offset)
         for sprite in group.sprites:
             self.write_character_sprite(sprite, group)
         group_metadata_name = (f"{group.character_name}_{group.pose}"
                                    f"{f'_{group.outfit}' if group.outfit else ''}")
         self.write_character_group_metadata(group, f'{group_metadata_name}')
 
-    def write_character_background(self, character: CharacterSprite, remove_size: tuple[int, int], remove_offset: tuple[int, int]):
+    def write_character_background(self, character: CharacterSprite, remove_size: tuple[int, int], remove_offset: tuple[int, int], y_offset: int = 0):
         os.makedirs(self.sprite_output_dir, exist_ok=True)
         output_filename = os.path.join(self.sprite_output_dir,
                                        f"{character.character_name}_bg_{character.pose}"
                                        f"{f'_{character.outfit}' if character.outfit else ''}")
 
-        ImageTools.resize_character_background(character.original_path, f'{output_filename}.bmp', remove_size, remove_offset)
+        ImageTools.resize_character_background(character.original_path, f'{output_filename}.bmp', remove_size, remove_offset, y_offset)
         self.write_character_background_metadata(f'{output_filename}.json')
 
     def write_character_background_metadata(self, output_filename):
@@ -160,7 +218,7 @@ class CharacterSpritesWriter:
                                        f"{f'_{character.outfit}' if character.outfit else ''}")
 
         ImageTools.resize_character_emotion_sprite(character.original_path, f'{output_filename}.bmp',
-                                                   group.base_emotion_offset, group.base_emotion_size)
+                                                   group.base_emotion_offset, group.base_emotion_size, group.base_origin_offset)
         # for tile in ImageTools.create_8x8_tiles(f'{output_filename}.bmp', f'{output_filename}.bmp'):
         #     self.write_character_sprite_tiles_metadata(tile.removesuffix('.bmp') + '.json')
         # os.remove(f'{output_filename}.bmp')

@@ -325,9 +325,11 @@ namespace ks {
                 ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom);
                 ks::SceneManager::show_dialog("", 171);
                 ks::SceneManager::show_dialog("", 172);
-                // bn::vector<ks::ConditionItem, 1> a1_tuesday_smalltalk__condition_0;
-                // a1_tuesday_smalltalk__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayRu::a1_tuesday_smalltalk__condition_0_0));
-                // scene.add_condition(a1_tuesday_smalltalk__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1TuesdayRu::a1_tuesday_smalltalk__condition_0_0();
+                } 
+                
+            
             }
             static void a1_tuesday_risk_vs_reward() {
                 ks::SceneManager::free_resources();
@@ -448,9 +450,11 @@ namespace ks {
                 ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
                 ks::SceneManager::show_dialog("mi", 230);
                 ks::SceneManager::music_stop();
-                // bn::vector<ks::ConditionItem, 1> a1_tuesday_risk_vs_reward__condition_0;
-                // a1_tuesday_risk_vs_reward__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayRu::a1_tuesday_risk_vs_reward__condition_0_0));
-                // scene.add_condition(a1_tuesday_risk_vs_reward__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1TuesdayRu::a1_tuesday_risk_vs_reward__condition_0_0();
+                } 
+                
+            
             }
             static void a1_tuesday_pseudo_tea_cosy() {
                 ks::SceneManager::free_resources();
@@ -515,11 +519,13 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 280);
                 ks::SceneManager::show_dialog("li", 281);
                 ks::SceneManager::show_dialog("", 282);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_basic, bn::sprite_items::lilly_spr_basic_smile, ks::sprite_metas::lilly_basic);
                 ks::SceneManager::show_dialog("li", 283);
                 ks::SceneManager::show_dialog("hi", 284);
                 ks::SceneManager::show_dialog("", 285);
                 ks::SceneManager::show_dialog("li", 286);
                 ks::SceneManager::show_dialog("hi", 287);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_basic2, bn::sprite_items::lilly_spr_basic2_giggle, ks::sprite_metas::lilly_basic2);
                 ks::SceneManager::show_dialog("", 288);
                 ks::SceneManager::show_dialog("li", 289);
                 ks::SceneManager::set_background(bn::regular_bg_items::tearoom_lillyhisao_noon);
@@ -581,6 +587,7 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 342);
                 ks::SceneManager::show_dialog("hi", 343);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_miyagi_ss);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("", 344);
                 ks::SceneManager::show_dialog("", 345);
                 ks::SceneManager::show_dialog("", 346);
@@ -589,38 +596,48 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 347);
                 ks::SceneManager::show_dialog("", 348);
                 ks::SceneManager::show_dialog("hi", 349);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smileclosed, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("", 350);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_library_ss);
                 ks::SceneManager::music_play("music_happiness.gsm");
                 ks::SceneManager::show_dialog("", 351);
                 ks::SceneManager::show_dialog("", 352);
                 ks::SceneManager::show_dialog("", 353);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smileclosed, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 354);
                 ks::SceneManager::show_dialog("", 355);
                 ks::SceneManager::show_dialog("", 356);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_surprised, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("", 357);
                 ks::SceneManager::show_dialog("mystery", 358);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane, -48, 0);
                 ks::SceneManager::show_dialog("", 359);
                 ks::SceneManager::show_dialog("yu_", 360);
                 ks::SceneManager::show_dialog("", 361);
                 ks::SceneManager::show_dialog("li", 362);
                 ks::SceneManager::show_dialog("yu_", 363);
                 ks::SceneManager::show_dialog("yu_", 364);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_sad, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 365);
                 ks::SceneManager::show_dialog("yu_", 366);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("yu_", 367);
                 ks::SceneManager::show_dialog("", 368);
                 ks::SceneManager::show_dialog("yu_", 369);
                 ks::SceneManager::show_dialog("", 370);
                 ks::SceneManager::show_dialog("", 371);
                 ks::SceneManager::show_dialog("yu_", 372);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_reminisce, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 373);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 374);
                 ks::SceneManager::show_dialog("yu_", 375);
                 ks::SceneManager::show_dialog("", 376);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("yu_", 377);
                 ks::SceneManager::show_dialog("yu_", 378);
                 ks::SceneManager::show_dialog("", 379);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smileclosed, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 380);
                 ks::SceneManager::show_dialog("hi", 381);
                 ks::SceneManager::show_dialog("yu", 382);
@@ -630,9 +647,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 386);
                 ks::SceneManager::show_dialog("yu", 387);
                 ks::SceneManager::show_dialog("", 388);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_sleepy, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 389);
                 ks::SceneManager::show_dialog("hi", 390);
                 ks::SceneManager::show_dialog("", 391);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("yu", 392);
                 ks::SceneManager::show_dialog("", 393);
                 ks::SceneManager::show_dialog("hi", 394);
@@ -643,11 +662,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 398);
                 ks::SceneManager::show_dialog("hi", 399);
                 ks::SceneManager::show_dialog("", 400);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smileclosed, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 401);
                 ks::SceneManager::music_stop();
-                // bn::vector<ks::ConditionItem, 1> a1_tuesday_pseudo_tea_cosy__condition_0;
-                // a1_tuesday_pseudo_tea_cosy__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayRu::a1_tuesday_pseudo_tea_cosy__condition_0_0));
-                // scene.add_condition(a1_tuesday_pseudo_tea_cosy__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1TuesdayRu::a1_tuesday_pseudo_tea_cosy__condition_0_0();
+                } 
+                
+            
             }
             static void a1_tuesday_shared_library() {
                 ks::SceneManager::free_resources();
@@ -681,6 +703,7 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 426);
                 ks::SceneManager::show_dialog("", 427);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_library_ss);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smileclosed, ks::sprite_metas::lilly_cane, -48, 0);
                 ks::SceneManager::music_play("music_pearly.gsm");
                 ks::SceneManager::show_dialog("", 428);
                 ks::SceneManager::show_dialog("", 429);
@@ -688,21 +711,28 @@ namespace ks {
                 ks::SceneManager::show_dialog("hi", 431);
                 ks::SceneManager::show_dialog("yu", 432);
                 ks::SceneManager::show_dialog("hi", 433);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_surprised, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 434);
                 ks::SceneManager::show_dialog("hi", 435);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_sad, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 436);
                 ks::SceneManager::show_dialog("yu", 437);
                 ks::SceneManager::show_dialog("hi", 438);
                 ks::SceneManager::show_dialog("li", 439);
                 ks::SceneManager::show_dialog("hi", 440);
+                ks::SceneManager::hide_character(2);
                 ks::SceneManager::show_dialog("", 441);
                 ks::SceneManager::show_dialog("hi", 442);
                 ks::SceneManager::show_dialog("hi", 443);
                 ks::SceneManager::show_dialog("yu", 444);
-                // bn::vector<ks::ConditionItem, 2> a1_tuesday_shared_library__condition_0;
-                // a1_tuesday_shared_library__condition_0.push_back(ks::ConditionItem(""Hi! I'm new here. Hisao Nakai. We're in the same class." in choices", &ScriptA1TuesdayRu::a1_tuesday_shared_library__condition_0_0));
-                // a1_tuesday_shared_library__condition_0.push_back(ks::ConditionItem("None", &ScriptA1TuesdayRu::a1_tuesday_shared_library__condition_0_1));
-                // scene.add_condition(a1_tuesday_shared_library__condition_0);
+                if (ks::progress.im_new_here == true) {
+                    ScriptA1TuesdayRu::a1_tuesday_shared_library__condition_0_0();
+                } 
+                else {
+                    ScriptA1TuesdayRu::a1_tuesday_shared_library__condition_0_1();
+                } 
+                
+            
                 ks::SceneManager::show_dialog("hi", 445);
                 ks::SceneManager::show_dialog("hi", 446);
                 ks::SceneManager::show_dialog("", 447);
@@ -723,9 +753,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 462);
                 ks::SceneManager::show_dialog("", 463);
                 ks::SceneManager::music_stop();
-                // bn::vector<ks::ConditionItem, 1> a1_tuesday_shared_library__condition_1;
-                // a1_tuesday_shared_library__condition_1.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayRu::a1_tuesday_shared_library__condition_1_0));
-                // scene.add_condition(a1_tuesday_shared_library__condition_1);
+                if (ks::in_replay) {
+                    ScriptA1TuesdayRu::a1_tuesday_shared_library__condition_1_0();
+                } 
+                
+            
             }
             static void a1_tuesday_bizarre_and_surreal() {
                 ks::SceneManager::free_resources();
@@ -846,9 +878,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 569);
                 ks::SceneManager::show_dialog("", 570);
                 ks::SceneManager::show_dialog("", 571);
-                // bn::vector<ks::ConditionItem, 1> a1_tuesday_bizarre_and_surreal__condition_0;
-                // a1_tuesday_bizarre_and_surreal__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1TuesdayRu::a1_tuesday_bizarre_and_surreal__condition_0_0));
-                // scene.add_condition(a1_tuesday_bizarre_and_surreal__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1TuesdayRu::a1_tuesday_bizarre_and_surreal__condition_0_0();
+                } 
+                
+            
             }
             static void a1_tuesday() {
                 ks::SceneManager::set(ks::SceneManager("script_a1_tuesday", "ru", script_a1_tuesday_ru_intl));
@@ -981,9 +1015,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 25);
                 ks::SceneManager::show_dialog("hi", 629);
                 ks::SceneManager::show_dialog("", 25);
-                // bn::vector<ks::ConditionItem, 1> a1c4o1__condition_0;
-                // a1c4o1__condition_0.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1TuesdayRu::a1c4o1__condition_0_0));
-                // scene.add_condition(a1c4o1__condition_0);
+                if (ks::progress.wanted_introduce || ks::in_replay) {
+                    ScriptA1TuesdayRu::a1c4o1__condition_0_0();
+                } 
+                
+            
                 ks::SceneManager::set_background(bn::regular_bg_items::hana_library);
                 ks::SceneManager::show_dialog("", 630);
                 ks::SceneManager::show_dialog("hi", 631);
@@ -1065,14 +1101,14 @@ namespace ks {
                 answers.push_back(683);
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
-                    if (answer == 0) {
+                if (answer == 0) {
                     ScriptA1TuesdayRu::a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively();
                 } else if (answer == 1) {
                     ScriptA1TuesdayRu::a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here();
                 }
             }
             static void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively() {
-                // scene.add_sequence(ks::AssignmentItem("attraction_sc += 1"));
+                ks::progress.attraction_sc += 1;
                 ScriptA1TuesdayRu::a1c3o1();
             }
             static void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here() {
@@ -1084,17 +1120,18 @@ namespace ks {
                 answers.push_back(654);
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
-                    if (answer == 0) {
+                if (answer == 0) {
                     ScriptA1TuesdayRu::a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class();
                 } else if (answer == 1) {
                     ScriptA1TuesdayRu::a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you();
                 }
             }
             static void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class() {
+                ks::progress.im_new_here = true;
                 ScriptA1TuesdayRu::a1c4o1();
             }
             static void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you() {
-                // scene.add_sequence(ks::AssignmentItem("attraction_hanako += 1"));
+                ks::progress.attraction_hanako += 1;
                 ScriptA1TuesdayRu::a1c4o2();
             }
             static void a1_tuesday_bizarre_and_surreal__menu_question_0() {
@@ -1103,14 +1140,14 @@ namespace ks {
                 answers.push_back(686);
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
-                    if (answer == 0) {
+                if (answer == 0) {
                     ScriptA1TuesdayRu::a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute();
                 } else if (answer == 1) {
                     ScriptA1TuesdayRu::a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute();
                 }
             }
             static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute() {
-                // scene.add_sequence(ks::AssignmentItem("attraction_hanako += 1"));
+                ks::progress.attraction_hanako += 1;
                 ScriptA1TuesdayRu::a1c5o1();
             }
             static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute() {

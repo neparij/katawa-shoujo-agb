@@ -17,6 +17,8 @@ bn::optional<bn::regular_bg_ptr> main_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
 bn::vector<character_visuals_ptr, 4> character_visuals;
 bn::vector<bn::optional<bn::sprite_palette_ptr>, 2> character_palettes;
+ks::saves::SaveSlotProgressData progress;
+bool in_replay = false;
 
 void SceneManager::free_resources() {
     while (character_visuals.size() < character_visuals.max_size()) {

@@ -13,10 +13,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("a0-s1", 4);
                 ks::SceneManager::show_dialog("a0-s1", 5);
                 ScriptA0TestEn::a0e1();
-                // bn::vector<ks::ConditionItem, 2> a0_actname_scene1__condition_0;
-                // a0_actname_scene1__condition_0.push_back(ks::ConditionItem("variable_name_a or variable_name_b", &ScriptA0TestEn::a0_actname_scene1__condition_0_0));
-                // a0_actname_scene1__condition_0.push_back(ks::ConditionItem("None", &ScriptA0TestEn::a0_actname_scene1__condition_0_1));
-                // scene.add_condition(a0_actname_scene1__condition_0);
+                if (ks::progress.attraction_sc > 1 || ks::in_replay) {
+                    ScriptA0TestEn::a0_actname_scene1__condition_0_0();
+                } 
+                else {
+                    ScriptA0TestEn::a0_actname_scene1__condition_0_1();
+                } 
+                
+            
                 ks::SceneManager::show_dialog("ao-s1", 6);
                 ks::SceneManager::show_dialog("ao-s1", 7);
             }

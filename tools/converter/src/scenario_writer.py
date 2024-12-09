@@ -1,7 +1,9 @@
 import hashlib
 import os
+import re
 from typing import List, cast, Dict
 
+from src.character_sprite.character_sprite import CharacterDisplayableReplacements
 from src.dto.assignment_item import AssignmentItem
 from src.dto.background_item import BackgroundItem
 from src.dto.condition_item import ConditionItem
@@ -29,22 +31,6 @@ class ScenarioWriter:
         self.tl_indexes: Dict[str, int] = {}
         self.tl_list: List[str] = []
         self.locale = locale if locale else DEFAULT_LOCALE
-
-        # TODO: refactor this
-        self.unprocessed_music = [
-            "music_another",
-            "music_comedy",
-            "music_daily",
-            "music_emi",
-            "music_kenji",
-            "music_nurse",
-            "music_pearly",
-            "music_rain",
-            "music_running",
-            # "music_serene", - AI processed bgm
-            "music_soothing",
-            "music_tension"
-        ]
 
         self.backgrounds = []
         self.events = []
@@ -145,7 +131,8 @@ class ScenarioWriter:
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::free_resources();')
             elif label.is_initial:
-                sequences.append(f'ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl));\n')
+                sequences.append(
+                    f'ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl));\n')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -169,21 +156,21 @@ class ScenarioWriter:
 
             sequences.append(f'bn::vector<int, 5> answers;')
             for answer in menu.conditions:
-                tl_index = self.tl_indexes.get(answer.condition)
+                tl_index = self.tl_indexes.get(answer.answer)
 
                 if tl_index is None:  # Only process if the id is not already in the index
                     for i, tl in enumerate(self.tl_list):
-                        if answer.condition == tl:  # Check for duplicate message
+                        if answer.answer == tl:  # Check for duplicate message
                             tl_index = i
                             break
                     else:  # If no duplicate is found
                         tl_index = len(self.tl_list)
-                        self.tl_list.append(answer.condition)  # Add the message to the list
+                        self.tl_list.append(answer.answer)  # Add the message to the list
 
-                    self.tl_indexes[answer.condition] = tl_index  # Store the index for the id
+                    self.tl_indexes[answer.answer] = tl_index  # Store the index for the id
                 answers_indexes.append(str(tl_index))
-                sequences.append(
-                    f'answers.push_back({tl_index});')
+                sequences.append(f'answers.push_back({tl_index});') if not answer.condition else sequences.append(
+                    f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({tl_index});')
 
             sequences.append(f'ks::SceneManager::show_dialog_question(answers);')
             sequences.append(f'int answer = ks::SceneManager::get_dialog_question_answer();')
@@ -191,12 +178,10 @@ class ScenarioWriter:
             answer_callbacks = []
             for answer in menu.conditions:
                 answer_callbacks.append(f'if (answer == {len(answer_callbacks)}) {{\n'
-                                        # f'    delete &answers;\n'
                                         f'    {self.get_class_name()}::{answer.function_callback}();\n'
-                                        # f'    {answer.function_callback}();\n'
                                         f'}}')
 
-            sequences.append(indented(" else ".join(answer_callbacks)))
+            sequences.extend(" else ".join(answer_callbacks).split("\n"))
 
             functions.append(f"static {menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
 
@@ -282,7 +267,14 @@ class ScenarioWriter:
         return []
 
     def process_sequence_assignment(self, group: SequenceGroup, assignment: AssignmentItem) -> List[str]:
-        return [f'// scene.add_sequence(ks::AssignmentItem("{assignment.content}"));']
+        assignment_regex = r'^[a-zA-Z_][a-zA-Z0-9_]*\s*(=|\+=|-=|\*=|/=)\s*.*$'
+
+        if re.match(assignment_regex, assignment.content):
+            return [f'{to_ks_progress_variables(to_cpp_condition(assignment.content))};']
+        else:
+            print(f"Unknown assignment: {assignment.content}")
+            return [f'// {assignment.content}; TODO: unknown assignment']
+        # return [f'// scene.add_sequence(ks::AssignmentItem("{assignment.content}"));']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
         if not bg.background in self.backgrounds:
@@ -292,14 +284,23 @@ class ScenarioWriter:
     def process_sequence_condition(self, group: SequenceGroup, condition: ConditionItem) -> List[str]:
         matching_scenario_item = next((item for item in self.scenario if item.name == condition.function_callback),
                                       None)
-        code = [
-            f'// bn::vector<ks::ConditionItem, {len(matching_scenario_item.conditions)}> {condition.function_callback};']
+        code = []
         cnum = 0
         for variant in matching_scenario_item.conditions:
-            code.append(
-                f'// {condition.function_callback}.push_back(ks::ConditionItem(\"{variant.condition}\", &{self.get_class_name()}::{condition.function_callback}_{cnum}));')
+            if variant.condition:
+                condition_variant = f"if ({to_ks_progress_variables(to_cpp_condition(variant.condition))})"
+            elif variant.condition and cnum > 0:
+                condition_variant = f"else if ({to_ks_progress_variables(to_cpp_condition(variant.condition))})"
+            elif cnum == len(matching_scenario_item.conditions) - 1 and not variant.condition:
+                condition_variant = "else"
+            else:
+                raise TypeError("Unknown Condition type")
+            code.extend([f'{condition_variant} {{',
+                         f'    {self.get_class_name()}::{condition.function_callback}_{cnum}();',
+                         f'}} '])
             cnum += 1
-        code.append(f'// scene.add_condition({condition.function_callback});')
+
+        code.append("\n")
         return code
 
     def precess_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
@@ -327,19 +328,13 @@ class ScenarioWriter:
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
         return [
             f'{self.get_class_name()}::{menu.function_callback}();']
-            # f'{menu.function_callback}();']
+        # f'{menu.function_callback}();']
         # return [
         #     f'// scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}(scene);}}));']
 
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
         if music.action == MusicAction.PLAY:
             return [f'ks::SceneManager::music_play("{music.music}.gsm");']
-            # if music.music and not music.music in self.music and music.music not in self.unprocessed_music:
-            #     self.music.append(music.music)
-            # if music.music in self.unprocessed_music:
-            #     return [f'scene.add_sequence(ks::MusicNotFoundItem());']
-            # return [f'scene.add_sequence(ks::MusicNotFoundItem());']
-            # return [f'scene.add_sequence(ks::MusicItem(bn::music_items::{music.music}));']
         elif music.action == MusicAction.STOP:
             return [f'ks::SceneManager::music_stop();']
         return []
@@ -367,7 +362,7 @@ class ScenarioWriter:
         #     self.sprites.append(show.sprite)
 
         # TODO: rework, that's for test purposes only for the moment
-        if show.sprite in ["shizu", "misha", "rin"]:
+        if show.sprite in ["shizu", "misha", "rin", "lilly"]:
             character_index = self.characters.get(show.sprite)
             if show.position == ShowPosition.TWOLEFT:
                 position = (-48, 0)
@@ -400,6 +395,10 @@ class ScenarioWriter:
                 character_index = len(self.characters)
                 self.characters[show.sprite] = character_index
             if show.variant:
+                if show.sprite == "lilly":
+                    # Fix for Lilly's custom poses
+                    show.variant = CharacterDisplayableReplacements.lilly(show.variant)
+
                 # character_bg_name = f'{show.sprite}_bg_{show.variant.split("_")[0]}'
                 # TODO: support _close notation
                 character_bg_name = f'{show.sprite}_bg_{show.variant.split("_")[0]}'.removesuffix("_close")
@@ -407,12 +406,12 @@ class ScenarioWriter:
                     self.backgrounds.append(character_bg_name)
                 # character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'
                 # TODO: support _close notation
-                character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'.removesuffix("_close")
+                character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'.removesuffix("_close").removesuffix("_ss")
                 if not character_spr_name in self.sprites:
                     self.sprites.append(character_spr_name)
                 # character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'
                 # TODO: support _close notation
-                character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'.removesuffix("_close")
+                character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'.removesuffix("_close").removesuffix("_ss")
                 if not character_sprite_meta_name in self.sprite_metas:
                     self.sprite_metas.append(character_sprite_meta_name)
 
@@ -439,7 +438,7 @@ class ScenarioWriter:
         #     raise TypeError("Unknown ShowEvent type")
 
     def process_sequence_hide(self, group: SequenceGroup, hide: HideItem) -> List[str]:
-        if hide.sprite in ["shizu", "misha", "rin"]:
+        if hide.sprite in ["shizu", "misha", "rin", "lilly"]:
             character_index = self.characters.get(hide.sprite)
             if character_index is None:
                 raise f'"{hide.sprite}" is not in character index. Attempt to hide not shown character?'
@@ -509,3 +508,24 @@ def condition_signature(group: SequenceGroup, num: int):
 
 def to_pascal_case(s: str) -> str:
     return ''.join(word.capitalize() for word in s.split('_'))
+
+
+def to_cpp_condition(s: str) -> str:
+    return (s.replace("not ", "!")
+            .replace(" and ", " && ")
+            .replace(" or ", " || ")
+            .replace("True", "true")
+            .replace("False", "false"))
+
+
+def to_ks_progress_variables(s: str) -> str:
+    def replacer(match):
+        variable = match.group(0)
+        if variable == "_in_replay":
+            return "ks::in_replay"
+        elif variable in ["true", "false"]:
+            return variable
+        return f"ks::progress.{variable}"
+
+    # Regex to match variable names (assumes they are composed of letters, numbers, and underscores)
+    return re.sub(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', replacer, s)

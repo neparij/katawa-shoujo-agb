@@ -62,7 +62,7 @@ class ImageTools:
         quantized = converter.convert(num_palettes=palettes, colors_per_palette=colors,
                                       dithering_mode=DitheringMode.FLOYDSTEINBERG if dithering > 0 else DitheringMode.NONE,
                                       dithering_level=dithering,
-                                      num_color_cluster_passes=0, num_tile_cluster_passes=0)
+                                      num_color_cluster_passes=256, num_tile_cluster_passes=256)
         # canvas.save(output_filename, format="BMP")
         quantized.save(output_filename, format="BMP")
         print(f"Resized, Quantized and saved: {output_filename}")
@@ -109,15 +109,15 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors)
 
     @staticmethod
-    def resize_character_background(input_filename: str, output_filename: str, remove_size: tuple[int, int], remove_offset: tuple[int, int]):
+    def resize_character_background(input_filename: str, output_filename: str, remove_size: tuple[int, int], remove_offset: tuple[int, int], y_offset = 0):
         palettes = 2
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=0, remove_size=remove_size, remove_offset=remove_offset)
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset, remove_size=remove_size, remove_offset=remove_offset)
 
     @staticmethod
     def resize_character_emotion_sprite(input_filename: str, output_filename: str, sprite_offset: tuple[int, int],
-                                        sprite_size: tuple[int, int]):
+                                        sprite_size: tuple[int, int], y_offset = 0):
         palettes = 1
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=0, dithering=0.0,
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset, dithering=0.0,
                           sprite_offset=sprite_offset, sprite_size=sprite_size)

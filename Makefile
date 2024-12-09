@@ -52,6 +52,7 @@ GRAPHICS    	:=  graphics \
 					graphics/characters/shizu \
 					graphics/characters/misha \
 					graphics/characters/rin \
+                                        graphics/characters/lilly \
 					graphics/video/temp_emi_imgs/converted \
 					../butano/common/graphics
 AUDIO       	:=  audio

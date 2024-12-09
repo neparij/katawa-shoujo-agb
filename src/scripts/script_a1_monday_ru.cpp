@@ -58,15 +58,17 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 40);
                 ks::SceneManager::show_dialog("n", 41);
                 ks::SceneManager::show_dialog("n", 42);
-                // bn::vector<ks::ConditionItem, 1> a1_monday_out_cold__condition_0;
-                // a1_monday_out_cold__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_out_cold__condition_0_0));
-                // scene.add_condition(a1_monday_out_cold__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_out_cold__condition_0_0();
+                } 
+                
+            
             }
             static void a1_monday_bundle_of_hisao() {
                 ks::SceneManager::free_resources();
                 ks::SceneManager::show_dialog("centered", 43);
                 ks::SceneManager::set_background(bn::regular_bg_items::hosp_room);
-                // scene.add_sequence(ks::AssignmentItem("renpy.music.set_volume(0.5, 0.0, channel="music")"));
+                // renpy.music.set_volume(0.5, 0.0, channel="music"); TODO: unknown assignment
                 ks::SceneManager::music_play("music_rain.gsm");
                 ks::SceneManager::show_dialog("n", 44);
                 ks::SceneManager::show_dialog("n", 45);
@@ -109,7 +111,7 @@ namespace ks {
                 ks::SceneManager::show_dialog("n", 82);
                 ks::SceneManager::show_dialog("n", 83);
                 ks::SceneManager::show_dialog("n", 84);
-                // scene.add_sequence(ks::AssignmentItem("renpy.music.set_volume(1.0, 1.0, channel="music")"));
+                // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
                 ks::SceneManager::show_dialog("", 85);
                 ks::SceneManager::show_dialog("", 86);
                 ks::SceneManager::show_dialog("", 87);
@@ -121,14 +123,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 93);
                 ks::SceneManager::show_dialog("Отец", 94);
                 ks::SceneManager::show_dialog("", 95);
-                // scene.add_sequence(ks::AssignmentItem("renpy.music.set_volume(0.5, 2.0, channel="music")"));
+                // renpy.music.set_volume(0.5, 2.0, channel="music"); TODO: unknown assignment
                 ks::SceneManager::show_dialog("", 96);
                 ks::SceneManager::show_dialog("", 97);
                 ks::SceneManager::show_dialog("", 98);
                 ks::SceneManager::show_dialog("", 99);
                 ks::SceneManager::show_dialog("", 100);
                 ks::SceneManager::show_dialog("", 101);
-                // scene.add_sequence(ks::AssignmentItem("renpy.music.set_volume(1.0, 1.0, channel="music")"));
+                // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
                 ks::SceneManager::set_background(bn::regular_bg_items::hosp_room);
                 ks::SceneManager::show_dialog("Доктор", 102);
                 ks::SceneManager::show_dialog("Доктор", 103);
@@ -171,9 +173,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 139);
                 ks::SceneManager::show_dialog("", 140);
                 ks::SceneManager::show_dialog("", 141);
-                // bn::vector<ks::ConditionItem, 1> a1_monday_bundle_of_hisao__condition_0;
-                // a1_monday_bundle_of_hisao__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_bundle_of_hisao__condition_0_0));
-                // scene.add_condition(a1_monday_bundle_of_hisao__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_bundle_of_hisao__condition_0_0();
+                } 
+                
+            
             }
             static void a1_monday_gateway_effect() {
                 ks::SceneManager::free_resources();
@@ -228,9 +232,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("mu", 183);
                 ks::SceneManager::music_stop();
                 ks::SceneManager::show_dialog("", 184);
-                // bn::vector<ks::ConditionItem, 1> a1_monday_gateway_effect__condition_0;
-                // a1_monday_gateway_effect__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_gateway_effect__condition_0_0));
-                // scene.add_condition(a1_monday_gateway_effect__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_gateway_effect__condition_0_0();
+                } 
+                
+            
             }
             static void a1_monday_enter_stage_left() {
                 ks::SceneManager::free_resources();
@@ -252,10 +258,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 196);
                 ks::SceneManager::show_dialog("mu", 197);
                 ks::SceneManager::show_dialog("", 198);
-                // bn::vector<ks::ConditionItem, 2> a1_monday_enter_stage_left__condition_0;
-                // a1_monday_enter_stage_left__condition_0.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_0_0));
-                // a1_monday_enter_stage_left__condition_0.push_back(ks::ConditionItem("None", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_0_1));
-                // scene.add_condition(a1_monday_enter_stage_left__condition_0);
+                if (ks::progress.wanted_introduce || ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_enter_stage_left__condition_0_0();
+                } 
+                else {
+                    ScriptA1MondayRu::a1_monday_enter_stage_left__condition_0_1();
+                } 
+                
+            
                 ks::SceneManager::set_background(bn::regular_bg_items::hisao_class);
                 ks::SceneManager::show_dialog("", 199);
                 ks::SceneManager::show_dialog("", 200);
@@ -305,10 +315,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("shi", 163);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, ks::sprite_metas::misha_perky);
                 ks::SceneManager::show_dialog("mi", 226);
-                // bn::vector<ks::ConditionItem, 2> a1_monday_enter_stage_left__condition_1;
-                // a1_monday_enter_stage_left__condition_1.push_back(ks::ConditionItem("wanted_introduce or _in_replay", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_1_0));
-                // a1_monday_enter_stage_left__condition_1.push_back(ks::ConditionItem("None", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_1_1));
-                // scene.add_condition(a1_monday_enter_stage_left__condition_1);
+                if (ks::progress.wanted_introduce || ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_enter_stage_left__condition_1_0();
+                } 
+                else {
+                    ScriptA1MondayRu::a1_monday_enter_stage_left__condition_1_1();
+                } 
+                
+            
                 ks::SceneManager::show_dialog("mi", 227);
                 ks::SceneManager::show_dialog("", 228);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
@@ -409,9 +423,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 272);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3);
                 ks::SceneManager::show_dialog("", 273);
-                // bn::vector<ks::ConditionItem, 1> a1_monday_enter_stage_left__condition_2;
-                // a1_monday_enter_stage_left__condition_2.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_enter_stage_left__condition_2_0));
-                // scene.add_condition(a1_monday_enter_stage_left__condition_2);
+                if (ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_enter_stage_left__condition_2_0();
+                } 
+                
+            
             }
             static void a1_monday_in_the_nursery() {
                 ks::SceneManager::free_resources();
@@ -447,7 +463,7 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 289);
                 ks::SceneManager::show_dialog("", 163);
                 ks::SceneManager::music_stop();
-                // scene.add_sequence(ks::AssignmentItem("renpy.music.set_volume(1.0, .5, channel="ambient")"));
+                // renpy.music.set_volume(1.0, .5, channel="ambient"); TODO: unknown assignment
                 ks::SceneManager::show_dialog("", 290);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom);
                 ks::SceneManager::music_play("music_daily.gsm");
@@ -569,9 +585,11 @@ namespace ks {
                 ks::SceneManager::set_background(bn::regular_bg_items::school_nursehall);
                 ks::SceneManager::music_stop();
                 ks::SceneManager::show_dialog("", 378);
-                // bn::vector<ks::ConditionItem, 1> a1_monday_in_the_nursery__condition_0;
-                // a1_monday_in_the_nursery__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_in_the_nursery__condition_0_0));
-                // scene.add_condition(a1_monday_in_the_nursery__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_in_the_nursery__condition_0_0();
+                } 
+                
+            
             }
             static void a1_monday_nobodys_room() {
                 ks::SceneManager::free_resources();
@@ -676,9 +694,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 462);
                 ks::SceneManager::show_dialog("", 463);
                 ks::SceneManager::show_dialog("", 464);
-                // bn::vector<ks::ConditionItem, 1> a1_monday_nobodys_room__condition_0;
-                // a1_monday_nobodys_room__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1MondayRu::a1_monday_nobodys_room__condition_0_0));
-                // scene.add_condition(a1_monday_nobodys_room__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1MondayRu::a1_monday_nobodys_room__condition_0_0();
+                } 
+                
+            
             }
             static void a1_monday() {
                 ks::SceneManager::set(ks::SceneManager("script_a1_monday", "ru", script_a1_monday_ru_intl));
@@ -739,19 +759,19 @@ namespace ks {
                 answers.push_back(489);
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
-                    if (answer == 0) {
+                if (answer == 0) {
                     ScriptA1MondayRu::a1_monday_gateway_effect__menu_question_0_why();
                 } else if (answer == 1) {
                     ScriptA1MondayRu::a1_monday_gateway_effect__menu_question_0_yeah_of_course();
                 }
             }
             static void a1_monday_gateway_effect__menu_question_0_why() {
-                // scene.add_sequence(ks::AssignmentItem("wanted_introduce = False"));
+                ks::progress.wanted_introduce = false;
                 ScriptA1MondayRu::a1c1o1();
             }
             static void a1_monday_gateway_effect__menu_question_0_yeah_of_course() {
-                // scene.add_sequence(ks::AssignmentItem("wanted_introduce = True"));
-                // scene.add_sequence(ks::AssignmentItem("attraction_sc += 1"));
+                ks::progress.wanted_introduce = true;
+                ks::progress.attraction_sc += 1;
                 ScriptA1MondayRu::a1c1o2();
             }
             static void a1_monday_in_the_nursery__menu_question_0() {
@@ -762,7 +782,7 @@ namespace ks {
                 answers.push_back(493);
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
-                    if (answer == 0) {
+                if (answer == 0) {
                     ScriptA1MondayRu::a1_monday_in_the_nursery__menu_question_0_ask_about_the_library();
                 } else if (answer == 1) {
                     ScriptA1MondayRu::a1_monday_in_the_nursery__menu_question_0_ask_about_shizunes_deafness();
@@ -771,14 +791,14 @@ namespace ks {
                 }
             }
             static void a1_monday_in_the_nursery__menu_question_0_ask_about_the_library() {
-                // scene.add_sequence(ks::AssignmentItem("attraction_hanako += 1"));
+                ks::progress.attraction_hanako += 1;
                 ScriptA1MondayRu::a1c2o1();
             }
             static void a1_monday_in_the_nursery__menu_question_0_ask_about_shizunes_deafness() {
                 ScriptA1MondayRu::a1c2o2();
             }
             static void a1_monday_in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know() {
-                // scene.add_sequence(ks::AssignmentItem("attraction_sc += 1"));
+                ks::progress.attraction_sc += 1;
                 ScriptA1MondayRu::a1c2o3();
             }
             static void a1_monday_out_cold__condition_0_0() {

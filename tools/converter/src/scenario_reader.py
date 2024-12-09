@@ -145,6 +145,36 @@ class ScenarioReader:
 
         elif stripped_line.startswith("if "):
             condition = stripped_line.split("if ", 1)[1].strip(":")
+            condition = rewrite_condition(condition)
+
+            # TODO: process conditions, also transpose it from py to c++
+
+            # TODO: custom condition definition for _in_replay
+            #     Example in rpy scenario:
+            #     if _in_replay:
+            #         return
+            #
+            # TODO: custom condition definition for go_through_lilly()
+            #     def go_through_lilly():
+            #         return talk_with_hanako and side_lilly
+            #
+            # TODO: custom condition definition for go_through_shizu()
+            #     def go_through_shizu():
+            #         return wait_for_shizu and not side_lilly
+            #
+            # TODO: custom condition definition for go_through_rin()
+            #     def get_tired():
+            #         return promised and go_for_it
+            #
+            # TODO: custom condition definition for go_through_rin()
+            #     def got_kenji():
+            #         return kick_shizu or fun_fun_at_office or not_much_talking
+            #
+            # TODO: custom condition definition for persistent.disable_disturbing_content
+            #     Example in rpy scenario:
+            #     if persistent.disable_disturbing_content:
+            #         "The following scene is disabled based on your accessibility options. By proceeding forward, you'll skip to the next day. "
+
             if self.stack:
                 name = f"{self.stack.current().name}__condition_{sum(1 for item in self.stack.current().sequence if isinstance(item, ConditionItem))}"
             else:
@@ -159,6 +189,7 @@ class ScenarioReader:
 
         elif stripped_line.startswith("elif "):
             condition = stripped_line.split("elif ", 1)[1].strip(":")
+            condition = rewrite_condition(condition)
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Elif block outside of condition block")
             self.stack.current().add_condition(condition)
@@ -182,13 +213,21 @@ class ScenarioReader:
 
         elif self.stack.current().type == SequenceGroupType.MENU and stripped_line.startswith("\""):
             # Parse menu choice
-            match = re.match(r"\"(.*)\":", stripped_line)
+            match = re.match(r"\"(.*)\"(?:| if (.*)):$", stripped_line)
             if match:
                 choice_text = match.group(1)
+                condition_block = match.group(2)
                 choice_text_translated = None
                 if self.translation and choice_text in self.translation.strings:
                     choice_text_translated = self.translation.strings[choice_text]
-                self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
+
+                condition = condition_block if condition_block else None
+                # self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
+                self.stack.current().add_answer(
+                    answer = choice_text_translated if choice_text_translated else choice_text,
+                    condition = condition,
+                    callback = f"{self.stack.current().name}_{sanitize_function_name(choice_text)}"
+                )
                 # self.stack.push(SequenceGroup(f"{self.stack.current().name}_{sanitize_function_name(choice_text)}", SequenceGroupType.MENU), current_indent)
             return
 
@@ -205,6 +244,8 @@ class ScenarioReader:
             if not skip:
                 # Inline calls in menu blocks
                 function_name = stripped_line.split("call ", 1)[1].strip()
+                if function_name == "a1c4o1":
+                    self.stack.current().add_sequence_item(AssignmentItem("im_new_here = True"))
                 self.stack.current().add_sequence_item(RunLabelItem(sanitize_function_name(function_name), False))
             return
 
@@ -322,3 +363,8 @@ class ScenarioReader:
                 self.stack.current().add_sequence_item(
                     DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n")))
             return
+
+def rewrite_condition(condition: str) -> str:
+    # FROM: "Hi! I'm new here. Hisao Nakai. We're in the same class." in choices
+    # TO im_new_here = True
+    return condition.replace('"Hi! I\'m new here. Hisao Nakai. We\'re in the same class." in choices', 'im_new_here == True')

@@ -55,10 +55,14 @@ namespace ks {
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_grin, ks::sprite_metas::misha_cross);
                 ks::SceneManager::show_dialog("mi", 24);
                 ks::SceneManager::show_dialog("", 25);
-                // bn::vector<ks::ConditionItem, 2> a1_wednesday_short_sharp_shock__condition_0;
-                // a1_wednesday_short_sharp_shock__condition_0.push_back(ks::ConditionItem("wait_for_shizu or _in_replay", &ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0_0));
-                // a1_wednesday_short_sharp_shock__condition_0.push_back(ks::ConditionItem("None", &ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0_1));
-                // scene.add_condition(a1_wednesday_short_sharp_shock__condition_0);
+                if (ks::progress.wait_for_shizu || ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0_0();
+                } 
+                else {
+                    ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0_1();
+                } 
+                
+            
             }
             static void a1_wednesday_detour_ahead() {
                 ks::SceneManager::free_resources();
@@ -398,10 +402,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 195);
                 ks::SceneManager::show_dialog("", 196);
                 ks::SceneManager::music_stop();
-                // bn::vector<ks::ConditionItem, 2> a1_wednesday_detour_ahead__condition_0;
-                // a1_wednesday_detour_ahead__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_detour_ahead__condition_0_0));
-                // a1_wednesday_detour_ahead__condition_0.push_back(ks::ConditionItem("talk_with_hanako", &ScriptA1WednesdayRu::a1_wednesday_detour_ahead__condition_0_1));
-                // scene.add_condition(a1_wednesday_detour_ahead__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_detour_ahead__condition_0_0();
+                } 
+                if (ks::progress.talk_with_hanako) {
+                    ScriptA1WednesdayRu::a1_wednesday_detour_ahead__condition_0_1();
+                } 
+                
+            
             }
             static void a1_wednesday_it_builds_character() {
                 ks::SceneManager::free_resources();
@@ -517,9 +525,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("hi", 281);
                 ks::SceneManager::music_stop();
                 ks::SceneManager::show_dialog("", 282);
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_it_builds_character__condition_0;
-                // a1_wednesday_it_builds_character__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_it_builds_character__condition_0_0));
-                // scene.add_condition(a1_wednesday_it_builds_character__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_it_builds_character__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_sip_p1() {
                 ks::SceneManager::free_resources();
@@ -527,7 +537,9 @@ namespace ks {
                 ks::SceneManager::set_background(bn::regular_bg_items::school_miyagi);
                 ks::SceneManager::show_dialog("", 283);
                 ks::SceneManager::show_dialog("", 284);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_basic, bn::sprite_items::lilly_spr_basic_smile, ks::sprite_metas::lilly_basic);
                 ks::SceneManager::show_dialog("hi", 285);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_basic, bn::sprite_items::lilly_spr_basic_smileclosed, ks::sprite_metas::lilly_basic);
                 ks::SceneManager::show_dialog("li", 286);
                 ks::SceneManager::show_dialog("", 287);
                 ks::SceneManager::show_dialog("", 288);
@@ -565,8 +577,10 @@ namespace ks {
                 ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3);
                 ks::SceneManager::show_dialog("", 318);
                 ks::SceneManager::show_dialog("", 319);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smileclosed, ks::sprite_metas::lilly_cane, -48, 0);
                 ks::SceneManager::show_dialog("li", 320);
                 ks::SceneManager::show_dialog("hi", 321);
+                ks::SceneManager::hide_character(2);
                 ks::SceneManager::music_stop();
                 ks::SceneManager::show_dialog("", 322);
                 ks::SceneManager::show_dialog("hi", 323);
@@ -583,44 +597,59 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 332);
                 ks::SceneManager::show_dialog("", 333);
                 ks::SceneManager::show_dialog("", 334);
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_sip_p1__condition_0;
-                // a1_wednesday_sip_p1__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_sip_p1__condition_0_0));
-                // scene.add_condition(a1_wednesday_sip_p1__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_sip_p1__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_meet_cute() {
                 ks::SceneManager::free_resources();
                 ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3);
                 ks::SceneManager::show_dialog("", 335);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smile, ks::sprite_metas::lilly_cane, -48, 0);
                 ks::SceneManager::show_dialog("", 336);
                 ks::SceneManager::show_dialog("", 337);
                 ks::SceneManager::show_dialog("", 338);
                 ScriptA1WednesdayRu::separate_of_sss_and_mc();
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_listen, ks::sprite_metas::lilly_cane, -120, 0);
+                ks::SceneManager::set_character_position(2, -80, 0);
                 ks::SceneManager::show_dialog("li", 339);
                 ks::SceneManager::show_dialog("", 340);
                 ks::SceneManager::show_dialog("hi", 341);
                 ks::SceneManager::show_dialog("emi_", 342);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 343);
                 ks::SceneManager::show_dialog("", 344);
                 ks::SceneManager::show_dialog("emi", 345);
                 ks::SceneManager::show_dialog("", 346);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_sad, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 347);
                 ks::SceneManager::show_dialog("", 348);
                 ks::SceneManager::show_dialog("", 10);
                 ks::SceneManager::show_dialog("emi", 11);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_surprised, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("emi", 349);
                 ks::SceneManager::show_dialog("emi", 17);
                 ks::SceneManager::music_stop();
                 ks::SceneManager::show_dialog("", 350);
                 ks::SceneManager::show_dialog("hi", 351);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_concerned, ks::sprite_metas::lilly_cane);
+                ks::SceneManager::set_character_position(2, -48, 0);
                 ks::SceneManager::show_dialog("li", 352);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_listen, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 353);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("", 354);
                 ks::SceneManager::show_dialog("li", 355);
+                ks::SceneManager::hide_character(2);
                 ks::SceneManager::show_dialog("", 356);
                 ks::SceneManager::show_dialog("", 357);
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_meet_cute__condition_0;
-                // a1_wednesday_meet_cute__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_meet_cute__condition_0_0));
-                // scene.add_condition(a1_wednesday_meet_cute__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_meet_cute__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_lunch_evolution_theory() {
                 ks::SceneManager::free_resources();
@@ -741,30 +770,30 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 433);
                 ks::SceneManager::show_dialog("hi", 434);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_classroomart);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_surprised, ks::sprite_metas::rin_relaxed);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_surprised, ks::sprite_metas::rin_relaxed);
                 ks::SceneManager::show_dialog("", 435);
                 ks::SceneManager::show_dialog("rin_", 436);
                 ks::SceneManager::show_dialog("", 437);
                 ks::SceneManager::show_dialog("hi", 438);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin_", 439);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 440);
                 ks::SceneManager::show_dialog("rin", 441);
                 ks::SceneManager::show_dialog("", 442);
                 ks::SceneManager::show_dialog("", 443);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_nonchalant, ks::sprite_metas::rin_relaxed);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_nonchalant, ks::sprite_metas::rin_relaxed);
                 ks::SceneManager::show_dialog("", 444);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 445);
                 ks::SceneManager::show_dialog("rin", 446);
                 ks::SceneManager::show_dialog("hi", 447);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 448);
                 ks::SceneManager::show_dialog("hi", 449);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
                 ks::SceneManager::show_dialog("rin", 450);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_delight, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_delight, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 451);
                 ks::SceneManager::show_dialog("", 452);
                 ks::SceneManager::set_background(bn::regular_bg_items::rin_eating);
@@ -781,40 +810,40 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 462);
                 ks::SceneManager::show_dialog("", 463);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_classroomart);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 464);
                 ks::SceneManager::show_dialog("", 465);
                 ks::SceneManager::show_dialog("", 466);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_lucid, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_lucid, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 467);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 468);
                 ks::SceneManager::music_play("music_rin.gsm");
                 ks::SceneManager::show_dialog("", 469);
                 ks::SceneManager::show_dialog("", 470);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_surprised, ks::sprite_metas::rin_relaxed);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_surprised, ks::sprite_metas::rin_relaxed);
                 ks::SceneManager::show_dialog("rin", 471);
                 ks::SceneManager::show_dialog("", 472);
                 ks::SceneManager::show_dialog("hi", 473);
                 ks::SceneManager::show_dialog("", 7);
                 ks::SceneManager::show_dialog("", 474);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
                 ks::SceneManager::show_dialog("", 475);
                 ks::SceneManager::show_dialog("rin", 476);
                 ks::SceneManager::show_dialog("", 477);
                 ks::SceneManager::show_dialog("hi", 478);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 479);
                 ks::SceneManager::show_dialog("hi", 480);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 481);
                 ks::SceneManager::show_dialog("hi", 482);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 483);
                 ks::SceneManager::show_dialog("hi", 484);
                 ks::SceneManager::show_dialog("", 7);
                 ks::SceneManager::music_stop();
-                ks::SceneManager::hide_character(2);
+                ks::SceneManager::hide_character(3);
                 ks::SceneManager::show_dialog("", 485);
                 ks::SceneManager::show_dialog("", 486);
                 ks::SceneManager::show_dialog("", 487);
@@ -824,7 +853,7 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 491);
                 ks::SceneManager::show_dialog("", 492);
                 ks::SceneManager::music_play("music_dreamy.gsm");
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic, 80, 0);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic, 80, 0);
                 ks::SceneManager::show_dialog("", 493);
                 ks::SceneManager::show_dialog("", 494);
                 ks::SceneManager::show_dialog("", 495);
@@ -835,39 +864,39 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 500);
                 ks::SceneManager::show_dialog("", 501);
                 ks::SceneManager::show_dialog("hi", 502);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 503);
                 ks::SceneManager::show_dialog("rin", 504);
                 ks::SceneManager::show_dialog("hi", 505);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 506);
                 ks::SceneManager::show_dialog("hi", 507);
                 ks::SceneManager::show_dialog("", 508);
                 ks::SceneManager::show_dialog("", 509);
                 ks::SceneManager::show_dialog("", 510);
                 ks::SceneManager::show_dialog("hi", 511);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 512);
                 ks::SceneManager::show_dialog("rin", 513);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_surprised, ks::sprite_metas::rin_relaxed);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_surprised, ks::sprite_metas::rin_relaxed);
                 ks::SceneManager::show_dialog("rin", 514);
                 ks::SceneManager::show_dialog("hi", 515);
                 ks::SceneManager::show_dialog("", 516);
                 ks::SceneManager::show_dialog("hi", 517);
                 ks::SceneManager::show_dialog("hi", 518);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 519);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 520);
                 ks::SceneManager::show_dialog("", 521);
                 ks::SceneManager::show_dialog("hi", 522);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 523);
                 ks::SceneManager::show_dialog("", 7);
                 ks::SceneManager::show_dialog("", 524);
                 ks::SceneManager::show_dialog("", 525);
                 ks::SceneManager::show_dialog("", 526);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 527);
                 ks::SceneManager::show_dialog("", 528);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3);
@@ -876,9 +905,11 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 531);
                 ks::SceneManager::show_dialog("rin", 532);
                 ks::SceneManager::music_stop();
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_a_private_lunch__condition_0;
-                // a1_wednesday_a_private_lunch__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_a_private_lunch__condition_0_0));
-                // scene.add_condition(a1_wednesday_a_private_lunch__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_a_private_lunch__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_waylay() {
                 ks::SceneManager::free_resources();
@@ -920,15 +951,15 @@ namespace ks {
                 ks::SceneManager::show_dialog("rin", 554);
                 ks::SceneManager::show_dialog("", 555);
                 ks::SceneManager::show_dialog("", 556);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_sleepy, ks::sprite_metas::rin_relaxed, 120, 0);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_sleepy, ks::sprite_metas::rin_relaxed, 120, 0);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_frown, ks::sprite_metas::shizu_basic);
-                ks::SceneManager::set_character_position(2, 80, 0);
+                ks::SceneManager::set_character_position(3, 80, 0);
                 ks::SceneManager::show_dialog("rin", 429);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_frown, ks::sprite_metas::shizu_basic);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_frown, ks::sprite_metas::misha_cross);
                 ks::SceneManager::show_dialog("mi", 557);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_confused, ks::sprite_metas::rin_negative);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_confused, ks::sprite_metas::rin_negative);
                 ks::SceneManager::show_dialog("rin", 558);
                 ks::SceneManager::show_dialog("", 559);
                 ks::SceneManager::show_dialog("", 560);
@@ -941,20 +972,20 @@ namespace ks {
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
                 ks::SceneManager::show_dialog("mi", 563);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 564);
                 ks::SceneManager::show_dialog("rin", 565);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_frustrated, ks::sprite_metas::shizu_behind);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_dialog("mi", 566);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_boredom, ks::sprite_metas::rin_relaxed);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_boredom, ks::sprite_metas::rin_relaxed);
                 ks::SceneManager::show_dialog("rin", 567);
                 ks::SceneManager::show_dialog("", 568);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_frown, ks::sprite_metas::shizu_basic);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_frown, ks::sprite_metas::misha_hips);
                 ks::SceneManager::show_dialog("mi", 569);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 570);
                 ks::SceneManager::show_dialog("rin", 571);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_grin, ks::sprite_metas::misha_cross);
@@ -962,30 +993,30 @@ namespace ks {
                 ks::SceneManager::hide_character(1);
                 ks::SceneManager::hide_character(0);
                 ks::SceneManager::show_dialog("", 573);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanupset, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanupset, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 574);
                 ks::SceneManager::show_dialog("rin", 575);
                 ks::SceneManager::show_dialog("rin", 576);
                 ks::SceneManager::show_dialog("rin", 577);
                 ks::SceneManager::show_dialog("rin", 578);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_nonchalant, ks::sprite_metas::rin_relaxed);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_nonchalant, ks::sprite_metas::rin_relaxed);
                 ks::SceneManager::show_dialog("rin", 579);
-                ks::SceneManager::set_character_position(2, 120, 0);
-                ks::SceneManager::hide_character(2);
+                ks::SceneManager::set_character_position(3, 120, 0);
+                ks::SceneManager::hide_character(3);
                 ks::SceneManager::music_stop();
                 ks::SceneManager::show_dialog("", 580);
                 ks::SceneManager::show_dialog("rin", 581);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_classroomart);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 582);
                 ks::SceneManager::show_dialog("", 583);
                 ks::SceneManager::show_dialog("", 584);
                 ks::SceneManager::show_dialog("", 585);
                 ks::SceneManager::show_dialog("", 586);
                 ks::SceneManager::show_dialog("hi", 587);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 588);
-                ks::SceneManager::hide_character(2);
+                ks::SceneManager::hide_character(3);
                 ks::SceneManager::show_dialog("", 589);
                 ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3);
                 ks::SceneManager::show_dialog("", 590);
@@ -997,16 +1028,16 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 594);
                 ks::SceneManager::music_play("music_nurse.gsm");
                 ks::SceneManager::show_dialog("nk", 595);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic, 48, 0);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic, 48, 0);
                 ks::SceneManager::show_dialog("", 596);
                 ks::SceneManager::show_dialog("nk", 597);
                 ks::SceneManager::show_dialog("", 598);
                 ks::SceneManager::show_dialog("nk", 599);
                 ks::SceneManager::show_dialog("nk", 600);
                 ks::SceneManager::show_dialog("nk", 601);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("hi", 63);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("nk", 602);
                 ks::SceneManager::show_dialog("", 603);
                 ks::SceneManager::show_dialog("", 604);
@@ -1015,26 +1046,26 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 607);
                 ks::SceneManager::show_dialog("", 608);
                 ks::SceneManager::show_dialog("", 609);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 610);
                 ks::SceneManager::show_dialog("", 7);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("nk", 611);
                 ks::SceneManager::show_dialog("nk", 612);
                 ks::SceneManager::show_dialog("", 613);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("hi", 614);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("nk", 615);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("hi", 616);
                 ks::SceneManager::show_dialog("", 617);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 618);
                 ks::SceneManager::show_dialog("nk", 619);
                 ks::SceneManager::music_stop();
-                ks::SceneManager::set_character_position(2, 120, 0);
-                ks::SceneManager::hide_character(2);
+                ks::SceneManager::set_character_position(3, 120, 0);
+                ks::SceneManager::hide_character(3);
                 ks::SceneManager::show_dialog("", 620);
                 ks::SceneManager::show_dialog("nk", 621);
                 ks::SceneManager::show_dialog("nk", 622);
@@ -1048,7 +1079,7 @@ namespace ks {
                 ks::SceneManager::show_dialog("hi", 628);
                 ks::SceneManager::show_dialog("nk", 629);
                 ks::SceneManager::music_stop();
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 630);
                 ks::SceneManager::show_dialog("", 631);
                 ks::SceneManager::show_dialog("rin", 632);
@@ -1061,16 +1092,18 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 639);
                 ks::SceneManager::show_dialog("", 640);
                 ks::SceneManager::show_dialog("hi", 641);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 642);
                 ks::SceneManager::show_dialog("hi", 643);
                 ks::SceneManager::show_dialog("hi", 644);
                 ks::SceneManager::show_dialog("", 645);
                 ks::SceneManager::show_dialog("", 646);
                 ks::SceneManager::show_dialog("", 647);
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_waylay__condition_0;
-                // a1_wednesday_waylay__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_waylay__condition_0_0));
-                // scene.add_condition(a1_wednesday_waylay__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_waylay__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_the_other_green() {
                 ks::SceneManager::free_resources();
@@ -1084,14 +1117,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 652);
                 ks::SceneManager::show_dialog("", 653);
                 ks::SceneManager::show_dialog("", 654);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic, 48, 0);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic, 48, 0);
                 ks::SceneManager::show_dialog("rin", 655);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpannormal, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 656);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
                 ks::SceneManager::show_dialog("rin", 657);
                 ks::SceneManager::show_dialog("rin", 658);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 659);
                 ks::SceneManager::show_dialog("", 660);
                 ks::SceneManager::show_dialog("", 661);
@@ -1099,62 +1132,62 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 663);
                 ks::SceneManager::show_dialog("rin", 664);
                 ks::SceneManager::show_dialog("hi", 665);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 666);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 667);
                 ks::SceneManager::show_dialog("", 668);
                 ks::SceneManager::show_dialog("", 669);
                 ks::SceneManager::show_dialog("hi", 670);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 671);
                 ks::SceneManager::show_dialog("hi", 672);
                 ks::SceneManager::show_dialog("rin", 673);
                 ks::SceneManager::show_dialog("hi", 674);
                 ks::SceneManager::show_dialog("", 675);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanamused, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanamused, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 676);
                 ks::SceneManager::show_dialog("", 677);
                 ks::SceneManager::show_dialog("", 678);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpansurprised, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpansurprised, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 679);
                 ks::SceneManager::show_dialog("hi", 680);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_amused, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_amused, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 681);
                 ks::SceneManager::show_dialog("hi", 682);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_delight, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_delight, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 683);
                 ks::SceneManager::show_dialog("", 684);
                 ks::SceneManager::show_dialog("", 685);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 686);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 687);
                 ks::SceneManager::show_dialog("hi", 688);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 689);
                 ks::SceneManager::show_dialog("rin", 690);
                 ks::SceneManager::show_dialog("hi", 691);
                 ks::SceneManager::show_dialog("hi", 692);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_nonchalant, ks::sprite_metas::rin_relaxed);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_nonchalant, ks::sprite_metas::rin_relaxed);
                 ks::SceneManager::show_dialog("", 693);
                 ks::SceneManager::show_dialog("rin", 694);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 695);
                 ks::SceneManager::show_dialog("", 696);
                 ks::SceneManager::show_dialog("hi", 697);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_absent, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 698);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 699);
                 ks::SceneManager::show_dialog("hi", 700);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanamused, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanamused, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 701);
                 ks::SceneManager::show_dialog("", 702);
                 ks::SceneManager::show_dialog("hi", 703);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_amused, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_amused, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 704);
-                ks::SceneManager::hide_character(2);
+                ks::SceneManager::hide_character(3);
                 ks::SceneManager::music_stop();
                 ks::SceneManager::show_dialog("", 705);
                 ks::SceneManager::show_dialog("", 706);
@@ -1165,29 +1198,29 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 710);
                 ks::SceneManager::show_dialog("", 711);
                 ks::SceneManager::music_play("music_another.gsm");
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic, 48, 0);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic, 48, 0);
                 ks::SceneManager::show_dialog("rin", 712);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
                 ks::SceneManager::show_dialog("", 713);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 714);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
                 ks::SceneManager::show_dialog("", 715);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 716);
                 ks::SceneManager::show_dialog("rin", 717);
                 ks::SceneManager::show_dialog("hi", 718);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanamused, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanamused, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("", 719);
                 ks::SceneManager::show_dialog("rin", 720);
                 ks::SceneManager::show_dialog("hi", 721);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpandelight, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 722);
                 ks::SceneManager::show_dialog("", 723);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanupset, ks::sprite_metas::rin_basic);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpanupset, ks::sprite_metas::rin_basic);
                 ks::SceneManager::show_dialog("rin", 724);
                 ks::SceneManager::show_dialog("rin", 725);
-                ks::SceneManager::show_character(2, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
+                ks::SceneManager::show_character(3, bn::regular_bg_items::rin_bg_negative, bn::sprite_items::rin_spr_negative_spaciness, ks::sprite_metas::rin_negative);
                 ks::SceneManager::show_dialog("", 7);
                 ks::SceneManager::show_dialog("", 726);
                 ks::SceneManager::music_stop();
@@ -1200,12 +1233,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 732);
                 ks::SceneManager::show_dialog("", 733);
                 ks::SceneManager::show_dialog("", 734);
-                // scene.add_sequence(ks::AssignmentItem("renpy.music.set_volume(0.1, 0.0, channel="ambient")"));
+                // renpy.music.set_volume(0.1, 0.0, channel="ambient"); TODO: unknown assignment
                 ks::SceneManager::set_background(bn::regular_bg_items::school_dormext_half_ni);
                 ks::SceneManager::show_dialog("", 735);
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_the_other_green__condition_0;
-                // a1_wednesday_the_other_green__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_the_other_green__condition_0_0));
-                // scene.add_condition(a1_wednesday_the_other_green__condition_0);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_the_other_green__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday() {
                 ks::SceneManager::set(ks::SceneManager("script_a1_wednesday", "ru", script_a1_wednesday_ru_intl));
@@ -1302,11 +1337,14 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 805);
                 ks::SceneManager::show_dialog("hi", 806);
                 ks::SceneManager::show_dialog("", 807);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane, -48, 0);
                 ks::SceneManager::music_play("music_lilly.gsm");
                 ks::SceneManager::show_dialog("ha", 808);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 809);
                 ks::SceneManager::show_dialog("ha", 314);
                 ks::SceneManager::show_dialog("", 810);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_sad, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 811);
                 ks::SceneManager::show_dialog("", 812);
                 ks::SceneManager::show_dialog("", 813);
@@ -1314,25 +1352,32 @@ namespace ks {
                 ks::SceneManager::show_dialog("", 815);
                 ks::SceneManager::show_dialog("", 816);
                 ks::SceneManager::show_dialog("hi", 817);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_surprised, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 818);
                 ks::SceneManager::show_dialog("", 819);
                 ks::SceneManager::show_dialog("ha", 820);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 821);
                 ks::SceneManager::show_dialog("li", 822);
                 ks::SceneManager::show_dialog("hi", 823);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 824);
                 ks::SceneManager::show_dialog("li", 825);
                 ks::SceneManager::show_dialog("hi", 826);
                 ks::SceneManager::show_dialog("ha", 827);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("", 828);
                 ks::SceneManager::show_dialog("li", 829);
                 ks::SceneManager::show_dialog("", 830);
                 ks::SceneManager::show_dialog("", 831);
                 ks::SceneManager::show_dialog("hi", 832);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("", 833);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 834);
                 ks::SceneManager::show_dialog("", 835);
                 ks::SceneManager::show_dialog("ha", 836);
+                ks::SceneManager::show_character(2, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_cheerful, ks::sprite_metas::lilly_cane);
                 ks::SceneManager::show_dialog("li", 837);
                 ks::SceneManager::show_dialog("", 838);
                 ks::SceneManager::show_dialog("", 839);
@@ -1383,41 +1428,53 @@ namespace ks {
             static void a1_wednesday_lunch_evolution_theory__menu_question_0() {
                 bn::vector<int, 5> answers;
                 answers.push_back(860);
+                if (ks::progress.attraction_hanako > 1 || ks::in_replay) answers.push_back(861);
+                if (ks::progress.attraction_sc > 1 || ks::in_replay) answers.push_back(862);
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
-                    if (answer == 0) {
+                if (answer == 0) {
                     ScriptA1WednesdayRu::a1_wednesday_lunch_evolution_theory__menu_question_0_read_my_book();
+                } else if (answer == 1) {
+                    ScriptA1WednesdayRu::a1_wednesday_lunch_evolution_theory__menu_question_0_go_talk_with_hanako();
+                } else if (answer == 2) {
+                    ScriptA1WednesdayRu::a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision();
                 }
             }
             static void a1_wednesday_lunch_evolution_theory__menu_question_0_read_my_book() {
                 ScriptA1WednesdayRu::a1c6o1();
-                // scene.add_sequence(ks::AssignmentItem("talk_with_hanako = True"));
+            }
+            static void a1_wednesday_lunch_evolution_theory__menu_question_0_go_talk_with_hanako() {
+                ks::progress.talk_with_hanako = true;
                 ScriptA1WednesdayRu::a1c6o2();
-                // scene.add_sequence(ks::AssignmentItem("wait_for_shizu = True"));
+            }
+            static void a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision() {
+                ks::progress.wait_for_shizu = true;
                 ScriptA1WednesdayRu::a1c6o3();
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_lunch_evolution_theory__menu_question_0__condition_0;
-                // a1_wednesday_lunch_evolution_theory__menu_question_0__condition_0.push_back(ks::ConditionItem("not talk_with_hanako", &ScriptA1WednesdayRu::a1_wednesday_lunch_evolution_theory__menu_question_0__condition_0_0));
-                // scene.add_condition(a1_wednesday_lunch_evolution_theory__menu_question_0__condition_0);
+                if (!ks::progress.talk_with_hanako) {
+                    ScriptA1WednesdayRu::a1_wednesday_lunch_evolution_theory__menu_question_0__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_waylay__menu_question_0() {
-                ks::SceneManager::show_dialog("nk", 861);
+                ks::SceneManager::show_dialog("nk", 863);
                 bn::vector<int, 5> answers;
                 answers.push_back(673);
-                answers.push_back(862);
+                answers.push_back(864);
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
-                    if (answer == 0) {
+                if (answer == 0) {
                     ScriptA1WednesdayRu::a1_wednesday_waylay__menu_question_0_yes();
                 } else if (answer == 1) {
                     ScriptA1WednesdayRu::a1_wednesday_waylay__menu_question_0_maybe();
                 }
             }
             static void a1_wednesday_waylay__menu_question_0_yes() {
-                // scene.add_sequence(ks::AssignmentItem("promised = True"));
+                ks::progress.promised = true;
                 ScriptA1WednesdayRu::a1c7o1();
             }
             static void a1_wednesday_waylay__menu_question_0_maybe() {
-                // scene.add_sequence(ks::AssignmentItem("promised = False"));
+                ks::progress.promised = false;
                 ScriptA1WednesdayRu::a1c7o2();
             }
             static void a1_wednesday_short_sharp_shock__condition_0__condition_0_0() {
@@ -1427,82 +1484,86 @@ namespace ks {
             
             }
             static void a1_wednesday_short_sharp_shock__condition_0_0() {
-                // scene.add_sequence(ks::AssignmentItem("renpy.music.play(music_normal, fadein=3.0, if_changed=True)"));
+                // renpy.music.play(music_normal, fadein=3.0, if_changed=True); TODO: unknown assignment
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_happy, ks::sprite_metas::shizu_adjust);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, ks::sprite_metas::misha_perky);
-                ks::SceneManager::show_dialog("mi", 863);
+                ks::SceneManager::show_dialog("mi", 865);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
-                ks::SceneManager::show_dialog("mi", 864);
-                ks::SceneManager::show_dialog("hi", 865);
-                ks::SceneManager::show_dialog("hi", 866);
+                ks::SceneManager::show_dialog("mi", 866);
+                ks::SceneManager::show_dialog("hi", 867);
+                ks::SceneManager::show_dialog("hi", 868);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_smile, ks::sprite_metas::shizu_behind);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, ks::sprite_metas::misha_perky);
-                ks::SceneManager::show_dialog("mi", 867);
-                ks::SceneManager::show_dialog("", 868);
+                ks::SceneManager::show_dialog("mi", 869);
+                ks::SceneManager::show_dialog("", 870);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_smug, ks::sprite_metas::shizu_adjust);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
-                ks::SceneManager::show_dialog("mi", 869);
-                ks::SceneManager::show_dialog("hi", 870);
-                ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, ks::sprite_metas::misha_hips);
                 ks::SceneManager::show_dialog("mi", 871);
-                ks::SceneManager::show_dialog("", 872);
-                ks::SceneManager::show_dialog("", 873);
+                ks::SceneManager::show_dialog("hi", 872);
+                ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, ks::sprite_metas::misha_hips);
+                ks::SceneManager::show_dialog("mi", 873);
+                ks::SceneManager::show_dialog("", 874);
+                ks::SceneManager::show_dialog("", 875);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_blank, ks::sprite_metas::shizu_behind);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_sign, bn::sprite_items::misha_spr_sign_smile, ks::sprite_metas::misha_sign);
-                ks::SceneManager::show_dialog("mi", 874);
-                ks::SceneManager::show_dialog("", 875);
-                ks::SceneManager::show_dialog("", 876);
+                ks::SceneManager::show_dialog("mi", 876);
                 ks::SceneManager::show_dialog("", 877);
                 ks::SceneManager::show_dialog("", 878);
-                ks::SceneManager::show_dialog("hi", 879);
+                ks::SceneManager::show_dialog("", 879);
+                ks::SceneManager::show_dialog("", 880);
+                ks::SceneManager::show_dialog("hi", 881);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_smile, ks::sprite_metas::shizu_behind);
-                ks::SceneManager::show_dialog("mi", 880);
-                ks::SceneManager::show_dialog("", 881);
+                ks::SceneManager::show_dialog("mi", 882);
+                ks::SceneManager::show_dialog("", 883);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_blank, ks::sprite_metas::shizu_behind);
-                ks::SceneManager::show_dialog("hi", 882);
+                ks::SceneManager::show_dialog("hi", 884);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2, ks::sprite_metas::shizu_basic);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_laugh, ks::sprite_metas::misha_cross);
-                ks::SceneManager::show_dialog("mi", 883);
+                ks::SceneManager::show_dialog("mi", 885);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_smug, ks::sprite_metas::shizu_adjust);
-                ks::SceneManager::show_dialog("", 884);
-                ks::SceneManager::show_dialog("hi", 885);
+                ks::SceneManager::show_dialog("", 886);
+                ks::SceneManager::show_dialog("hi", 887);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_happy, ks::sprite_metas::shizu_adjust);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_grin, ks::sprite_metas::misha_cross);
                 ks::SceneManager::music_stop();
-                ks::SceneManager::show_dialog("", 886);
+                ks::SceneManager::show_dialog("", 888);
             }
             static void a1_wednesday_short_sharp_shock__condition_0_1() {
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2, ks::sprite_metas::shizu_basic);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, ks::sprite_metas::misha_perky);
-                ks::SceneManager::show_dialog("mi", 887);
+                ks::SceneManager::show_dialog("mi", 889);
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_blank, ks::sprite_metas::shizu_behind);
                 ks::SceneManager::show_dialog("shi", 7);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, ks::sprite_metas::misha_hips);
-                ks::SceneManager::show_dialog("mi", 888);
+                ks::SceneManager::show_dialog("mi", 890);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
-                ks::SceneManager::show_dialog("mi", 889);
+                ks::SceneManager::show_dialog("mi", 891);
                 ks::SceneManager::show_character(0, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_laugh, ks::sprite_metas::misha_hips);
                 ks::SceneManager::show_dialog("mi", 160);
                 ks::SceneManager::hide_character(0);
                 ks::SceneManager::hide_character(1);
                 ks::SceneManager::music_stop();
-                ks::SceneManager::show_dialog("", 890);
-                ks::SceneManager::show_dialog("", 891);
-                ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom);
                 ks::SceneManager::show_dialog("", 892);
                 ks::SceneManager::show_dialog("", 893);
+                ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom);
                 ks::SceneManager::show_dialog("", 894);
-                // bn::vector<ks::ConditionItem, 2> a1_wednesday_short_sharp_shock__condition_0__condition_0;
-                // a1_wednesday_short_sharp_shock__condition_0__condition_0.push_back(ks::ConditionItem("_in_replay", &ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0__condition_0_0));
-                // a1_wednesday_short_sharp_shock__condition_0__condition_0.push_back(ks::ConditionItem("None", &ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0__condition_0_1));
-                // scene.add_condition(a1_wednesday_short_sharp_shock__condition_0__condition_0);
+                ks::SceneManager::show_dialog("", 895);
+                ks::SceneManager::show_dialog("", 896);
+                if (ks::in_replay) {
+                    ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0__condition_0_0();
+                } 
+                else {
+                    ScriptA1WednesdayRu::a1_wednesday_short_sharp_shock__condition_0__condition_0_1();
+                } 
+                
+            
             }
             static void a1_wednesday_detour_ahead__condition_0_0() {
                 return;
@@ -1518,9 +1579,11 @@ namespace ks {
             }
             static void a1_wednesday_sip_p1__condition_0_0() {
                 return;
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_sip_p1__condition_0__condition_0;
-                // a1_wednesday_sip_p1__condition_0__condition_0.push_back(ks::ConditionItem("not wait_for_shizu", &ScriptA1WednesdayRu::a1_wednesday_sip_p1__condition_0__condition_0_0));
-                // scene.add_condition(a1_wednesday_sip_p1__condition_0__condition_0);
+                if (!ks::progress.wait_for_shizu) {
+                    ScriptA1WednesdayRu::a1_wednesday_sip_p1__condition_0__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_meet_cute__condition_0__condition_0_0() {
                 a1_wednesday_detour_ahead();
@@ -1528,9 +1591,11 @@ namespace ks {
             }
             static void a1_wednesday_meet_cute__condition_0_0() {
                 return;
-                // bn::vector<ks::ConditionItem, 1> a1_wednesday_meet_cute__condition_0__condition_0;
-                // a1_wednesday_meet_cute__condition_0__condition_0.push_back(ks::ConditionItem("wait_for_shizu", &ScriptA1WednesdayRu::a1_wednesday_meet_cute__condition_0__condition_0_0));
-                // scene.add_condition(a1_wednesday_meet_cute__condition_0__condition_0);
+                if (ks::progress.wait_for_shizu) {
+                    ScriptA1WednesdayRu::a1_wednesday_meet_cute__condition_0__condition_0_0();
+                } 
+                
+            
             }
             static void a1_wednesday_lunch_evolution_theory__menu_question_0__condition_0_0() {
                 a1_wednesday_short_sharp_shock();

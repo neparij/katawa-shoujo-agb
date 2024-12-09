@@ -9,6 +9,7 @@
 #include <bn_regular_bg_ptr.h>
 #include "bn_sprite_palette_ptr.h"
 #include "character_sprite_meta.h"
+#include "savefile/save_file.h"
 
 namespace ks {
 
@@ -84,6 +85,8 @@ extern bn::optional<bn::regular_bg_ptr> main_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
 extern bn::vector<character_visuals_ptr, 4> character_visuals;
 extern bn::vector<bn::optional<bn::sprite_palette_ptr>, 2> character_palettes;
+extern ks::saves::SaveSlotProgressData progress;
+extern bool in_replay;
 
 
 } // namespace ks

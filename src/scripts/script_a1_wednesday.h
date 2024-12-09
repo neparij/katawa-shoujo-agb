@@ -28,7 +28,9 @@
 #include "bn_regular_bg_items_school_scienceroom.h"
 #include "bn_regular_bg_items_school_lobby.h"
 #include "bn_regular_bg_items_school_miyagi.h"
+#include "bn_regular_bg_items_lilly_bg_basic.h"
 #include "bn_regular_bg_items_tearoom_everyone_noon.h"
+#include "bn_regular_bg_items_lilly_bg_cane.h"
 #include "bn_regular_bg_items_school_classroomart.h"
 #include "bn_regular_bg_items_rin_eating.h"
 #include "bn_regular_bg_items_rin_bg_relaxed.h"
@@ -63,6 +65,15 @@
 #include "bn_sprite_items_misha_spr_perky_confused.h"
 #include "bn_sprite_items_misha_spr_sign_smile.h"
 #include "bn_sprite_items_misha_spr_sign_sad.h"
+#include "bn_sprite_items_lilly_spr_basic_smile.h"
+#include "bn_sprite_items_lilly_spr_basic_smileclosed.h"
+#include "bn_sprite_items_lilly_spr_cane_smileclosed.h"
+#include "bn_sprite_items_lilly_spr_cane_smile.h"
+#include "bn_sprite_items_lilly_spr_cane_listen.h"
+#include "bn_sprite_items_lilly_spr_cane_weaksmile.h"
+#include "bn_sprite_items_lilly_spr_cane_sad.h"
+#include "bn_sprite_items_lilly_spr_cane_surprised.h"
+#include "bn_sprite_items_lilly_spr_cane_concerned.h"
 #include "bn_sprite_items_rin_spr_relaxed_surprised.h"
 #include "bn_sprite_items_rin_spr_basic_absent.h"
 #include "bn_sprite_items_rin_spr_basic_deadpandelight.h"
@@ -83,6 +94,7 @@
 #include "bn_sprite_items_rin_spr_basic_deadpanamused.h"
 #include "bn_sprite_items_rin_spr_basic_deadpansurprised.h"
 #include "bn_sprite_items_rin_spr_basic_amused.h"
+#include "bn_sprite_items_lilly_spr_cane_cheerful.h"
 #include "bn_sprite_items_misha_spr_hips_laugh.h"
 #include "misha_hips.h"
 #include "shizu_cross.h"
@@ -92,6 +104,8 @@
 #include "misha_perky.h"
 #include "shizu_behind.h"
 #include "misha_sign.h"
+#include "lilly_basic.h"
+#include "lilly_cane.h"
 #include "rin_relaxed.h"
 #include "rin_basic.h"
 #include "rin_negative.h"
@@ -119,6 +133,8 @@ namespace ks {
             // Choice functions
             static void a1_wednesday_lunch_evolution_theory__menu_question_0();
             static void a1_wednesday_lunch_evolution_theory__menu_question_0_read_my_book();
+            static void a1_wednesday_lunch_evolution_theory__menu_question_0_go_talk_with_hanako();
+            static void a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision();
             static void a1_wednesday_waylay__menu_question_0();
             static void a1_wednesday_waylay__menu_question_0_yes();
             static void a1_wednesday_waylay__menu_question_0_maybe();

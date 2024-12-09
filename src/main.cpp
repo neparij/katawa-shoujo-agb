@@ -184,7 +184,7 @@ int main()
                 need_update = false;
 
                 // Debug menu stuff
-                bn::string<64> title("Katawa Shouho v0.1.3+00609");
+                bn::string<64> title("Katawa Shoujo v0.1.3+00610");
                 bn::string<64> author(alt_lang ? "порт от NeParij" : "ported by: NeParij");
                 bn::string<64> play_a0_test_scene(alt_lang ? "Тестовая сцена" : "Test Scene");
                 bn::string<64> play_a1_monday(alt_lang ? "Акт 1. Понедельник" : "Act 1. Monday");
@@ -219,32 +219,26 @@ int main()
 
         if (select == 0) {
             ks::ScriptA0TestEn::a0_actname();
-            ks::globals::main_update();
+            // ks::globals::main_update();
         } else if (select == 1) {
             !alt_lang ? ks::ScriptA1MondayEn::a1_monday() : ks::ScriptA1MondayRu::a1_monday();
-            ks::globals::main_update();
+            // ks::globals::main_update();
         } else if (select == 2) {
             !alt_lang ? ks::ScriptA1TuesdayEn::a1_tuesday() : ks::ScriptA1TuesdayRu::a1_tuesday();
-            ks::globals::main_update();
+            // ks::globals::main_update();
         }
         else if (select == 3) {
             !alt_lang ? ks::ScriptA1WednesdayEn::a1_wednesday() :ks::ScriptA1WednesdayRu::a1_wednesday();
-            ks::globals::main_update();
+            // ks::globals::main_update();
         } else if (select == 4) {
             // Play all scenes
-            // BN_BARRIER;
             !alt_lang ? ks::ScriptA1MondayEn::a1_monday() : ks::ScriptA1MondayRu::a1_monday();
-            // BN_BARRIER;
-            ks::globals::main_update();
+            // ks::globals::main_update();
 
-            // BN_BARRIER;
             !alt_lang ? ks::ScriptA1TuesdayEn::a1_tuesday() : ks::ScriptA1TuesdayRu::a1_tuesday();
-            // BN_BARRIER;
-            ks::globals::main_update();
+            // ks::globals::main_update();
 
-            // BN_BARRIER;
             !alt_lang ? ks::ScriptA1WednesdayEn::a1_wednesday() :ks::ScriptA1WednesdayRu::a1_wednesday();
-            // BN_BARRIER;
             // ks::globals::main_update();
         }
 
