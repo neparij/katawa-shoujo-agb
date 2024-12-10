@@ -19,7 +19,7 @@ from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, Condit
 from src.utils import sanitize_function_name, sanitize_comment_text
 
 DEFAULT_LOCALE = "en"
-
+PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko"]
 
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup],
@@ -287,7 +287,7 @@ class ScenarioWriter:
         code = []
         cnum = 0
         for variant in matching_scenario_item.conditions:
-            if variant.condition:
+            if variant.condition and cnum == 0:
                 condition_variant = f"if ({to_ks_progress_variables(to_cpp_condition(variant.condition))})"
             elif variant.condition and cnum > 0:
                 condition_variant = f"else if ({to_ks_progress_variables(to_cpp_condition(variant.condition))})"
@@ -362,7 +362,7 @@ class ScenarioWriter:
         #     self.sprites.append(show.sprite)
 
         # TODO: rework, that's for test purposes only for the moment
-        if show.sprite in ["shizu", "misha", "rin", "lilly"]:
+        if show.sprite in PROCESSED_CHARACTERS:
             character_index = self.characters.get(show.sprite)
             if show.position == ShowPosition.TWOLEFT:
                 position = (-48, 0)
@@ -395,23 +395,39 @@ class ScenarioWriter:
                 character_index = len(self.characters)
                 self.characters[show.sprite] = character_index
             if show.variant:
+
+                show.variant = show.variant.replace("_ss", "").removesuffix("_close")
+                show.sprite = show.sprite.replace("_ss", "")
+
                 if show.sprite == "lilly":
                     # Fix for Lilly's custom poses
                     show.variant = CharacterDisplayableReplacements.lilly(show.variant)
+                elif show.sprite == "yuuko":
+                    show.variant = CharacterDisplayableReplacements.yuuko(show.variant)
+                elif show.sprite == "kenji":
+                    show.variant = CharacterDisplayableReplacements.kenji(show.variant)
 
                 # character_bg_name = f'{show.sprite}_bg_{show.variant.split("_")[0]}'
                 # TODO: support _close notation
-                character_bg_name = f'{show.sprite}_bg_{show.variant.split("_")[0]}'.removesuffix("_close")
+                if len(show.variant.split("_")) > 1:
+                    character_bg_name = f'{show.sprite}_bg_{show.variant.split("_")[0]}'
+                else:
+                    # for characters without poses
+                    character_bg_name = f'{show.sprite}_bg'
                 if not character_bg_name in self.backgrounds:
                     self.backgrounds.append(character_bg_name)
                 # character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'
                 # TODO: support _close notation
-                character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'.removesuffix("_close").removesuffix("_ss")
+                character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'
                 if not character_spr_name in self.sprites:
                     self.sprites.append(character_spr_name)
                 # character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'
                 # TODO: support _close notation
-                character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'.removesuffix("_close").removesuffix("_ss")
+                if len(show.variant.split("_")) > 1:
+                    character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'
+                else:
+                    # for characters without poses
+                    character_sprite_meta_name = f'{show.sprite}'
                 if not character_sprite_meta_name in self.sprite_metas:
                     self.sprite_metas.append(character_sprite_meta_name)
 
@@ -438,7 +454,7 @@ class ScenarioWriter:
         #     raise TypeError("Unknown ShowEvent type")
 
     def process_sequence_hide(self, group: SequenceGroup, hide: HideItem) -> List[str]:
-        if hide.sprite in ["shizu", "misha", "rin", "lilly"]:
+        if hide.sprite in PROCESSED_CHARACTERS:
             character_index = self.characters.get(hide.sprite)
             if character_index is None:
                 raise f'"{hide.sprite}" is not in character index. Attempt to hide not shown character?'

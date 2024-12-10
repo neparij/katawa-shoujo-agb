@@ -46,6 +46,23 @@ class CharacterDisplayableReplacements:
                 .replace("basic_surprised", "basic3_surprised" if not "_paj" in displayable_name else "basic_surprised")  # hands breast if not in _paj outfit
                 )
 
+    @staticmethod
+    def yuuko(displayable_name: str) -> str:
+        # We should swap last two string
+        # Example: "yuuko_first_second" -> "yuuko_second_first"
+        parts = displayable_name.split('_')
+        if len(parts) > 1:
+            return '_'.join(parts[:-2] + [parts[-1], parts[-2]])
+
+    @staticmethod
+    def kenji(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("happy", "basic_happy")
+                .replace("neutral", "basic_neutral")
+                .replace("tsun", "basic_tsun")
+                .replace("rage", "rage_rage")
+                )
+
 
 class CharacterSpritesGroup:
     def __init__(self, character_name: str, pose: str, outfit: str | None, base_emotion: str | None,
@@ -77,10 +94,15 @@ class CharacterSpritesReader:
         self.character_groups: List[CharacterSpritesGroup] = []
 
     def process_all(self) -> List[CharacterSpritesGroup]:
-        # self.process_shizu()
-        # self.process_misha()
-        # self.process_rin()
+        self.process_shizu()
+        self.process_misha()
+        self.process_emi()
+        self.process_rin()
         self.process_lilly()
+        self.process_hanako()
+        self.process_kenji()
+        self.process_nurse()
+        self.process_yuuko()
         return self.character_groups
 
     def process_shizu(self) -> List[CharacterSpritesGroup]:
@@ -108,6 +130,17 @@ class CharacterSpritesReader:
         self.character_groups.append(CharacterSpritesGroup("misha", "perky", None, "smile", (112, 76)))
         self.character_groups.append(CharacterSpritesGroup("misha", "sign", None, "smile", (112, 76)))
         self._process_character("misha", nude_if=lambda basename: False)
+        return self.character_groups
+
+    def process_emi(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("emi", "basic", "gym", "smile", (110, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "basic", None, "smile", (110, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "excited", "gym", "smile", (112, 92)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "excited", None, "smile", (112, 92)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "sad", "gym", "shy", (106, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "sad", None, "shy", (106, 88)))
+
+        self._process_character("emi", nude_if=lambda basename: False)
         return self.character_groups
 
     def process_rin(self) -> List[CharacterSpritesGroup]:
@@ -150,6 +183,48 @@ class CharacterSpritesReader:
                                 nude_if=lambda basename: basename.endswith("nak"))
         return self.character_groups
 
+    def process_hanako(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", "cas", "normal", (116, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", None, "normal", (116, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", "cas", "distant", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", None, "distant", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "def", "cas", "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "def", None, "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", "cas", "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", None, "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", "cas", "timid", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", None, "timid", (112, 64)))
+
+        self._process_character("hanako", nude_if=lambda basename: False)
+        return self.character_groups
+
+    def process_kenji(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("kenji", "basic", None, "tsun", (118, 66)))
+        self.character_groups.append(CharacterSpritesGroup("kenji", "basic", "naked", "tsun", (118, 69)))
+        self.character_groups.append(CharacterSpritesGroup("kenji", "rage", None, "rage", (128, 80)))
+
+        self._process_character("kenji",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.kenji(filename),
+                                nude_if=lambda basename: basename.endswith("naked"))
+        return self.character_groups
+
+    def process_nurse(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("nurse", None, None, "neutral", (110, 64), base_origin_offset=-48))
+
+        self._process_character("nurse",
+                                regex=r'(?P<name>[^_]+)_(?P<emotion>[^_]+)\.png$',
+                                nude_if=lambda basename: False)
+        return self.character_groups
+
+    def process_yuuko(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("yuuko", "up", None, "smile", (96, 64), base_emotion_size=(64,32)))
+        self.character_groups.append(CharacterSpritesGroup("yuuko", "down", None, "smile", (96, 64), base_emotion_size=(64,32)))
+
+        self._process_character("yuuko",
+                                regex=r'(?P<name>[^_]+)_(?P<emotion>[^_]+)(_(?P<pose>[^_]+))?\.png$',
+                                nude_if=lambda basename: False)
+        return self.character_groups
+
     def _process_character(self,
                            character_key: str,
                            regex: str = r'(?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?\.png$',
@@ -187,14 +262,16 @@ class CharacterSpritesWriter:
         self.write_character_background(default_sprite, group.base_emotion_size, group.base_emotion_offset, group.base_origin_offset)
         for sprite in group.sprites:
             self.write_character_sprite(sprite, group)
-        group_metadata_name = (f"{group.character_name}_{group.pose}"
-                                   f"{f'_{group.outfit}' if group.outfit else ''}")
+        group_metadata_name = (f"{group.character_name}"
+                               f"{f'_{group.pose}' if group.pose else ''}"
+                               f"{f'_{group.outfit}' if group.outfit else ''}")
         self.write_character_group_metadata(group, f'{group_metadata_name}')
 
     def write_character_background(self, character: CharacterSprite, remove_size: tuple[int, int], remove_offset: tuple[int, int], y_offset: int = 0):
         os.makedirs(self.sprite_output_dir, exist_ok=True)
         output_filename = os.path.join(self.sprite_output_dir,
-                                       f"{character.character_name}_bg_{character.pose}"
+                                       f"{character.character_name}_bg"
+                                       f"{f'_{character.pose}' if character.pose else ''}"
                                        f"{f'_{character.outfit}' if character.outfit else ''}")
 
         ImageTools.resize_character_background(character.original_path, f'{output_filename}.bmp', remove_size, remove_offset, y_offset)
@@ -203,7 +280,9 @@ class CharacterSpritesWriter:
     def write_character_background_metadata(self, output_filename):
         metadata = {
             "type": "regular_bg",
-            "bpp_mode": "bpp_4_manual",
+            # "bpp_mode": "bpp_4_manual",
+            "bpp_mode": "bpp_8",
+            "colors_count": 128,
             "compression": "auto_no_huffman",  # or auto_no_huffman?
         }
 
@@ -213,15 +292,16 @@ class CharacterSpritesWriter:
     def write_character_sprite(self, character: CharacterSprite, group: CharacterSpritesGroup):
         os.makedirs(self.sprite_output_dir, exist_ok=True)
         output_filename = os.path.join(self.sprite_output_dir,
-                                       f"{character.character_name}_spr_{character.pose}"
+                                       f"{character.character_name}_spr"
+                                       f"{f'_{character.pose}' if character.pose else ''}"
                                        f"_{character.emotion}"
                                        f"{f'_{character.outfit}' if character.outfit else ''}")
 
         ImageTools.resize_character_emotion_sprite(character.original_path, f'{output_filename}.bmp',
                                                    group.base_emotion_offset, group.base_emotion_size, group.base_origin_offset)
-        # for tile in ImageTools.create_8x8_tiles(f'{output_filename}.bmp', f'{output_filename}.bmp'):
-        #     self.write_character_sprite_tiles_metadata(tile.removesuffix('.bmp') + '.json')
-        # os.remove(f'{output_filename}.bmp')
+        # # for tile in ImageTools.create_8x8_tiles(f'{output_filename}.bmp', f'{output_filename}.bmp'):
+        # #     self.write_character_sprite_tiles_metadata(tile.removesuffix('.bmp') + '.json')
+        # # os.remove(f'{output_filename}.bmp')
         self.write_character_sprite_metadata(f'{output_filename}.json')
 
     def write_character_sprite_tiles_metadata(self, json_filename):
@@ -238,8 +318,10 @@ class CharacterSpritesWriter:
     def write_character_sprite_metadata(self, json_filename):
         metadata = {
             "type": "sprite",
-            "bpp_mode": "bpp_4",
-            "colors_count": 16,
+            # "bpp_mode": "bpp_4",
+            # "colors_count": 16,
+            "bpp_mode": "bpp_8",
+            "colors_count": 128,
             "compression": "auto_no_huffman",
         }
 
@@ -285,8 +367,8 @@ def _from_filename(filename: str, regex: str, nude_if=None):
     if not match:
         raise Exception(f"Filename {filename} does not match regex {regex}")
     character_name = match.group("name")
-    pose = match.group("pose")
-    outfit = match.group("outfit")
+    pose = match.group("pose") if "pose" in match.groupdict() else None
+    outfit = match.group("outfit") if "outfit" in match.groupdict() else None
     emotion = match.group("emotion")
     nude_if(filename.removesuffix('.png')) if nude_if else False
     return CharacterSprite(character_name, pose, emotion, outfit, False)

@@ -51,8 +51,13 @@ GRAPHICS    	:=  graphics \
 					graphics/event \
 					graphics/characters/shizu \
 					graphics/characters/misha \
+                                        graphics/characters/emi \
 					graphics/characters/rin \
                                         graphics/characters/lilly \
+                                        graphics/characters/hanako \
+                                        graphics/characters/kenji \
+                                        graphics/characters/nurse \
+                                        graphics/characters/yuuko \
 					graphics/video/temp_emi_imgs/converted \
 					../butano/common/graphics
 AUDIO       	:=  audio

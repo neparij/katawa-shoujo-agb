@@ -8,6 +8,8 @@
 #include "utils/scenario_reader.h"
 #include <BN_LOG.h>
 
+#include "extension_sprite_ptr.cpp.h"
+
 
 namespace ks {
 
@@ -109,8 +111,14 @@ void SceneManager::show_character(const int character_index,
     character_visuals.at(character_index).background->set_z_order(0);
 
     character_visuals.at(character_index).sprite.reset();
+
     character_visuals.at(character_index).sprite = sprite.create_sprite(character_visuals.at(character_index).position_x + sprite_meta.offset_x,
                                                                         character_visuals.at(character_index).position_y + sprite_meta.offset_y);
+
+    // auto palette = sprite.palette_item().create_palette();
+    // character_visuals.at(character_index).sprite = bn::create_sprite_4bpp(sprite, character_visuals.at(character_index).position_x + sprite_meta.offset_x,
+    //                                                                     character_visuals.at(character_index).position_y + sprite_meta.offset_y,
+    //                                                                     palette);
     character_visuals.at(character_index).offset_x = sprite_meta.offset_x;
     character_visuals.at(character_index).offset_y = sprite_meta.offset_y;
     character_visuals.at(character_index).sprite->set_z_order(-5);

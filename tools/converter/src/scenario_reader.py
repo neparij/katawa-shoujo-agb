@@ -34,7 +34,7 @@ class ScenarioReader:
         line_pack = []
         for line in lines:
             if line.strip():
-                current_indent = (len(line) - len(line.lstrip())) // 4
+                current_indent = get_line_indent(line)
                 line_pack.append((line, current_indent))
             else:
                 self.process_line_pack(line_pack)
@@ -68,6 +68,14 @@ class ScenarioReader:
         label.translation_identifiers.append(result)
         return result
 
+    # def close_conditions(self, current_indent, next_line):
+    #     """Closes conditions until reaching the target indentation."""
+    #     has_next_condition = next_line.startswith("elif ") or next_line.startswith("else:")
+    #     if self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not (has_next_condition and self.stack.current_indent() < get_line_indent(next_line)):
+    #     # while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not has_conditional_operator:
+    #         condition = self.stack.pop()
+    #         self.scenario.append(condition)
+    #
     def close_conditions(self, current_indent, next_line):
         """Closes conditions until reaching the target indentation."""
         while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent:
@@ -87,18 +95,26 @@ class ScenarioReader:
             self.scenario.append(label)
 
     def pop_stack_if_unindented(self, current_indent, next_line):
-        has_conditional_operator = next_line.startswith("if ") or next_line.startswith("elif ") or next_line.startswith(
-            "else:")
-        while self.stack.size() > 0 and self.stack.current_indent() >= current_indent and not has_conditional_operator:
-            stack_type = self.stack.current().type
-            if stack_type == SequenceGroupType.CONDITION:
+        """Close blocks based on the current indentation level."""
+        has_condition = next_line.startswith("elif ") or next_line.startswith("else:")
+        stack_size = self.stack.size()
+
+        while self.stack.size() > 0:
+            stack_indent = self.stack.current_indent()
+
+            # Ensure we do not close a parent `if` block if there's an `elif` or `else`
+            if stack_indent < current_indent or (has_condition and stack_indent == current_indent):
+                break
+
+            current_group = self.stack.current()
+            if current_group.type == SequenceGroupType.CONDITION:
                 self.close_conditions(current_indent, next_line)
-            elif stack_type == SequenceGroupType.MENU:
+            elif current_group.type == SequenceGroupType.MENU:
                 self.close_menus(current_indent)
-            elif stack_type == SequenceGroupType.LABEL:
+            elif current_group.type == SequenceGroupType.LABEL:
                 self.close_labels(current_indent)
             else:
-                raise Exception(f"Unknown stack type: {stack_type}")
+                raise Exception(f"Unknown stack type: {current_group.type}")
 
     def process_line_pack(self, line_pack):
         with_clause = None
@@ -258,12 +274,12 @@ class ScenarioReader:
             self.stack.current().add_sequence_item(BackgroundItem(scene_bg_name))
             return
 
-        elif stripped_line.startswith("scene ev"):
+        elif stripped_line.startswith("scene ev") or stripped_line.startswith("show ev"):
             parts = stripped_line.split()
             event_bg_name = parts[2]
             # REMOVES TEMP
             # TODO: use specs
-            event_bg_name = event_bg_name.replace("_start", "").replace("_move", "").replace("_end", "").replace("_zoomout", "")
+            event_bg_name = rewrite_motion_background(event_bg_name)
             self.stack.current().add_sequence_item(BackgroundItem(event_bg_name))
             return
 
@@ -364,7 +380,25 @@ class ScenarioReader:
                     DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n")))
             return
 
+def get_line_indent(line: str) -> int:
+    return (len(line) - len(line.lstrip())) // 4
+
 def rewrite_condition(condition: str) -> str:
     # FROM: "Hi! I'm new here. Hisao Nakai. We're in the same class." in choices
     # TO im_new_here = True
     return condition.replace('"Hi! I\'m new here. Hisao Nakai. We\'re in the same class." in choices', 'im_new_here == True')
+
+def rewrite_background(bg_name: str) -> str:
+    return rewrite_motion_background(bg_name)
+
+def rewrite_motion_background(bg_name: str) -> str:
+    # TODO: remove this method and allow motion backgrounds
+    return (bg_name
+            .replace("_start", "")
+            .replace("_move", "")
+            .replace("_end", "")
+            .replace("_zoomout", "")
+            .replace("emi_knockeddown_facepullout", "emi_knockeddown")
+            .replace("emi_knockeddown_largepullout", "emi_knockeddown")
+            .replace("emi_knockeddown_legs", "emi_knockeddown")
+            )
