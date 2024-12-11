@@ -184,7 +184,7 @@ int main()
                 need_update = false;
 
                 // Debug menu stuff
-                bn::string<64> title("Katawa Shoujo v0.1.3+00610");
+                bn::string<64> title("Katawa Shoujo v0.1.5+00972");
                 bn::string<64> author(alt_lang ? "порт от NeParij" : "ported by: NeParij");
                 bn::string<64> play_a0_test_scene(alt_lang ? "Тестовая сцена" : "Test Scene");
                 bn::string<64> play_a1_monday(alt_lang ? "Акт 1. Понедельник" : "Act 1. Monday");

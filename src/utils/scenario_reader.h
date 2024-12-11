@@ -4,6 +4,8 @@
 #include "bn_string.h"
 #include "../globals.h"
 
+#include <BN_LOG.h>
+
 namespace ks {
     namespace scenario {
         namespace gbfs_reader {
@@ -15,7 +17,7 @@ namespace ks {
             static u32 src_len = 0;
 
             template <int MaxSize>
-            inline bn::string<MaxSize> parse_string(u8* source, u32* cursor, u32 max_length) {
+            inline bn::string<MaxSize> BN_CODE_IWRAM parse_string(u8* source, u32* cursor, u32 max_length) {
                 bn::string<MaxSize> result;
                 for (u32 i = 0; i < max_length; i++) {
                     char c = source[*cursor];
@@ -29,12 +31,11 @@ namespace ks {
             }
 
             template <int MaxSize>
-            inline bn::string<MaxSize> get_tl(const char* script, const char* locale, unsigned int offset) {
+            inline bn::string<MaxSize> BN_CODE_IWRAM get_tl(const char* script, const char* locale, unsigned int offset) {
                 u32 cursor = offset;
                 auto filename = bn::string<32>(script).append(".").append(locale).c_str();
                 auto data = (u8*)gbfs_get_obj(fs, filename, &src_len);
-                auto parsed_string = parse_string<MaxSize>(data, &cursor, src_len);
-                return parsed_string;
+                return parse_string<MaxSize>(data, &cursor, src_len);
             }
         }
     }

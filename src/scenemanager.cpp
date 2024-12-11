@@ -62,12 +62,14 @@ void SceneManager::set_background(const bn::regular_bg_item& bg) {
 }
 
 void SceneManager::show_dialog(bn::string<16> actor, int tl_key) {
-    auto message = ks::scenario::gbfs_reader::get_tl<512>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
+    bn::string<1024> message = ks::scenario::gbfs_reader::get_tl<1024>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
+    ks::globals::main_update();
     dialog->show(actor, message);
     while (!dialog->is_finished()) {
         dialog->update();
         ks::globals::main_update();
     }
+    // in_msg.clear();
 }
 
 void SceneManager::show_dialog_question(bn::vector<int, 5> answers) {
@@ -111,14 +113,8 @@ void SceneManager::show_character(const int character_index,
     character_visuals.at(character_index).background->set_z_order(0);
 
     character_visuals.at(character_index).sprite.reset();
-
     character_visuals.at(character_index).sprite = sprite.create_sprite(character_visuals.at(character_index).position_x + sprite_meta.offset_x,
                                                                         character_visuals.at(character_index).position_y + sprite_meta.offset_y);
-
-    // auto palette = sprite.palette_item().create_palette();
-    // character_visuals.at(character_index).sprite = bn::create_sprite_4bpp(sprite, character_visuals.at(character_index).position_x + sprite_meta.offset_x,
-    //                                                                     character_visuals.at(character_index).position_y + sprite_meta.offset_y,
-    //                                                                     palette);
     character_visuals.at(character_index).offset_x = sprite_meta.offset_x;
     character_visuals.at(character_index).offset_y = sprite_meta.offset_y;
     character_visuals.at(character_index).sprite->set_z_order(-5);
