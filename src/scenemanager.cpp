@@ -98,47 +98,47 @@ void SceneManager::show_character(const int character_index,
                                   const int position_x,
                                   const int position_y,
                                   const bool position_change) {
-    // bool was_shown_before = character_visuals.at(character_index).background.has_value();
-    // if (position_change && !was_shown_before) {
-    //     character_visuals.at(character_index).position_x = position_x;
-    //     character_visuals.at(character_index).position_y = position_y;
-    // }
-    // if (!was_shown_before) {
-    //     dialog->hide_blend();
-    // }
+    bool was_shown_before = character_visuals.at(character_index).background.has_value();
+    if (position_change && !was_shown_before) {
+        character_visuals.at(character_index).position_x = position_x;
+        character_visuals.at(character_index).position_y = position_y;
+    }
+    if (!was_shown_before) {
+        dialog->hide_blend();
+    }
 
-    // character_visuals.at(character_index).background.reset();
-    // character_visuals.at(character_index).background = bg.create_bg(character_visuals.at(character_index).position_x,
-    //                                                                 character_visuals.at(character_index).position_y);
-    // character_visuals.at(character_index).background->set_z_order(0);
+    character_visuals.at(character_index).background.reset();
+    character_visuals.at(character_index).background = bg.create_bg(character_visuals.at(character_index).position_x,
+                                                                    character_visuals.at(character_index).position_y);
+    character_visuals.at(character_index).background->set_z_order(0);
 
-    // character_visuals.at(character_index).sprite.reset();
-    // character_visuals.at(character_index).sprite = sprite.create_sprite(character_visuals.at(character_index).position_x + sprite_meta.offset_x,
-    //                                                                     character_visuals.at(character_index).position_y + sprite_meta.offset_y);
-    // character_visuals.at(character_index).offset_x = sprite_meta.offset_x;
-    // character_visuals.at(character_index).offset_y = sprite_meta.offset_y;
-    // character_visuals.at(character_index).sprite->set_z_order(-5);
+    character_visuals.at(character_index).sprite.reset();
+    character_visuals.at(character_index).sprite = sprite.create_sprite(character_visuals.at(character_index).position_x + sprite_meta.offset_x,
+                                                                        character_visuals.at(character_index).position_y + sprite_meta.offset_y);
+    character_visuals.at(character_index).offset_x = sprite_meta.offset_x;
+    character_visuals.at(character_index).offset_y = sprite_meta.offset_y;
+    character_visuals.at(character_index).sprite->set_z_order(-5);
 
-    // if (!was_shown_before) {
-    //     bn::blending::set_transparency_alpha(0);
-    //     auto spr_alpha_action = bn::blending_transparency_alpha_to_action(20, 1);
-    //     character_visuals.at(character_index).sprite->set_blending_enabled(true);
-    //     character_visuals.at(character_index).background->set_blending_enabled(true);
-    //     while (!spr_alpha_action.done()) {
-    //         spr_alpha_action.update();
+    if (!was_shown_before) {
+        bn::blending::set_transparency_alpha(0);
+        auto spr_alpha_action = bn::blending_transparency_alpha_to_action(20, 1);
+        character_visuals.at(character_index).sprite->set_blending_enabled(true);
+        character_visuals.at(character_index).background->set_blending_enabled(true);
+        while (!spr_alpha_action.done()) {
+            spr_alpha_action.update();
 
-    //         ks::globals::main_update();
-    //     }
-    //     character_visuals.at(character_index).sprite->set_blending_enabled(false);
-    //     character_visuals.at(character_index).background->set_blending_enabled(false);
-    //     // spr_alpha_action.reset();
-    // }
+            ks::globals::main_update();
+        }
+        character_visuals.at(character_index).sprite->set_blending_enabled(false);
+        character_visuals.at(character_index).background->set_blending_enabled(false);
+        // spr_alpha_action.reset();
+    }
 
-    // ks::globals::main_update();
+    ks::globals::main_update();
 
-    // if (position_change && was_shown_before) {
-    //     set_character_position(character_index, position_x, position_y);
-    // }
+    if (position_change && was_shown_before) {
+        set_character_position(character_index, position_x, position_y);
+    }
 
 }
 
@@ -161,40 +161,40 @@ void SceneManager::show_character(const int character_index,
 void SceneManager::set_character_position(const int character_index,
                                           const int position_x,
                                           const int position_y) {
-    // character_visuals.at(character_index).position_x = position_x;
-    // character_visuals.at(character_index).position_y = position_y;
+    character_visuals.at(character_index).position_x = position_x;
+    character_visuals.at(character_index).position_y = position_y;
 
-    // auto bg_move_action = bn::regular_bg_move_to_action(character_visuals.at(character_index).background.value(),
-    //                                                                                   20,
-    //                                                                                   position_x,
-    //                                                                                   position_y);
-    // auto spr_move_action = bn::sprite_move_to_action(character_visuals.at(character_index).sprite.value(),
-    //                                                                                   20,
-    //                                                                                   position_x + character_visuals.at(character_index).offset_x,
-    //                                                                                   position_y + character_visuals.at(character_index).offset_y);
+    auto bg_move_action = bn::regular_bg_move_to_action(character_visuals.at(character_index).background.value(),
+                                                                                      20,
+                                                                                      position_x,
+                                                                                      position_y);
+    auto spr_move_action = bn::sprite_move_to_action(character_visuals.at(character_index).sprite.value(),
+                                                                                      20,
+                                                                                      position_x + character_visuals.at(character_index).offset_x,
+                                                                                      position_y + character_visuals.at(character_index).offset_y);
 
-    // while (!bg_move_action.done() &&
-    //        !spr_move_action.done()) {
-    //     bg_move_action.update();
-    //     spr_move_action.update();
-    //     ks::globals::main_update();
-    // }
-    // // bg_move_action.reset();
-    // // spr_move_action.reset();
-    // // delete &bg_move_action;
-    // // delete &spr_move_action;
+    while (!bg_move_action.done() &&
+           !spr_move_action.done()) {
+        bg_move_action.update();
+        spr_move_action.update();
+        ks::globals::main_update();
+    }
+    // bg_move_action.reset();
+    // spr_move_action.reset();
+    // delete &bg_move_action;
+    // delete &spr_move_action;
 }
 
 void SceneManager::hide_character(const int character_index, const bool need_update) {
-    // // delete character_visuals.at(character_index).sprite_item_ptr;
-    // character_visuals.at(character_index).background.reset();
-    // character_visuals.at(character_index).sprite.reset();
-    // character_visuals.at(character_index).position_x = 0;
-    // character_visuals.at(character_index).position_y = 0;
-    // // delete &character_visuals.at(character_index).background_item_ptr;
-    // if (need_update) {
-    //     ks::globals::main_update();
-    // }
+    // delete character_visuals.at(character_index).sprite_item_ptr;
+    character_visuals.at(character_index).background.reset();
+    character_visuals.at(character_index).sprite.reset();
+    character_visuals.at(character_index).position_x = 0;
+    character_visuals.at(character_index).position_y = 0;
+    // delete &character_visuals.at(character_index).background_item_ptr;
+    if (need_update) {
+        ks::globals::main_update();
+    }
 }
 
 void SceneManager::hide_character(const int character_index) {

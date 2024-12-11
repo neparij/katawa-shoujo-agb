@@ -335,7 +335,7 @@ namespace ks
                 reset_message();
             } else {
                 _text_render_timer.restart();
-                // bool quoted_start = _actor.size() != 0 && _text_render_prev_line_index == 0;
+                bool quoted_start = _actor.size() != 0 && _text_render_prev_line_index == 0;
 
 
                 bn::string_view finalized_line(message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
@@ -349,8 +349,8 @@ namespace ks
                         0, (_text_render_line - 1) * 12,
                         finalized_line,
                         _finalized_text_sprites,
-                        false
-                        // bn::string_view("\"")
+                        false,
+                        quoted_start ? "\"" : nullptr
                         );
                 //     render_finalized_by_chunks_with_updates((_text_render_line - 1) * 12, finalized_line, bn::string_view("\""));
                 // } else {
@@ -457,7 +457,8 @@ namespace ks
                 animated_line,
                 _animated_text_sprites,
                 true,
-                nullptr
+                quoted_start ? "\"" : nullptr,
+                (quoted_end && _text_render_next_line_index == message.size()) ? "\"" : nullptr
             );
             BN_LOG("Done!");
 
@@ -472,7 +473,8 @@ namespace ks
             bn::vector<bn::sprite_ptr, SpritePtrSize>& sprite_vector,
             bool one_sprite_per_character = true,
             bn::string_view prefix = nullptr,
-            unsigned char chunk_size = 4
+            bn::string_view suffix = nullptr,
+            unsigned char chunk_size = 8
             ) {
             // Set text generator settings
             _text_generator->set_one_sprite_per_character(one_sprite_per_character);
@@ -480,21 +482,21 @@ namespace ks
             // Start rendering position
             unsigned char current_x = x;
 
-            // // Render prefix if provided
-            // if (prefix != nullptr) {
-            //     _text_generator->generate(
-            //         -ks::device::screen_width_half + 10 + current_x,
-            //         ks::device::screen_height_half - 36 + y,
-            //         prefix,
-            //         sprite_vector
-            //         );
-            //     current_x += _text_generator->width(prefix);
-            // }
+            // Render prefix if provided
+            if (prefix != nullptr) {
+                _text_generator->generate(
+                    -ks::device::screen_width_half + 10 + current_x,
+                    ks::device::screen_height_half - 36 + y,
+                    prefix,
+                    sprite_vector
+                    );
+                current_x += _text_generator->width(prefix);
+            }
 
             // Render text in chunks
             size_t index = 0;
             while (index < buffer.size()) {
-                bn::string<16> chunk; // Temporary string for a single chunk
+                bn::string<32> chunk; // Temporary string for a single chunk
                 chunk.clear();
                 int chunk_length = 0; // Number of valid UTF-8 characters added to the chunk
 
@@ -520,7 +522,7 @@ namespace ks
 
                 // Generate sprites for the chunk
                 BN_ASSERT(buffer.size() <= SpritePtrSize, "Buffer size exceeds limit for rendering");
-                BN_ASSERT(chunk.size() <= 16, "Chunk size exceeds limit");
+                BN_ASSERT(chunk.size() <= 32, "Chunk size exceeds limit");
                 if (!chunk.empty()) {
                     BN_LOG("Add chunk [", chunk, "]");
                     _text_generator->generate(
@@ -536,8 +538,28 @@ namespace ks
                     current_x += _text_generator->width(chunk);
                 }
 
+                if (one_sprite_per_character) {
+                    for (auto& sprite : sprite_vector) {
+                        sprite.set_visible(false);
+                    }
+                }
+
                 // Update the screen
-                // ks::globals::main_update();
+                ks::globals::main_update();
+            }
+
+            // Render suffix if provided
+            if (suffix != nullptr) {
+                _text_generator->generate(
+                    -ks::device::screen_width_half + 10 + current_x,
+                    ks::device::screen_height_half - 36 + y,
+                    suffix,
+                    sprite_vector
+                    );
+                current_x += _text_generator->width(prefix);
+                if (one_sprite_per_character) {
+                    sprite_vector.back().set_visible(false);
+                }
             }
         }
 
@@ -562,7 +584,7 @@ namespace ks
         void write_immediately() {
             _text_render_timer.restart();
             // Increases the audio player rate
-            // player_setRate(3);
+            // player_setRate(2);
             while (_text_render_next_line_index != _remaining_message.size() && _text_render_line < ks::defaults::text_render_max_lines_count - 1) {
                 _text_render_line++;
                 render_message_line(_text_render_next_line_index);
@@ -632,14 +654,14 @@ namespace ks
                     write_immediately();
                 } else {
                     if (_animated_text_sprites.size() > 0 && _text_render_timer.elapsed_ticks() < _animated_text_sprites.size() * ks::defaults::text_render_char_ticks) {
-                        // // Animating
-                        // int i = 0;
-                        // for (auto sprite : _animated_text_sprites) {
-                        //     if (_text_render_timer.elapsed_ticks() >= i * ks::defaults::text_render_char_ticks) {
-                        //         sprite.set_visible(true);
-                        //     }
-                        //     i++;
-                        // }
+                        // Animating
+                        int i = 0;
+                        for (auto sprite : _animated_text_sprites) {
+                            if (_text_render_timer.elapsed_ticks() >= i * ks::defaults::text_render_char_ticks) {
+                                sprite.set_visible(true);
+                            }
+                            i++;
+                        }
                     } else if (_text_render_next_line_index != _remaining_message.size() && _text_render_line < ks::defaults::text_render_max_lines_count - 1) {
                         _text_render_line++;
                         render_message_line(_text_render_next_line_index);
