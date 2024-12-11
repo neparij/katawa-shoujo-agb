@@ -466,7 +466,7 @@ namespace ks
         }
 
         template <int SpritePtrSize>
-        void render_text_by_chunks_with_updates(
+        void BN_CODE_IWRAM render_text_by_chunks_with_updates(
             int x,
             int y,
             bn::string_view buffer,
@@ -474,7 +474,7 @@ namespace ks
             bool one_sprite_per_character = true,
             bn::string_view prefix = nullptr,
             bn::string_view suffix = nullptr,
-            unsigned char chunk_size = 8
+            unsigned char chunk_size = 6
             ) {
             // Set text generator settings
             _text_generator->set_one_sprite_per_character(one_sprite_per_character);
@@ -496,7 +496,7 @@ namespace ks
             // Render text in chunks
             size_t index = 0;
             while (index < buffer.size()) {
-                bn::string<32> chunk; // Temporary string for a single chunk
+                bn::string<24> chunk; // Temporary string for a single chunk
                 chunk.clear();
                 int chunk_length = 0; // Number of valid UTF-8 characters added to the chunk
 
@@ -522,7 +522,7 @@ namespace ks
 
                 // Generate sprites for the chunk
                 BN_ASSERT(buffer.size() <= SpritePtrSize, "Buffer size exceeds limit for rendering");
-                BN_ASSERT(chunk.size() <= 32, "Chunk size exceeds limit");
+                BN_ASSERT(chunk.size() <= 24, "Chunk size exceeds limit");
                 if (!chunk.empty()) {
                     BN_LOG("Add chunk [", chunk, "]");
                     _text_generator->generate(
