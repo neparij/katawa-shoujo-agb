@@ -4,6 +4,8 @@
 #include "bn_string.h"
 #include "../globals.h"
 
+#include <BN_LOG.h>
+
 namespace ks {
     namespace scenario {
         namespace gbfs_reader {
@@ -33,8 +35,7 @@ namespace ks {
                 u32 cursor = offset;
                 auto filename = bn::string<32>(script).append(".").append(locale).c_str();
                 auto data = (u8*)gbfs_get_obj(fs, filename, &src_len);
-                auto parsed_string = parse_string<MaxSize>(data, &cursor, src_len);
-                return parsed_string;
+                return parse_string<MaxSize>(data, &cursor, src_len);
             }
         }
     }
