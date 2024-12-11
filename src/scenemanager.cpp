@@ -62,13 +62,8 @@ void SceneManager::set_background(const bn::regular_bg_item& bg) {
 }
 
 void SceneManager::show_dialog(bn::string<16> actor, int tl_key) {
-    BN_LOG("READ message from GBFS: ", tl_key);
-    bn::string<512> in_msg = ks::scenario::gbfs_reader::get_tl<512>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
-    BN_LOG("RESULT: ", bn::string_view(in_msg).substr(0,64));
+    bn::string<1024> message = ks::scenario::gbfs_reader::get_tl<1024>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
     ks::globals::main_update();
-    // BN_LOG("show_dialog.in_msg: ", in_msg);
-    bn::string_view message(in_msg);
-    BN_LOG("show_dialog.message: ", message.substr(0,64));
     dialog->show(actor, message);
     while (!dialog->is_finished()) {
         dialog->update();

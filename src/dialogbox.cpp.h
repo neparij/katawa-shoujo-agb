@@ -173,7 +173,7 @@ namespace ks
             _hidden = false;
         }
 
-        void show(bn::string<16> actor, bn::string_view message)
+        void show(bn::string<16> actor, bn::string<1024> message)
         {
             reset_title();
             reset_message();
@@ -192,7 +192,6 @@ namespace ks
             set_blending(true);
             _actor = actor;
             _remaining_message = message;
-            BN_LOG("_remaining_message: ", _remaining_message.substr(0, 64));
 
             _text_generator->set_one_sprite_per_character(false);
             _text_generator->set_left_alignment();
@@ -326,29 +325,51 @@ namespace ks
         }
 
 
-        void BN_CODE_IWRAM render_message_line(int cursor) {
+        void render_message_line(int cursor) {
             const int max_width = ks::device::screen_width - 20;
             const unsigned char space_width = _text_generator->width(" ");
+            const bn::string_view message(_remaining_message);
 
             if (_text_render_line == 0) {
                 // Delete all text sprites on the first line of each page.
                 reset_message();
             } else {
                 _text_render_timer.restart();
-                // auto finalized_line = bn::string<256>((_actor.size() != 0 && _text_render_prev_line_index == 0) ? "\"" : "");
-                // auto finalized_index = _finalized_text_sprites.size();
-                // finalized_line.append(_remaining_message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
-                bn::string_view finalized_line(_remaining_message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
-                bool quoted_start = _actor.size() != 0 && _text_render_prev_line_index == 0;
+                // bool quoted_start = _actor.size() != 0 && _text_render_prev_line_index == 0;
 
-                BN_LOG("finalized_line: ", finalized_line.substr(0, 64));
-                if (quoted_start) {
-                    render_finalized_by_chunks_with_updates((_text_render_line - 1) * 12, finalized_line, bn::string_view("\""));
-                } else {
-                    render_finalized_by_chunks_with_updates((_text_render_line - 1) * 12, finalized_line);
+
+                bn::string_view finalized_line(message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
+                BN_LOG("Render finalized line ", _text_render_line - 1);
+                BN_LOG(finalized_line);
+                // bn::string_view finalized_line(message.substr(0, 16));
+
+                // BN_LOG("finalized_line: ", finalized_line.substr(0, 64));
+                // if (quoted_start) {
+                    render_text_by_chunks_with_updates<64>(
+                        0, (_text_render_line - 1) * 12,
+                        finalized_line,
+                        _finalized_text_sprites,
+                        false
+                        // bn::string_view("\"")
+                        );
+                //     render_finalized_by_chunks_with_updates((_text_render_line - 1) * 12, finalized_line, bn::string_view("\""));
+                // } else {
+                    // render_text_by_chunks_with_updates<512>(
+                    //     0, (_text_render_line - 1) * 12,
+                    //     finalized_line,
+                    //     _finalized_text_sprites,
+                    //     false
+                    //     );
+                //     render_finalized_by_chunks_with_updates((_text_render_line - 1) * 12, finalized_line);
+                // }
+
+                // BN_LOG("Clear animated sprites");
+                // _animated_text_sprites.clear();
+
+                if (!_animated_text_sprites.empty()) {
+                    BN_LOG("F: Animated sprites not empty. clear");
+                    _animated_text_sprites.clear();
                 }
-                _animated_text_sprites.clear();
-                ks::globals::main_update();
             }
 
             unsigned int cursor_i = cursor;
@@ -367,16 +388,15 @@ namespace ks
             }
 
             while (!line_end) {
-                unsigned char first_byte = static_cast<unsigned char>(_remaining_message.at(cursor_i));
+                unsigned char first_byte = static_cast<unsigned char>(message.at(cursor_i));
                 int char_length = get_char_size(first_byte);
 
-                bn::string<4> part = _remaining_message.substr(cursor_i, char_length);
-                BN_LOG("part: [", part, "]");
-
-                // Move the index to the next character
+                bn::string<4> part = message.substr(cursor_i, char_length);
                 cursor_i += char_length;
 
-                is_eol = (cursor_i == _remaining_message.size());
+                BN_ASSERT(cursor_i <= message.size(), "Cursor index out of bounds in message");
+
+                is_eol = (cursor_i == message.size());
                 is_space = part.starts_with(32);
                 is_newline = part.starts_with(10);
 
@@ -392,12 +412,7 @@ namespace ks
                     word_width = _text_generator->width(_word_buffer);
 
                     if (cursor_x + word_width < max_width) {
-                        bn::string_view buffer(_word_buffer);
-                        BN_LOG("Word buffer: [", buffer, "]");
-                        // render_animated_by_chunks_with_updates(cursor_x, _text_render_line * 12, buffer);
                         _word_buffer.clear();
-
-                        ks::globals::main_update();
                         cursor_x += word_width + (is_space ? space_width : 0);
                         _text_render_next_line_index = cursor_i;
                         if (is_eol || is_newline) {
@@ -425,102 +440,104 @@ namespace ks
                 _text_render_prev_line_length--;
             }
 
+            BN_ASSERT(_text_render_prev_line_index + _text_render_prev_line_length <= message.size(), "Finalized line substring out of bounds");
+
+            BN_LOG("Animated sprites count: ", _animated_text_sprites.size());
+            BN_LOG("Finalized sprites count: ", _finalized_text_sprites.size());
+            bn::string_view animated_line(message.substr(cursor, _text_render_prev_line_length));
+            BN_LOG("Render animated line ");
+            BN_LOG(animated_line);
+            if (!_animated_text_sprites.empty()) {
+                BN_LOG("Animated sprites not empty. clear");
+                _animated_text_sprites.clear();
+            }
+            BN_LOG("Render animated.......");
+            render_text_by_chunks_with_updates<128>(
+                0, _text_render_line * 12,
+                animated_line,
+                _animated_text_sprites,
+                true,
+                nullptr
+            );
+            BN_LOG("Done!");
+
             write_animation();
         }
 
-        void render_animated_by_chunks_with_updates(int x, int y, bn::string_view buffer, unsigned char chunk_size = 4) {
-            _text_generator->set_one_sprite_per_character(true);
+        template <int SpritePtrSize>
+        void render_text_by_chunks_with_updates(
+            int x,
+            int y,
+            bn::string_view buffer,
+            bn::vector<bn::sprite_ptr, SpritePtrSize>& sprite_vector,
+            bool one_sprite_per_character = true,
+            bn::string_view prefix = nullptr,
+            unsigned char chunk_size = 4
+            ) {
+            // Set text generator settings
+            _text_generator->set_one_sprite_per_character(one_sprite_per_character);
 
+            // Start rendering position
             unsigned char current_x = x;
 
+            // // Render prefix if provided
+            // if (prefix != nullptr) {
+            //     _text_generator->generate(
+            //         -ks::device::screen_width_half + 10 + current_x,
+            //         ks::device::screen_height_half - 36 + y,
+            //         prefix,
+            //         sprite_vector
+            //         );
+            //     current_x += _text_generator->width(prefix);
+            // }
+
+            // Render text in chunks
             size_t index = 0;
             while (index < buffer.size()) {
-                bn::string<16> chunk; // Temporary string for a single chunk (size limited to chunk_size)
+                bn::string<16> chunk; // Temporary string for a single chunk
                 chunk.clear();
-                int chunk_length = 0;  // Number of valid UTF-8 characters added to the chunk
+                int chunk_length = 0; // Number of valid UTF-8 characters added to the chunk
 
-                // BN_LOG("index: ", index, " of ", buffer.size());
-                // Extract a valid UTF-8 chunk
+                // Extract valid UTF-8 characters up to chunk_size
                 while (index < buffer.size() && chunk_length < chunk_size) {
-                    unsigned char c = static_cast<unsigned char>(buffer.at(index));
+                    unsigned char c = static_cast<unsigned char>(buffer[index]);
                     unsigned char char_size = get_char_size(c);
+                    BN_ASSERT(char_size > 0 && char_size <= 4, "Invalid UTF-8 character size");
+                    BN_ASSERT(index + char_size <= buffer.size(), "UTF-8 character exceeds buffer size");
 
-                    BN_LOG("Buffer size: ", buffer.size(), ", Index: ", index, ", Chunk: ", chunk);
-
-                    // Ensure there are enough bytes left in the finalized_line for this character
+                    // Ensure there are enough bytes left for this character
                     if (index + char_size <= buffer.size()) {
                         for (int i = 0; i < char_size; ++i) {
-                            chunk.push_back(buffer.at(index + i));
+                            chunk.push_back(buffer[index + i]);
                         }
-                        index += char_size; // Move the index past the character
-                        ++chunk_length; // Count this as one character
+                        index += char_size; // Advance the index
+                        ++chunk_length; // Count the character
                     } else {
-                        break; // Incomplete character at the end of the line
-                    }
-                }
-
-                // BN_LOG("Buffer size: ", buffer.size(), ", Index: ", index, ", Chunk: ", chunk);
-
-                // Generate sprites for the chunk
-                _text_generator->generate(
-                    -ks::device::screen_width_half + 10 + current_x,
-                    ks::device::screen_height_half - 36 + y,
-                    chunk,
-                    _animated_text_sprites
-                    );
-
-                // Update horizontal position for the next chunk
-                current_x += _text_generator->width(chunk);
-
-                // Update the screen
-                ks::globals::main_update();
-            }
-        }
-
-        void render_finalized_by_chunks_with_updates(int y, bn::string_view finalized_line, bn::string_view prefix = nullptr, unsigned char chunk_size = 4) {
-            _text_generator->set_one_sprite_per_character(false);
-            unsigned char current_x = 0;
-            if (prefix != nullptr) {
-                _text_generator->generate(-ks::device::screen_width_half + 10, ks::device::screen_height_half - 36 + y, prefix, _finalized_text_sprites);
-                current_x += _text_generator->width(prefix);
-            }
-            // _text_generator->generate(-ks::device::screen_width_half + 10 + current_x, ks::device::screen_height_half - 36 + y, finalized_line, _finalized_text_sprites);
-
-            size_t index = 0;
-            while (index < finalized_line.size()) {
-                bn::string<16> chunk; // Temporary string for a single chunk (size limited to chunk_size)
-                int chunk_length = 0;  // Number of valid UTF-8 characters added to the chunk
-
-                // Extract a valid UTF-8 chunk
-                while (index < finalized_line.size() && chunk_length < chunk_size) {
-                    unsigned char c = static_cast<unsigned char>(finalized_line[index]);
-                    unsigned char char_size = get_char_size(c);
-
-                    // Ensure there are enough bytes left in the finalized_line for this character
-                    if (index + char_size <= finalized_line.size()) {
-                        for (int i = 0; i < char_size; ++i) {
-                            chunk.push_back(finalized_line[index + i]);
-                        }
-                        index += char_size; // Move the index past the character
-                        ++chunk_length; // Count this as one character
-                    } else {
-                        break; // Incomplete character at the end of the line
+                        // BN_ERROR("Incomplete character at the end of the buffer");
+                        return;
                     }
                 }
 
                 // Generate sprites for the chunk
-                _text_generator->generate(
-                    -ks::device::screen_width_half + 10 + current_x,
-                    ks::device::screen_height_half - 36 + y,
-                    chunk,
-                    _finalized_text_sprites
-                    );
+                BN_ASSERT(buffer.size() <= SpritePtrSize, "Buffer size exceeds limit for rendering");
+                BN_ASSERT(chunk.size() <= 16, "Chunk size exceeds limit");
+                if (!chunk.empty()) {
+                    BN_LOG("Add chunk [", chunk, "]");
+                    _text_generator->generate(
+                        -ks::device::screen_width_half + 10 + current_x,
+                        ks::device::screen_height_half - 36 + y,
+                        chunk,
+                        sprite_vector
+                        );
 
-                // Update horizontal position for the next chunk
-                current_x += _text_generator->width(chunk);
+                    BN_ASSERT(sprite_vector.size() < SpritePtrSize, "Too many animated sprites allocated");
+
+                    // Update horizontal position
+                    current_x += _text_generator->width(chunk);
+                }
 
                 // Update the screen
-                ks::globals::main_update();
+                // ks::globals::main_update();
             }
         }
 
@@ -542,7 +559,7 @@ namespace ks
             _is_writing = true;
         }
 
-        void BN_CODE_IWRAM write_immediately() {
+        void write_immediately() {
             _text_render_timer.restart();
             // Increases the audio player rate
             // player_setRate(3);
@@ -567,6 +584,8 @@ namespace ks
             } else if ((c & 0xF8) == 0xF0) {
                 return 4;
             }
+            BN_ERROR("Unknown char size");
+            return 1;
         }
 
         void update()
@@ -603,27 +622,24 @@ namespace ks
                     set_answer_box_blending();
                     set_answers_palette();
                 } else if (bn::keypad::a_pressed()) {
-                    BN_LOG("BEFORE FINISH");
                     _is_finished = true;
-                    BN_LOG("AFTER FINISH");
                 }
                 return;
             }
 
             if (_is_writing) {
-                BN_LOG("WRITING");
                 if (bn::keypad::a_pressed() || SKIP) {
                     write_immediately();
                 } else {
                     if (_animated_text_sprites.size() > 0 && _text_render_timer.elapsed_ticks() < _animated_text_sprites.size() * ks::defaults::text_render_char_ticks) {
-                        // Animating
-                        int i = 0;
-                        for (auto sprite : _animated_text_sprites) {
-                            if (_text_render_timer.elapsed_ticks() >= i * ks::defaults::text_render_char_ticks) {
-                                sprite.set_visible(true);
-                            }
-                            i++;
-                        }
+                        // // Animating
+                        // int i = 0;
+                        // for (auto sprite : _animated_text_sprites) {
+                        //     if (_text_render_timer.elapsed_ticks() >= i * ks::defaults::text_render_char_ticks) {
+                        //         sprite.set_visible(true);
+                        //     }
+                        //     i++;
+                        // }
                     } else if (_text_render_next_line_index != _remaining_message.size() && _text_render_line < ks::defaults::text_render_max_lines_count - 1) {
                         _text_render_line++;
                         render_message_line(_text_render_next_line_index);
@@ -687,12 +703,12 @@ private:
         bn::optional<bn::sprite_ptr> talkbox4;
         bn::vector<bn::sprite_ptr, 32> _title_sprites;
         bn::vector<bn::sprite_ptr, 128> _animated_text_sprites;
-        bn::vector<bn::sprite_ptr, 512> _finalized_text_sprites;
+        bn::vector<bn::sprite_ptr, 64> _finalized_text_sprites;
         // bn::vector<bn::sprite_ptr, 256> _debug_sprites;
         bn::timer _text_render_timer;
         bn::string<32> _actor;
-        bn::string_view _remaining_message;
-        bn::string<256> _word_buffer; // May be resize form verylongphraseswithoutspaces
+        bn::string<1024> _remaining_message;
+        bn::string<64> _word_buffer; // May be resize form verylongphraseswithoutspaces
 
         // Palettes
         bn::sprite_palette_item original_palette_item;
