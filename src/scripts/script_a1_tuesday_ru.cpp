@@ -1162,9 +1162,9 @@ namespace ks {
             }
             static void a1_tuesday_risk_vs_reward__menu_question_0() {
                 ks::SceneManager::show_dialog("mi", 681);
-                bn::vector<int, 5> answers;
-                answers.push_back(682);
-                answers.push_back(683);
+                bn::vector<ks::answer_ptr, 5> answers;
+                answers.push_back(ks::answer_ptr{0, 682});
+                answers.push_back(ks::answer_ptr{1, 683});
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
                 if (answer == 0) {
@@ -1181,9 +1181,9 @@ namespace ks {
                 ScriptA1TuesdayRu::a1c3o2();
             }
             static void a1_tuesday_shared_library__menu_question_0() {
-                bn::vector<int, 5> answers;
-                answers.push_back(684);
-                answers.push_back(654);
+                bn::vector<ks::answer_ptr, 5> answers;
+                answers.push_back(ks::answer_ptr{0, 684});
+                answers.push_back(ks::answer_ptr{1, 654});
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
                 if (answer == 0) {
@@ -1201,9 +1201,9 @@ namespace ks {
                 ScriptA1TuesdayRu::a1c4o2();
             }
             static void a1_tuesday_bizarre_and_surreal__menu_question_0() {
-                bn::vector<int, 5> answers;
-                answers.push_back(685);
-                answers.push_back(686);
+                bn::vector<ks::answer_ptr, 5> answers;
+                answers.push_back(ks::answer_ptr{0, 685});
+                answers.push_back(ks::answer_ptr{1, 686});
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
                 if (answer == 0) {

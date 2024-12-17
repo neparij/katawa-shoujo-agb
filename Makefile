@@ -64,7 +64,7 @@ AUDIO       	:=  audio
 DMGAUDIO    	:=  dmg_audio
 ROMTITLE    	:=  KATAWASHOUJO
 ROMCODE     	:=  NPKS
-USERFLAGS   	:=  -Ofast # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
+USERFLAGS   	:=  # -Ofast -DBN_CFG_BGS_MAX_ITEMS=4 # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
 USERCXXFLAGS	:=  # -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections
 USERASFLAGS 	:=  
 USERLDFLAGS 	:=  -Wl,--print-memory-usage #-Wl,--gc-sections -Wl,--print-memory-usage

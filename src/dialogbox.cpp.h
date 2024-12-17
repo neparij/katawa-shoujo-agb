@@ -51,9 +51,8 @@ namespace ks
     class DialogBox
     {
     public:
-        DialogBox(bn::sprite_text_generator* text_generator, const bn::sprite_font& font)
+        DialogBox(bn::sprite_text_generator* text_generator)
             : _text_generator(text_generator),
-            _font(font),
             original_palette_item(_text_generator->palette_item()),
             beige_palette_item(bn::sprite_items::variable_16x16_font_beige.palette_item()),
             beige_selected_palette_item(bn::sprite_items::variable_16x16_font_beige_selected.palette_item())
@@ -124,13 +123,13 @@ namespace ks
             talkbox3->set_blending_enabled(enabled);
             talkbox4->set_blending_enabled(enabled);
 
-            for (auto s : _title_sprites) {
+            for (auto& s : _title_sprites) {
                 s.set_blending_enabled(true);
             }
-            for (auto s : _finalized_text_sprites) {
+            for (auto& s : _finalized_text_sprites) {
                 s.set_blending_enabled(true);
             }
-            for (auto s : _animated_text_sprites) {
+            for (auto& s : _animated_text_sprites) {
                 s.set_blending_enabled(true);
             }
         }
@@ -175,6 +174,9 @@ namespace ks
 
         void show(bn::string<16> actor, bn::string<1024> message)
         {
+            // BN_LOG("Pointer (S) address: ", ks::gfx::static_text_tiles);
+            // BN_LOG("Pointer (A) address: ", ks::gfx::animated_text_tiles);
+
             reset_title();
             reset_message();
             reset_question();
@@ -209,7 +211,17 @@ namespace ks
             BN_LOG("AFTER RENDER FIRST LINE");
         }
 
+        void restore_from_pause() {
+            if (!_remaining_message.empty()) {
+                show(_actor, _remaining_message);
+            }
+        }
+
         void show_question(bn::vector<bn::string<128>, 5>& answers) {
+
+            // BN_LOG("Pointer (S) address: ", ks::gfx::static_text_tiles);
+            // BN_LOG("Pointer (A) address: ", ks::gfx::animated_text_tiles);
+
             reset_question();
             _text_generator->set_one_sprite_per_character(true);
             _text_generator->set_z_order(-50);
@@ -250,6 +262,9 @@ namespace ks
             for (int i = 0; i < answers.size(); i++) {
                 set_answer_sprites_visibility(i);
             }
+
+            // BN_LOG("Pointer (S) address: ", ks::gfx::static_text_tiles);
+            // BN_LOG("Pointer (A) address: ", ks::gfx::animated_text_tiles);
         }
 
         void move_answer_camera_to_start() {
@@ -366,10 +381,18 @@ namespace ks
                 // BN_LOG("Clear animated sprites");
                 // _animated_text_sprites.clear();
 
+
+                for (auto& sprite : _finalized_text_sprites) {
+                    sprite.set_visible(true);
+                }
+
                 if (!_animated_text_sprites.empty()) {
                     BN_LOG("F: Animated sprites not empty. clear");
                     _animated_text_sprites.clear();
                 }
+
+
+
             }
 
             unsigned int cursor_i = cursor;
@@ -442,8 +465,6 @@ namespace ks
 
             BN_ASSERT(_text_render_prev_line_index + _text_render_prev_line_length <= message.size(), "Finalized line substring out of bounds");
 
-            BN_LOG("Animated sprites count: ", _animated_text_sprites.size());
-            BN_LOG("Finalized sprites count: ", _finalized_text_sprites.size());
             bn::string_view animated_line(message.substr(cursor, _text_render_prev_line_length));
             BN_LOG("Render animated line ");
             BN_LOG(animated_line);
@@ -466,7 +487,7 @@ namespace ks
         }
 
         template <int SpritePtrSize>
-        void BN_CODE_IWRAM render_text_by_chunks_with_updates(
+        void render_text_by_chunks_with_updates(
             int x,
             int y,
             bn::string_view buffer,
@@ -474,13 +495,16 @@ namespace ks
             bool one_sprite_per_character = true,
             bn::string_view prefix = nullptr,
             bn::string_view suffix = nullptr,
-            unsigned char chunk_size = 6
+            unsigned char chunk_size = 4
             ) {
             // Set text generator settings
             _text_generator->set_one_sprite_per_character(one_sprite_per_character);
 
             // Start rendering position
             unsigned char current_x = x;
+
+            // Tilesprites to hide from position
+            unsigned short sprite_vector_start = sprite_vector.size();
 
             // Render prefix if provided
             if (prefix != nullptr) {
@@ -496,7 +520,7 @@ namespace ks
             // Render text in chunks
             size_t index = 0;
             while (index < buffer.size()) {
-                bn::string<24> chunk; // Temporary string for a single chunk
+                bn::string<16> chunk; // Temporary string for a single chunk. SHOULD BE SIZE CHUNK * 4, ALSO SEE ASSERTS BELOW
                 chunk.clear();
                 int chunk_length = 0; // Number of valid UTF-8 characters added to the chunk
 
@@ -522,7 +546,7 @@ namespace ks
 
                 // Generate sprites for the chunk
                 BN_ASSERT(buffer.size() <= SpritePtrSize, "Buffer size exceeds limit for rendering");
-                BN_ASSERT(chunk.size() <= 24, "Chunk size exceeds limit");
+                BN_ASSERT(chunk.size() <= 16, "Chunk size exceeds limit");
                 if (!chunk.empty()) {
                     BN_LOG("Add chunk [", chunk, "]");
                     _text_generator->generate(
@@ -532,16 +556,11 @@ namespace ks
                         sprite_vector
                         );
 
-                    BN_ASSERT(sprite_vector.size() < SpritePtrSize, "Too many animated sprites allocated");
-
                     // Update horizontal position
                     current_x += _text_generator->width(chunk);
                 }
-
-                if (one_sprite_per_character) {
-                    for (auto& sprite : sprite_vector) {
-                        sprite.set_visible(false);
-                    }
+                for (unsigned short i = sprite_vector_start; i < sprite_vector.size(); i++) {
+                    sprite_vector.at(i).set_visible(false);
                 }
 
                 // Update the screen
@@ -557,9 +576,7 @@ namespace ks
                     sprite_vector
                     );
                 current_x += _text_generator->width(prefix);
-                if (one_sprite_per_character) {
-                    sprite_vector.back().set_visible(false);
-                }
+                sprite_vector.back().set_visible(false);
             }
         }
 
@@ -656,7 +673,7 @@ namespace ks
                     if (_animated_text_sprites.size() > 0 && _text_render_timer.elapsed_ticks() < _animated_text_sprites.size() * ks::defaults::text_render_char_ticks) {
                         // Animating
                         int i = 0;
-                        for (auto sprite : _animated_text_sprites) {
+                        for (auto& sprite : _animated_text_sprites) {
                             if (_text_render_timer.elapsed_ticks() >= i * ks::defaults::text_render_char_ticks) {
                                 sprite.set_visible(true);
                             }
@@ -702,7 +719,6 @@ private:
         bool _hidden = true;
 
         bn::sprite_text_generator* _text_generator;
-        const bn::sprite_font& _font;
 
         // Answers related stuff
         bn::vector<bn::optional<bn::sprite_ptr>, 5> answerboxes_l;
@@ -714,7 +730,7 @@ private:
         bn::optional<bn::camera_ptr> _answers_camera;
         bn::optional<bn::camera_move_loop_action> _answers_camera_action;
         unsigned short _answers_camera_loop_duration;
-        int _answer_selected;
+        unsigned char _answer_selected;
         unsigned short _answer_loop_cycle_counter;
         unsigned short _answer_pause_cycle_counter;
 
@@ -723,10 +739,10 @@ private:
         bn::optional<bn::sprite_ptr> talkbox2;
         bn::optional<bn::sprite_ptr> talkbox3;
         bn::optional<bn::sprite_ptr> talkbox4;
-        bn::vector<bn::sprite_ptr, 32> _title_sprites;
+        bn::vector<bn::sprite_ptr, 8> _title_sprites;
         bn::vector<bn::sprite_ptr, 128> _animated_text_sprites;
         bn::vector<bn::sprite_ptr, 64> _finalized_text_sprites;
-        // bn::vector<bn::sprite_ptr, 256> _debug_sprites;
+
         bn::timer _text_render_timer;
         bn::string<32> _actor;
         bn::string<1024> _remaining_message;

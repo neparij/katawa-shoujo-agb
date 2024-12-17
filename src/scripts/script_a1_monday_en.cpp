@@ -779,9 +779,9 @@ namespace ks {
             }
             static void a1_monday_gateway_effect__menu_question_0() {
                 ks::SceneManager::show_dialog("mu", 488);
-                bn::vector<int, 5> answers;
-                answers.push_back(489);
-                answers.push_back(490);
+                bn::vector<ks::answer_ptr, 5> answers;
+                answers.push_back(ks::answer_ptr{0, 489});
+                answers.push_back(ks::answer_ptr{1, 490});
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
                 if (answer == 0) {
@@ -801,10 +801,10 @@ namespace ks {
             }
             static void a1_monday_in_the_nursery__menu_question_0() {
                 ks::SceneManager::show_dialog("hi", 491);
-                bn::vector<int, 5> answers;
-                answers.push_back(492);
-                answers.push_back(493);
-                answers.push_back(494);
+                bn::vector<ks::answer_ptr, 5> answers;
+                answers.push_back(ks::answer_ptr{0, 492});
+                answers.push_back(ks::answer_ptr{1, 493});
+                answers.push_back(ks::answer_ptr{2, 494});
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
                 if (answer == 0) {

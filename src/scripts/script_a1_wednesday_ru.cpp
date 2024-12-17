@@ -1526,10 +1526,10 @@ namespace ks {
                 return;
             }
             static void a1_wednesday_lunch_evolution_theory__menu_question_0() {
-                bn::vector<int, 5> answers;
-                answers.push_back(860);
-                if (ks::progress.attraction_hanako > 1 || ks::in_replay) answers.push_back(861);
-                if (ks::progress.attraction_sc > 1 || ks::in_replay) answers.push_back(862);
+                bn::vector<ks::answer_ptr, 5> answers;
+                answers.push_back(ks::answer_ptr{0, 860});
+                if (ks::progress.attraction_hanako > 1 || ks::in_replay) answers.push_back({1, 861});
+                if (ks::progress.attraction_sc > 1 || ks::in_replay) answers.push_back({2, 862});
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
                 if (answer == 0) {
@@ -1553,9 +1553,9 @@ namespace ks {
             }
             static void a1_wednesday_waylay__menu_question_0() {
                 ks::SceneManager::show_dialog("nk", 863);
-                bn::vector<int, 5> answers;
-                answers.push_back(673);
-                answers.push_back(864);
+                bn::vector<ks::answer_ptr, 5> answers;
+                answers.push_back(ks::answer_ptr{0, 673});
+                answers.push_back(ks::answer_ptr{1, 864});
                 ks::SceneManager::show_dialog_question(answers);
                 int answer = ks::SceneManager::get_dialog_question_answer();
                 if (answer == 0) {

@@ -133,8 +133,8 @@ int main()
     player_init();
 
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
-    bn::sprite_text_generator* _text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
-    ks::dialog = new ks::DialogBox(_text_generator, variable_16x16_sprite_font);
+    ks::text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
+    ks::dialog = new ks::DialogBox(ks::text_generator);
 
     bn::vector<bn::sprite_ptr, 64> _text_sprites;
     bn::optional<bn::sprite_ptr> _bottom_icon;
@@ -195,19 +195,19 @@ int main()
                 bn::string<64> play_video(alt_lang ? "Воспроизвести видео" : "Play video");
 
                 _text_sprites.clear();
-                _text_generator->set_one_sprite_per_character(false);
-                _text_generator->set_center_alignment();
-                _text_generator->generate(0, -72, title, _text_sprites);
-                _text_generator->generate(0, -72+12, author, _text_sprites);
+                ks::text_generator->set_one_sprite_per_character(false);
+                ks::text_generator->set_center_alignment();
+                ks::text_generator->generate(0, -72, title, _text_sprites);
+                ks::text_generator->generate(0, -72+12, author, _text_sprites);
 
-                _text_generator->set_left_alignment();
-                _text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 0), bn::string<64>(select == 0 ? "> " : "  ") + play_a0_test_scene, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 1), bn::string<64>(select == 1 ? "> " : "  ") + play_a1_monday, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 2), bn::string<64>(select == 2 ? "> " : "  ") + play_a1_tuesday, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 3), bn::string<64>(select == 3 ? "> " : "  ") + play_a1_wednesday, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 4), bn::string<64>(select == 4 ? "> " : "  ") + play_all, _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 0), bn::string<64>(select == 5 ? "> " : "  ") + language + (alt_lang ? "Русский" : "English"), _text_sprites);
-                _text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 1), bn::string<64>(select == 6 ? "> " : "  ") + play_video, _text_sprites);
+                ks::text_generator->set_left_alignment();
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 0), bn::string<64>(select == 0 ? "> " : "  ") + play_a0_test_scene, _text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 1), bn::string<64>(select == 1 ? "> " : "  ") + play_a1_monday, _text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 2), bn::string<64>(select == 2 ? "> " : "  ") + play_a1_tuesday, _text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 3), bn::string<64>(select == 3 ? "> " : "  ") + play_a1_wednesday, _text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 4), bn::string<64>(select == 4 ? "> " : "  ") + play_all, _text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 0), bn::string<64>(select == 5 ? "> " : "  ") + language + (alt_lang ? "Русский" : "English"), _text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 1), bn::string<64>(select == 6 ? "> " : "  ") + play_video, _text_sprites);
             }
             ks::globals::main_update();
         }
@@ -244,7 +244,6 @@ int main()
 
         ks::SceneManager::free_resources();
         ks::main_background.reset();
-        ks::secondary_background.reset();
         ks::dialog->reset();
     }
 }
