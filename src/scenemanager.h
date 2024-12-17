@@ -91,6 +91,9 @@ private:
     const char* _scenario;
     const char* _locale;
     const unsigned int* _script_tl_index;
+
+    static bn::string<16> _cached_actor;  // Cache for actor (used by ingame pause)
+    static int _cached_tl_key;       // Cache for tl_key (used by ingame pause)
 };
 
 extern bn::optional<ks::SceneManager> scene;
@@ -103,7 +106,8 @@ extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
 extern bool in_replay;
 
-// extern bn::vector<bn::sprite_ptr, 64> menu_text_sprites;
+extern bn::vector<bn::sprite_ptr, 64>* static_text_sprites;
+extern bn::vector<bn::sprite_ptr, 128>* animated_text_sprites;
 
 } // namespace ks
 

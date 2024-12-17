@@ -133,10 +133,14 @@ int main()
     player_init();
 
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
+    ks::static_text_sprites = new bn::vector<bn::sprite_ptr, 64>();
+    ks::animated_text_sprites = new bn::vector<bn::sprite_ptr, 128>();
+    ks::static_text_sprites->clear();
+    ks::animated_text_sprites->clear();
     ks::text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
-    ks::dialog = new ks::DialogBox(ks::text_generator);
+    ks::dialog = new ks::DialogBox(ks::text_generator, ks::static_text_sprites, ks::animated_text_sprites);
 
-    bn::vector<bn::sprite_ptr, 64> _text_sprites;
+    // bn::vector<bn::sprite_ptr, 64> _text_sprites;
     bn::optional<bn::sprite_ptr> _bottom_icon;
     while(true)
     {
@@ -194,25 +198,27 @@ int main()
                 bn::string<64> language(alt_lang ? "Язык: " : "Language: ");
                 bn::string<64> play_video(alt_lang ? "Воспроизвести видео" : "Play video");
 
-                _text_sprites.clear();
+                // _text_sprites.clear();
+                ks::static_text_sprites->clear();
                 ks::text_generator->set_one_sprite_per_character(false);
                 ks::text_generator->set_center_alignment();
-                ks::text_generator->generate(0, -72, title, _text_sprites);
-                ks::text_generator->generate(0, -72+12, author, _text_sprites);
+                ks::text_generator->generate(0, -72, title, *ks::static_text_sprites);
+                ks::text_generator->generate(0, -72+12, author, *ks::static_text_sprites);
 
                 ks::text_generator->set_left_alignment();
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 0), bn::string<64>(select == 0 ? "> " : "  ") + play_a0_test_scene, _text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 1), bn::string<64>(select == 1 ? "> " : "  ") + play_a1_monday, _text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 2), bn::string<64>(select == 2 ? "> " : "  ") + play_a1_tuesday, _text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 3), bn::string<64>(select == 3 ? "> " : "  ") + play_a1_wednesday, _text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 4), bn::string<64>(select == 4 ? "> " : "  ") + play_all, _text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 0), bn::string<64>(select == 5 ? "> " : "  ") + language + (alt_lang ? "Русский" : "English"), _text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 1), bn::string<64>(select == 6 ? "> " : "  ") + play_video, _text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 0), bn::string<64>(select == 0 ? "> " : "  ") + play_a0_test_scene, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 1), bn::string<64>(select == 1 ? "> " : "  ") + play_a1_monday, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 2), bn::string<64>(select == 2 ? "> " : "  ") + play_a1_tuesday, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 3), bn::string<64>(select == 3 ? "> " : "  ") + play_a1_wednesday, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 4), bn::string<64>(select == 4 ? "> " : "  ") + play_all, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 0), bn::string<64>(select == 5 ? "> " : "  ") + language + (alt_lang ? "Русский" : "English"), *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 1), bn::string<64>(select == 6 ? "> " : "  ") + play_video, *ks::static_text_sprites);
             }
             ks::globals::main_update();
         }
 
-        _text_sprites.clear();
+        // _text_sprites.clear();
+        ks::static_text_sprites->clear();
         _bottom_icon.reset();
         player_stop();
 

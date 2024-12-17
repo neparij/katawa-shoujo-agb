@@ -51,8 +51,10 @@ namespace ks
     class DialogBox
     {
     public:
-        DialogBox(bn::sprite_text_generator* text_generator)
+        DialogBox(bn::sprite_text_generator* text_generator, bn::vector<bn::sprite_ptr, 64>* finalized_text_sprites, bn::vector<bn::sprite_ptr, 128>* animated_text_sprites)
             : _text_generator(text_generator),
+            _finalized_text_sprites(finalized_text_sprites),
+            _animated_text_sprites(animated_text_sprites),
             original_palette_item(_text_generator->palette_item()),
             beige_palette_item(bn::sprite_items::variable_16x16_font_beige.palette_item()),
             beige_selected_palette_item(bn::sprite_items::variable_16x16_font_beige_selected.palette_item())
@@ -81,21 +83,21 @@ namespace ks
             _is_immediately = false;
             _word_buffer.clear();
 
-            _animated_text_sprites.clear();
-            _finalized_text_sprites.clear();
+            _animated_text_sprites->clear();
+            _finalized_text_sprites->clear();
             _answers_sprites.clear();
         }
 
         void reset_question() {
             _is_finished = false;
             _is_question = true;
-            for (auto answerbox : answerboxes_l) {
+            for (auto& answerbox : answerboxes_l) {
                 answerbox.reset();
             }
-            for (auto answerbox : answerboxes_c) {
+            for (auto& answerbox : answerboxes_c) {
                 answerbox.reset();
             }
-            for (auto answerbox : answerboxes_r) {
+            for (auto& answerbox : answerboxes_r) {
                 answerbox.reset();
             }
             answerboxes_l.clear();
@@ -126,10 +128,10 @@ namespace ks
             for (auto& s : _title_sprites) {
                 s.set_blending_enabled(true);
             }
-            for (auto& s : _finalized_text_sprites) {
+            for (auto& s : *_finalized_text_sprites) {
                 s.set_blending_enabled(true);
             }
-            for (auto& s : _animated_text_sprites) {
+            for (auto& s : *_animated_text_sprites) {
                 s.set_blending_enabled(true);
             }
         }
@@ -356,39 +358,21 @@ namespace ks
                 bn::string_view finalized_line(message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
                 BN_LOG("Render finalized line ", _text_render_line - 1);
                 BN_LOG(finalized_line);
-                // bn::string_view finalized_line(message.substr(0, 16));
+                render_text_by_chunks_with_updates<64>(
+                    0, (_text_render_line - 1) * 12,
+                    finalized_line,
+                    *_finalized_text_sprites,
+                    false,
+                    quoted_start ? "\"" : nullptr
+                    );
 
-                // BN_LOG("finalized_line: ", finalized_line.substr(0, 64));
-                // if (quoted_start) {
-                    render_text_by_chunks_with_updates<64>(
-                        0, (_text_render_line - 1) * 12,
-                        finalized_line,
-                        _finalized_text_sprites,
-                        false,
-                        quoted_start ? "\"" : nullptr
-                        );
-                //     render_finalized_by_chunks_with_updates((_text_render_line - 1) * 12, finalized_line, bn::string_view("\""));
-                // } else {
-                    // render_text_by_chunks_with_updates<512>(
-                    //     0, (_text_render_line - 1) * 12,
-                    //     finalized_line,
-                    //     _finalized_text_sprites,
-                    //     false
-                    //     );
-                //     render_finalized_by_chunks_with_updates((_text_render_line - 1) * 12, finalized_line);
-                // }
-
-                // BN_LOG("Clear animated sprites");
-                // _animated_text_sprites.clear();
-
-
-                for (auto& sprite : _finalized_text_sprites) {
+                for (auto& sprite : *_finalized_text_sprites) {
                     sprite.set_visible(true);
                 }
 
-                if (!_animated_text_sprites.empty()) {
+                if (!_animated_text_sprites->empty()) {
                     BN_LOG("F: Animated sprites not empty. clear");
-                    _animated_text_sprites.clear();
+                    _animated_text_sprites->clear();
                 }
 
 
@@ -468,15 +452,15 @@ namespace ks
             bn::string_view animated_line(message.substr(cursor, _text_render_prev_line_length));
             BN_LOG("Render animated line ");
             BN_LOG(animated_line);
-            if (!_animated_text_sprites.empty()) {
+            if (!_animated_text_sprites->empty()) {
                 BN_LOG("Animated sprites not empty. clear");
-                _animated_text_sprites.clear();
+                _animated_text_sprites->clear();
             }
             BN_LOG("Render animated.......");
             render_text_by_chunks_with_updates<128>(
                 0, _text_render_line * 12,
                 animated_line,
-                _animated_text_sprites,
+                *_animated_text_sprites,
                 true,
                 quoted_start ? "\"" : nullptr,
                 (quoted_end && _text_render_next_line_index == message.size()) ? "\"" : nullptr
@@ -549,6 +533,10 @@ namespace ks
                 BN_ASSERT(chunk.size() <= 16, "Chunk size exceeds limit");
                 if (!chunk.empty()) {
                     BN_LOG("Add chunk [", chunk, "]");
+
+                    // BN_LOG("Spirtes used/available: ", bn::sprites_manager.);
+                    BN_LOG("Static size: ", _finalized_text_sprites->size());
+                    BN_LOG("Animated size: ", _animated_text_sprites->size());
                     _text_generator->generate(
                         -ks::device::screen_width_half + 10 + current_x,
                         ks::device::screen_height_half - 36 + y,
@@ -581,13 +569,13 @@ namespace ks
         }
 
         void hide_animated_sprites() {
-            for (auto& sprite : _animated_text_sprites) {
+            for (auto& sprite : *_animated_text_sprites) {
                 sprite.set_visible(false);
             }
         }
 
         void show_message_sprites() {
-            for (auto& sprite : _animated_text_sprites) {
+            for (auto& sprite : *_animated_text_sprites) {
                 sprite.set_visible(true);
             }
         }
@@ -670,10 +658,10 @@ namespace ks
                 if (bn::keypad::a_pressed() || SKIP) {
                     write_immediately();
                 } else {
-                    if (_animated_text_sprites.size() > 0 && _text_render_timer.elapsed_ticks() < _animated_text_sprites.size() * ks::defaults::text_render_char_ticks) {
+                    if (_animated_text_sprites->size() > 0 && _text_render_timer.elapsed_ticks() < _animated_text_sprites->size() * ks::defaults::text_render_char_ticks) {
                         // Animating
                         int i = 0;
-                        for (auto& sprite : _animated_text_sprites) {
+                        for (auto& sprite : *_animated_text_sprites) {
                             if (_text_render_timer.elapsed_ticks() >= i * ks::defaults::text_render_char_ticks) {
                                 sprite.set_visible(true);
                             }
@@ -719,6 +707,8 @@ private:
         bool _hidden = true;
 
         bn::sprite_text_generator* _text_generator;
+        bn::vector<bn::sprite_ptr, 128>* _animated_text_sprites;
+        bn::vector<bn::sprite_ptr, 64>* _finalized_text_sprites;
 
         // Answers related stuff
         bn::vector<bn::optional<bn::sprite_ptr>, 5> answerboxes_l;
@@ -740,8 +730,6 @@ private:
         bn::optional<bn::sprite_ptr> talkbox3;
         bn::optional<bn::sprite_ptr> talkbox4;
         bn::vector<bn::sprite_ptr, 8> _title_sprites;
-        bn::vector<bn::sprite_ptr, 128> _animated_text_sprites;
-        bn::vector<bn::sprite_ptr, 64> _finalized_text_sprites;
 
         bn::timer _text_render_timer;
         bn::string<32> _actor;

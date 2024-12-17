@@ -23,7 +23,11 @@ bn::vector<unsigned char, 5> answers_index_map;
 ks::saves::SaveSlotProgressData progress;
 bool in_replay = false;
 
-// bn::vector<bn::sprite_ptr, 64> menu_text_sprites;
+bn::vector<bn::sprite_ptr, 64>* static_text_sprites;
+bn::vector<bn::sprite_ptr, 128>* animated_text_sprites;
+
+bn::string<16> SceneManager::_cached_actor;
+int SceneManager::_cached_tl_key = -1;
 
 void SceneManager::free_resources() {
     while (character_visuals.size() < character_visuals.max_size()) {
@@ -55,43 +59,76 @@ void SceneManager::set_background(const bn::regular_bg_item& bg) {
 }
 
 void SceneManager::show_dialog(bn::string<16> actor, int tl_key) {
-    bn::string<1024> message = ks::scenario::gbfs_reader::get_tl<1024>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
-    ks::globals::main_update();
-    dialog->show(actor, message);
-    while (!dialog->is_finished()) {
-        dialog->update();
+    _cached_actor = actor;
+    _cached_tl_key = tl_key;
+
+    while (true) {
+        bn::string<1024> message = ks::scenario::gbfs_reader::get_tl<1024>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
         ks::globals::main_update();
+        dialog->show(actor, message);
+        while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+            dialog->update();
+            ks::globals::main_update();
+        }
         if (bn::keypad::start_pressed()) {
             dialog->hide_blend();
             SceneManager::open_ingame_menu();
-            dialog->restore_from_pause();
+            continue;
         }
+        break;
     }
 }
 
-void SceneManager::show_dialog_question(bn::vector<ks::answer_ptr, 5> answers) {
-    answers_index_map.clear();
-    bn::vector<bn::string<128>, 5> answers_messages;
-    for (int i = 0; i < answers.size(); i++) {
-        auto message = ks::scenario::gbfs_reader::get_tl<128>(scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i).tl_key]);
-        BN_LOG("Message ", i, ": ", message);
-        answers_messages.push_back(message);
-        answers_index_map.push_back(answers.at(i).index);
-    }
-    dialog->show_question(answers_messages);
-    while (!dialog->is_finished()) {
-        dialog->update();
-        ks::globals::main_update();
+void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr, 5> answers) {
+    bool redisplay_dialog = false;  // Prevents re-showing dialog unnecessarily
+
+    // TODO: IDEAAA!!!! TO USE 1024 SIZED MESSAGE I CAN USE TWO METHOD CALLS INSIDE WHILE CYCLE.
+    // - FIRST: REDISPLAY
+    // - SECOND: PERFORM QUESTION
+    // Looks like this way compiler shouldn't create bn::string<1024> and bn::vector<bn::string<128>, 5> at the same scope
+    // and should release resources on each method pop from stack
+    // WAAAAAAAAHAA!~
+
+    while (true) {
+        if (redisplay_dialog) {
+            // ATTENTION! Used reduced-size message due to limits. Need to be tested as well.
+            bn::string<512> message = ks::scenario::gbfs_reader::get_tl<512>(scene->scenario(), scene->locale(), scene->_script_tl_index[_cached_tl_key]);
+            dialog->show(_cached_actor, message);
+
+            while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+                dialog->update();
+                ks::globals::main_update();
+            }
+        }
+
+        // Phase 2: Display the question dialog
+        answers_index_map.clear();
+        bn::vector<bn::string<128>, 5> answers_messages;
+
+        for (int i = 0; i < answers.size(); i++) {
+            auto message = ks::scenario::gbfs_reader::get_tl<128>(
+                scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i).tl_key]);
+            answers_messages.push_back(message);
+            answers_index_map.push_back(answers.at(i).index);
+        }
+
+        dialog->show_question(answers_messages);
+
+        while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+            dialog->update();
+            ks::globals::main_update();
+        }
+
         if (bn::keypad::start_pressed()) {
+            // Pause and re-open menu logic
             dialog->reset_question();
             dialog->hide_blend();
             SceneManager::open_ingame_menu();
-            dialog->restore_from_pause();
-            dialog->write_immediately();
-            dialog->show_question(answers_messages);
+            redisplay_dialog = true;
+            continue;
         }
+        break;
     }
-    answers_messages.clear();
 }
 
 int SceneManager::get_dialog_question_answer() {
@@ -284,29 +321,29 @@ void SceneManager::open_ingame_menu() {
     secondary_background = bn::regular_bg_items::ui_ingame_menu_background_0.create_bg(0, 0);
 
     // TEMP
-    // bn::sprite_palette_item original_palette_item = ks::text_generator->palette_item();
-    // bn::sprite_palette_item beige_palette_item = bn::sprite_items::variable_16x16_font_beige.palette_item();
-    // bn::sprite_palette_item beige_selected_palette_item = bn::sprite_items::variable_16x16_font_beige_selected.palette_item();
-    // menu_text_sprites.clear();
-    // ks::text_generator->set_center_alignment();
-    // ks::text_generator->set_one_sprite_per_character(false);
-    // ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::string_view("Наиграно: 4:57:21"), menu_text_sprites);
+    bn::sprite_palette_item original_palette_item = ks::text_generator->palette_item();
+    bn::sprite_palette_item beige_palette_item = bn::sprite_items::variable_16x16_font_beige.palette_item();
+    bn::sprite_palette_item beige_selected_palette_item = bn::sprite_items::variable_16x16_font_beige_selected.palette_item();
+    static_text_sprites->clear();
+    ks::text_generator->set_center_alignment();
+    ks::text_generator->set_one_sprite_per_character(false);
+    ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::string_view("Наиграно: 4:57:21"), *static_text_sprites);
 
-    // ks::text_generator->set_palette_item(beige_selected_palette_item);
-    // ks::text_generator->generate(0, -48, bn::string_view("Назад"), menu_text_sprites);
-    // ks::text_generator->set_palette_item(beige_palette_item);
-    // ks::text_generator->generate(0, -32, bn::string_view("История"), menu_text_sprites);
-    // ks::text_generator->generate(0, -16, bn::string_view("Настройки"), menu_text_sprites);
-    // ks::text_generator->generate(0, 0, bn::string_view("Сохранить"), menu_text_sprites);
-    // ks::text_generator->generate(0, 16, bn::string_view("Загрузить"), menu_text_sprites);
-    // ks::text_generator->generate(0, 32, bn::string_view("Главное меню"), menu_text_sprites);
+    ks::text_generator->set_palette_item(beige_selected_palette_item);
+    ks::text_generator->generate(0, -48, bn::string_view("Назад"), *static_text_sprites);
+    ks::text_generator->set_palette_item(beige_palette_item);
+    ks::text_generator->generate(0, -32, bn::string_view("История"), *static_text_sprites);
+    ks::text_generator->generate(0, -16, bn::string_view("Настройки"), *static_text_sprites);
+    ks::text_generator->generate(0, 0, bn::string_view("Сохранить"), *static_text_sprites);
+    ks::text_generator->generate(0, 16, bn::string_view("Загрузить"), *static_text_sprites);
+    ks::text_generator->generate(0, 32, bn::string_view("Главное меню"), *static_text_sprites);
 
-    // ks::text_generator->set_palette_item(original_palette_item);
-    // ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::string_view("Сцена: Так закалялся характер"), menu_text_sprites);
-    // ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::string_view("Композиция: Generic Happy Music"), menu_text_sprites);
+    ks::text_generator->set_palette_item(original_palette_item);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::string_view("Сцена: Так закалялся характер"), *static_text_sprites);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::string_view("Композиция: Generic Happy Music"), *static_text_sprites);
 
     // this is a pause to test it all together.
-    for (int i = 0; i < 256; i++) {
+    while (!bn::keypad::start_pressed()) {
         ks::globals::main_update();
     }
 
@@ -317,7 +354,8 @@ void SceneManager::open_ingame_menu() {
 }
 
 void SceneManager::close_ingame_menu() {
-    // menu_text_sprites.clear();
+    static_text_sprites->clear();
+    animated_text_sprites->clear();
     secondary_background.reset();
 
     for (auto& character_visual : character_visuals) {
