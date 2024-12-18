@@ -14,6 +14,7 @@ namespace ks {
     namespace globals {
         extern bool show_memory_debug;
         extern bool use_alt_lang;
+        extern bool exit_scenario;
 
         extern void main_update();
         extern void ISR_VBlank();

@@ -62,7 +62,8 @@ void SceneManager::show_dialog(bn::string<16> actor, int tl_key) {
     _cached_actor = actor;
     _cached_tl_key = tl_key;
 
-    while (true) {
+    while (!ks::globals::exit_scenario) {
+        // TODO: Use ref to message. All the way. Reduce the mem usage.
         bn::string<1024> message = ks::scenario::gbfs_reader::get_tl<1024>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key]);
         ks::globals::main_update();
         dialog->show(actor, message);
@@ -89,7 +90,7 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
     // and should release resources on each method pop from stack
     // WAAAAAAAAHAA!~
 
-    while (true) {
+    while (!ks::globals::exit_scenario) {
         if (redisplay_dialog) {
             // ATTENTION! Used reduced-size message due to limits. Need to be tested as well.
             bn::string<512> message = ks::scenario::gbfs_reader::get_tl<512>(scene->scenario(), scene->locale(), scene->_script_tl_index[_cached_tl_key]);
@@ -274,12 +275,10 @@ void SceneManager::music_stop() {
 
 void SceneManager::open_ingame_menu() {
     const int TRANSITION_STEPS = 16;
-
     constexpr bn::color BLACK = bn::color(0, 0, 0);
 
     bn::bg_palettes::set_fade_color(BLACK);
     bn::sprite_palettes::set_fade_color(BLACK);
-
 
     // Enable blending for characters
     for (auto& char_visual : character_visuals) {
@@ -321,36 +320,85 @@ void SceneManager::open_ingame_menu() {
     secondary_background = bn::regular_bg_items::ui_ingame_menu_background_0.create_bg(0, 0);
 
     // TEMP
+    bool alt_lang = ks::globals::use_alt_lang;
+    unsigned char selected = 0;
+    bn::vector<signed char, 64> selection_index;
     bn::sprite_palette_item original_palette_item = ks::text_generator->palette_item();
     bn::sprite_palette_item beige_palette_item = bn::sprite_items::variable_16x16_font_beige.palette_item();
     bn::sprite_palette_item beige_selected_palette_item = bn::sprite_items::variable_16x16_font_beige_selected.palette_item();
     static_text_sprites->clear();
     ks::text_generator->set_center_alignment();
     ks::text_generator->set_one_sprite_per_character(false);
-    ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::string_view("Наиграно: 4:57:21"), *static_text_sprites);
+    ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::string_view(!alt_lang ? "Playtime: 0:00:00" : "Наиграно: 0:00:00"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), -1);
 
-    ks::text_generator->set_palette_item(beige_selected_palette_item);
-    ks::text_generator->generate(0, -48, bn::string_view("Назад"), *static_text_sprites);
-    ks::text_generator->set_palette_item(beige_palette_item);
-    ks::text_generator->generate(0, -32, bn::string_view("История"), *static_text_sprites);
-    ks::text_generator->generate(0, -16, bn::string_view("Настройки"), *static_text_sprites);
-    ks::text_generator->generate(0, 0, bn::string_view("Сохранить"), *static_text_sprites);
-    ks::text_generator->generate(0, 16, bn::string_view("Загрузить"), *static_text_sprites);
-    ks::text_generator->generate(0, 32, bn::string_view("Главное меню"), *static_text_sprites);
+    // ks::text_generator->set_palette_item(beige_selected_palette_item);
+    ks::text_generator->generate(0, -48, bn::string_view(!alt_lang ? "Return" :"Назад"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), 0);
+    // ks::text_generator->set_palette_item(beige_palette_item);
+    ks::text_generator->generate(0, -32, bn::string_view(!alt_lang ? "History (n/a)" :"История (н/д)"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), 1);
+    ks::text_generator->generate(0, -16, bn::string_view(!alt_lang ? "Options (n/a)" :"Настройки (н/д)"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), 2);
+    ks::text_generator->generate(0, 0, bn::string_view(!alt_lang ? "Save (n/a)" :"Сохранить (н/д)"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), 3);
+    ks::text_generator->generate(0, 16, bn::string_view(!alt_lang ? "Load (n/a)" :"Загрузить (н/д)"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), 4);
+    ks::text_generator->generate(0, 32, bn::string_view(!alt_lang ? "Main menu" :"Главное меню"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), 5);
 
     ks::text_generator->set_palette_item(original_palette_item);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::string_view("Сцена: Так закалялся характер"), *static_text_sprites);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::string_view("Композиция: Generic Happy Music"), *static_text_sprites);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::string_view(!alt_lang ? "Scene: No scene" : "Сцена: Нет сцены"), *static_text_sprites);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::string_view(!alt_lang ? "Track: Nothing" : "Композиция: Ничего"), *static_text_sprites);
+    selection_index.resize(static_text_sprites->size(), -1);
 
-    // this is a pause to test it all together.
-    while (!bn::keypad::start_pressed()) {
-        ks::globals::main_update();
+    bool action_performed = false;
+    while (!action_performed) {
+        BN_LOG("Calc palettes");
+        for (int i = 0; i < static_text_sprites->size(); i++) {
+            bool is_selected = selection_index.at(i) == selected;
+            bool is_action = selection_index.at(i) != -1;
+            if (!is_action) {
+                static_text_sprites->at(i).set_palette(original_palette_item);
+            } else {
+                static_text_sprites->at(i).set_palette(is_selected ? beige_selected_palette_item : beige_palette_item);
+            }
+        }
+
+        while (true) {
+            ks::globals::main_update();
+            if (bn::keypad::up_pressed() || bn::keypad::down_pressed()) {
+                selected += bn::keypad::down_pressed() ? 1 : -1;
+                selected += 6;
+                selected = selected % 6;
+                break;
+            }
+            if (bn::keypad::start_pressed() || bn::keypad::b_pressed()) {
+                action_performed = true;
+                break;
+            }
+            if (bn::keypad::a_pressed()) {
+                if (selected == 0) {
+                    action_performed = true;
+                }
+                if (selected == 5) {
+                    action_performed = true;
+                    ks::globals::exit_scenario = true;
+                }
+                break;
+            }
+        }
     }
 
     // TODO: backwards processing.
     bn::blending::set_fade_alpha(0);
     main_background->set_blending_enabled(false);
-    SceneManager::close_ingame_menu();
+
+    if (!ks::globals::exit_scenario) {
+        SceneManager::close_ingame_menu();
+    } else {
+        SceneManager::exit_scenario_from_ingame_menu();
+    }
 }
 
 void SceneManager::close_ingame_menu() {
@@ -376,7 +424,20 @@ void SceneManager::close_ingame_menu() {
     }
 
     const bn::color BLACK = bn::color(0, 0, 0);
-    for(int alpha = 32; alpha >= 0; --alpha) {
+    for(int alpha = 16; alpha >= 0; --alpha) {
+        bn::bg_palettes::set_fade(BLACK, bn::fixed(alpha) / 32);
+        bn::sprite_palettes::set_fade(BLACK, bn::fixed(alpha) / 32);
+        ks::globals::main_update();
+    }
+}
+
+void SceneManager::exit_scenario_from_ingame_menu() {
+    static_text_sprites->clear();
+    animated_text_sprites->clear();
+    secondary_background.reset();
+
+    const bn::color BLACK = bn::color(0, 0, 0);
+    for(int alpha = 16; alpha <= 32; ++alpha) {
         bn::bg_palettes::set_fade(BLACK, bn::fixed(alpha) / 32);
         bn::sprite_palettes::set_fade(BLACK, bn::fixed(alpha) / 32);
         ks::globals::main_update();

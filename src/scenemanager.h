@@ -14,6 +14,12 @@
 
 #include "bn_regular_bg_items_ui_ingame_menu_background_0.h"
 
+#define IF_NOT_EXIT(step)                         \
+step;                                             \
+if (ks::globals::exit_scenario) {                 \
+    return;                                       \
+}
+
 namespace ks {
 
 struct character_visuals_ptr
@@ -82,6 +88,7 @@ public:
 
     static void open_ingame_menu();
     static void close_ingame_menu();
+    static void exit_scenario_from_ingame_menu();
 
     constexpr const char* scenario() const { return _scenario; }
     constexpr const char* locale() const { return _locale; }

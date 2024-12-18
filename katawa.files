@@ -5,8 +5,6 @@ src/backgrounditem.cpp.h
 src/constants.h
 src/dialogbox.cpp.h
 src/dialogitem.cpp.h
-src/dynamicvector.cpp
-src/extension_sprite_ptr.cpp.h
 src/globals.cpp
 src/globals.h
 src/gsm_player.h

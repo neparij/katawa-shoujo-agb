@@ -1,14 +1,6 @@
 #ifndef KS_SCRIPT_A1_TUESDAY
 #define KS_SCRIPT_A1_TUESDAY
 
-#include "../sequence/assignmentitem.h"
-#include "../sequence/backgrounditem.h"
-#include "../sequence/dialogitem.h"
-#include "../sequence/menuitem.h"
-#include "../sequence/musicitem.h"
-#include "../sequence/runlabelfinishitem.h"
-#include "../sequence/runlabelitem.h"
-#include "../sequence/spriteitem.h"
 #include "../scenemanager.h"
 #include "bn_regular_bg_items_school_dormhisao.h"
 #include "bn_regular_bg_items_school_scienceroom.h"

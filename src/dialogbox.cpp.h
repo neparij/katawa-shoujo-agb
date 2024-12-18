@@ -5,7 +5,6 @@
 #include "bn_blending_actions.h"
 #include "bn_camera_actions.h"
 #include "bn_camera_ptr.h"
-#include "bn_core.h"
 #include "bn_math.h"
 #include "bn_keypad.h"
 #include "bn_sprite_palette_ptr.h"
@@ -15,12 +14,8 @@
 #include "bn_rect_window.h"
 #include "bn_timer.h"
 
-#include "bn_memory.h"
-
 #include "constants.h"
 #include "globals.h"
-#include "gsmplayer/player.h"
-#include "sequence/dialogitem.h"
 
 #include "bn_sprite_items_ui_answerbox1.h"
 #include "bn_sprite_items_ui_answerbox2.h"
@@ -83,6 +78,14 @@ namespace ks
             _is_immediately = false;
             _word_buffer.clear();
 
+            // _animated_text_sprites->clear();
+            // _finalized_text_sprites->clear();
+            for (auto& sprite : *_animated_text_sprites) {
+                sprite.set_visible(false);
+            }
+            for (auto& sprite : *_finalized_text_sprites) {
+                sprite.set_visible(false);
+            }
             _animated_text_sprites->clear();
             _finalized_text_sprites->clear();
             _answers_sprites.clear();
@@ -367,17 +370,18 @@ namespace ks
                     );
 
                 for (auto& sprite : *_finalized_text_sprites) {
-                    sprite.set_visible(true);
+                    if (!sprite.visible()) {
+                        sprite.set_visible(true);
+                    }
                 }
 
                 if (!_animated_text_sprites->empty()) {
                     BN_LOG("F: Animated sprites not empty. clear");
                     _animated_text_sprites->clear();
                 }
-
-
-
             }
+
+            ks::globals::main_update();  // Yield control for VBlank updates
 
             unsigned int cursor_i = cursor;
             unsigned char cursor_x = 0;
@@ -450,6 +454,8 @@ namespace ks
             BN_ASSERT(_text_render_prev_line_index + _text_render_prev_line_length <= message.size(), "Finalized line substring out of bounds");
 
             bn::string_view animated_line(message.substr(cursor, _text_render_prev_line_length));
+            ks::globals::main_update();  // Allow VBlank again
+
             BN_LOG("Render animated line ");
             BN_LOG(animated_line);
             if (!_animated_text_sprites->empty()) {
@@ -479,7 +485,7 @@ namespace ks
             bool one_sprite_per_character = true,
             bn::string_view prefix = nullptr,
             bn::string_view suffix = nullptr,
-            unsigned char chunk_size = 4
+            unsigned char chunk_size = 8
             ) {
             // Set text generator settings
             _text_generator->set_one_sprite_per_character(one_sprite_per_character);
@@ -504,7 +510,7 @@ namespace ks
             // Render text in chunks
             size_t index = 0;
             while (index < buffer.size()) {
-                bn::string<16> chunk; // Temporary string for a single chunk. SHOULD BE SIZE CHUNK * 4, ALSO SEE ASSERTS BELOW
+                bn::string<32> chunk; // Temporary string for a single chunk. SHOULD BE SIZE CHUNK * 4, ALSO SEE ASSERTS BELOW
                 chunk.clear();
                 int chunk_length = 0; // Number of valid UTF-8 characters added to the chunk
 
@@ -530,7 +536,7 @@ namespace ks
 
                 // Generate sprites for the chunk
                 BN_ASSERT(buffer.size() <= SpritePtrSize, "Buffer size exceeds limit for rendering");
-                BN_ASSERT(chunk.size() <= 16, "Chunk size exceeds limit");
+                BN_ASSERT(chunk.size() <= 32, "Chunk size exceeds limit");
                 if (!chunk.empty()) {
                     BN_LOG("Add chunk [", chunk, "]");
 
@@ -570,13 +576,17 @@ namespace ks
 
         void hide_animated_sprites() {
             for (auto& sprite : *_animated_text_sprites) {
-                sprite.set_visible(false);
+                if (sprite.visible()) {
+                    sprite.set_visible(false);
+                }
             }
         }
 
         void show_message_sprites() {
             for (auto& sprite : *_animated_text_sprites) {
-                sprite.set_visible(true);
+                if (!sprite.visible()) {
+                    sprite.set_visible(true);
+                }
             }
         }
 
@@ -601,7 +611,7 @@ namespace ks
             _is_writing = false;
         }
 
-        unsigned char BN_CODE_IWRAM get_char_size(unsigned char c) {
+        inline unsigned char BN_CODE_IWRAM get_char_size(unsigned char c) {
             if ((c & 0x80) == 0) {
                 return 1;
             } else if ((c & 0xE0) == 0xC0) {

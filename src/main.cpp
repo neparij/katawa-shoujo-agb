@@ -1,4 +1,5 @@
 #include "bn_core.h"
+#include "bn_sprite_palettes.h"
 #include "bn_sram.h"
 #include "bn_keypad.h"
 #include "bn_bg_palettes.h"
@@ -26,6 +27,9 @@
 #include "scripts/script_a1_wednesday_ru.cpp"
 #include "gsmplayer/player.h"
 
+#include "bn_regular_bg_items_video_end_4ls.h"
+#include "bn_regular_bg_items_ui_bg_main.h"
+
 #include "bn_sprite_items_hanako.h"
 #include <BN_LOG.h>
 
@@ -40,98 +44,66 @@ namespace
     };
 }
 
-// void sram_init() {
-//     sram_data cart_sram_data;
-//     bn::sram::read(cart_sram_data);
-//     if (!cart_sram_data.initialized) {
-//         cart_sram_data.initialized = true;
-//         bn::sram::write(cart_sram_data);
-//     }
-//     bn::sram::read(cart_sram_data);
-//     if (!cart_sram_data.initialized) {
-//         BN_ERROR("SRAM is not working.\n\nCheck your emulator settings if you play\nKatawa Shoujo on emulator.");
-//     }
-// }
-
-// bool sram_video_shown() {
-//     sram_data cart_sram_data;
-//     bn::sram::read(cart_sram_data);
-//     return false;//cart_sram_data.video_shown;
-// }
-
 void BN_CODE_IWRAM show_video() {
     auto vid_test = new ks::VidTest(fs);
-
-    // player_init();
-    // player_playGSM("music_happiness.gsm");
     while (!vid_test->is_finished()) {
-        // bn::core::update();
-        // player_update(0, [](unsigned current) {});
         vid_test->update();
-        // ks::globals::main_update();
-        // player_onVBlank();
     }
-
 }
 
 
 
 int main()
 {
-    bn::core::init(ks::globals::ISR_VBlank);
-    BN_ASSERT(fs != NULL,
-              "GBFS file not found.\nUse the ROM that ends with .out.gba!");
+    const constexpr bool SHOW_INTRO = true;
 
+    // Init Butano Core.
+    bn::core::init();
+    // Check that ROM with GBFS is running.
+    BN_ASSERT(fs != NULL, "GBFS file not found.\nUse the ROM that ends with .out.gba!");
 
-    bn::array<char, 32> expected_format_tag;
-    bn::istring_base expected_format_tag_istring(expected_format_tag._data);
-    bn::ostringstream expected_format_tag_stream(expected_format_tag_istring);
-    expected_format_tag_stream.append("KSGBA.SRAM");
-
-    sram_data cart_sram_data;
-    bn::sram::read(cart_sram_data);
-    if (cart_sram_data.format_tag != expected_format_tag) {
-        cart_sram_data.format_tag = expected_format_tag;
-        cart_sram_data.video_shown = true;
-        bn::sram::clear(bn::sram::size());
-        bn::sram::write(cart_sram_data);
-    }
-
-    bn::sram::read(cart_sram_data);
-    if (cart_sram_data.format_tag != expected_format_tag) {
-        BN_ERROR("SRAM is not working.\n\nCheck your emulator settings if you play\nKatawa Shoujo on emulator.");
-    }
-
-    if (!cart_sram_data.video_shown) {
+    if (SHOW_INTRO) {
+        // Show the 4LS intro video (p1 - video playback)
         show_video();
-        bn::sram::read(cart_sram_data);
-        cart_sram_data.video_shown = true;
-        bn::sram::write(cart_sram_data);
-        bn::core::reset();
-    } else {
-        // BN_ERROR("played");
-
     }
-    // BN_BARRIER;
 
-    // while (true) {
-    //     ks::globals::main_update();
-    //     if (bn::keypad::start_pressed()) {
-    //         sram_data cart_sram_data;
-    //         bn::sram::read(cart_sram_data);
-    //         cart_sram_data.video_shown = false;
-    //         cart_sram_data.num_plays = 0;
-    //         bn::sram::write(cart_sram_data);
-    //         bn::core::reset();
-    //     }
-    // }
-
-    // bn::core::reset();
-    // BN_ERROR("Finished");
-
+    // Re-init Butano Core and GSM Audio Engine
     bn::core::init(ks::globals::ISR_VBlank);
     player_init();
 
+    if (SHOW_INTRO) {
+        // Show the 4LS intro video (p2 - native gfx playback)
+        ks::main_background = bn::regular_bg_items::video_end_4ls.create_bg(0, 0);
+        player_playGSM("video_a_4ls_end.gsm");
+        constexpr bn::color WHITE = bn::color(31, 31, 31);
+        constexpr bn::color BLACK = bn::color(0, 0, 0);
+
+        bn::bg_palettes::set_fade_color(WHITE);
+        for (int i = 0; i < 120; i++) {
+            if (i < 30) {
+                bn::bg_palettes::set_fade_intensity(bn::fixed(30 - i) / 30);
+            }
+            if (i == 90) {
+                bn::bg_palettes::set_fade_color(BLACK);
+            }
+            if (i > 90) {
+                bn::bg_palettes::set_fade_intensity(bn::fixed(i - 90) / 30);
+            }
+            ks::globals::main_update();
+        }
+
+        ks::main_background.reset();
+        bn::bg_palettes::set_fade_intensity(0);
+
+        // Wait 1 second
+        for (int i = 0; i < 60 * 1; i++) {
+            ks::globals::main_update();
+        }
+        // END OF INTRO
+    }
+
+
+    // Initialiaze common data and classes.
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
     ks::static_text_sprites = new bn::vector<bn::sprite_ptr, 64>();
     ks::animated_text_sprites = new bn::vector<bn::sprite_ptr, 128>();
@@ -140,7 +112,8 @@ int main()
     ks::text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
     ks::dialog = new ks::DialogBox(ks::text_generator, ks::static_text_sprites, ks::animated_text_sprites);
 
-    // bn::vector<bn::sprite_ptr, 64> _text_sprites;
+
+    // Main loop starts.
     bn::optional<bn::sprite_ptr> _bottom_icon;
     while(true)
     {
@@ -149,11 +122,18 @@ int main()
         bool scene_selected = false;
         bool need_update = true;
 
+
+        ks::main_background = bn::regular_bg_items::ui_bg_main.create_bg(0, 0);
         player_playGSM("music_menus.gsm");
         player_setLoop(true);
 
         _bottom_icon.reset();
         _bottom_icon = bn::sprite_items::hanako.create_sprite(ks::device::screen_width_half - 32, ks::device::screen_height_half - 32);
+
+        bn::sprite_palette_item original_palette_item = ks::text_generator->palette_item();
+        bn::sprite_palette_item beige_palette_item = bn::sprite_items::variable_16x16_font_beige.palette_item();
+        bn::sprite_palette_item beige_selected_palette_item = bn::sprite_items::variable_16x16_font_beige_selected.palette_item();
+
         ks::globals::main_update();
 
         while (!scene_selected) {
@@ -161,24 +141,18 @@ int main()
                 need_update = true;
                 select--;
                 if (select < 0) {
-                    select = 6;
+                    select = 5;
                 }
             }
             if (bn::keypad::down_pressed()) {
                 need_update = true;
-                select = ++select % 7;
+                select = ++select % 6;
             }
             if (bn::keypad::a_pressed()) {
                 need_update = true;
                 if (select == 5) {
                     alt_lang = !alt_lang;
                     ks::globals::use_alt_lang = alt_lang;
-                } else if (select == 6) {
-                    sram_data cart_sram_data;
-                    bn::sram::read(cart_sram_data);
-                    cart_sram_data.video_shown = false;
-                    bn::sram::write(cart_sram_data);
-                    bn::core::reset();
                 } else {
                     scene_selected = true;
                 }
@@ -188,31 +162,42 @@ int main()
                 need_update = false;
 
                 // Debug menu stuff
-                bn::string<64> title("Katawa Shoujo v0.1.5+00972");
-                bn::string<64> author(alt_lang ? "порт от NeParij" : "ported by: NeParij");
+                bn::string<64> title("Katawa Shoujo v0.2.0+01337");
+                bn::string<64> author("NeParij <3 JetstreamFamee");
                 bn::string<64> play_a0_test_scene(alt_lang ? "Тестовая сцена" : "Test Scene");
                 bn::string<64> play_a1_monday(alt_lang ? "Акт 1. Понедельник" : "Act 1. Monday");
                 bn::string<64> play_a1_tuesday(alt_lang ? "Акт 1. Вторник" : "Act 1. Tuesday");
                 bn::string<64> play_a1_wednesday(alt_lang ? "Акт 1. Среда" : "Act 1. Wednesday");
                 bn::string<64> play_all(alt_lang ? "Играть все доступные" : "Play all available");
                 bn::string<64> language(alt_lang ? "Язык: " : "Language: ");
-                bn::string<64> play_video(alt_lang ? "Воспроизвести видео" : "Play video");
 
                 // _text_sprites.clear();
                 ks::static_text_sprites->clear();
                 ks::text_generator->set_one_sprite_per_character(false);
                 ks::text_generator->set_center_alignment();
-                ks::text_generator->generate(0, -72, title, *ks::static_text_sprites);
-                ks::text_generator->generate(0, -72+12, author, *ks::static_text_sprites);
+                ks::text_generator->set_palette_item(beige_palette_item);
+                ks::text_generator->generate(0, -60, title, *ks::static_text_sprites);
+                ks::text_generator->generate(0, -60+12, author, *ks::static_text_sprites);
 
                 ks::text_generator->set_left_alignment();
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 0), bn::string<64>(select == 0 ? "> " : "  ") + play_a0_test_scene, *ks::static_text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 1), bn::string<64>(select == 1 ? "> " : "  ") + play_a1_monday, *ks::static_text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 2), bn::string<64>(select == 2 ? "> " : "  ") + play_a1_tuesday, *ks::static_text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 3), bn::string<64>(select == 3 ? "> " : "  ") + play_a1_wednesday, *ks::static_text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, -40 + (12 * 4), bn::string<64>(select == 4 ? "> " : "  ") + play_all, *ks::static_text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 0), bn::string<64>(select == 5 ? "> " : "  ") + language + (alt_lang ? "Русский" : "English"), *ks::static_text_sprites);
-                ks::text_generator->generate(-ks::device::screen_width_half + 4, 44 + (12 * 1), bn::string<64>(select == 6 ? "> " : "  ") + play_video, *ks::static_text_sprites);
+
+                ks::text_generator->set_palette_item(select == 0 ? beige_selected_palette_item : beige_palette_item);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 0), play_a0_test_scene, *ks::static_text_sprites);
+
+                ks::text_generator->set_palette_item(select == 1 ? beige_selected_palette_item : beige_palette_item);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 1), play_a1_monday, *ks::static_text_sprites);
+
+                ks::text_generator->set_palette_item(select == 2 ? beige_selected_palette_item : beige_palette_item);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 2), play_a1_tuesday, *ks::static_text_sprites);
+
+                ks::text_generator->set_palette_item(select == 3 ? beige_selected_palette_item : beige_palette_item);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 3), play_a1_wednesday, *ks::static_text_sprites);
+
+                ks::text_generator->set_palette_item(select == 4 ? beige_selected_palette_item : beige_palette_item);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 4), play_all, *ks::static_text_sprites);
+
+                ks::text_generator->set_palette_item(select == 5 ? beige_selected_palette_item : beige_palette_item);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, 56 + (12 * 0), language + (alt_lang ? "Русский" : "English"), *ks::static_text_sprites);
             }
             ks::globals::main_update();
         }
@@ -249,8 +234,11 @@ int main()
         }
 
         ks::SceneManager::free_resources();
+        ks::globals::exit_scenario = false;
         ks::main_background.reset();
         ks::dialog->reset();
+        bn::bg_palettes::set_fade_intensity(0);
+        bn::sprite_palettes::set_fade_intensity(0);
     }
 }
 

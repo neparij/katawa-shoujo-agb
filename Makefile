@@ -32,13 +32,13 @@ TARGET      	:=  $(notdir $(CURDIR))
 BUILD       	:=  build
 LIBBUTANO   	:=  ../afska_butano/butano
 PYTHON      	:=  python3
-SOURCES     	:=  ../butano/common/src \
+SOURCES     	:=  ../afska_butano/common/src \
 		    src \
+                    src/amgvplayer \
                     src/gsmplayer \
                     src/gsmplayer/core \
                     src/savefile \
                     src/scripts \
-		    src/sequence \
 		    src/utils \
                     src/utils/gbfs
 INCLUDES    	:=  include \
@@ -58,13 +58,12 @@ GRAPHICS    	:=  graphics \
                                         graphics/characters/kenji \
                                         graphics/characters/nurse \
                                         graphics/characters/yuuko \
-					graphics/video/temp_emi_imgs/converted \
 					../butano/common/graphics
 AUDIO       	:=  audio
 DMGAUDIO    	:=  dmg_audio
 ROMTITLE    	:=  KATAWASHOUJO
 ROMCODE     	:=  NPKS
-USERFLAGS   	:=  # -Ofast -DBN_CFG_BGS_MAX_ITEMS=4 # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
+USERFLAGS   	:=  -DBN_CFG_SPRITES_MAX_ITEMS=256 # -Ofast -DBN_CFG_BGS_MAX_ITEMS=4 # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
 USERCXXFLAGS	:=  # -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections
 USERASFLAGS 	:=  
 USERLDFLAGS 	:=  -Wl,--print-memory-usage #-Wl,--gc-sections -Wl,--print-memory-usage
@@ -88,6 +87,15 @@ VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
 
 
 
+#---------------------------------------------------------------------------------
+# This rule links in binary data with the .bin extension
+#---------------------------------------------------------------------------------
+%.agmv.o %_agmv.h :	%.agmv
+#---------------------------------------------------------------------------------
+		@echo $(notdir $<)
+		@$(bin2o)
+
+
 
 #---------------------------------------------------------------------------------------------------------------------
 # Include main makefile:
@@ -109,12 +117,3 @@ else
 #---------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------
-
-
-#---------------------------------------------------------------------------------
-# This rule links in binary data with the .bin extension
-#---------------------------------------------------------------------------------
-%.agmv.o %_agmv.h :	%.agmv
-#---------------------------------------------------------------------------------
-		@echo $(notdir $<)
-		@$(bin2o)
