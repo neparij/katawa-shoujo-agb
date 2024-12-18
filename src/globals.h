@@ -3,6 +3,7 @@
 
 #include "bn_optional.h"
 #include "bn_regular_bg_ptr.h"
+#include "bn_sprite_ptr.h"
 #include "utils/gbfs/gbfs.h"
 
 #include <bn_vector.h>
@@ -13,6 +14,7 @@ namespace ks {
     namespace globals {
         extern bool show_memory_debug;
         extern bool use_alt_lang;
+        extern bool exit_scenario;
 
         extern void main_update();
         extern void ISR_VBlank();

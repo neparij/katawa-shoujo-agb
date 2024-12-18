@@ -7,6 +7,7 @@ namespace ks {
     namespace globals {
         bool show_memory_debug = false;
         bool use_alt_lang = false;
+        bool exit_scenario = false;
 
         void main_update() {
             bn::core::update();

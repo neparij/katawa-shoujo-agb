@@ -3,416 +3,416 @@
 
 #include "bn_vector.h"
 constexpr unsigned int script_a1_wednesday_en_intl[] = {
-    0x0000, // Just around the corner of the hallway something hits me in the chest with the force of a runaway train.
-    0x0068, // I feel a hand on my shoulder at the same time the girl's eyes widen in horror and whatever she was saying gets interrupted by a very horrified—{w=.9}{nw}
-    0x0104, // Eep!
-    0x0109, // I don't have time to look behind me because Shizune is already shoving me aside and stomping over to the girl, signing furiously at her.
-    0x0192, // Miss Ibarazaki, I saw that. Running in the halls is strictly forbidden.
-    0x01DA, // Misha translates, right on Shizune's tail, but her voice is girlishly playful, not full of the divine fury Shizune's arm movements would seem to call for.
-    0x0275, // Er, sorry, I was just going to get some stuff, and I was in a kind of a hurry.
-    0x02C4, // …
-    0x02C8, // You've been told this a thousand times before. Your reckless behavior endangers other students, and even worse, it's explicitly against the school regulations.
-    0x0368, // The girl blushes and starts to fidget nervously like a little child caught misbehaving.
-    0x03C0, // It's so cute I find myself smiling.
-    0x03E4, // I know that! I— I, um, I was just…
-    0x040B, // Make sure that this will not happen again… although I'm sure telling you this is futile, and only causes me further headache when you choose to ignore the regulations.
-    0x04B5, // Got that, Emi?
-    0x04C4, // The small girl sticks her tongue out in response.
-    0x04F6, // Aaah!
-    0x04FC, // I gotta go!
-    0x0508, // Teacher'll have my head! I promised to help with printouts, but I went running instead! Sorry, but I've gotta change and everything!
-    0x058D, // Before Misha or Shizune or I can say anything, she's already bolted from where she was a second ago, almost halfway towards the stairwell.
-    0x0618, // Shizune looks like she's about to go nuclear on the spot, so I smile at her in a vain attempt to calm her down.
-    0x0688, // Are you okay, Hicchan? That Ibarazaki girl is always like that, causing trouble to others.
-    0x06E3, // You know, I'm pretty certain Shizune wouldn't call me 'Hicchan.'
-    0x0724, // Never mind, never mind!
-    0x073C, // Yeah, anyway, I'm okay. Just got the wind knocked out of me.
-    0x0779, // That's great, Hicchan!
-    0x0790, // I wouldn't call that great, but I let it slide this one time.
-    0x07CE, // Watching her walk in front of me, I notice that she walks very quickly, taking long, heavy, determined strides.
-    0x083E, // Maybe if we were traveling through a snowstorm it would make sense to walk like that, but it's a perfectly clear day. Anyway, it's making me feel exhausted just watching her.
-    0x08ED, // We arrive at the teahouse in what Misha says is 'record time,' likely because of Shizune's blazing pace. I feel a little let down seeing that it's not a huge feudal-era building with mats on the floor and women in kimonos pouring the tea.
-    0x09DC, // It actually is more like a café, as I thought. Not that it's a bad thing. It looks very nice.
-    0x0A3B, // As soon as I walk through the doors, someone zooms in front of us, as if they had been lying in wait the entire time.
-    0x0AB1, // Welcome! Thank you for patronizing this establishment!
-    0x0AE8, // The top half of her body drops forward in a bow that looks like an axe chopping through wood.
-    0x0B46, // I'm surprised to see it's none other than Yuuko, the librarian.
-    0x0B86, // Hey, I didn't know you worked here.
-    0x0BAA, // Oh… Yes, I do. I'm a waitress… I've been working here for one year, six months, and two weeks now… Thank you for choosing to come here, is there anything I can do for you?
-    0x0C5C, // Hi, Yuu-chan~!
-    0x0C6B, // Hello.
-    0x0C72, // Misha, you both know her too?
-    0x0C90, // Of course, Hicchan~! Yuu-chan works in the library, after all~! I don't go there often myself, but Shicchan knows her! And~!, we both come here a lot, so it's like we see her all the time!
-    0x0D4D, // Um… Yes… Should I get you your usuals? And… if there is anything you would want, please feel free to tell me at any time.
-    0x0DCD, // You don't have to be so formal, we all know each other.
-    0x0E05, // It's also pretty empty today, so she can afford to take it easy.
-    0x0E46, // I was hoping she would stop looking so nervous, but my words have the opposite effect.
-    0x0E9D, // No… I'm a waitress, this is my job, I have to… do it properly.
-    0x0EE0, // Okay, okay~! That works for Shicchan! Yuu-chan, please get Shicchan what she usually gets, and I'll have some green tea with milk and honey.
-    0x0F6D, // No pressure.
-    0x0F7A, // Um, yes… but… this is my job, and… there is always pressure. I'm sorry, I'm arguing with a customer… Sorry! Sorry, sorry!
-    0x0FFC, // Yuuko takes another hundred-mile-per-hour bow. I decide to give up and join Shizune and Misha at a table.
-    0x1066, // As soon as I sit down, Yuuko comes by looking even more upset than before.
-    0x10B1, // I'm sorry! I'm really, really sorry, I forgot to take your order… I'm… not attentive to customers, that's not right… I'm sorry… If there is anything I can do to make up for it, please tell me…
-    0x117C, // It's okay, Yuu-chan, Hicchan didn't order anything, so it's not your fault, don't be upset.
-    0x11D8, // It's true. I guess I should order now, but I don't really know what this place serves, and there doesn't seem to be a menu.
-    0x1254, // Yeah, she's right. I'll have some coffee, and… a sandwich, if you have one. Whichever sandwich you think is the best tasting one here, because Shizune is paying for my meal.
-    0x1304, // Shizune frowns and gives me alternating looks of surprise, indignation, and bemusement, unable to decide between the three.
-    0x1380, // Hicchan, just how much money do you have in your wallet? It can't be that little, right?, right? We should split the cost three ways, to make it fair~! Yeah, I won't accept anything else~!
-    0x143D, // Misha turns to Yuuko.
-    0x1453, // Yuu-chan, Shicchan says she wants three of whatever is the most expensive item on the menu~.
-    0x14B0, // No!
-    0x14B4, // Hahaha~! Just kidding, Hicchan…
-    0x14D6, // Um… okay, I think that the turkey sandwich is the most delicious sandwich… And it comes with free soup… A good employee would try to recommend the item that there is the most of, though… or the most expensive item…
-    0x15B7, // Am I bad at my job?
-    0x15CB, // No! That sounds good, I'll have that. And some coffee.
-    0x1602, // Okay.
-    0x1608, // She comes back a few minutes later with our drinks and my sandwich. Shizune seems to be fine with just her tea, while Misha also ordered a parfait. I don't know why, because I can't imagine many other things that would go worse with tea.
-    0x16F6, // Oh well. I take a bite out of my sandwich. It's very good.
-    0x1731, // Hicchan, have you thought about joining the Student Council?
-    0x176E, // Huh?
-    0x1773, // Don't talk with your mouth full, Hicchan…
-    0x179F, // I wash my food down with a sip of coffee, which is also surprisingly good. But now's not the time to remark on how this place has good food.
-    0x182C, // You said you understood it was too early to expect me to make a decision this quickly! That was like three hours ago!
-    0x18A2, // A man should be decisive, Hicchan!
-    0x18C5, // You really should join the Student Council, Hicchan. Come on, it'll be fun!
-    0x1911, // People always say 'come on, it'll be fun' about things that are never, ever fun.
-    0x1962, // Don't you believe me, Hicchan?
-    0x1981, // Is it Shizune saying that or Misha? What a cute expression; but the effect is somewhat jarring, like she has split personalities.
-    0x1A03, // Uh…
-    0x1A09, // Hicchan, that's depressing. We just want to spend time with you…
-    0x1A4C, // That's right, Shicchan! Yeah, that's a good point too!
-    0x1A83, // Yup, this is beneficial to everyone, it solves all our problems~.
-    0x1AC5, // Yeah, I also thought Hicchan would appreciate it… That makes me sad.
-    0x1B0C, // Suddenly I feel really left out.
-    0x1B2D, // It's rude to talk about someone without letting them in the conversation.
-    0x1B77, // Shizune adjusts her glasses, laughing to herself.
-    0x1BA9, // Aw, but it's true, Hicchan~! And you would be helping us out, membership has been really low this year.
-    0x1C11, // How low?
-    0x1C1A, // Ah, that's a secret, Hicchan.
-    0x1C38, // No, I want to know how low it was. How low is 'low'?
-    0x1C6D, // Ahaha…
-    0x1C76, // Five?
-    0x1C7C, // Lower?
-    0x1C83, // Well…
-    0x1C8B, // Zero?
-    0x1C91, // Wahaha~! Hicchan, that isn't important. What matters is that the number is low, and that is why we would appreciate you giving us a hand, especially with the festival coming up so soon, and it looking to be a busy year ahead in general.
-    0x1D7E, // So you're not going to answer my question?
-    0x1DA9, // No~.
-    0x1DAE, // I sigh and straighten up in my chair, trying to look as defiant as possible, because this seems like a big issue and I do not want to let it go that easily. I feel silly, like a blowfish.
-    0x1E6A, // Fine, at least tell me this: How many people are in the Student Council? Total?
-    0x1EBA, // Um, well, Hicchan, we're definitely undermanned, but we have enough members to get the job done. Yup, yup~!
-    0x1F26, // It's not just the two of you, is it?
-    0x1F4B, // Hahaha~! Hicchan, that's funny~!
-    0x1F6C, // But~! It's definitely not just us.
-    0x1F8F, // Are you sure? Are you absolutely sure?
-    0x1FB6, // Yup~!
-    0x1FBC, // I stare at them both, trying to see if they will slip up and confirm my worst fears.
-    0x2011, // Misha frowns, looking uncomfortable, but that is probably because I'm staring at her.
-    0x2067, // Shizune, on the other hand, returns my gaze with one of her own. Maybe she is challenging me, peering at me over the rims of her glasses like that. So teasing; and surprisingly immature, like a little girl beckoning someone to play with her.
-    0x2159, // Hicchan, your two cute student council representatives have been trying to make you feel welcome and are even treating you to lunch. You should show your gratitude by joining the council so you can at least help them out.
-    0x2237, // Yeah, it would be great if you could just file some papers for us, and… the festival is coming up, and we have to build some stalls for the games and food, just a few, so if you were there, it would be a lot easier for us…
-    0x231A, // Please, Hicchan?
-    0x232B, // What an interesting good cop-bad cop routine.
-    0x2359, // I'll give it a shot. Why not?
-    0x2377, // Just a shot.
-    0x2384, // Okay, I'll give it a trial run. It doesn't mean I'm joining, or anything definite, just that I'll help out a little, and then I'll see. And this makes us even for lunch, I'm not doing this because I want to.
-    0x2454, // I finish off the last of my sandwich, and this makes Misha notice for the first time in a while that she has a parfait. She starts digging in, much to Shizune's chagrin, because I can tell from the way she plays with her fingers that she had a lot to say.
-    0x2554, // Every time I look at Shizune, she looks back with such focus and intensity. This time is no exception. Her face is expressionless; maybe she is thinking. Eventually, it gives way to a smile.
-    0x2613, // She signs something, and obviously, I can't understand it at all. She has to know that. Then, she does it again, a childish playfulness showing through in the speed and energy of her gestures.
-    0x26D4, // Misha, what did she say?
-    0x26ED, // …?
-    0x26F2, // Misha looks up from her parfait, torn between wanting to help out and going back to eating.
-    0x274E, // What does this mean?
-    0x2763, // I try my best to make the same movements with my hands that Shizune did. I come to realize quickly that this isn't very easy. Imagine doing this all day, as your only means of communication.
-    0x2822, // Hmm~… Sorry, Hicchan, I can't tell you.
-    0x284C, // Why not? Is it an insult?
-    0x2866, // No, Hicchan, I can't tell you because~!, it means something nice.
-    0x28A8, // Something nice, huh? Well, they've gone back to their tea and food, so I guess this conversation is over for now.
-    0x291A, // I don't really understand. But this makes me wish that I could. Maybe I could even try learning sign language. This school might have courses for it.
-    0x29B0, // Would I really do that? I think about it as I finish the rest of my coffee. I wonder why I'd even be motivated to think about it.
-    0x2A32, // I'm enjoying myself so much that I don't even notice that we were supposed to be back in class ten minutes ago.
-    0x2AA2, // Even if I were to start heading back to school right now, it would take at least… thirty minutes? Maybe. I can't risk running fast with my condition, so it would take at least that long to get there.
-    0x2B6C, // Well, ten minutes late already as I am, it wouldn't matter even if I could teleport.
-    0x2BC1, // Something wrong, Hicchan?
-    0x2BDB, // I just realized lunch break ended ten minutes ago. It's only my third day, and I'm already going to miss a class.
-    0x2C4D, // Yup~! You are already late.
-    0x2C69, // Hey, that's not funny, so are you! And, aren't you two in the Student Council? You're setting a bad example.
-    0x2CD6, // Hicchan is so moral…
-    0x2CED, // But~! Hicchan is right, he is late for class, and~ it looks like you're cutting too, Hicchan, because you're not making an effort to go.
-    0x2D76, // As your student council representatives, we're going to have to do something about this and make sure you're punished for it~!
-    0x2DF5, // But you two dragged me out here, this is all your fault. Take responsibility!
-    0x2E43, // Hicchan, we were just taking a prospective student council member out to try and recruit him. It's business, business~! But~! You're not a member of the council, so there's no excuse!
-    0x2EFB, // Yes, there is. That prospective student council member is clearly me.
-    0x2F41, // Yes~! Are you going to join the Student Council, Hicchan?
-    0x2F7B, // Shizune raises her teacup haughtily and wags her outstretched pinky finger up and down.
-    0x2FD3, // Hicchan, if only you were a member of the Student Council… But~! You can still join now, Hicchan! If you join now, you won't be in any trouble at all, and we'll be able to take many more nice excursions like this all the time! It'll be fun~!
-    0x30C7, // I start to think that, maybe, this was all an elaborate set-up leading up to this moment. Maybe Shizune lured me out here, banking on the possibility that I'd lose track of time and be forced into this situation.
-    0x319C, // Diabolical. …Well, considering what I know of her, I should have been more on my guard. But to admit that I got myself into this, even slightly, would be unforgivable.
-    0x3246, // I try to read Shizune's intentions in her eyes, but she just returns my stare blankly. Innocently. She takes a sip of tea, like she is mocking me.
-    0x32D9, // By the way, Hicchan, I didn't plan this at all, things just happened to work out this way~!
-    0x3335, // I was almost about to drop my theory as paranoia, but this puts a new spin on things. I almost fall over in awe. So it really was an elaborate set up, from the very beginning, all just to burn me and force me to join the Student Council.
-    0x3423, // Ahahahaha~! You look so nervous, Hicchan~! Did you really think we were tricking you this whole time?
-    0x3489, // You're not?
-    0x3495, // Hicchan, you really thought…?
-    0x34B5, // Misha frowns, looking heartbroken. Shizune quickly frowns as well, following her lead. How synchronized. Two of a perfect pair. They must be twins.
-    0x3549, // Shicchan says she's flattered, Hicchan, but doing that kind of thing would be a grossly inappropriate abuse of power, and imposing on your free will~! And~! It would be blackmail, too! Shicchan would never do anything like that, never!
-    0x3635, // I think about asking Misha, 'Are you sure?' but resist the urge to.
-    0x3679, // Anyway, Hicchan, what Shicchan said is true. Since you're with us, and we're doing student council work, it's okay if we miss a class or two.
-    0x3707, // Not that this is a good excuse to do so…
-    0x3732, // …Or one that should be used more than three times a month…
-    0x3771, // Or something that can or should be abused…
-    0x379E, // So~! We must definitely, definitely return to class! Eventually~!
-    0x37E0, // Wahaha~!
-    0x37E9, // Shizune waves Yuuko over and points to her empty teacup, indicating that she wants another one, as Misha scrambles to finish her parfait so she can order something else. Maybe I should as well.
-    0x38AB, // I am still hungry, and the portions here are a little on the small side. Most importantly, Shizune is paying for everything. With that in mind, I ask Yuuko for another sandwich.
-    0x395D, // By the time we leave the tea shop I've missed not just one class, but two.
-    0x39A8, // Shizune and Misha seem content to let the whole day pass by, stalling for even more time by suggesting a tour of the town that turns out to cover a two block radius from where we start.
-    0x3A62, // Eventually, we do go back to school, and the rest of the day is business as usual. When classes are over, Shizune and Misha pack their bags and leave the room before me. Come to think of it, this is the first time they've left me alone.
-    0x3B4F, // It's strange, I almost miss them. The room empties quickly, and I'm the last one out the door.
-    0x3BAE, // When I try leaving the lobby, however, an arm lowers itself in front of me like a toll bridge gate, stopping me in my tracks.
-    0x3C2C, // Oh, hi Shizune.
-    0x3C3C, // A pair of hands from behind cover my eyes, followed by a sharp burst of laughter.
-    0x3C8E, // Hi, Hicchan~! Guess who!
-    0x3CA7, // Misha asks the question completely without sarcasm, meaning she doesn't think that I instantly knew it was her for many obvious reasons.
-    0x3D30, // I wonder who it could be? Well, it's definitely not Misha…
-    0x3D6D, // Hahaha~! It is!
-    0x3D7D, // Misha swings around to stand in front of me, beside Shizune.
-    0x3DBA, // Hicchan, are you busy right now?
-    0x3DDB, // Busy going to my room, yeah. See you two tomorrow!
-    0x3E0E, // I try to make a break for it, but Shizune is too agile to get past. As someone who used to play soccer, this is embarrassing. Not to mention that this behavior is drawing some odd looks. I should just quit while I'm ahead.
-    0x3EED, // Hicchan, could you please go upstairs and get a few things for us from the art room?
-    0x3F42, // Why me?
-    0x3F4A, // Hahaha~! Shicchan thinks that if the art teacher sees us, he will say hi, and she doesn't like him!
-    0x3FAE, // Ignore him.
-    0x3FBA, // She tried, but even though Shicchan is deaf, he'll try to say 'hi~!' anyway!
-    0x4007, // Run away?
-    0x4011, // I never run!
-    0x401E, // A tone of finality so strong that I can pick it up even through Misha. I can see there is no use pursuing this further with Shizune.
-    0x40A3, // Misha, why can't you get them?
-    0x40C2, // Stairs make me dizzy, Hicchan!
-    0x40E1, // Shizune nods, as if to confirm it.
-    0x4104, // Please, Hicchan? We need these things to build stalls for the festival, and you said you would help out a little, right?, right?
-    0x4185, // I really shouldn't, but I guess just this once would be all right.
-    0x41C8, // That's great, Hicchan! Thank you~!
-    0x41EB, // This is what we need!
-    0x4201, // She holds out a piece of paper for me to take.
-    0x4230, // I'm sure this list was made by Shizune. It's handwritten, but each letter is perfectly formed and uniform, as if it were typed. Not just that, but it's exhaustively detailed, complete with numbers, bullet points, and even little checkboxes.
-    0x4321, // What it boils down to is that she wants paint, paintbrushes, posterboard, and an easel. Just different types and specific numbers of each. I wonder how I'm going to carry all of this stuff down the stairs without breaking my neck.
-    0x4408, // The teacher seems like an okay person despite the weird first impression I got, and the material is relatively interesting.
-    0x4484, // However, the way he teaches is really bizarre. It's as if he expects that everyone is a natural genius.
-    0x44EC, // When the final bell sounds, I realize that there is still a lot of time left in the day, and I'm left wondering what to do.
-    0x4568, // It's odd, at the hospital I had 24 hours a day of free time, but here filling the considerably shorter hours feels difficult.
-    0x45E6, // Everyone else leaves, and I'm left alone with the teacher.
-    0x4621, // Mutou is examining the assignment sheets we were working on earlier, marking them with a red ballpen.
-    0x4687, // Raising his eyes from his papers briefly, he notices me and furrows his brow.
-    0x46D5, // What is it, Nakai?
-    0x46E8, // I jump at him addressing me, but I guess it's natural to spark some conversation since there is nobody else around.
-    0x475C, // Umm… nothing. Thinking about what I'd do after school.
-    0x4795, // The teacher slowly puts the cap on the pen he is holding and arranges his papers into a stack, clacking it against the desk twice.
-    0x4818, // He seems very methodical and for a brief moment I'm reminded of Shizune, but the teacher is more unhurried and relaxed, much more routined.
-    0x48A4, // You have no plans?
-    0x48B7, // No. I considered joining a club, but don't know what kind of club would interest me.
-    0x490C, // Go observe a meeting of someone else's club. Might pique your interest.
-    0x4954, // I guess…
-    0x495F, // I just…
-    0x4969, // But I don't know how to continue from there.
-    0x4996, // Mutou looks at me in a way that makes me quickly want to take the words back to avoid a conversation.
-    0x49FC, // But I can't, so I have to forge ahead.
-    0x4A23, // I just don't know how to deal with people. I mean, the other students.
-    0x4A6A, // I'm talking to people and everything, so it's not that I'd be isolated or anything.
-    0x4ABE, // I just don't know what to think about… the disabilities. It's like… it feels that I'm being impolite if I pay attention to them, and it's weird to ignore them.
-    0x4B62, // Damned if I do, damned if I don't.
-    0x4B85, // The teacher scratches his cheek absentmindedly, looking very unresponsive.
-    0x4BD0, // These things are only an issue if you make them one.
-    0x4C05, // You can talk normally with someone, even if they are blind or something.
-    0x4C4E, // Try to look behind the superficial. There's not a single student here who isn't just a normal kid behind whatever they might seem at first glance.
-    0x4CE1, // He says the same thing as Yuuko did.
-    0x4D06, // I know they're right, but it's hard. How can you not consider for example Shizune's deafness, when the only way to communicate with her is to talk through Misha?
-    0x4DA8, // Or Hanako… it's not like you can ignore her face.
-    0x4DDC, // But…
-    0x4DE3, // I'm interrupted by the door of the classroom suddenly slamming open.
-    0x4E28, // Teacher~!
-    0x4E32, // Misha crashes in, hand straight in an enthusiastic greeting, her voice loud and lively enough to wake the dead from their graves.
-    0x4EB4, // She starts towards the teacher's desk with her bouncing step, hands energetically swinging with the rhythm.
-    0x4F20, // Mutou, visibly dismayed at the interruption and Misha in general, slumps in his chair.
-    0x4F77, // Mikado.
-    0x4F7F, // Misha stops in her tracks and looks around cluelessly, as if she's sensing from his tone that something's wrong but has no idea what.
-    0x5005, // Yes~?
-    0x500B, // We have talked about volume control before.
-    0x5037, // Yes~!
-    0x503D, // But she doesn't lower her voice at all, and the teacher just rubs his eyes.
-    0x5089, // So, what is it?
-    0x5099, // I… we need help! We are running out of supplies for the festival stands!
-    0x50E4, // This is a distress!
-    0x50F8, // She waves a pink slip of paper she's holding around.
-    0x512D, // So… go get more supplies from the art room. What's the problem with that?
-    0x5179, // Plywood! Plywood is always the problem! Last time we wanted more there was only a little, but that time we just took it all and went with that.
-    0x5209, // Now there's like none left there, so do you know where there is some?
-    0x524F, // I don't understand. How would I know?
-    0x5275, // Shicchan… I mean the president thought that a teacher would know if there is plywood. Was she wrong?
-    0x52DC, // Mutou looks like he is in great pain, frowning with his entire essence, and Misha doesn't get it at all.
-    0x5345, // Looking at the two of them communicate is terrible, like looking at a man being tortured by drilling his skull open while blasting pop music at full volume at the same time.
-    0x53F3, // I'm afraid I have no idea if there is any plywood in the school, let alone where it would be if there was any.
-    0x5462, // Awww… what should I do?
-    0x547C, // Perhaps try to find Mr. Nomiya? I'm quite sure he would know where to find everything you need.
-    0x54DC, // You'd have to pry them from his cold, dead hands, but that's a different matter.
-    0x552D, // Aaaah! I don't have time! We are so busy!
-    0x5557, // She holds her head with both of her hands, looking as despairing as it's possible for a person like her. Without even noticing, she crumples the note she's holding against her hair.
-    0x560D, // I shouldn't even be fetching these things, there is so much to do and we are falling behind the schedule!
-    0x5677, // Mutou looks at her gravely and then, suddenly smiles. Smiling doesn't really fit his face. I think it'd be better if he didn't.
-    0x56F7, // I wonder if you could get some temporary help?
-    0x5726, // He switches to staring at me focusedly, with a hard expression, as if trying to say 'go make some friends.'
-    0x5792, // Eehhh… I guess I can give you a hand.
-    0x57BA, // You can? Thanks, Hicchan, you are really nice!
-    0x57E9, // She pauses, does a double take and then points at me with her finger, yelping 'Ah!' and looking very puzzled.
-    0x5857, // Come to think of it, what's Hicchan doing here? Class is over, you should be having fun~!
-    0x58B1, // We just had a little chat.
-    0x58CC, // Oh no! It's not detention is it? Are you in trouble, Hicchan?
-    0x590A, // No, I'm not.
-    0x5917, // Is Hicchan in trouble, teacher?
-    0x5937, // No, he's not.
-    0x5945, // Mutou sighs deeply and I feel that I have to help Misha to get her off the teacher's back.
-    0x59A0, // So what do you need?
-    0x59B5, // Here's a list. I can try to find the plywood from somewhere if there's none in the art room.
-    0x5A12, // She offers me the note she's holding. I take it, hesitating a bit.
-    0x5A55, // I said I'd help you, but this has no implications on whether I'm joining the council or not.
-    0x5AB2, // Awww….
-    0x5ABB, // Still, thanks, Hicchan. Try to be quick, we are in a stall-building streak now, we must hurry hurry hurry!
-    0x5B26, // She bounces out of the classroom, leaving me and the teacher looking at each other with something that feels like a silent agreement.
-    0x5BAC, // Well, there you have it, Nakai. You have something to do now.
-    0x5BEA, // Please don't sound so smug.
-    0x5C06, // Looking at the list with a number of items ranging from paint to plywood, all written with small, neat handwriting that is undoubtedly Shizune's, I heave a sigh.
-    0x5CA8, // I'll be going then.
-    0x5CBC, // Waving the long list limply at the teacher, I exit to the hallway.
-    0x5CFF, // Lilly and Hanako quickly go about the business of making lunch.
-    0x5D3F, // Before I can even open my small bag of food, Lilly's busying herself with her thermos and teabags as Hanako is setting out both their lunchboxes.
-    0x5DD1, // So, is this what you meant by coming here almost every day?
-    0x5E0D, // Yes, Hanako and I usually have lunch here. It suits both of us, so we ended up using this room regularly.
-    0x5E77, // After seeing Hanako's reactions to me over the past couple of days, I can understand why that is a boon. That, and Lilly being able to get some quiet away from her class as well.
-    0x5F2A, // I take my seat last, after Lilly's poured the tea for us and sits down.
-    0x5F72, // The more time I spend with these two girls, the more I think they're a perfect foil to Misha and Shizune.
-    0x5FDC, // Even without a voice, Shizune is direct and brash, and Misha seems to get along with everyone. On the other hand, Lilly is soft-spoken and relaxed while Hanako seems to be the shyest girl I've ever met.
-    0x60A7, // So, how are you faring in Yamaku, Hisao? You seemed a bit flustered before.
-    0x60F3, // Apart from getting lost every now and again, and being crash-tackled outside my classroom? Fine I guess…
-    0x615E, // You… you looked pretty hurt before. Are you really… okay?
-    0x619C, // For a brief moment, I consider telling Hanako and Lilly about my condition but then, I hold it back.
-    0x6201, // I can't tell why, but for some reason I feel uncomfortable talking about it to these relative strangers, even if they have been pretty friendly.
-    0x6292, // Yeah, it's nothing. I was just a bit startled.
-    0x62C1, // Judging from the two girls' expressions, I don't think that they're buying it. But, in what I assume is their way of respecting my privacy, they don't press the matter.
-    0x636A, // I guess that is one of the unwritten rules around here; 'don't ask.' Even if people's conditions are obvious, like Hanako's, there's still bound to be a story involved.
-    0x6413, // Everyone has things that they don't feel comfortable speaking about, and I think everyone here recognizes that.
-    0x6483, // So, uh… how long have you been in this school? You both seem to know your way around pretty well.
-    0x64E7, // Hmm… well, I've been here since the start of high school, but only moved into the dormitories a year ago.
-    0x6553, // Hanako joined at the start of high school as well, and moved to the dormitories when she did, if memory serves me right.
-    0x65CC, // That's right. Since… high school.
-    0x65F0, // So you've known each other since then?
-    0x6617, // Since I moved, yes. Hanako lives next door to me, so it's only natural, right?
-    0x6666, // R-right.
-    0x666F, // Yeah, of course.
-    0x6680, // Living next to someone is probably reason enough to befriend them, though I'm guessing that Lilly's blindness played a part in it as well.
-    0x670B, // I can't imagine Hanako easily making friends with someone who has to deliberately avoid looking at her scars.
-    0x6779, // With the immediate conversation dried up, we start to eat our lunch.
-    0x67BE, // It isn't long before the bells are signaling the end of the break. Like me, the girls pack up their lunches as efficiently as they set them out.
-    0x684F, // I guess I'd better be off. Are you going to go with Hisao, Hanako?
-    0x6892, // Hanako looks up at me, and for a second I can see that she is considering skipping class, maybe just to avoid walking to the classroom with me.
-    0x6922, // Y-yes.
-    0x6929, // I don't know what to think of it. Hanako really is delicate to the point of breaking if looked at in the wrong way. It makes me a bit nervous too, but I push the feeling aside, trying to be as natural as I can.
-    0x69FC, // We should hurry then. Class has already started by the sound of it.
-    0x6A40, // Lilly gives a nod of farewell as she bends down to take her cane, Hanako and I filing out before her.
-    0x6AA6, // We walk quickly down the empty halls to our respective classes.
-    0x6AE6, // As we reach the door to Lilly's 3-2 classroom, she turns towards me.
-    0x6B2B, // Hisao, thank you for sharing lunch with us today.
-    0x6B5D, // My pleasure, Lilly.
-    0x6B71, // And with that, we part ways; Lilly entering her classroom and leaving Hanako and me to make off to our own. She's still looking like she wants to run away.
-    0x6C0D, // So, do you really want to go back to class now?
-    0x6C3D, // Okay then.
-    0x6C48, // I feel like I should say something more to her, but it's hard to come up with anything that would be appropriate and safe enough.
-    0x6CCA, // And Lilly was right; the more time we spend out here, the more explaining we have to do.
-    0x6D23, // I open the rear door to the class, and walk in.
-    0x6D53, // The teacher looks up at me, and opens his mouth to say something.
-    0x6D95, // However, as Hanako follows me in and closes the door, he simply nods to us and continues his lecture.
-    0x6DFB, // This is the third time that Hanako has had her truancy practically ignored. There's definitely something going on here.
-    0x6E73, // We make our way to our seats, and I notice that Misha and Shizune are both missing as well.
-    0x6ECF, // I wonder if it is some form of informal agreement with the staff, or if it's a 'perk' afforded to the unique students of this school?
-    0x6F55, // Trying to make as little disturbance as I can, I extract the relevant textbooks from my bag and start catching up.
-    0x6FC8, // The class goes on quietly.
-    0x6FE3, // So we leave, all three together.
-    0x7004, // Lilly walks beside the wall, letting her cane gently tap against it every now and then. Hanako comes along right beside her, so close that she is practically half-hugging her as they go.
-    0x70BF, // Although it must make her walking that much harder, Lilly takes it in stride.
-    0x710D, // As we turn around the corner of the hallway, something hits me in the chest with the force of a steam train. Hanako shrieks a little and my vision briefly goes black.
-    0x71B4, // Hisao, what happened?
-    0x71CA, // She's not quite up to speed for obvious reasons, but she sounds very worried. More than what the situation deserves, really.
-    0x7247, // Someone just bumped into me, nothing serious. Just winded.
-    0x7282, // Er, sorry, it's my fault. I was just going to get some stuff, and I was in a kind of a hurry.
-    0x72E0, // That 'someone' here is Emi, isn't it?
-    0x7306, // The little girl coughs quietly and shuffles her plastic or metallic feet, looking down at them before saying anything.
-    0x737D, // Hi, Lilly. Hanako.
-    0x7390, // I guess the girls know each other.
-    0x73B3, // Do please try to be more careful. You might be sturdy enough to endure these sorts of accidents, but there are people who aren't.
-    0x7435, // Aaah! I gotta go!
-    0x7447, // Teacher'll have my head, I promised to help with printouts but I went running instead! Sorry, but I've gotta change and everything!
-    0x74CB, // Before any of us can say a thing, Emi has already bolted away, leaving the hallway eerily quiet.
-    0x752C, // Does that kind of thing happen often around here?
-    0x755E, // There are more rules in Yamaku than usual for running in corridors.
-    0x75A2, // …but that rarely stops Emi, it seems.
-    0x75CA, // She shakes her head weakly and offers a slight, composed smile.
-    0x760A, // I don't think there's anything we can do to stop her, I'm afraid. Shall we be off, then?
-    0x7663, // Lilly heads off along the hallway, and Hanako hurries after her.
-    0x76A4, // The route to the room the two use for tea is fairly simple to retrace, being still fresh in my mind from yesterday.
-    0x7718, // I feel very tired this morning, probably because yesterday itself was a very tiring day. On top of that, I woke up far earlier than necessary.
-    0x77A7, // After saying hi to Shizune and Misha, I start doing the work as instructed from the board. It already looks like today is going to be heavy.
-    0x7834, // I don't have a problem with that now, though. Shizune and Misha might jump on me trying to get an answer about whether or not I've decided to join the Student Council, even if it's just one day.
-    0x78F7, // I wouldn't put it past them to try, and I don't have an answer for them if they do. So, this situation is convenient for me.
-    0x7974, // About ten minutes into class, Hanako walks in and takes a seat, but no one looks at her. The teacher doesn't even comment on her lateness.
-    0x79FF, // He does, however, stop us to say that we're going to break into groups again.
-    0x7A4D, // I turn my head and see that Shizune and Misha are looking at me. Shizune gives me a smile that is equal parts cute and menacing. This is a smile that says 'We have you now. There is no escape.'
-    0x7B0F, // Hicchan~, it looks like we're together again! Yay yay~!
-    0x7B47, // Misha leans sideways while Shizune pushes her desk closer to mine. There really is no escape now unless I were to jump through the window.
-    0x7BD2, // Jumping out the window isn't the best option, sadly.
-    0x7C07, // What's wrong, Hicchan?
-    0x7C1E, // Oh… Hicchan, have you been thinking about what you said yesterday? You said that you would think about joining the Student Council, didn't you?
-    0x7CB0, // It's okay, Hicchan. We were talking about it after you left, and it would be rude to expect you to already have an answer for us this early, right? Right~!
-    0x7D4C, // Hahahahahaha~!
-    0x7D5B, // I'm so happy you two are able to have a laugh at my expense, and even more pleased to know that you both know how crazy the two of you can be.
-    0x7DEA, // Now that that's over, Shizune snaps back into serious mode and smacks today's assignment with the back of her hand in an overly dramatic and important way.
-    0x7E86, // When I actually look at the stuff, it's mostly just reading. In fact, there are only two problems.
-    0x7EE9, // I almost want to say something about how her rush to get started seems a bit much, considering the small amount of work. In fact, Shizune probably knows how little there is, and simply doesn't care.
-    0x7FB0, // Yeah, it seems like the workload doesn't matter to her as much as the fact that there is work; the actual amount is unimportant. She approaches everything with the same level of ambition.
-    0x806C, // While I'm reading, I let my eyes wander around the room and catch Hanako trying her hand at solving the problems. It looks like she's working alone.
-    0x8101, // I can't remember seeing her working with other people before.
-    0x813F, // Thinking back to how shy she is, it's understandable.
-    0x8175, // Hey, that girl over there…
-    0x8192, // Huh? Who, Hicchan?
-    0x81A5, // Her. Hanako. Over there. Does she always work alone?
-    0x81DA, // I think so, Hicchan. Do you feel sorry for her because she's alone?
-    0x821E, // I was just thinking that maybe she could work with us, or something.
-    0x8263, // Hmmmm… No, I don't think that would be a good idea, Hicchan.
-    0x82A2, // Why not?
-    0x82AB, // Shicchan wouldn't get along with her.
-    0x82D1, // Why?
-    0x82D6, // Misha shuffles around the question, letting out a laugh that sounds very strange; it's nervous, but still has that lilting up-and-down quality present in everything she says.
-    0x8385, // Just because, Hicchan.
-    0x839C, // By now, Shizune has noticed our conversation, and it makes me realize again how Misha has been signing everything she has been saying this whole time.
-    0x8433, // What, Shicchan? The friend of my enemy is my enemy? That sounds so harsh, I'm not going to say that.
-    0x8498, // You said it anyway.
-    0x84AC, // I know, Hicchan, it's fine if you overhear~!
-    0x84D9, // I wonder if this is Misha's way of keeping things fair, since without her, I wouldn't be able to understand a thing Shizune is saying, and vice versa.
-    0x8570, // Is that also why she signs all the time, so there is never a conversation Shizune will be left out of?
-    0x85D7, // Anyway, we should start on the problems now, Hicchan.
-    0x860D, // We finish with time to spare, and I decide to ask if there are any alternatives to the cafeteria, as frankly, the food so far has been subpar.
-    0x869C, // This sends Shizune and Misha arguing among themselves about their favorite restaurants. All of them are downtown, so I don't think we have time to go all the way there. And what about the bill?
-    0x875E, // Are they arguing just for the fun of it?
-    0x8787, // Maybe. They seem so distracted by it that they don't even notice the start of the actual lunch break.
-    0x87ED, // I look over my shoulder towards the back of the classroom.
-    0x8828, // She seems to be studying her notes from the previous class.
-    0x8864, // It's an odd sight; everyone else in the class is busying themselves with the lunch break.
-    0x88BE, // Socializing, gossiping, rearranging desks, the ones with actual boxed lunches mixed in and chattering like everyone else, only interrupted by short bouts of eating.
-    0x8963, // But, when I watch Hanako, it feels that I'm the only one who can see her. Almost as if she was invisible; sort of hiding in plain sight.
-    0x89EC, // Is she being bullied? Is she isolating herself from the rest of the class on her own accord?
-    0x8A49, // I see her look over her shoulder towards the classroom's rear door.
-    0x8A8D, // Come to think of it, she hasn't turned a page since I've started watching her.
-    0x8ADC, // I guess she's waiting for someone.
+    0x0000, // I feel very tired this morning, probably because yesterday itself was a very tiring day. On top of that, I woke up far earlier than necessary.
+    0x008F, // After saying hi to Shizune and Misha, I start doing the work as instructed from the board. It already looks like today is going to be heavy.
+    0x011C, // I don't have a problem with that now, though. Shizune and Misha might jump on me trying to get an answer about whether or not I've decided to join the Student Council, even if it's just one day.
+    0x01DF, // I wouldn't put it past them to try, and I don't have an answer for them if they do. So, this situation is convenient for me.
+    0x025C, // About ten minutes into class, Hanako walks in and takes a seat, but no one looks at her. The teacher doesn't even comment on her lateness.
+    0x02E7, // He does, however, stop us to say that we're going to break into groups again.
+    0x0335, // I turn my head and see that Shizune and Misha are looking at me. Shizune gives me a smile that is equal parts cute and menacing. This is a smile that says 'We have you now. There is no escape.'
+    0x03F7, // Hicchan~, it looks like we're together again! Yay yay~!
+    0x042F, // Misha leans sideways while Shizune pushes her desk closer to mine. There really is no escape now unless I were to jump through the window.
+    0x04BA, // Jumping out the window isn't the best option, sadly.
+    0x04EF, // …
+    0x04F3, // What's wrong, Hicchan?
+    0x050A, // Oh… Hicchan, have you been thinking about what you said yesterday? You said that you would think about joining the Student Council, didn't you?
+    0x059C, // It's okay, Hicchan. We were talking about it after you left, and it would be rude to expect you to already have an answer for us this early, right? Right~!
+    0x0638, // Hahahahahaha~!
+    0x0647, // I'm so happy you two are able to have a laugh at my expense, and even more pleased to know that you both know how crazy the two of you can be.
+    0x06D6, // Now that that's over, Shizune snaps back into serious mode and smacks today's assignment with the back of her hand in an overly dramatic and important way.
+    0x0772, // When I actually look at the stuff, it's mostly just reading. In fact, there are only two problems.
+    0x07D5, // I almost want to say something about how her rush to get started seems a bit much, considering the small amount of work. In fact, Shizune probably knows how little there is, and simply doesn't care.
+    0x089C, // Yeah, it seems like the workload doesn't matter to her as much as the fact that there is work; the actual amount is unimportant. She approaches everything with the same level of ambition.
+    0x0958, // While I'm reading, I let my eyes wander around the room and catch Hanako trying her hand at solving the problems. It looks like she's working alone.
+    0x09ED, // I can't remember seeing her working with other people before.
+    0x0A2B, // Thinking back to how shy she is, it's understandable.
+    0x0A61, // Hey, that girl over there…
+    0x0A7E, // Huh? Who, Hicchan?
+    0x0A91, // Her. Hanako. Over there. Does she always work alone?
+    0x0AC6, // I think so, Hicchan. Do you feel sorry for her because she's alone?
+    0x0B0A, // I was just thinking that maybe she could work with us, or something.
+    0x0B4F, // Hmmmm… No, I don't think that would be a good idea, Hicchan.
+    0x0B8E, // Why not?
+    0x0B97, // Shicchan wouldn't get along with her.
+    0x0BBD, // Why?
+    0x0BC2, // Misha shuffles around the question, letting out a laugh that sounds very strange; it's nervous, but still has that lilting up-and-down quality present in everything she says.
+    0x0C71, // Just because, Hicchan.
+    0x0C88, // By now, Shizune has noticed our conversation, and it makes me realize again how Misha has been signing everything she has been saying this whole time.
+    0x0D1F, // What, Shicchan? The friend of my enemy is my enemy? That sounds so harsh, I'm not going to say that.
+    0x0D84, // You said it anyway.
+    0x0D98, // I know, Hicchan, it's fine if you overhear~!
+    0x0DC5, // I wonder if this is Misha's way of keeping things fair, since without her, I wouldn't be able to understand a thing Shizune is saying, and vice versa.
+    0x0E5C, // Is that also why she signs all the time, so there is never a conversation Shizune will be left out of?
+    0x0EC3, // Anyway, we should start on the problems now, Hicchan.
+    0x0EF9, // We finish with time to spare, and I decide to ask if there are any alternatives to the cafeteria, as frankly, the food so far has been subpar.
+    0x0F88, // This sends Shizune and Misha arguing among themselves about their favorite restaurants. All of them are downtown, so I don't think we have time to go all the way there. And what about the bill?
+    0x104A, // Are they arguing just for the fun of it?
+    0x1073, // Maybe. They seem so distracted by it that they don't even notice the start of the actual lunch break.
+    0x10D9, // I look over my shoulder towards the back of the classroom.
+    0x1114, // She seems to be studying her notes from the previous class.
+    0x1150, // It's an odd sight; everyone else in the class is busying themselves with the lunch break.
+    0x11AA, // Socializing, gossiping, rearranging desks, the ones with actual boxed lunches mixed in and chattering like everyone else, only interrupted by short bouts of eating.
+    0x124F, // But, when I watch Hanako, it feels that I'm the only one who can see her. Almost as if she was invisible; sort of hiding in plain sight.
+    0x12D8, // Is she being bullied? Is she isolating herself from the rest of the class on her own accord?
+    0x1335, // I see her look over her shoulder towards the classroom's rear door.
+    0x1379, // Come to think of it, she hasn't turned a page since I've started watching her.
+    0x13C8, // I guess she's waiting for someone.
+    0x13EB, // Just around the corner of the hallway something hits me in the chest with the force of a runaway train.
+    0x1453, // I feel a hand on my shoulder at the same time the girl's eyes widen in horror and whatever she was saying gets interrupted by a very horrified—{w=.9}{nw}
+    0x14EF, // Eep!
+    0x14F4, // I don't have time to look behind me because Shizune is already shoving me aside and stomping over to the girl, signing furiously at her.
+    0x157D, // Miss Ibarazaki, I saw that. Running in the halls is strictly forbidden.
+    0x15C5, // Misha translates, right on Shizune's tail, but her voice is girlishly playful, not full of the divine fury Shizune's arm movements would seem to call for.
+    0x1660, // Er, sorry, I was just going to get some stuff, and I was in a kind of a hurry.
+    0x16AF, // You've been told this a thousand times before. Your reckless behavior endangers other students, and even worse, it's explicitly against the school regulations.
+    0x174F, // The girl blushes and starts to fidget nervously like a little child caught misbehaving.
+    0x17A7, // It's so cute I find myself smiling.
+    0x17CB, // I know that! I— I, um, I was just…
+    0x17F2, // Make sure that this will not happen again… although I'm sure telling you this is futile, and only causes me further headache when you choose to ignore the regulations.
+    0x189C, // Got that, Emi?
+    0x18AB, // The small girl sticks her tongue out in response.
+    0x18DD, // Aaah!
+    0x18E3, // I gotta go!
+    0x18EF, // Teacher'll have my head! I promised to help with printouts, but I went running instead! Sorry, but I've gotta change and everything!
+    0x1974, // Before Misha or Shizune or I can say anything, she's already bolted from where she was a second ago, almost halfway towards the stairwell.
+    0x19FF, // Shizune looks like she's about to go nuclear on the spot, so I smile at her in a vain attempt to calm her down.
+    0x1A6F, // Are you okay, Hicchan? That Ibarazaki girl is always like that, causing trouble to others.
+    0x1ACA, // You know, I'm pretty certain Shizune wouldn't call me 'Hicchan.'
+    0x1B0B, // Never mind, never mind!
+    0x1B23, // Yeah, anyway, I'm okay. Just got the wind knocked out of me.
+    0x1B60, // That's great, Hicchan!
+    0x1B77, // I wouldn't call that great, but I let it slide this one time.
+    0x1BB5, // So we leave, all three together.
+    0x1BD6, // Lilly walks beside the wall, letting her cane gently tap against it every now and then. Hanako comes along right beside her, so close that she is practically half-hugging her as they go.
+    0x1C91, // Although it must make her walking that much harder, Lilly takes it in stride.
+    0x1CDF, // As we turn around the corner of the hallway, something hits me in the chest with the force of a steam train. Hanako shrieks a little and my vision briefly goes black.
+    0x1D86, // Hisao, what happened?
+    0x1D9C, // She's not quite up to speed for obvious reasons, but she sounds very worried. More than what the situation deserves, really.
+    0x1E19, // Someone just bumped into me, nothing serious. Just winded.
+    0x1E54, // Er, sorry, it's my fault. I was just going to get some stuff, and I was in a kind of a hurry.
+    0x1EB2, // That 'someone' here is Emi, isn't it?
+    0x1ED8, // The little girl coughs quietly and shuffles her plastic or metallic feet, looking down at them before saying anything.
+    0x1F4F, // Hi, Lilly. Hanako.
+    0x1F62, // I guess the girls know each other.
+    0x1F85, // Do please try to be more careful. You might be sturdy enough to endure these sorts of accidents, but there are people who aren't.
+    0x2007, // Aaah! I gotta go!
+    0x2019, // Teacher'll have my head, I promised to help with printouts but I went running instead! Sorry, but I've gotta change and everything!
+    0x209D, // Before any of us can say a thing, Emi has already bolted away, leaving the hallway eerily quiet.
+    0x20FE, // Does that kind of thing happen often around here?
+    0x2130, // There are more rules in Yamaku than usual for running in corridors.
+    0x2174, // …but that rarely stops Emi, it seems.
+    0x219C, // She shakes her head weakly and offers a slight, composed smile.
+    0x21DC, // I don't think there's anything we can do to stop her, I'm afraid. Shall we be off, then?
+    0x2235, // Lilly heads off along the hallway, and Hanako hurries after her.
+    0x2276, // The route to the room the two use for tea is fairly simple to retrace, being still fresh in my mind from yesterday.
+    0x22EA, // Watching her walk in front of me, I notice that she walks very quickly, taking long, heavy, determined strides.
+    0x235A, // Maybe if we were traveling through a snowstorm it would make sense to walk like that, but it's a perfectly clear day. Anyway, it's making me feel exhausted just watching her.
+    0x2409, // We arrive at the teahouse in what Misha says is 'record time,' likely because of Shizune's blazing pace. I feel a little let down seeing that it's not a huge feudal-era building with mats on the floor and women in kimonos pouring the tea.
+    0x24F8, // It actually is more like a café, as I thought. Not that it's a bad thing. It looks very nice.
+    0x2557, // As soon as I walk through the doors, someone zooms in front of us, as if they had been lying in wait the entire time.
+    0x25CD, // Welcome! Thank you for patronizing this establishment!
+    0x2604, // The top half of her body drops forward in a bow that looks like an axe chopping through wood.
+    0x2662, // I'm surprised to see it's none other than Yuuko, the librarian.
+    0x26A2, // Hey, I didn't know you worked here.
+    0x26C6, // Oh… Yes, I do. I'm a waitress… I've been working here for one year, six months, and two weeks now… Thank you for choosing to come here, is there anything I can do for you?
+    0x2778, // Hi, Yuu-chan~!
+    0x2787, // Hello.
+    0x278E, // Misha, you both know her too?
+    0x27AC, // Of course, Hicchan~! Yuu-chan works in the library, after all~! I don't go there often myself, but Shicchan knows her! And~!, we both come here a lot, so it's like we see her all the time!
+    0x2869, // Um… Yes… Should I get you your usuals? And… if there is anything you would want, please feel free to tell me at any time.
+    0x28E9, // You don't have to be so formal, we all know each other.
+    0x2921, // It's also pretty empty today, so she can afford to take it easy.
+    0x2962, // I was hoping she would stop looking so nervous, but my words have the opposite effect.
+    0x29B9, // No… I'm a waitress, this is my job, I have to… do it properly.
+    0x29FC, // Okay, okay~! That works for Shicchan! Yuu-chan, please get Shicchan what she usually gets, and I'll have some green tea with milk and honey.
+    0x2A89, // No pressure.
+    0x2A96, // Um, yes… but… this is my job, and… there is always pressure. I'm sorry, I'm arguing with a customer… Sorry! Sorry, sorry!
+    0x2B18, // Yuuko takes another hundred-mile-per-hour bow. I decide to give up and join Shizune and Misha at a table.
+    0x2B82, // As soon as I sit down, Yuuko comes by looking even more upset than before.
+    0x2BCD, // I'm sorry! I'm really, really sorry, I forgot to take your order… I'm… not attentive to customers, that's not right… I'm sorry… If there is anything I can do to make up for it, please tell me…
+    0x2C98, // It's okay, Yuu-chan, Hicchan didn't order anything, so it's not your fault, don't be upset.
+    0x2CF4, // It's true. I guess I should order now, but I don't really know what this place serves, and there doesn't seem to be a menu.
+    0x2D70, // Yeah, she's right. I'll have some coffee, and… a sandwich, if you have one. Whichever sandwich you think is the best tasting one here, because Shizune is paying for my meal.
+    0x2E20, // Shizune frowns and gives me alternating looks of surprise, indignation, and bemusement, unable to decide between the three.
+    0x2E9C, // Hicchan, just how much money do you have in your wallet? It can't be that little, right?, right? We should split the cost three ways, to make it fair~! Yeah, I won't accept anything else~!
+    0x2F59, // Misha turns to Yuuko.
+    0x2F6F, // Yuu-chan, Shicchan says she wants three of whatever is the most expensive item on the menu~.
+    0x2FCC, // No!
+    0x2FD0, // Hahaha~! Just kidding, Hicchan…
+    0x2FF2, // Um… okay, I think that the turkey sandwich is the most delicious sandwich… And it comes with free soup… A good employee would try to recommend the item that there is the most of, though… or the most expensive item…
+    0x30D3, // Am I bad at my job?
+    0x30E7, // No! That sounds good, I'll have that. And some coffee.
+    0x311E, // Okay.
+    0x3124, // She comes back a few minutes later with our drinks and my sandwich. Shizune seems to be fine with just her tea, while Misha also ordered a parfait. I don't know why, because I can't imagine many other things that would go worse with tea.
+    0x3212, // Oh well. I take a bite out of my sandwich. It's very good.
+    0x324D, // Hicchan, have you thought about joining the Student Council?
+    0x328A, // Huh?
+    0x328F, // Don't talk with your mouth full, Hicchan…
+    0x32BB, // I wash my food down with a sip of coffee, which is also surprisingly good. But now's not the time to remark on how this place has good food.
+    0x3348, // You said you understood it was too early to expect me to make a decision this quickly! That was like three hours ago!
+    0x33BE, // A man should be decisive, Hicchan!
+    0x33E1, // You really should join the Student Council, Hicchan. Come on, it'll be fun!
+    0x342D, // People always say 'come on, it'll be fun' about things that are never, ever fun.
+    0x347E, // Don't you believe me, Hicchan?
+    0x349D, // Is it Shizune saying that or Misha? What a cute expression; but the effect is somewhat jarring, like she has split personalities.
+    0x351F, // Uh…
+    0x3525, // Hicchan, that's depressing. We just want to spend time with you…
+    0x3568, // That's right, Shicchan! Yeah, that's a good point too!
+    0x359F, // Yup, this is beneficial to everyone, it solves all our problems~.
+    0x35E1, // Yeah, I also thought Hicchan would appreciate it… That makes me sad.
+    0x3628, // Suddenly I feel really left out.
+    0x3649, // It's rude to talk about someone without letting them in the conversation.
+    0x3693, // Shizune adjusts her glasses, laughing to herself.
+    0x36C5, // Aw, but it's true, Hicchan~! And you would be helping us out, membership has been really low this year.
+    0x372D, // How low?
+    0x3736, // Ah, that's a secret, Hicchan.
+    0x3754, // No, I want to know how low it was. How low is 'low'?
+    0x3789, // Ahaha…
+    0x3792, // Five?
+    0x3798, // Lower?
+    0x379F, // Well…
+    0x37A7, // Zero?
+    0x37AD, // Wahaha~! Hicchan, that isn't important. What matters is that the number is low, and that is why we would appreciate you giving us a hand, especially with the festival coming up so soon, and it looking to be a busy year ahead in general.
+    0x389A, // So you're not going to answer my question?
+    0x38C5, // No~.
+    0x38CA, // I sigh and straighten up in my chair, trying to look as defiant as possible, because this seems like a big issue and I do not want to let it go that easily. I feel silly, like a blowfish.
+    0x3986, // Fine, at least tell me this: How many people are in the Student Council? Total?
+    0x39D6, // Um, well, Hicchan, we're definitely undermanned, but we have enough members to get the job done. Yup, yup~!
+    0x3A42, // It's not just the two of you, is it?
+    0x3A67, // Hahaha~! Hicchan, that's funny~!
+    0x3A88, // But~! It's definitely not just us.
+    0x3AAB, // Are you sure? Are you absolutely sure?
+    0x3AD2, // Yup~!
+    0x3AD8, // I stare at them both, trying to see if they will slip up and confirm my worst fears.
+    0x3B2D, // Misha frowns, looking uncomfortable, but that is probably because I'm staring at her.
+    0x3B83, // Shizune, on the other hand, returns my gaze with one of her own. Maybe she is challenging me, peering at me over the rims of her glasses like that. So teasing; and surprisingly immature, like a little girl beckoning someone to play with her.
+    0x3C75, // Hicchan, your two cute student council representatives have been trying to make you feel welcome and are even treating you to lunch. You should show your gratitude by joining the council so you can at least help them out.
+    0x3D53, // Yeah, it would be great if you could just file some papers for us, and… the festival is coming up, and we have to build some stalls for the games and food, just a few, so if you were there, it would be a lot easier for us…
+    0x3E36, // Please, Hicchan?
+    0x3E47, // What an interesting good cop-bad cop routine.
+    0x3E75, // I'll give it a shot. Why not?
+    0x3E93, // Just a shot.
+    0x3EA0, // Okay, I'll give it a trial run. It doesn't mean I'm joining, or anything definite, just that I'll help out a little, and then I'll see. And this makes us even for lunch, I'm not doing this because I want to.
+    0x3F70, // I finish off the last of my sandwich, and this makes Misha notice for the first time in a while that she has a parfait. She starts digging in, much to Shizune's chagrin, because I can tell from the way she plays with her fingers that she had a lot to say.
+    0x4070, // Every time I look at Shizune, she looks back with such focus and intensity. This time is no exception. Her face is expressionless; maybe she is thinking. Eventually, it gives way to a smile.
+    0x412F, // She signs something, and obviously, I can't understand it at all. She has to know that. Then, she does it again, a childish playfulness showing through in the speed and energy of her gestures.
+    0x41F0, // Misha, what did she say?
+    0x4209, // …?
+    0x420E, // Misha looks up from her parfait, torn between wanting to help out and going back to eating.
+    0x426A, // What does this mean?
+    0x427F, // I try my best to make the same movements with my hands that Shizune did. I come to realize quickly that this isn't very easy. Imagine doing this all day, as your only means of communication.
+    0x433E, // Hmm~… Sorry, Hicchan, I can't tell you.
+    0x4368, // Why not? Is it an insult?
+    0x4382, // No, Hicchan, I can't tell you because~!, it means something nice.
+    0x43C4, // Something nice, huh? Well, they've gone back to their tea and food, so I guess this conversation is over for now.
+    0x4436, // I don't really understand. But this makes me wish that I could. Maybe I could even try learning sign language. This school might have courses for it.
+    0x44CC, // Would I really do that? I think about it as I finish the rest of my coffee. I wonder why I'd even be motivated to think about it.
+    0x454E, // I'm enjoying myself so much that I don't even notice that we were supposed to be back in class ten minutes ago.
+    0x45BE, // Even if I were to start heading back to school right now, it would take at least… thirty minutes? Maybe. I can't risk running fast with my condition, so it would take at least that long to get there.
+    0x4688, // Well, ten minutes late already as I am, it wouldn't matter even if I could teleport.
+    0x46DD, // Something wrong, Hicchan?
+    0x46F7, // I just realized lunch break ended ten minutes ago. It's only my third day, and I'm already going to miss a class.
+    0x4769, // Yup~! You are already late.
+    0x4785, // Hey, that's not funny, so are you! And, aren't you two in the Student Council? You're setting a bad example.
+    0x47F2, // Hicchan is so moral…
+    0x4809, // But~! Hicchan is right, he is late for class, and~ it looks like you're cutting too, Hicchan, because you're not making an effort to go.
+    0x4892, // As your student council representatives, we're going to have to do something about this and make sure you're punished for it~!
+    0x4911, // But you two dragged me out here, this is all your fault. Take responsibility!
+    0x495F, // Hicchan, we were just taking a prospective student council member out to try and recruit him. It's business, business~! But~! You're not a member of the council, so there's no excuse!
+    0x4A17, // Yes, there is. That prospective student council member is clearly me.
+    0x4A5D, // Yes~! Are you going to join the Student Council, Hicchan?
+    0x4A97, // Shizune raises her teacup haughtily and wags her outstretched pinky finger up and down.
+    0x4AEF, // Hicchan, if only you were a member of the Student Council… But~! You can still join now, Hicchan! If you join now, you won't be in any trouble at all, and we'll be able to take many more nice excursions like this all the time! It'll be fun~!
+    0x4BE3, // I start to think that, maybe, this was all an elaborate set-up leading up to this moment. Maybe Shizune lured me out here, banking on the possibility that I'd lose track of time and be forced into this situation.
+    0x4CB8, // Diabolical. …Well, considering what I know of her, I should have been more on my guard. But to admit that I got myself into this, even slightly, would be unforgivable.
+    0x4D62, // I try to read Shizune's intentions in her eyes, but she just returns my stare blankly. Innocently. She takes a sip of tea, like she is mocking me.
+    0x4DF5, // By the way, Hicchan, I didn't plan this at all, things just happened to work out this way~!
+    0x4E51, // I was almost about to drop my theory as paranoia, but this puts a new spin on things. I almost fall over in awe. So it really was an elaborate set up, from the very beginning, all just to burn me and force me to join the Student Council.
+    0x4F3F, // Ahahahaha~! You look so nervous, Hicchan~! Did you really think we were tricking you this whole time?
+    0x4FA5, // You're not?
+    0x4FB1, // Hicchan, you really thought…?
+    0x4FD1, // Misha frowns, looking heartbroken. Shizune quickly frowns as well, following her lead. How synchronized. Two of a perfect pair. They must be twins.
+    0x5065, // Shicchan says she's flattered, Hicchan, but doing that kind of thing would be a grossly inappropriate abuse of power, and imposing on your free will~! And~! It would be blackmail, too! Shicchan would never do anything like that, never!
+    0x5151, // I think about asking Misha, 'Are you sure?' but resist the urge to.
+    0x5195, // Anyway, Hicchan, what Shicchan said is true. Since you're with us, and we're doing student council work, it's okay if we miss a class or two.
+    0x5223, // Not that this is a good excuse to do so…
+    0x524E, // …Or one that should be used more than three times a month…
+    0x528D, // Or something that can or should be abused…
+    0x52BA, // So~! We must definitely, definitely return to class! Eventually~!
+    0x52FC, // Wahaha~!
+    0x5305, // Shizune waves Yuuko over and points to her empty teacup, indicating that she wants another one, as Misha scrambles to finish her parfait so she can order something else. Maybe I should as well.
+    0x53C7, // I am still hungry, and the portions here are a little on the small side. Most importantly, Shizune is paying for everything. With that in mind, I ask Yuuko for another sandwich.
+    0x5479, // By the time we leave the tea shop I've missed not just one class, but two.
+    0x54C4, // Shizune and Misha seem content to let the whole day pass by, stalling for even more time by suggesting a tour of the town that turns out to cover a two block radius from where we start.
+    0x557E, // Eventually, we do go back to school, and the rest of the day is business as usual. When classes are over, Shizune and Misha pack their bags and leave the room before me. Come to think of it, this is the first time they've left me alone.
+    0x566B, // It's strange, I almost miss them. The room empties quickly, and I'm the last one out the door.
+    0x56CA, // When I try leaving the lobby, however, an arm lowers itself in front of me like a toll bridge gate, stopping me in my tracks.
+    0x5748, // Oh, hi Shizune.
+    0x5758, // A pair of hands from behind cover my eyes, followed by a sharp burst of laughter.
+    0x57AA, // Hi, Hicchan~! Guess who!
+    0x57C3, // Misha asks the question completely without sarcasm, meaning she doesn't think that I instantly knew it was her for many obvious reasons.
+    0x584C, // I wonder who it could be? Well, it's definitely not Misha…
+    0x5889, // Hahaha~! It is!
+    0x5899, // Misha swings around to stand in front of me, beside Shizune.
+    0x58D6, // Hicchan, are you busy right now?
+    0x58F7, // Busy going to my room, yeah. See you two tomorrow!
+    0x592A, // I try to make a break for it, but Shizune is too agile to get past. As someone who used to play soccer, this is embarrassing. Not to mention that this behavior is drawing some odd looks. I should just quit while I'm ahead.
+    0x5A09, // Hicchan, could you please go upstairs and get a few things for us from the art room?
+    0x5A5E, // Why me?
+    0x5A66, // Hahaha~! Shicchan thinks that if the art teacher sees us, he will say hi, and she doesn't like him!
+    0x5ACA, // Ignore him.
+    0x5AD6, // She tried, but even though Shicchan is deaf, he'll try to say 'hi~!' anyway!
+    0x5B23, // Run away?
+    0x5B2D, // I never run!
+    0x5B3A, // A tone of finality so strong that I can pick it up even through Misha. I can see there is no use pursuing this further with Shizune.
+    0x5BBF, // Misha, why can't you get them?
+    0x5BDE, // Stairs make me dizzy, Hicchan!
+    0x5BFD, // Shizune nods, as if to confirm it.
+    0x5C20, // Please, Hicchan? We need these things to build stalls for the festival, and you said you would help out a little, right?, right?
+    0x5CA1, // I really shouldn't, but I guess just this once would be all right.
+    0x5CE4, // That's great, Hicchan! Thank you~!
+    0x5D07, // This is what we need!
+    0x5D1D, // She holds out a piece of paper for me to take.
+    0x5D4C, // I'm sure this list was made by Shizune. It's handwritten, but each letter is perfectly formed and uniform, as if it were typed. Not just that, but it's exhaustively detailed, complete with numbers, bullet points, and even little checkboxes.
+    0x5E3D, // What it boils down to is that she wants paint, paintbrushes, posterboard, and an easel. Just different types and specific numbers of each. I wonder how I'm going to carry all of this stuff down the stairs without breaking my neck.
+    0x5F24, // Lilly and Hanako quickly go about the business of making lunch.
+    0x5F64, // Before I can even open my small bag of food, Lilly's busying herself with her thermos and teabags as Hanako is setting out both their lunchboxes.
+    0x5FF6, // So, is this what you meant by coming here almost every day?
+    0x6032, // Yes, Hanako and I usually have lunch here. It suits both of us, so we ended up using this room regularly.
+    0x609C, // After seeing Hanako's reactions to me over the past couple of days, I can understand why that is a boon. That, and Lilly being able to get some quiet away from her class as well.
+    0x614F, // I take my seat last, after Lilly's poured the tea for us and sits down.
+    0x6197, // The more time I spend with these two girls, the more I think they're a perfect foil to Misha and Shizune.
+    0x6201, // Even without a voice, Shizune is direct and brash, and Misha seems to get along with everyone. On the other hand, Lilly is soft-spoken and relaxed while Hanako seems to be the shyest girl I've ever met.
+    0x62CC, // So, how are you faring in Yamaku, Hisao? You seemed a bit flustered before.
+    0x6318, // Apart from getting lost every now and again, and being crash-tackled outside my classroom? Fine I guess…
+    0x6383, // You… you looked pretty hurt before. Are you really… okay?
+    0x63C1, // For a brief moment, I consider telling Hanako and Lilly about my condition but then, I hold it back.
+    0x6426, // I can't tell why, but for some reason I feel uncomfortable talking about it to these relative strangers, even if they have been pretty friendly.
+    0x64B7, // Yeah, it's nothing. I was just a bit startled.
+    0x64E6, // Judging from the two girls' expressions, I don't think that they're buying it. But, in what I assume is their way of respecting my privacy, they don't press the matter.
+    0x658F, // I guess that is one of the unwritten rules around here; 'don't ask.' Even if people's conditions are obvious, like Hanako's, there's still bound to be a story involved.
+    0x6638, // Everyone has things that they don't feel comfortable speaking about, and I think everyone here recognizes that.
+    0x66A8, // So, uh… how long have you been in this school? You both seem to know your way around pretty well.
+    0x670C, // Hmm… well, I've been here since the start of high school, but only moved into the dormitories a year ago.
+    0x6778, // Hanako joined at the start of high school as well, and moved to the dormitories when she did, if memory serves me right.
+    0x67F1, // That's right. Since… high school.
+    0x6815, // So you've known each other since then?
+    0x683C, // Since I moved, yes. Hanako lives next door to me, so it's only natural, right?
+    0x688B, // R-right.
+    0x6894, // Yeah, of course.
+    0x68A5, // Living next to someone is probably reason enough to befriend them, though I'm guessing that Lilly's blindness played a part in it as well.
+    0x6930, // I can't imagine Hanako easily making friends with someone who has to deliberately avoid looking at her scars.
+    0x699E, // With the immediate conversation dried up, we start to eat our lunch.
+    0x69E3, // It isn't long before the bells are signaling the end of the break. Like me, the girls pack up their lunches as efficiently as they set them out.
+    0x6A74, // I guess I'd better be off. Are you going to go with Hisao, Hanako?
+    0x6AB7, // Hanako looks up at me, and for a second I can see that she is considering skipping class, maybe just to avoid walking to the classroom with me.
+    0x6B47, // Y-yes.
+    0x6B4E, // I don't know what to think of it. Hanako really is delicate to the point of breaking if looked at in the wrong way. It makes me a bit nervous too, but I push the feeling aside, trying to be as natural as I can.
+    0x6C21, // We should hurry then. Class has already started by the sound of it.
+    0x6C65, // Lilly gives a nod of farewell as she bends down to take her cane, Hanako and I filing out before her.
+    0x6CCB, // We walk quickly down the empty halls to our respective classes.
+    0x6D0B, // As we reach the door to Lilly's 3-2 classroom, she turns towards me.
+    0x6D50, // Hisao, thank you for sharing lunch with us today.
+    0x6D82, // My pleasure, Lilly.
+    0x6D96, // And with that, we part ways; Lilly entering her classroom and leaving Hanako and me to make off to our own. She's still looking like she wants to run away.
+    0x6E32, // So, do you really want to go back to class now?
+    0x6E62, // Okay then.
+    0x6E6D, // I feel like I should say something more to her, but it's hard to come up with anything that would be appropriate and safe enough.
+    0x6EEF, // And Lilly was right; the more time we spend out here, the more explaining we have to do.
+    0x6F48, // I open the rear door to the class, and walk in.
+    0x6F78, // The teacher looks up at me, and opens his mouth to say something.
+    0x6FBA, // However, as Hanako follows me in and closes the door, he simply nods to us and continues his lecture.
+    0x7020, // This is the third time that Hanako has had her truancy practically ignored. There's definitely something going on here.
+    0x7098, // We make our way to our seats, and I notice that Misha and Shizune are both missing as well.
+    0x70F4, // I wonder if it is some form of informal agreement with the staff, or if it's a 'perk' afforded to the unique students of this school?
+    0x717A, // Trying to make as little disturbance as I can, I extract the relevant textbooks from my bag and start catching up.
+    0x71ED, // The class goes on quietly.
+    0x7208, // The teacher seems like an okay person despite the weird first impression I got, and the material is relatively interesting.
+    0x7284, // However, the way he teaches is really bizarre. It's as if he expects that everyone is a natural genius.
+    0x72EC, // When the final bell sounds, I realize that there is still a lot of time left in the day, and I'm left wondering what to do.
+    0x7368, // It's odd, at the hospital I had 24 hours a day of free time, but here filling the considerably shorter hours feels difficult.
+    0x73E6, // Everyone else leaves, and I'm left alone with the teacher.
+    0x7421, // Mutou is examining the assignment sheets we were working on earlier, marking them with a red ballpen.
+    0x7487, // Raising his eyes from his papers briefly, he notices me and furrows his brow.
+    0x74D5, // What is it, Nakai?
+    0x74E8, // I jump at him addressing me, but I guess it's natural to spark some conversation since there is nobody else around.
+    0x755C, // Umm… nothing. Thinking about what I'd do after school.
+    0x7595, // The teacher slowly puts the cap on the pen he is holding and arranges his papers into a stack, clacking it against the desk twice.
+    0x7618, // He seems very methodical and for a brief moment I'm reminded of Shizune, but the teacher is more unhurried and relaxed, much more routined.
+    0x76A4, // You have no plans?
+    0x76B7, // No. I considered joining a club, but don't know what kind of club would interest me.
+    0x770C, // Go observe a meeting of someone else's club. Might pique your interest.
+    0x7754, // I guess…
+    0x775F, // I just…
+    0x7769, // But I don't know how to continue from there.
+    0x7796, // Mutou looks at me in a way that makes me quickly want to take the words back to avoid a conversation.
+    0x77FC, // But I can't, so I have to forge ahead.
+    0x7823, // I just don't know how to deal with people. I mean, the other students.
+    0x786A, // I'm talking to people and everything, so it's not that I'd be isolated or anything.
+    0x78BE, // I just don't know what to think about… the disabilities. It's like… it feels that I'm being impolite if I pay attention to them, and it's weird to ignore them.
+    0x7962, // Damned if I do, damned if I don't.
+    0x7985, // The teacher scratches his cheek absentmindedly, looking very unresponsive.
+    0x79D0, // These things are only an issue if you make them one.
+    0x7A05, // You can talk normally with someone, even if they are blind or something.
+    0x7A4E, // Try to look behind the superficial. There's not a single student here who isn't just a normal kid behind whatever they might seem at first glance.
+    0x7AE1, // He says the same thing as Yuuko did.
+    0x7B06, // I know they're right, but it's hard. How can you not consider for example Shizune's deafness, when the only way to communicate with her is to talk through Misha?
+    0x7BA8, // Or Hanako… it's not like you can ignore her face.
+    0x7BDC, // But…
+    0x7BE3, // I'm interrupted by the door of the classroom suddenly slamming open.
+    0x7C28, // Teacher~!
+    0x7C32, // Misha crashes in, hand straight in an enthusiastic greeting, her voice loud and lively enough to wake the dead from their graves.
+    0x7CB4, // She starts towards the teacher's desk with her bouncing step, hands energetically swinging with the rhythm.
+    0x7D20, // Mutou, visibly dismayed at the interruption and Misha in general, slumps in his chair.
+    0x7D77, // Mikado.
+    0x7D7F, // Misha stops in her tracks and looks around cluelessly, as if she's sensing from his tone that something's wrong but has no idea what.
+    0x7E05, // Yes~?
+    0x7E0B, // We have talked about volume control before.
+    0x7E37, // Yes~!
+    0x7E3D, // But she doesn't lower her voice at all, and the teacher just rubs his eyes.
+    0x7E89, // So, what is it?
+    0x7E99, // I… we need help! We are running out of supplies for the festival stands!
+    0x7EE4, // This is a distress!
+    0x7EF8, // She waves a pink slip of paper she's holding around.
+    0x7F2D, // So… go get more supplies from the art room. What's the problem with that?
+    0x7F79, // Plywood! Plywood is always the problem! Last time we wanted more there was only a little, but that time we just took it all and went with that.
+    0x8009, // Now there's like none left there, so do you know where there is some?
+    0x804F, // I don't understand. How would I know?
+    0x8075, // Shicchan… I mean the president thought that a teacher would know if there is plywood. Was she wrong?
+    0x80DC, // Mutou looks like he is in great pain, frowning with his entire essence, and Misha doesn't get it at all.
+    0x8145, // Looking at the two of them communicate is terrible, like looking at a man being tortured by drilling his skull open while blasting pop music at full volume at the same time.
+    0x81F3, // I'm afraid I have no idea if there is any plywood in the school, let alone where it would be if there was any.
+    0x8262, // Awww… what should I do?
+    0x827C, // Perhaps try to find Mr. Nomiya? I'm quite sure he would know where to find everything you need.
+    0x82DC, // You'd have to pry them from his cold, dead hands, but that's a different matter.
+    0x832D, // Aaaah! I don't have time! We are so busy!
+    0x8357, // She holds her head with both of her hands, looking as despairing as it's possible for a person like her. Without even noticing, she crumples the note she's holding against her hair.
+    0x840D, // I shouldn't even be fetching these things, there is so much to do and we are falling behind the schedule!
+    0x8477, // Mutou looks at her gravely and then, suddenly smiles. Smiling doesn't really fit his face. I think it'd be better if he didn't.
+    0x84F7, // I wonder if you could get some temporary help?
+    0x8526, // He switches to staring at me focusedly, with a hard expression, as if trying to say 'go make some friends.'
+    0x8592, // Eehhh… I guess I can give you a hand.
+    0x85BA, // You can? Thanks, Hicchan, you are really nice!
+    0x85E9, // She pauses, does a double take and then points at me with her finger, yelping 'Ah!' and looking very puzzled.
+    0x8657, // Come to think of it, what's Hicchan doing here? Class is over, you should be having fun~!
+    0x86B1, // We just had a little chat.
+    0x86CC, // Oh no! It's not detention is it? Are you in trouble, Hicchan?
+    0x870A, // No, I'm not.
+    0x8717, // Is Hicchan in trouble, teacher?
+    0x8737, // No, he's not.
+    0x8745, // Mutou sighs deeply and I feel that I have to help Misha to get her off the teacher's back.
+    0x87A0, // So what do you need?
+    0x87B5, // Here's a list. I can try to find the plywood from somewhere if there's none in the art room.
+    0x8812, // She offers me the note she's holding. I take it, hesitating a bit.
+    0x8855, // I said I'd help you, but this has no implications on whether I'm joining the council or not.
+    0x88B2, // Awww….
+    0x88BB, // Still, thanks, Hicchan. Try to be quick, we are in a stall-building streak now, we must hurry hurry hurry!
+    0x8926, // She bounces out of the classroom, leaving me and the teacher looking at each other with something that feels like a silent agreement.
+    0x89AC, // Well, there you have it, Nakai. You have something to do now.
+    0x89EA, // Please don't sound so smug.
+    0x8A06, // Looking at the list with a number of items ranging from paint to plywood, all written with small, neat handwriting that is undoubtedly Shizune's, I heave a sigh.
+    0x8AA8, // I'll be going then.
+    0x8ABC, // Waving the long list limply at the teacher, I exit to the hallway.
     0x8AFF, // The classrooms closest to ours are designated belonging to classes 3-1 and 3-2 on the right side, and 3-4 on the left side, each door looking exactly the same.
     0x8B9F, // Further down the corridor still with identical doors, are rooms that I didn't think were used for classes.
     0x8C0A, // I guess the art room is not a classroom as such.
@@ -863,40 +863,42 @@ constexpr unsigned int script_a1_wednesday_en_intl[] = {
     0x111AF, // I didn't do anything at the hospital either.
     0x111DC, // Yeah, okay. Sorry.
     0x111EF, // Read my book.
-    0x111FD, // Can you promise me to be more serious about this from now on?
-    0x1123B, // Maybe.
-    0x11242, // So, let's hurry, Hicchan~! To have lunch!
-    0x1126C, // We promise it'll be great!
-    0x11287, // I'll take your word for it. What kind of a place is it?
-    0x112BF, // A restaurant, or something?
-    0x112DB, // It's a teahouse, Hicchan~!
-    0x112F6, // A teahouse… that sounds kind of fancy.
-    0x1131F, // Why are you looking at your wallet, Hicchan? It's okay, if you don't have any money we'll cover for you~!
-    0x11389, // That's really nice of you. Thanks.
-    0x113AC, // It's okay, Hicchan! After all, we're friends, right, Hicchan?
-    0x113EA, // It's only been three days. Are we really friends that quickly?
-    0x11429, // Heh. But, hearing that makes me happy.
-    0x11450, // Ah, it's only for today, though, and only if you accept right now! Do you want to go, Hicchan?
-    0x114AF, // I start wondering if this is some kind of trap. Is this Misha's suggestion or Shizune's? This is important. I'm still a little apprehensive about the possible motives of a girl whose favorite pastime is the game of world domination.
-    0x11598, // No, I'm just being paranoid. Actually, they have grown on me already, and I do have to go to town sometime. So why not now, with them?
-    0x1161F, // I've never actually been to a teahouse before. All my expectations are from what I've seen about them on TV. But those are period dramas, and these are modern times. It might just be a regular café, and they're just calling it a teahouse.
-    0x1170F, // Either way, I'm curious about that, too, so there's another reason for me to join them.
-    0x11767, // Sure.
-    0x1176D, // That's great, Hicchan~! That's great, that's great! Yay~!
-    0x117A7, // Misha hops up and down briefly to show how happy she is, which causes a few heads to turn towards us. Shizune opts for a polite, tiny clap that lasts for all of two seconds before she goes back to looking stoic as usual.
-    0x11884, // Would it kill you to be a little happier, Shizune?
-    0x118B7, // Oh? I wasn't aware that Hicchan was a king. Hahahaha~!
-    0x118EE, // Shizune pushes her glasses up as Misha delivers her message totally without sarcasm. I guess it would sting more if she could say it with the intent Shizune meant behind it, so for once I'm happy to have Misha as a barrier between us.
-    0x119D9, // I'm not telling you to jump for joy just because I'm having lunch with you. I'm not that arrogant.
-    0x11A3C, // She seems to accept this, and we head for town with Shizune leading the way.
-    0x11A89, // We have to run now, there is an important student council meeting regarding the festival. And we finally decided where to eat~!
-    0x11B09, // Too bad you can't join, but this lunch meeting is only for council members.
-    0x11B55, // We can take you there some other time! Oh, but that'd be like a date, wouldn't it?
-    0x11BA8, // The girls leave for downstairs.
-    0x11BC8, // I didn't manage to get far from the third floor hallway before all this commotion struck, literally. I should get going as well.
-    0x11C49, // The lunch and the afternoon class pass uneventfully.
-    0x11C7E, // I read most of the book I had started yesterday, and eat some of the mostly inedible offerings of the cafeteria.
-    0x11CEF, // The class is tiresome.
+    0x111FD, // Go talk with Hanako.
+    0x11212, // Wait for Shizune and Misha to come to a decision.
+    0x11244, // Can you promise me to be more serious about this from now on?
+    0x11282, // Maybe.
+    0x11289, // So, let's hurry, Hicchan~! To have lunch!
+    0x112B3, // We promise it'll be great!
+    0x112CE, // I'll take your word for it. What kind of a place is it?
+    0x11306, // A restaurant, or something?
+    0x11322, // It's a teahouse, Hicchan~!
+    0x1133D, // A teahouse… that sounds kind of fancy.
+    0x11366, // Why are you looking at your wallet, Hicchan? It's okay, if you don't have any money we'll cover for you~!
+    0x113D0, // That's really nice of you. Thanks.
+    0x113F3, // It's okay, Hicchan! After all, we're friends, right, Hicchan?
+    0x11431, // It's only been three days. Are we really friends that quickly?
+    0x11470, // Heh. But, hearing that makes me happy.
+    0x11497, // Ah, it's only for today, though, and only if you accept right now! Do you want to go, Hicchan?
+    0x114F6, // I start wondering if this is some kind of trap. Is this Misha's suggestion or Shizune's? This is important. I'm still a little apprehensive about the possible motives of a girl whose favorite pastime is the game of world domination.
+    0x115DF, // No, I'm just being paranoid. Actually, they have grown on me already, and I do have to go to town sometime. So why not now, with them?
+    0x11666, // I've never actually been to a teahouse before. All my expectations are from what I've seen about them on TV. But those are period dramas, and these are modern times. It might just be a regular café, and they're just calling it a teahouse.
+    0x11756, // Either way, I'm curious about that, too, so there's another reason for me to join them.
+    0x117AE, // Sure.
+    0x117B4, // That's great, Hicchan~! That's great, that's great! Yay~!
+    0x117EE, // Misha hops up and down briefly to show how happy she is, which causes a few heads to turn towards us. Shizune opts for a polite, tiny clap that lasts for all of two seconds before she goes back to looking stoic as usual.
+    0x118CB, // Would it kill you to be a little happier, Shizune?
+    0x118FE, // Oh? I wasn't aware that Hicchan was a king. Hahahaha~!
+    0x11935, // Shizune pushes her glasses up as Misha delivers her message totally without sarcasm. I guess it would sting more if she could say it with the intent Shizune meant behind it, so for once I'm happy to have Misha as a barrier between us.
+    0x11A20, // I'm not telling you to jump for joy just because I'm having lunch with you. I'm not that arrogant.
+    0x11A83, // She seems to accept this, and we head for town with Shizune leading the way.
+    0x11AD0, // We have to run now, there is an important student council meeting regarding the festival. And we finally decided where to eat~!
+    0x11B50, // Too bad you can't join, but this lunch meeting is only for council members.
+    0x11B9C, // We can take you there some other time! Oh, but that'd be like a date, wouldn't it?
+    0x11BEF, // The girls leave for downstairs.
+    0x11C0F, // I didn't manage to get far from the third floor hallway before all this commotion struck, literally. I should get going as well.
+    0x11C90, // The lunch and the afternoon class pass uneventfully.
+    0x11CC5, // I read most of the book I had started yesterday, and eat some of the mostly inedible offerings of the cafeteria.
+    0x11D36, // The class is tiresome.
 };
 
 #endif // KS_SCRIPT_A1_WEDNESDAY_EN_TL_INDEX

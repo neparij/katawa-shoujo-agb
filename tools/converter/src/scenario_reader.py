@@ -34,7 +34,7 @@ class ScenarioReader:
         line_pack = []
         for line in lines:
             if line.strip():
-                current_indent = (len(line) - len(line.lstrip())) // 4
+                current_indent = get_line_indent(line)
                 line_pack.append((line, current_indent))
             else:
                 self.process_line_pack(line_pack)
@@ -68,6 +68,14 @@ class ScenarioReader:
         label.translation_identifiers.append(result)
         return result
 
+    # def close_conditions(self, current_indent, next_line):
+    #     """Closes conditions until reaching the target indentation."""
+    #     has_next_condition = next_line.startswith("elif ") or next_line.startswith("else:")
+    #     if self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not (has_next_condition and self.stack.current_indent() < get_line_indent(next_line)):
+    #     # while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not has_conditional_operator:
+    #         condition = self.stack.pop()
+    #         self.scenario.append(condition)
+    #
     def close_conditions(self, current_indent, next_line):
         """Closes conditions until reaching the target indentation."""
         while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent:
@@ -87,18 +95,26 @@ class ScenarioReader:
             self.scenario.append(label)
 
     def pop_stack_if_unindented(self, current_indent, next_line):
-        has_conditional_operator = next_line.startswith("if ") or next_line.startswith("elif ") or next_line.startswith(
-            "else:")
-        while self.stack.size() > 0 and self.stack.current_indent() >= current_indent and not has_conditional_operator:
-            stack_type = self.stack.current().type
-            if stack_type == SequenceGroupType.CONDITION:
+        """Close blocks based on the current indentation level."""
+        has_condition = next_line.startswith("elif ") or next_line.startswith("else:")
+        stack_size = self.stack.size()
+
+        while self.stack.size() > 0:
+            stack_indent = self.stack.current_indent()
+
+            # Ensure we do not close a parent `if` block if there's an `elif` or `else`
+            if stack_indent < current_indent or (has_condition and stack_indent == current_indent):
+                break
+
+            current_group = self.stack.current()
+            if current_group.type == SequenceGroupType.CONDITION:
                 self.close_conditions(current_indent, next_line)
-            elif stack_type == SequenceGroupType.MENU:
+            elif current_group.type == SequenceGroupType.MENU:
                 self.close_menus(current_indent)
-            elif stack_type == SequenceGroupType.LABEL:
+            elif current_group.type == SequenceGroupType.LABEL:
                 self.close_labels(current_indent)
             else:
-                raise Exception(f"Unknown stack type: {stack_type}")
+                raise Exception(f"Unknown stack type: {current_group.type}")
 
     def process_line_pack(self, line_pack):
         with_clause = None
@@ -145,6 +161,36 @@ class ScenarioReader:
 
         elif stripped_line.startswith("if "):
             condition = stripped_line.split("if ", 1)[1].strip(":")
+            condition = rewrite_condition(condition)
+
+            # TODO: process conditions, also transpose it from py to c++
+
+            # TODO: custom condition definition for _in_replay
+            #     Example in rpy scenario:
+            #     if _in_replay:
+            #         return
+            #
+            # TODO: custom condition definition for go_through_lilly()
+            #     def go_through_lilly():
+            #         return talk_with_hanako and side_lilly
+            #
+            # TODO: custom condition definition for go_through_shizu()
+            #     def go_through_shizu():
+            #         return wait_for_shizu and not side_lilly
+            #
+            # TODO: custom condition definition for go_through_rin()
+            #     def get_tired():
+            #         return promised and go_for_it
+            #
+            # TODO: custom condition definition for go_through_rin()
+            #     def got_kenji():
+            #         return kick_shizu or fun_fun_at_office or not_much_talking
+            #
+            # TODO: custom condition definition for persistent.disable_disturbing_content
+            #     Example in rpy scenario:
+            #     if persistent.disable_disturbing_content:
+            #         "The following scene is disabled based on your accessibility options. By proceeding forward, you'll skip to the next day. "
+
             if self.stack:
                 name = f"{self.stack.current().name}__condition_{sum(1 for item in self.stack.current().sequence if isinstance(item, ConditionItem))}"
             else:
@@ -159,6 +205,7 @@ class ScenarioReader:
 
         elif stripped_line.startswith("elif "):
             condition = stripped_line.split("elif ", 1)[1].strip(":")
+            condition = rewrite_condition(condition)
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Elif block outside of condition block")
             self.stack.current().add_condition(condition)
@@ -182,13 +229,21 @@ class ScenarioReader:
 
         elif self.stack.current().type == SequenceGroupType.MENU and stripped_line.startswith("\""):
             # Parse menu choice
-            match = re.match(r"\"(.*)\":", stripped_line)
+            match = re.match(r"\"(.*)\"(?:| if (.*)):$", stripped_line)
             if match:
                 choice_text = match.group(1)
+                condition_block = match.group(2)
                 choice_text_translated = None
                 if self.translation and choice_text in self.translation.strings:
                     choice_text_translated = self.translation.strings[choice_text]
-                self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
+
+                condition = condition_block if condition_block else None
+                # self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
+                self.stack.current().add_answer(
+                    answer = choice_text_translated if choice_text_translated else choice_text,
+                    condition = condition,
+                    callback = f"{self.stack.current().name}_{sanitize_function_name(choice_text)}"
+                )
                 # self.stack.push(SequenceGroup(f"{self.stack.current().name}_{sanitize_function_name(choice_text)}", SequenceGroupType.MENU), current_indent)
             return
 
@@ -205,6 +260,8 @@ class ScenarioReader:
             if not skip:
                 # Inline calls in menu blocks
                 function_name = stripped_line.split("call ", 1)[1].strip()
+                if function_name == "a1c4o1":
+                    self.stack.current().add_sequence_item(AssignmentItem("im_new_here = True"))
                 self.stack.current().add_sequence_item(RunLabelItem(sanitize_function_name(function_name), False))
             return
 
@@ -217,12 +274,12 @@ class ScenarioReader:
             self.stack.current().add_sequence_item(BackgroundItem(scene_bg_name))
             return
 
-        elif stripped_line.startswith("scene ev"):
+        elif stripped_line.startswith("scene ev") or stripped_line.startswith("show ev"):
             parts = stripped_line.split()
             event_bg_name = parts[2]
             # REMOVES TEMP
             # TODO: use specs
-            event_bg_name = event_bg_name.replace("_start", "").replace("_move", "").replace("_end", "").replace("_zoomout", "")
+            event_bg_name = rewrite_motion_background(event_bg_name)
             self.stack.current().add_sequence_item(BackgroundItem(event_bg_name))
             return
 
@@ -322,3 +379,26 @@ class ScenarioReader:
                 self.stack.current().add_sequence_item(
                     DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n")))
             return
+
+def get_line_indent(line: str) -> int:
+    return (len(line) - len(line.lstrip())) // 4
+
+def rewrite_condition(condition: str) -> str:
+    # FROM: "Hi! I'm new here. Hisao Nakai. We're in the same class." in choices
+    # TO im_new_here = True
+    return condition.replace('"Hi! I\'m new here. Hisao Nakai. We\'re in the same class." in choices', 'im_new_here == True')
+
+def rewrite_background(bg_name: str) -> str:
+    return rewrite_motion_background(bg_name)
+
+def rewrite_motion_background(bg_name: str) -> str:
+    # TODO: remove this method and allow motion backgrounds
+    return (bg_name
+            .replace("_start", "")
+            .replace("_move", "")
+            .replace("_end", "")
+            .replace("_zoomout", "")
+            .replace("emi_knockeddown_facepullout", "emi_knockeddown")
+            .replace("emi_knockeddown_largepullout", "emi_knockeddown")
+            .replace("emi_knockeddown_legs", "emi_knockeddown")
+            )
