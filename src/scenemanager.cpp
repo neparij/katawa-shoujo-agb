@@ -1,5 +1,6 @@
 #include "scenemanager.h"
 #include "bn_bg_palettes.h"
+#include "bn_format.h"
 #include "bn_sprite_palettes.h"
 #include "bn_regular_bg_actions.h"
 #include "bn_regular_bg_item.h"
@@ -7,6 +8,7 @@
 #include "bn_blending_actions.h"
 #include "globals.h"
 #include "gsmplayer/player.h"
+#include "translation.h"
 #include "utils/scenario_reader.h"
 #include <BN_LOG.h>
 
@@ -320,7 +322,6 @@ void SceneManager::open_ingame_menu() {
     secondary_background = bn::regular_bg_items::ui_ingame_menu_background_0.create_bg(0, 0);
 
     // TEMP
-    bool alt_lang = ks::globals::use_alt_lang;
     unsigned char selected = 0;
     bn::vector<signed char, 64> selection_index;
     bn::sprite_palette_item original_palette_item = ks::text_generator->palette_item();
@@ -329,27 +330,27 @@ void SceneManager::open_ingame_menu() {
     static_text_sprites->clear();
     ks::text_generator->set_center_alignment();
     ks::text_generator->set_one_sprite_per_character(false);
-    ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::string_view(!alt_lang ? "Playtime: 0:00:00" : "Наиграно: 0:00:00"), *static_text_sprites);
+    ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::format<64>("{}: {}", ks::globals::i18n->screens_playtime(), "0:00:00"), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), -1);
 
     // ks::text_generator->set_palette_item(beige_selected_palette_item);
-    ks::text_generator->generate(0, -48, bn::string_view(!alt_lang ? "Return" :"Назад"), *static_text_sprites);
+    ks::text_generator->generate(0, -48, ks::globals::i18n->screens_return(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 0);
     // ks::text_generator->set_palette_item(beige_palette_item);
-    ks::text_generator->generate(0, -32, bn::string_view(!alt_lang ? "History (n/a)" :"История (н/д)"), *static_text_sprites);
+    ks::text_generator->generate(0, -32, ks::globals::i18n->screens_history(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 1);
-    ks::text_generator->generate(0, -16, bn::string_view(!alt_lang ? "Options (n/a)" :"Настройки (н/д)"), *static_text_sprites);
+    ks::text_generator->generate(0, -16, ks::globals::i18n->screens_options(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 2);
-    ks::text_generator->generate(0, 0, bn::string_view(!alt_lang ? "Save (n/a)" :"Сохранить (н/д)"), *static_text_sprites);
+    ks::text_generator->generate(0, 0, ks::globals::i18n->screens_save_game(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 3);
-    ks::text_generator->generate(0, 16, bn::string_view(!alt_lang ? "Load (n/a)" :"Загрузить (н/д)"), *static_text_sprites);
+    ks::text_generator->generate(0, 16, ks::globals::i18n->screens_load_game(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 4);
-    ks::text_generator->generate(0, 32, bn::string_view(!alt_lang ? "Main menu" :"Главное меню"), *static_text_sprites);
+    ks::text_generator->generate(0, 32, ks::globals::i18n->screens_main_menu(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 5);
 
     ks::text_generator->set_palette_item(original_palette_item);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::string_view(!alt_lang ? "Scene: No scene" : "Сцена: Нет сцены"), *static_text_sprites);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::string_view(!alt_lang ? "Track: Nothing" : "Композиция: Ничего"), *static_text_sprites);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_scene(), ks::globals::i18n->definitions_no_scene()), *static_text_sprites);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_track(), ks::globals::i18n->definitions_nothing()), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), -1);
 
     bool action_performed = false;

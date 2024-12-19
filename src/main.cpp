@@ -4,7 +4,9 @@
 #include "bn_keypad.h"
 #include "bn_bg_palettes.h"
 
+
 #include "bn_string.h"
+#include "bn_format.h"
 #include "bn_sprite_text_generator.h"
 #include "variable_16x16_sprite_font.h"
 
@@ -19,16 +21,12 @@
 
 
 #include "scripts/script_a0_test_en.cpp"
-#include "scripts/script_a1_monday_en.cpp"
-#include "scripts/script_a1_monday_ru.cpp"
-#include "scripts/script_a1_tuesday_en.cpp"
-#include "scripts/script_a1_tuesday_ru.cpp"
-#include "scripts/script_a1_wednesday_en.cpp"
-#include "scripts/script_a1_wednesday_ru.cpp"
 #include "gsmplayer/player.h"
 
 #include "bn_regular_bg_items_video_end_4ls.h"
 #include "bn_regular_bg_items_ui_bg_main.h"
+#include "translation_en.cpp"
+#include "translation_ru.cpp"
 
 #include "bn_sprite_items_hanako.h"
 #include <BN_LOG.h>
@@ -111,14 +109,13 @@ int main()
     ks::animated_text_sprites->clear();
     ks::text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
     ks::dialog = new ks::DialogBox(ks::text_generator, ks::static_text_sprites, ks::animated_text_sprites);
-
+    ks::globals::i18n = new ks::TranslationEn();
 
     // Main loop starts.
     bn::optional<bn::sprite_ptr> _bottom_icon;
     while(true)
     {
         int select = 1;
-        bool alt_lang = ks::globals::use_alt_lang;
         bool scene_selected = false;
         bool need_update = true;
 
@@ -151,8 +148,15 @@ int main()
             if (bn::keypad::a_pressed()) {
                 need_update = true;
                 if (select == 5) {
-                    alt_lang = !alt_lang;
-                    ks::globals::use_alt_lang = alt_lang;
+                    if (ks::globals::i18n->type() == ks::Translation::Type::EN) {
+                        delete ks::globals::i18n;
+                        ks::globals::i18n = new ks::TranslationRu();
+                    } else if (ks::globals::i18n->type() == ks::Translation::Type::RU) {
+                        delete ks::globals::i18n;
+                        ks::globals::i18n = new ks::TranslationEn();
+                    } else {
+                        BN_ERROR("Unkown language was selected");
+                    }
                 } else {
                     scene_selected = true;
                 }
@@ -163,13 +167,6 @@ int main()
 
                 // Debug menu stuff
                 bn::string<64> title("Katawa Shoujo v0.2.0+01337");
-                bn::string<64> author("NeParij <3 JetstreamFamee");
-                bn::string<64> play_a0_test_scene(alt_lang ? "Тестовая сцена" : "Test Scene");
-                bn::string<64> play_a1_monday(alt_lang ? "Акт 1. Понедельник" : "Act 1. Monday");
-                bn::string<64> play_a1_tuesday(alt_lang ? "Акт 1. Вторник" : "Act 1. Tuesday");
-                bn::string<64> play_a1_wednesday(alt_lang ? "Акт 1. Среда" : "Act 1. Wednesday");
-                bn::string<64> play_all(alt_lang ? "Играть все доступные" : "Play all available");
-                bn::string<64> language(alt_lang ? "Язык: " : "Language: ");
 
                 // _text_sprites.clear();
                 ks::static_text_sprites->clear();
@@ -177,27 +174,27 @@ int main()
                 ks::text_generator->set_center_alignment();
                 ks::text_generator->set_palette_item(beige_palette_item);
                 ks::text_generator->generate(0, -60, title, *ks::static_text_sprites);
-                ks::text_generator->generate(0, -60+12, author, *ks::static_text_sprites);
+                ks::text_generator->generate(0, -60+12, ks::globals::i18n->menu_author(), *ks::static_text_sprites);
 
                 ks::text_generator->set_left_alignment();
 
                 ks::text_generator->set_palette_item(select == 0 ? beige_selected_palette_item : beige_palette_item);
-                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 0), play_a0_test_scene, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 0), ks::globals::i18n->menu_play_a0_test_scene(), *ks::static_text_sprites);
 
                 ks::text_generator->set_palette_item(select == 1 ? beige_selected_palette_item : beige_palette_item);
-                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 1), play_a1_monday, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 1), ks::globals::i18n->menu_play_a1_monday(), *ks::static_text_sprites);
 
                 ks::text_generator->set_palette_item(select == 2 ? beige_selected_palette_item : beige_palette_item);
-                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 2), play_a1_tuesday, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 2), ks::globals::i18n->menu_play_a1_tuesday(), *ks::static_text_sprites);
 
                 ks::text_generator->set_palette_item(select == 3 ? beige_selected_palette_item : beige_palette_item);
-                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 3), play_a1_wednesday, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 3), ks::globals::i18n->menu_play_a1_wednesday(), *ks::static_text_sprites);
 
                 ks::text_generator->set_palette_item(select == 4 ? beige_selected_palette_item : beige_palette_item);
-                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 4), play_all, *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, -20 + (12 * 4), ks::globals::i18n->menu_play_all(), *ks::static_text_sprites);
 
                 ks::text_generator->set_palette_item(select == 5 ? beige_selected_palette_item : beige_palette_item);
-                ks::text_generator->generate(-ks::device::screen_width_half + 24, 56 + (12 * 0), language + (alt_lang ? "Русский" : "English"), *ks::static_text_sprites);
+                ks::text_generator->generate(-ks::device::screen_width_half + 24, 56 + (12 * 0), bn::format<64>("{}: {}", ks::globals::i18n->menu_language(), ks::globals::i18n->language()), *ks::static_text_sprites);
             }
             ks::globals::main_update();
         }
@@ -207,30 +204,20 @@ int main()
         _bottom_icon.reset();
         player_stop();
 
-
         if (select == 0) {
             ks::ScriptA0TestEn::a0_actname();
-            // ks::globals::main_update();
         } else if (select == 1) {
-            !alt_lang ? ks::ScriptA1MondayEn::a1_monday() : ks::ScriptA1MondayRu::a1_monday();
-            // ks::globals::main_update();
+            ks::globals::i18n->script_a1_monday()();
         } else if (select == 2) {
-            !alt_lang ? ks::ScriptA1TuesdayEn::a1_tuesday() : ks::ScriptA1TuesdayRu::a1_tuesday();
-            // ks::globals::main_update();
+            ks::globals::i18n->script_a1_tuesday()();
         }
         else if (select == 3) {
-            !alt_lang ? ks::ScriptA1WednesdayEn::a1_wednesday() :ks::ScriptA1WednesdayRu::a1_wednesday();
-            // ks::globals::main_update();
+            ks::globals::i18n->script_a1_wednesday()();
         } else if (select == 4) {
             // Play all scenes
-            !alt_lang ? ks::ScriptA1MondayEn::a1_monday() : ks::ScriptA1MondayRu::a1_monday();
-            // ks::globals::main_update();
-
-            !alt_lang ? ks::ScriptA1TuesdayEn::a1_tuesday() : ks::ScriptA1TuesdayRu::a1_tuesday();
-            // ks::globals::main_update();
-
-            !alt_lang ? ks::ScriptA1WednesdayEn::a1_wednesday() :ks::ScriptA1WednesdayRu::a1_wednesday();
-            // ks::globals::main_update();
+            ks::globals::i18n->script_a1_monday()();
+            ks::globals::i18n->script_a1_tuesday()();
+            ks::globals::i18n->script_a1_wednesday()();
         }
 
         ks::SceneManager::free_resources();

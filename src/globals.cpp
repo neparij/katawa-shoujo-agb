@@ -1,13 +1,13 @@
 #include "globals.h"
 #include "bn_core.h"
+// #include "translation_en.cpp"
 #include "gsmplayer/player.h"
 #include "gsmplayer/player_sfx.h"
 
 namespace ks {
     namespace globals {
-        bool show_memory_debug = false;
-        bool use_alt_lang = false;
         bool exit_scenario = false;
+        ks::Translation* i18n;// = new TranslationEn();
 
         void main_update() {
             bn::core::update();

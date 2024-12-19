@@ -34,6 +34,9 @@ src/sequence/spriteitem.cpp
 src/sequenceitem.cpp
 src/sprite_meta.h
 src/spriteitem.cpp.h
+src/translation.h
+src/translation_en.cpp
+src/translation_ru.cpp
 src/utils/gbfs_scenario_tl.cpp
 src/utils/gbfs_scenario_tl.h
 src/utils/main_updates.cpp.h
