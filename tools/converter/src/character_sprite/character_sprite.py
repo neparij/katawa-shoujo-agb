@@ -361,7 +361,6 @@ class CharacterSpritesWriter:
             meta_file.write(f'}}\n\n')
             meta_file.write(f'#endif  // KS_SPRITEMETA_{meta_name.upper()}\n')
 
-
 def _from_filename(filename: str, regex: str, nude_if=None):
     match = re.match(regex, filename)
     if not match:

@@ -43,6 +43,7 @@ namespace ks {
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_cross, bn::sprite_items::shizu_spr_cross_angry, ks::sprite_metas::shizu_cross);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("shi", 25));
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_cross, bn::sprite_items::shizu_spr_cross_angry, ks::sprite_metas::shizu_cross, 48, 0);
+                // TODO: Show bg
                 ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips, -48, 0);
                 ks::SceneManager::music_play("music_happiness.gsm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mi", 27));
@@ -135,6 +136,7 @@ namespace ks {
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_frown, ks::sprite_metas::shizu_behind);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("shi", 25));
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_frown, ks::sprite_metas::shizu_behind, 48, 0);
+                // TODO: Show bg
                 ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, ks::sprite_metas::misha_hips, -48, 0);
                 ks::SceneManager::music_play("music_comedy.gsm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mi", 72));
@@ -161,6 +163,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mi", 86));
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_happy, ks::sprite_metas::shizu_adjust);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 87));
+                ks::SceneManager::sfx_play("sfx_normalbell.pcm");
                 ks::SceneManager::hide_character(0);
                 ks::SceneManager::hide_character(1);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 88));
@@ -354,6 +357,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 180));
                 ks::SceneManager::hide_character(1);
                 ks::SceneManager::hide_character(0);
+                // TODO: Show bg
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 181));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 182));
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2, ks::sprite_metas::shizu_basic, 48, 0);
@@ -367,6 +371,7 @@ namespace ks {
                 ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mi", 186));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 187));
+                ks::SceneManager::sfx_play("sfx_dooropen.pcm");
                 ks::SceneManager::music_stop();
                 ks::SceneManager::set_background(bn::regular_bg_items::school_council);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 188));
@@ -384,6 +389,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("shi", 25));
                 ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_sign, bn::sprite_items::misha_spr_sign_smile, ks::sprite_metas::misha_sign);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mi", 195));
+                ks::SceneManager::sfx_play("sfx_snap.pcm");
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_happy, ks::sprite_metas::shizu_basic);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 196));
                 ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_happy, ks::sprite_metas::shizu_adjust);
@@ -476,6 +482,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 241));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 242));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 243));
+                ks::SceneManager::sfx_play("sfx_door_creak.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 244));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 245));
                 ks::SceneManager::music_play("music_lilly.gsm");
@@ -532,60 +539,89 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 288));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 289));
                 ks::SceneManager::set_background(bn::regular_bg_items::tearoom_lillyhisao_noon);
+                // TODO: Show tearoom_hisao
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 290));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 291));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 292));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 293));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 294));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 295));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 296));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 297));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 298));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 299));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 300));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 301));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 302));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 303));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 304));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 305));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 306));
+                // TODO: Show tearoom_lilly
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 307));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 308));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 309));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 310));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 311));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 312));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 313));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 314));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 315));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 316));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 317));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 318));
                 ks::SceneManager::music_stop();
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 319));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 320));
                 ks::SceneManager::set_background(bn::regular_bg_items::tearoom_lillyhisao_sunset);
+                // TODO: Show tearoom_hisao
+                // TODO: Show tearoom_lilly
                 ks::SceneManager::music_play("music_tranquil.gsm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 321));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 322));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 323));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 324));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 325));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 326));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 327));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 328));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 329));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 330));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 331));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 332));
+                // TODO: Show tearoom_lilly
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 333));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 334));
+                // TODO: Show tearoom_hisao
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 335));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 336));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 337));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 338));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 339));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 340));
+                // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 341));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 342));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 343));
@@ -610,10 +646,12 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("li", 354));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 355));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 356));
+                ks::SceneManager::sfx_play("sfx_impact.pcm");
                 ks::SceneManager::show_character(3, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_surprised, ks::sprite_metas::lilly_cane);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 357));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mystery", 358));
                 ks::SceneManager::show_character(3, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane, -48, 0);
+                // TODO: Show bg
                 ks::SceneManager::show_character(4, bn::regular_bg_items::yuuko_bg_down, bn::sprite_items::yuuko_spr_down_neutral, ks::sprite_metas::yuuko_down);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 359));
                 ks::SceneManager::show_character(4, bn::regular_bg_items::yuuko_bg_up, bn::sprite_items::yuuko_spr_up_neurotic, ks::sprite_metas::yuuko_up, 48, 0);
@@ -719,6 +757,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 424));
                 ks::SceneManager::show_character(2, bn::regular_bg_items::hanako_bg_defarms, bn::sprite_items::hanako_spr_defarms_strain, ks::sprite_metas::hanako_defarms);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ha", 425));
+                // TODO: Show hanako:
                 ks::SceneManager::hide_character(2);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 426));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 427));
@@ -745,6 +784,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 440));
                 ks::SceneManager::hide_character(3);
                 ks::SceneManager::show_character(4, bn::regular_bg_items::yuuko_bg_up, bn::sprite_items::yuuko_spr_up_neurotic, ks::sprite_metas::yuuko_up);
+                // TODO: Show bg
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 441));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 442));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 443));
@@ -792,6 +832,7 @@ namespace ks {
                 ks::SceneManager::free_resources();
                 ks::SceneManager::set_background(bn::regular_bg_items::school_dormhallway);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 464));
+                ks::SceneManager::sfx_play("sfx_dooropen.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 465));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mystery", 466));
                 ks::SceneManager::music_play("music_kenji.gsm");
@@ -1145,6 +1186,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 675));
                 ks::SceneManager::set_background(bn::regular_bg_items::hana_library);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 676));
+                ks::SceneManager::sfx_play("sfx_impact.pcm");
                 ks::SceneManager::set_background(bn::regular_bg_items::school_library_ss);
                 ks::SceneManager::show_character(2, bn::regular_bg_items::hanako_bg_def, bn::sprite_items::hanako_spr_def_worry, ks::sprite_metas::hanako_def);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 677));

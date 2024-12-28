@@ -12,6 +12,7 @@ from src.dto.music_item import MusicItem, MusicAction, MusicEffect
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.show_item import ShowEvent, ShowItem, ShowPosition
+from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
@@ -26,6 +27,7 @@ class ScenarioReader:
         self.stack: ScenarioScriptStack = ScenarioScriptStack()
         self.initial_name = None
         self._hack_nvl_cleared = False
+        self._hack_latest_label_name = None
 
     def read(self) -> List[SequenceGroup]:
         with open(self.scenario_file, 'r', encoding="utf-8") as f:
@@ -136,10 +138,13 @@ class ScenarioReader:
 
         if stripped_line.startswith("label "):
             label_name = stripped_line.split("label ", 1)[1].strip(":")
+            self._hack_latest_label_name = label_name
             if label_name.startswith("."):
                 label_name = label_name[1:]
-                if self.stack.size() == 0:
+                if self.stack.size() == 0 and not self._hack_latest_label_name:
                     raise Exception("Initial label cannot be a relative label")
+                elif self.stack.size() == 0:
+                    label_name = f"{self._hack_latest_label_name}_{label_name}"
             name = sanitize_function_name(label_name)
 
             if self.stack.size() > 0:
@@ -301,6 +306,24 @@ class ScenarioReader:
                           fadeout_time))
             return
 
+        elif stripped_line.startswith("play sound"):
+            parts = stripped_line.split()
+            music_name = parts[2]
+            fadein_match = re.search(r"fadein (\d+\.\d+)", stripped_line)
+            fadein_time = float(fadein_match.group(1)) if fadein_match else 0
+            self.stack.current().add_sequence_item(
+                SoundItem(SoundAction.PLAY, music_name, SoundEffect.FADEIN if fadein_match else SoundEffect.NONE,
+                          fadein_time))
+            return
+
+        elif stripped_line.startswith("stop sound"):
+            fadeout_match = re.search(r"fadeout (\d+\.\d+)", stripped_line)
+            fadeout_time = float(fadeout_match.group(1)) if fadeout_match else 0
+            self.stack.current().add_sequence_item(
+                SoundItem(SoundAction.STOP, "", SoundEffect.FADEOUT if fadeout_match else SoundEffect.NONE,
+                          fadeout_time))
+            return
+
         elif stripped_line.startswith("show "):
             parts = stripped_line.split()
             sprite_name = parts[1]
@@ -350,17 +373,31 @@ class ScenarioReader:
             hashing_contents = stripped_line
             if _hack_prepend_dialog_nvl_clear:
                 hashing_contents = f"nvl clear\r\n{hashing_contents}"
-            if self.stack.current().type == SequenceGroupType.MENU:
-                hashing_contents = f"{hashing_contents} nointeract"
-
-            dialog_hash = self.calculate_tl_hash(hashing_contents)
+            # if self.stack.current().type == SequenceGroupType.MENU:
+                # hashing_contents = f"{hashing_contents} nointeract"
 
             dialog_match_str = re.match(r"^\"(.+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
             dialog_match_ref = re.match(r"^(.+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
             narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
 
+            original_dialog_hash = self.calculate_tl_hash(hashing_contents)
+            dialog_hash = original_dialog_hash
+
             if dialog_match_str or dialog_match_ref or narration_match:
                 if self.translation:
+                    if dialog_hash not in self.translation.translations:
+                        dialog_hash = self.calculate_tl_hash(f"{hashing_contents} nointeract")
+                    if dialog_hash not in self.translation.translations:
+                        # Hack: there is a case where the dialog hash label contains unclosed previous label.
+                        # So we need to find a key by remaining part of hash
+                        # Example: a1_thursday_things_you_can_do_5abaf868 should be a1_thursday_5abaf868
+                        short_hash = original_dialog_hash[-8:]
+                        for key in self.translation.translations:
+                            if key.endswith(short_hash):
+                                dialog_hash = key
+                                break
+                    if dialog_hash not in self.translation.translations:
+                        raise Exception(f"Missing translation for:\n{stripped_line}")
                     stripped_line = self.translation.translations[dialog_hash]
                     dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
                     dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)

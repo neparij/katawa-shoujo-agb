@@ -8,6 +8,7 @@ src/dialogitem.cpp.h
 src/globals.cpp
 src/globals.h
 src/gsm_player.h
+src/gsmplayer/player_settings.h
 src/main.cpp
 src/menuitem.cpp.h
 src/musicitem.cpp.h

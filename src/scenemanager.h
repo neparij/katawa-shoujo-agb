@@ -85,6 +85,9 @@ public:
     static void music_play(const char *filename);
     static void music_play(const char *filename, bn::fixed fade);
     static void music_stop();
+    static void sfx_play(const char *filename);
+    static void sfx_play(const char *filename, bn::fixed fade);
+    static void sfx_stop();
 
     static void open_ingame_menu();
     static void close_ingame_menu();

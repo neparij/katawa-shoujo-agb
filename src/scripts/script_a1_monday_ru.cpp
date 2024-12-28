@@ -6,6 +6,7 @@ namespace ks {
             static void a1_monday_out_cold() {
                 ks::SceneManager::free_resources();
                 ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods);
+                // TODO: Show snow
                 ks::SceneManager::music_play("music_serene.gsm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 0));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 1));
@@ -17,6 +18,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 7));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 8));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 9));
+                ks::SceneManager::sfx_play("sfx_rustling.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 10));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mystery", 11));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 12));
@@ -25,6 +27,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 15));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 16));
                 ks::SceneManager::set_background(bn::regular_bg_items::other_iwanako);
+                // TODO: Show snow
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 17));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 18));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 19));
@@ -32,8 +35,16 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 21));
                 ks::SceneManager::music_stop();
                 ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods);
+                // TODO: Show snow
+                ks::SceneManager::sfx_play("sfx_heartslow.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
+                ks::SceneManager::sfx_play("sfx_heartslow.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 22));
                 ks::SceneManager::set_background(bn::regular_bg_items::other_iwanako);
+                // TODO: Show snow
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 23));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 24));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 25));
@@ -41,10 +52,20 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 27));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 28));
                 ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods);
+                // TODO: Show snow
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 29));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Иванако", 30));
+                ks::SceneManager::sfx_play("sfx_heartslow.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Иванако", 31));
                 ks::SceneManager::music_stop();
+                ks::SceneManager::sfx_play("sfx_heartslow.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
+                ks::SceneManager::sfx_play("sfx_heartfast.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Иванако", 32));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 33));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 34));
@@ -52,10 +73,26 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Иванако", 35));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 36));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Иванако", 37));
+                ks::SceneManager::sfx_play("sfx_heartfast.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 38));
+                ks::SceneManager::sfx_play("sfx_heartfast.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
+                ks::SceneManager::sfx_play("sfx_heartslow.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
+                ks::SceneManager::sfx_play("sfx_heartfast.pcm");
+                // TODO: Show heartattack
+                // TODO: Hide heartattack
+                ks::SceneManager::sfx_play("sfx_heartstop.pcm");
+                // TODO: Show heartattack
                 ks::SceneManager::music_stop();
+                // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Иванако", 39));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 40));
+                // TODO: Show passoutOP1
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("n", 41));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("n", 42));
                 if (ks::in_replay) {
@@ -68,6 +105,8 @@ namespace ks {
                 ks::SceneManager::free_resources();
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("centered", 43));
                 ks::SceneManager::set_background(bn::regular_bg_items::hosp_room);
+                // TODO: Show sakura
+                // TODO: Show hospitalmask
                 // renpy.music.set_volume(0.5, 0.0, channel="music"); TODO: unknown assignment
                 ks::SceneManager::music_play("music_rain.gsm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("n", 44));
@@ -124,6 +163,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Отец", 94));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 95));
                 // renpy.music.set_volume(0.5, 2.0, channel="music"); TODO: unknown assignment
+                // TODO: Show drugs:
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 96));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 97));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 98));
@@ -132,6 +172,8 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 101));
                 // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
                 ks::SceneManager::set_background(bn::regular_bg_items::hosp_room);
+                // TODO: Show sakura
+                // TODO: Show hospitalmask
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Доктор", 102));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Доктор", 103));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 104));
@@ -212,13 +254,17 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 167));
                 ks::SceneManager::set_background(bn::regular_bg_items::school_lobby);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 168));
+                // TODO: Show muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu_", 169));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 170));
+                // TODO: Show muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu_", 171));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu", 172));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 173));
+                // TODO: Show muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu", 174));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 175));
+                // TODO: Show muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu", 176));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 177));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 178));
@@ -227,8 +273,12 @@ namespace ks {
                 ks::SceneManager::set_background(bn::regular_bg_items::school_staircase2);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 180));
                 ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3);
+                // TODO: Show muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 181));
+                ks::SceneManager::sfx_play("sfx_dooropen.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 182));
+                // TODO: Show muto:
+                // TODO: Hide muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu", 183));
                 ks::SceneManager::music_stop();
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 184));
@@ -272,10 +322,13 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 201));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 202));
                 ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom);
+                // TODO: Show muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu", 203));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 204));
+                // TODO: Show muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu", 205));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mu", 206));
+                // TODO: Hide muto
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 207));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 208));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 209));
@@ -292,6 +345,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("mi_not_shi", 216));
                 ks::SceneManager::music_play("music_shizune.gsm");
                 ks::SceneManager::set_character_position(0, -48, 0);
+                // TODO: Show bg
                 ks::SceneManager::show_character(1, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal, ks::sprite_metas::shizu_basic, 48, 0);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 217));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 218));
@@ -420,6 +474,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 269));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 270));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 271));
+                ks::SceneManager::sfx_play("sfx_normalbell.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 272));
                 ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 273));
@@ -471,6 +526,7 @@ namespace ks {
                 ks::SceneManager::show_character(2, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_downtimid, ks::sprite_metas::hanako_emb);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 292));
                 ks::SceneManager::show_character(2, bn::regular_bg_items::hanako_bg_defarms, bn::sprite_items::hanako_spr_defarms_shock, ks::sprite_metas::hanako_defarms);
+                // TODO: Show hanako:
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 293));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 294));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 295));
@@ -482,6 +538,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 299));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 300));
                 ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom);
+                ks::SceneManager::sfx_play("sfx_normalbell.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 301));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 302));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 303));
@@ -527,8 +584,10 @@ namespace ks {
                 ks::SceneManager::set_background(bn::regular_bg_items::school_nursehall);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 320));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 321));
+                ks::SceneManager::sfx_play("sfx_doorknock2.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 322));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 323));
+                ks::SceneManager::sfx_play("sfx_dooropen.pcm");
                 ks::SceneManager::set_background(bn::regular_bg_items::school_nurseoffice);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 324));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 325));
@@ -543,6 +602,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("nk_", 331));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 332));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 333));
+                ks::SceneManager::sfx_play("sfx_snap.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 334));
                 ks::SceneManager::show_character(3, bn::regular_bg_items::nurse_bg, bn::sprite_items::nurse_spr_fabulous, ks::sprite_metas::nurse);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("nk", 335));
@@ -638,6 +698,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 400));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 401));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 402));
+                ks::SceneManager::sfx_play("sfx_doorknock2.pcm");
                 ks::SceneManager::music_stop();
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 403));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("hi", 404));
@@ -682,6 +743,7 @@ namespace ks {
                 ks::SceneManager::hide_character(4);
                 ks::SceneManager::music_stop();
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 432));
+                ks::SceneManager::sfx_play("sfx_doorslam.pcm");
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("extend", 433));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 434));
                 ks::SceneManager::set_background(bn::regular_bg_items::school_dormhisao_ss);
@@ -705,8 +767,12 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 451));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 452));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 453));
+                // TODO: Show pills:
+                // TODO: Show pills:
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 454));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 455));
+                // TODO: Show pills:
+                // TODO: Hide pills
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 456));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 457));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("", 458));

@@ -22,6 +22,7 @@
 
 #include "scripts/script_a0_test_en.cpp"
 #include "gsmplayer/player.h"
+#include "gsmplayer/player_sfx.h"
 
 #include "bn_regular_bg_items_video_end_4ls.h"
 #include "bn_regular_bg_items_ui_bg_main.h"
@@ -68,6 +69,7 @@ int main()
     // Re-init Butano Core and GSM Audio Engine
     bn::core::init(ks::globals::ISR_VBlank);
     player_init();
+    player_sfx_init();
 
     if (SHOW_INTRO) {
         // Show the 4LS intro video (p2 - native gfx playback)
@@ -76,6 +78,7 @@ int main()
         constexpr bn::color WHITE = bn::color(31, 31, 31);
         constexpr bn::color BLACK = bn::color(0, 0, 0);
 
+        // TODO: Should be calculated in msecs for readability instead of ticks
         bn::bg_palettes::set_fade_color(WHITE);
         for (int i = 0; i < 120; i++) {
             if (i < 30) {
@@ -134,6 +137,11 @@ int main()
         ks::globals::main_update();
 
         while (!scene_selected) {
+            if (bn::keypad::select_pressed()) {
+                // TODO: Remove, test only
+                player_sfx_play("sfx_alarmclock.pcm");
+                player_sfx_setLoop(false);
+            }
             if (bn::keypad::up_pressed()) {
                 need_update = true;
                 select--;
@@ -166,7 +174,7 @@ int main()
                 need_update = false;
 
                 // Debug menu stuff
-                bn::string<64> title("Katawa Shoujo v0.2.0+01337");
+                bn::string<64> title("Katawa Shoujo v0.2.0+01339");
 
                 // _text_sprites.clear();
                 ks::static_text_sprites->clear();
@@ -210,8 +218,7 @@ int main()
             ks::globals::i18n->script_a1_monday()();
         } else if (select == 2) {
             ks::globals::i18n->script_a1_tuesday()();
-        }
-        else if (select == 3) {
+        } else if (select == 3) {
             ks::globals::i18n->script_a1_wednesday()();
         } else if (select == 4) {
             // Play all scenes

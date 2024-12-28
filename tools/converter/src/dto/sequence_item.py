@@ -9,6 +9,7 @@ class SequenceType(Enum):
     DIALOG = "dialog"
     MENU = "menu"
     MUSIC = "music"
+    SOUND = "sound"
     RETURN = "return"
     RUN_LABEL = "run_label"
     SHOW = "show"

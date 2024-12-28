@@ -8,6 +8,7 @@
 #include "bn_blending_actions.h"
 #include "globals.h"
 #include "gsmplayer/player.h"
+#include "gsmplayer/player_sfx.h"
 #include "translation.h"
 #include "utils/scenario_reader.h"
 #include <BN_LOG.h>
@@ -275,6 +276,24 @@ void SceneManager::music_stop() {
     }
 }
 
+void SceneManager::sfx_play(const char* filename) {
+    sfx_play(filename, 0);
+}
+
+void SceneManager::sfx_play(const char* filename, bn::fixed fade) {
+    if (player_sfx_isPlaying()) {
+        player_sfx_stop();
+    }
+    player_sfx_play(filename);
+    player_sfx_setLoop(false);
+}
+
+void SceneManager::sfx_stop() {
+    if (player_sfx_isPlaying()) {
+        player_sfx_stop();
+    }
+}
+
 void SceneManager::open_ingame_menu() {
     const int TRANSITION_STEPS = 16;
     constexpr bn::color BLACK = bn::color(0, 0, 0);
@@ -333,10 +352,8 @@ void SceneManager::open_ingame_menu() {
     ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::format<64>("{}: {}", ks::globals::i18n->screens_playtime(), "0:00:00"), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), -1);
 
-    // ks::text_generator->set_palette_item(beige_selected_palette_item);
     ks::text_generator->generate(0, -48, ks::globals::i18n->screens_return(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 0);
-    // ks::text_generator->set_palette_item(beige_palette_item);
     ks::text_generator->generate(0, -32, ks::globals::i18n->screens_history(), *static_text_sprites);
     selection_index.resize(static_text_sprites->size(), 1);
     ks::text_generator->generate(0, -16, ks::globals::i18n->screens_options(), *static_text_sprites);

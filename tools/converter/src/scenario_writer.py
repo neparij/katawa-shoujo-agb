@@ -15,6 +15,7 @@ from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
 from src.dto.show_item import ShowItem, ShowEvent, ShowPosition
+from src.dto.sound_item import SoundItem, SoundAction
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name, sanitize_comment_text
 
@@ -66,15 +67,6 @@ class ScenarioWriter:
     def write_header(self):
         define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
         h_code = [
-            # Include SequenceItem headers
-            include_header("../sequence/assignmentitem"),
-            include_header("../sequence/backgrounditem"),
-            include_header("../sequence/dialogitem"),
-            include_header("../sequence/menuitem"),
-            include_header("../sequence/musicitem"),
-            include_header("../sequence/runlabelfinishitem"),
-            include_header("../sequence/runlabelitem"),
-            include_header("../sequence/spriteitem"),
             # Include common stuff
             include_header("../scenemanager"),
             # Include common BN stuff
@@ -154,7 +146,8 @@ class ScenarioWriter:
                     sequences.extend(sequence_code)
             answers_indexes = []
 
-            sequences.append(f'bn::vector<int, 5> answers;')
+            sequences.append(f'bn::vector<ks::answer_ptr, 5> answers;')
+            answer_index = 0
             for answer in menu.conditions:
                 tl_index = self.tl_indexes.get(answer.answer)
 
@@ -169,10 +162,11 @@ class ScenarioWriter:
 
                     self.tl_indexes[answer.answer] = tl_index  # Store the index for the id
                 answers_indexes.append(str(tl_index))
-                sequences.append(f'answers.push_back({tl_index});') if not answer.condition else sequences.append(
-                    f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({tl_index});')
+                sequences.append(f'answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});') if not answer.condition else sequences.append(
+                    f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({{{answer_index}, {tl_index}}});')
+                answer_index += 1
 
-            sequences.append(f'ks::SceneManager::show_dialog_question(answers);')
+            sequences.append(f'IF_NOT_EXIT(ks::SceneManager::show_dialog_question(answers));')
             sequences.append(f'int answer = ks::SceneManager::get_dialog_question_answer();')
 
             answer_callbacks = []
@@ -256,6 +250,8 @@ class ScenarioWriter:
             return self.process_sequence_menu(group, cast(MenuItem, sequence))
         elif sequence.type == SequenceType.MUSIC:
             return self.process_sequence_music(group, cast(MusicItem, sequence))
+        elif sequence.type == SequenceType.SOUND:
+            return self.process_sequence_sound(group, cast(SoundItem, sequence))
         elif sequence.type == SequenceType.RETURN:
             return self.process_sequence_return(group, cast(ReturnItem, sequence))
         elif sequence.type == SequenceType.RUN_LABEL:
@@ -264,7 +260,8 @@ class ScenarioWriter:
             return self.process_sequence_show(group, cast(ShowItem, sequence))
         elif sequence.type == SequenceType.HIDE:
             return self.process_sequence_hide(group, cast(HideItem, sequence))
-        return []
+        else:
+            raise TypeError("Unknown Sequence type")
 
     def process_sequence_assignment(self, group: SequenceGroup, assignment: AssignmentItem) -> List[str]:
         assignment_regex = r'^[a-zA-Z_][a-zA-Z0-9_]*\s*(=|\+=|-=|\*=|/=)\s*.*$'
@@ -318,12 +315,12 @@ class ScenarioWriter:
             self.tl_indexes[dialog.id] = tl_index  # Store the index for the id
 
         if dialog.actor_ref:
-            return [f'ks::SceneManager::show_dialog("{dialog.actor_ref}", {tl_index});']
+            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog("{dialog.actor_ref}", {tl_index}));']
             # return [f'scene.add_dialog("{dialog.actor_ref}", \"{resulted_hash}\");']
         elif dialog.actor:
-            return [f'ks::SceneManager::show_dialog("{dialog.actor}", {tl_index});']
+            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog("{dialog.actor}", {tl_index}));']
         else:
-            return [f'ks::SceneManager::show_dialog("", {tl_index});']
+            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog("", {tl_index}));']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
         return [
@@ -339,6 +336,13 @@ class ScenarioWriter:
             return [f'ks::SceneManager::music_stop();']
         return []
 
+    def process_sequence_sound(self, group: SequenceGroup, sound: SoundItem) -> List[str]:
+        if sound.action == SoundAction.PLAY:
+            return [f'ks::SceneManager::sfx_play("{sound.sound}.pcm");']
+        elif sound.action == SoundAction.STOP:
+            return [f'ks::SceneManager::sfx_stop();']
+        return []
+
     def process_sequence_return(self, group, ret: ReturnItem) -> List[str]:
         if group.is_called_inline:
             return []
@@ -347,12 +351,12 @@ class ScenarioWriter:
     def process_sequence_run_label(self, group: SequenceGroup, run_label: RunLabelItem) -> List[str]:
         if run_label.inline_call:
             return [
-                f'{run_label.function_callback}();',
+                f'IF_NOT_EXIT({run_label.function_callback}());',
             ]
         else:
             # return [f'scene.add_sequence(ks::RunLabelItem(&{self.get_class_name()}::{run_label.function_callback}));']
             # return [f'scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}();}}));']
-            return [f'{self.get_class_name()}::{run_label.function_callback}();']
+            return [f'IF_NOT_EXIT({self.get_class_name()}::{run_label.function_callback}());']
             # return [f'{run_label.function_callback}();']
             # return [
             #     f'// scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{run_label.function_callback}(scene);}}));']
@@ -362,7 +366,9 @@ class ScenarioWriter:
         #     self.sprites.append(show.sprite)
 
         # TODO: rework, that's for test purposes only for the moment
-        if show.sprite in PROCESSED_CHARACTERS:
+        if show.sprite not in PROCESSED_CHARACTERS:
+            return [f'// TODO: Show {show.sprite}']
+        else:
             character_index = self.characters.get(show.sprite)
             if show.position == ShowPosition.TWOLEFT:
                 position = (-48, 0)
@@ -454,7 +460,9 @@ class ScenarioWriter:
         #     raise TypeError("Unknown ShowEvent type")
 
     def process_sequence_hide(self, group: SequenceGroup, hide: HideItem) -> List[str]:
-        if hide.sprite in PROCESSED_CHARACTERS:
+        if hide.sprite not in PROCESSED_CHARACTERS:
+            return [f'// TODO: Hide {hide.sprite}']
+        else:
             character_index = self.characters.get(hide.sprite)
             if character_index is None:
                 raise f'"{hide.sprite}" is not in character index. Attempt to hide not shown character?'
