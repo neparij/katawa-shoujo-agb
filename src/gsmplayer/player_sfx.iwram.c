@@ -10,20 +10,8 @@
 #include <stdlib.h>
 #include <string.h>  // for memset
 
+#include "player_settings.h"
 #include "../utils/gbfs/gbfs.h"
-
-#define BUFFER_SIZE 608
-
-#define TIMER_16MHZ 0
-#define FIFO_ADDR_A 0x040000a0
-#define CHANNEL_A_MUTE 0xfcff  /*0b1111110011111111*/
-#define CHANNEL_A_UNMUTE 0x300 /*0b0000001100000000*/
-#define AUDIO_CHUNK_SIZE_PCM 304
-#define FRACUMUL_PRECISION 0xFFFFFFFF
-#define AS_MSECS_PCM 118273043  // 0xffffffff * (1000/36314)
-#define AS_CURSOR_PCM 1348619731
-#define REG_DMA1CNT_L *(vu16*)(REG_BASE + 0x0c4)
-#define REG_DMA1CNT_H *(vu16*)(REG_BASE + 0x0c6)
 
 #define CODE_ROM __attribute__((section(".code")))
 #define CODE_EWRAM __attribute__((section(".ewram")))
@@ -42,9 +30,9 @@ static bool did_run = false;
 static bool is_looping = false;
 static bool is_paused = false;
 
-#define AS_MSECS AS_MSECS_PCM
+// #define AS_MSECS AS_MSECS_PCM
 
-#define AUDIO_PROCESS(ON_STOP)                                       \
+#define AUDIO_PROCESS_SFX(ON_STOP)                                       \
   did_run = true;                                                    \
   buffer = double_buffers[cur_buffer];                               \
                                                                      \
@@ -52,10 +40,10 @@ static bool is_paused = false;
     if (src_pos < src_len) {                                         \
       u32 pending_bytes = src_len - src_pos;                         \
       u32 bytes_to_read =                                            \
-          pending_bytes < BUFFER_SIZE ? pending_bytes : BUFFER_SIZE; \
+          pending_bytes < BUFFER_SIZE_A ? pending_bytes : BUFFER_SIZE_A; \
       for (u32 i = 0; i < bytes_to_read / 4; i++)                    \
         ((u32*)buffer)[i] = ((u32*)(src + src_pos))[i];              \
-      src_pos += BUFFER_SIZE;                                        \
+      src_pos += BUFFER_SIZE_A;                                        \
       if (src_pos >= src_len) {                                      \
         ON_STOP;                                                     \
       }                                                              \
@@ -69,7 +57,7 @@ static const GBFS_FILE* fs;
 static const unsigned char* src = NULL;
 static u32 src_len = 0;
 static u32 src_pos = 0;
-static s8 double_buffers[2][BUFFER_SIZE] __attribute__((aligned(4)));
+static s8 double_buffers[2][BUFFER_SIZE_A] __attribute__((aligned(4)));
 static u32 cur_buffer = 0;
 static s8* buffer;
 
@@ -84,14 +72,16 @@ INLINE void unmute() {
 INLINE void turn_on_sound() {
   SETSNDRES(1);
   SNDSTAT = SNDSTAT_ENABLE;
-  DSOUNDCTRL = 0xff0c; /*0b1111111100001100*/
+  // DSOUNDCTRL = 0xff0c; /*0b1111111100001100*/ // TODO: Check the timers here!!!
+  DSOUNDCTRL = DSOUNDCTRL_SETTINGS;
   mute();
 }
 
 INLINE void init() {
   /* TMxCNT_L is count; TMxCNT_H is control */
   REG_TM0CNT_H = 0;
-  REG_TM0CNT_L = 0x10000 - (924 / 2);        // 0x10000 - (16777216 / 36314)
+  // REG_TM0CNT_L = 0x10000 - (924 / 2);        // 0x10000 - (16777216 / 36314)
+  REG_TM0CNT_L = 0x10000 - PERIOD_SIZE_A;
   REG_TM0CNT_H = TIMER_16MHZ | TIMER_START;  //            cpuFreq  / sampleRate
 
   mute();
@@ -103,7 +93,7 @@ INLINE void stop() {
   cur_buffer = 0;
   for (u32 i = 0; i < 2; i++) {
     u32* bufferPtr = (u32*)double_buffers[i];
-    for (u32 j = 0; j < BUFFER_SIZE / 4; j++)
+    for (u32 j = 0; j < BUFFER_SIZE_A / 4; j++)
       bufferPtr[j] = 0;
   }
 }
@@ -220,7 +210,7 @@ void player_sfx_update() {
   }
 
   // > audio processing (back buffer)
-  AUDIO_PROCESS({
+  AUDIO_PROCESS_SFX({
     if (is_looping) {
       src_pos = 0;
       did_run = false;
