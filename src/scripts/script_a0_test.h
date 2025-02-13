@@ -2,6 +2,7 @@
 #define KS_SCRIPT_A0_TEST
 
 #include "../scenemanager.h"
+#include "../character.h"
 #include "bn_regular_bg_items_op_snowywoods.h"
 namespace ks {
     class ScriptA0Test {

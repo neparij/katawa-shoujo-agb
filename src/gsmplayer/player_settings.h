@@ -25,11 +25,15 @@
 
 #define DSOUNDCTRL_SETTINGS 0xfb0c; /*0b1111101100001100*/
 
-#define BUFFER_SIZE_B 304 * 2 // DOUBLE buffer size for GSM
-#define BUFFER_SIZE_A 96 * 2 // DOUBLE buffer size for PCM at 11468 Hz
+// #define BUFFER_SIZE_B 304 * 2 // DOUBLE buffer size for GSM at 18157 Hz
+#define BUFFER_SIZE_B 224 * 2 // DOUBLE buffer size for GSM at 13379 Hz
+#define BUFFER_SIZE_A 192 // DOUBLE buffer size for PCM at 11468 Hz
+// #define BUFFER_SIZE_A 56 * 2 // DOUBLE buffer size for PCM at 11468 Hz
 
-#define PERIOD_SIZE_B 462 // amount of cycles for GSM
+// #define PERIOD_SIZE_B 462 // amount of cycles for GSM at 18157 Hz
+#define PERIOD_SIZE_B 627 // amount of cycles for GSM at 13379 Hz
 #define PERIOD_SIZE_A 1463 // amount of cycles for PCM at 11468 Hz
+// #define PERIOD_SIZE_A 2508 // amount of cycles for PCM at 11468 Hz
 
 #define TIMER_16MHZ 0
 

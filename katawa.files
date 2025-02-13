@@ -2,6 +2,7 @@ include/fixed_32x64_sprite_font.h
 include/variable_16x16_sprite_font.h
 src/assignmentitem.cpp.h
 src/backgrounditem.cpp.h
+src/character.h
 src/constants.h
 src/dialogbox.cpp.h
 src/dialogitem.cpp.h
@@ -38,8 +39,11 @@ src/spriteitem.cpp.h
 src/translation.h
 src/translation_en.cpp
 src/translation_ru.cpp
+src/utils/gbfs/lz77.h
 src/utils/gbfs_scenario_tl.cpp
 src/utils/gbfs_scenario_tl.h
 src/utils/main_updates.cpp.h
 src/utils/scenario_reader.h
+src/videoplayer/video_player.cpp
+src/videoplayer/video_player.h
 src/vidtest.cpp.h

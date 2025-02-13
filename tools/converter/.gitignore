@@ -1,7 +1,10 @@
 venv/
+venv-3.12/
+.idea/
 __pycache__/
 *.pyc
 *.pyo
 out/
 *.egg-info/
 run.sh
+src/out/

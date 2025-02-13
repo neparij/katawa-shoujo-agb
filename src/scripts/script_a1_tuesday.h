@@ -2,6 +2,7 @@
 #define KS_SCRIPT_A1_TUESDAY
 
 #include "../scenemanager.h"
+#include "../character.h"
 #include "bn_regular_bg_items_school_dormhisao.h"
 #include "bn_regular_bg_items_school_scienceroom.h"
 #include "bn_regular_bg_items_shizu_bg_behind.h"

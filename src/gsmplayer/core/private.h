@@ -48,11 +48,18 @@ struct gsm_state {
 #define MIN_LONGWORD (-2147483647 - 1)
 #define MAX_LONGWORD 2147483647
 
-#ifdef SASR /* flag: >> is a signed arithmetic shift right */
-#undef SASR
+// #ifdef SASR /* flag: >> is a signed arithmetic shift right */
+// #undef SASR
+// #define SASR(x, by) ((x) >> (by))
+// #else
+// #define SASR(x, by) ((x) >= 0 ? (x) >> (by) : (~(-((x) + 1) >> (by))))
+// #endif /* SASR */
+
+#ifndef SASR /* flag: >> is a signed arithmetic shift right */
+// #undef SASR
 #define SASR(x, by) ((x) >> (by))
-#else
-#define SASR(x, by) ((x) >= 0 ? (x) >> (by) : (~(-((x) + 1) >> (by))))
+// #else
+// #define SASR(x, by) ((x) >= 0 ? (x) >> (by) : (~(-((x) + 1) >> (by))))
 #endif /* SASR */
 
 #include "proto.h"

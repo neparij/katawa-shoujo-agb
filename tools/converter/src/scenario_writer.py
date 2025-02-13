@@ -3,9 +3,13 @@ import os
 import re
 from typing import List, cast, Dict
 
-from src.character_sprite.character_sprite import CharacterDisplayableReplacements
+import pyfastgbalz77
+
+from src.character_sprite.character_sprite import CharacterDisplayableReplacements, CharacterSprite, CharacterRegex, \
+    CharacterNudeIf
 from src.dto.assignment_item import AssignmentItem
-from src.dto.background_item import BackgroundItem
+from src.dto.background_item import BackgroundItem, BgShowPosition
+from src.dto.background_transform_item import BackgroundTransformItem
 from src.dto.condition_item import ConditionItem
 from src.dto.dialog_item import DialogItem
 from src.dto.hide_item import HideItem
@@ -15,12 +19,15 @@ from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
 from src.dto.show_item import ShowItem, ShowEvent, ShowPosition
+from src.dto.show_transform_item import ShowTransformItem
+from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction
+from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name, sanitize_comment_text
 
 DEFAULT_LOCALE = "en"
-PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko"]
+PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "muto"]
 
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup],
@@ -38,6 +45,7 @@ class ScenarioWriter:
         self.music = []
         self.sprites = []
         self.sprite_metas = []
+        self.videos = []
         self.characters: Dict[str, int] = {}
 
     def clean(self):
@@ -69,6 +77,7 @@ class ScenarioWriter:
         h_code = [
             # Include common stuff
             include_header("../scenemanager"),
+            include_header("../character"),
             # Include common BN stuff
             # include_header("bn_music_items"),
         ]
@@ -81,6 +90,9 @@ class ScenarioWriter:
 
         for sprite_meta in self.sprite_metas:
             h_code.append(include_header(sprite_meta))
+
+        for video in self.videos:
+            h_code.append(include_header(video, "video_", "_agmv"))
 
         function_declarations = [
             f'virtual ~{self.get_interface_name()}() = default;',
@@ -124,7 +136,7 @@ class ScenarioWriter:
                 sequences.append(f'ks::SceneManager::free_resources();')
             elif label.is_initial:
                 sequences.append(
-                    f'ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl));\n')
+                    f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -224,9 +236,23 @@ class ScenarioWriter:
 
         tl_filename = f"tl_{self.filename}.{self.locale}"
         os.makedirs(os.path.dirname(os.path.join(self.gbfs_dir, tl_filename)), exist_ok=True)
-        with open(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}", "wb") as tl_file:
+
+        # Write uncompressed translation file
+        with open(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}.uncompressed", "wb") as tl_file:
             for value in self.tl_list:
                 tl_file.write(value.encode("utf-8") + b'\0')
+
+        with open(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}.uncompressed", "rb") as f:
+            uncompressed_bytes = f.read()
+
+        compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
+
+        # Write LZ77 compressed translation file
+        with open(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}", "wb") as f:
+            f.write(compressed_bytes)
+
+        # Delete uncompressed translation file
+        os.remove(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}.uncompressed")
 
     def get_labels(self) -> List[SequenceGroup]:
         return [group for group in self.scenario if group.type == SequenceGroupType.LABEL]
@@ -260,6 +286,14 @@ class ScenarioWriter:
             return self.process_sequence_show(group, cast(ShowItem, sequence))
         elif sequence.type == SequenceType.HIDE:
             return self.process_sequence_hide(group, cast(HideItem, sequence))
+        elif sequence.type == SequenceType.BACKGROUND_TRANSFORM:
+            return self.process_sequence_bg_transform(group, cast(BackgroundTransformItem, sequence))
+        elif sequence.type == SequenceType.SHOW_TRANSFORM:
+            return self.process_sequence_show_transform(group, cast(ShowTransformItem, sequence))
+        elif sequence.type == SequenceType.UPDATE_VISUALS:
+            return self.process_sequence_update_visuals(group, cast(UpdateVisualsItem, sequence))
+        elif sequence.type == SequenceType.SHOW_VIDEO:
+            return self.process_sequence_show_video(group, cast(ShowVideoItem, sequence))
         else:
             raise TypeError("Unknown Sequence type")
 
@@ -276,7 +310,25 @@ class ScenarioWriter:
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
         if not bg.background in self.backgrounds:
             self.backgrounds.append(bg.background)
-        return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background});']
+
+        if bg.position == BgShowPosition.BGLEFT:
+            position = (8, 0)
+        elif bg.position == BgShowPosition.BGRIGHT:
+            position = (-8, 0)
+        elif bg.position == BgShowPosition.CENTER:
+            position = (0, 0)
+        elif bg.position == BgShowPosition.DEFAULT:
+            position = (0, 0)
+        else:
+            raise TypeError("Unknown BgShowPosition type")
+
+        return [
+            # * 60 == 1x speed; * 30 == 2x speed.
+            f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {int(bg.dissolve_time * 30)});']
+        # if bg.position == BgShowPosition.DEFAULT:
+        #     return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background});']
+        # else:
+        #     return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]});']
 
     def process_sequence_condition(self, group: SequenceGroup, condition: ConditionItem) -> List[str]:
         matching_scenario_item = next((item for item in self.scenario if item.name == condition.function_callback),
@@ -302,6 +354,8 @@ class ScenarioWriter:
 
     def precess_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
         tl_index = self.tl_indexes.get(dialog.id)
+        # TODO: add character symbol to font
+        dialog.message = dialog.message.replace("’", "'")
 
         if tl_index is None:  # Only process if the id is not already in the index
             for i, tl in enumerate(self.tl_list):
@@ -315,12 +369,12 @@ class ScenarioWriter:
             self.tl_indexes[dialog.id] = tl_index  # Store the index for the id
 
         if dialog.actor_ref:
-            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog("{dialog.actor_ref}", {tl_index}));']
+            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
             # return [f'scene.add_dialog("{dialog.actor_ref}", \"{resulted_hash}\");']
         elif dialog.actor:
             return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog("{dialog.actor}", {tl_index}));']
         else:
-            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog("", {tl_index}));']
+            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
         return [
@@ -338,7 +392,7 @@ class ScenarioWriter:
 
     def process_sequence_sound(self, group: SequenceGroup, sound: SoundItem) -> List[str]:
         if sound.action == SoundAction.PLAY:
-            return [f'ks::SceneManager::sfx_play("{sound.sound}.pcm");']
+            return [f'ks::SceneManager::sfx_play("{sound.sound}.8ad");']
         elif sound.action == SoundAction.STOP:
             return [f'ks::SceneManager::sfx_stop();']
         return []
@@ -380,16 +434,18 @@ class ScenarioWriter:
                 position = (60, 0)
             elif show.position == ShowPosition.OFFSCREENLEFT:
                 # TODO: Calculate bsed on sprite width
-                position = (-120 - 0, 0)
+                position = (-120 - 64, 0)
             elif show.position == ShowPosition.OFFSCREENRIGHT:
                 # TODO: Calculate bsed on sprite width
-                position = (120 + 0, 0)
+                position = (120 + 64, 0)
             elif show.position == ShowPosition.LEFT:
                 # TODO: Calculate bsed on sprite width
                 position = (-120 + 40, 0)
             elif show.position == ShowPosition.RIGHT:
                 # TODO: Calculate bsed on sprite width
                 position = (120 - 40, 0)
+            elif show.position == ShowPosition.CENTER:
+                position = (0, 0)
             elif show.position == ShowPosition.DEFAULT:
                 position = (0, 0)
             else:
@@ -401,39 +457,64 @@ class ScenarioWriter:
                 character_index = len(self.characters)
                 self.characters[show.sprite] = character_index
             if show.variant:
+                show.variant = show.variant.replace("_ss", "").replace("_ni", "")
+                show.sprite = show.sprite.replace("_ss", "").replace("_ni", "")
 
-                show.variant = show.variant.replace("_ss", "").removesuffix("_close")
-                show.sprite = show.sprite.replace("_ss", "")
-
+                displayable = f"{show.sprite}_{show.variant}"
                 if show.sprite == "lilly":
-                    # Fix for Lilly's custom poses
-                    show.variant = CharacterDisplayableReplacements.lilly(show.variant)
+                    displayable = CharacterDisplayableReplacements.lilly(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.lilly(displayable))
+                elif show.sprite == "emi":
+                    # TODO: remove this. That is WORKAROUND for Thursday script
+                    displayable = CharacterDisplayableReplacements.emi(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "misha":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "shizu":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.shizu(displayable))
+                elif show.sprite == "hanako":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "rin":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
                 elif show.sprite == "yuuko":
-                    show.variant = CharacterDisplayableReplacements.yuuko(show.variant)
+                    displayable = CharacterDisplayableReplacements.yuuko(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.yuuko(),
+                                                                 CharacterNudeIf.default(displayable))
                 elif show.sprite == "kenji":
-                    show.variant = CharacterDisplayableReplacements.kenji(show.variant)
-
-                # character_bg_name = f'{show.sprite}_bg_{show.variant.split("_")[0]}'
-                # TODO: support _close notation
-                if len(show.variant.split("_")) > 1:
-                    character_bg_name = f'{show.sprite}_bg_{show.variant.split("_")[0]}'
+                    print(displayable)
+                    displayable = CharacterDisplayableReplacements.kenji(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.kenji(displayable))
+                elif show.sprite == "nurse":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.nurse(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "muto":
+                    displayable = CharacterDisplayableReplacements.muto(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
                 else:
-                    # for characters without poses
-                    character_bg_name = f'{show.sprite}_bg'
+                    raise TypeError("Unknown character: " + show.sprite)
+
+                # TODO: Support close for all characters
+                if not character.character_name in ["rin", "muto"]:
+                    character.close = False
+
+                character_bg_name = character.to_bg_name()
+                character_spr_name = character.to_sprite_name()
+                character_sprite_meta_name = character.to_group_name()
+
                 if not character_bg_name in self.backgrounds:
                     self.backgrounds.append(character_bg_name)
-                # character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'
-                # TODO: support _close notation
-                character_spr_name = f'{show.sprite}_spr_{"_".join(show.variant.split("_")[0:])}'
+
                 if not character_spr_name in self.sprites:
                     self.sprites.append(character_spr_name)
-                # character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'
-                # TODO: support _close notation
-                if len(show.variant.split("_")) > 1:
-                    character_sprite_meta_name = f'{show.sprite}_{show.variant.split("_")[0]}'
-                else:
-                    # for characters without poses
-                    character_sprite_meta_name = f'{show.sprite}'
+
                 if not character_sprite_meta_name in self.sprite_metas:
                     self.sprite_metas.append(character_sprite_meta_name)
 
@@ -444,6 +525,7 @@ class ScenarioWriter:
                     result.append(
                         f'ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name}, {position[0]}, {position[1]});')
                 return result
+            # Move if not default position and variant is not provided
             if show.position != ShowPosition.DEFAULT:
                 result.append(
                     f'ks::SceneManager::set_character_position({character_index}, {position[0]}, {position[1]});')
@@ -467,6 +549,40 @@ class ScenarioWriter:
             if character_index is None:
                 raise f'"{hide.sprite}" is not in character index. Attempt to hide not shown character?'
             return [f'ks::SceneManager::hide_character({character_index});']
+
+    def process_sequence_bg_transform(self, group: SequenceGroup, bg_transform: BackgroundTransformItem) -> List[str]:
+        # TODO: remove deuplicated positions code!!!!!!
+        print(bg_transform.position)
+        if bg_transform.position == BgShowPosition.BGLEFT:
+            position = (8, 0)
+        elif bg_transform.position == BgShowPosition.BGRIGHT:
+            position = (-8, 0)
+        elif bg_transform.position == BgShowPosition.CENTER:
+            position = (0, 0)
+        else:
+            raise TypeError("Unknown BgShowPosition type")
+        return [
+            f'ks::SceneManager::set_background_position({position[0]}, {position[1]});']
+
+    def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
+        character_index = self.characters.get(show_transform.sprite)
+        print(show_transform)
+        if character_index is None:
+            raise f'"{show_transform.sprite}" is not in character index. Attempt to transform not shown character?'
+        return [
+            f'ks::SceneManager::set_character_position({character_index}, {show_transform.x}, 0);']
+
+    def process_sequence_update_visuals(self, group: SequenceGroup, update_visuals: UpdateVisualsItem) -> List[str]:
+        return [f'ks::SceneManager::update_visuals();']
+
+    def process_sequence_show_video(self, group: SequenceGroup, show_video: ShowVideoItem) -> List[str]:
+        if not show_video.video in self.videos:
+            self.videos.append(show_video.video)
+        return [
+        #     # f'ks::SceneManager::free_resources();',
+            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_agmv, video_{show_video.video}_agmv_size, "video_{show_video.video}.gsm"));'
+            f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n'
+        ]
 
     def locale_suffix(self):
         return f"_{self.locale}" if self.locale else ""

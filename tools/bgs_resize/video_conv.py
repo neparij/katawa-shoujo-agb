@@ -16,7 +16,7 @@ QUANTIZE = True
 DIFF_RESOLUTION_DIVIDER = 8
 DIFF_THRESHOLD = 0.1
 SOURCE_FPS = 15
-MIN_FPS = 10
+MIN_FPS = 5
 MAX_FPS = 15
 
 MAX_FRAME_SKIP = SOURCE_FPS / MIN_FPS
@@ -26,7 +26,8 @@ USE_DIFF = True
 
 def unpack_video(video_path, output_dir):
     os.makedirs(output_dir, exist_ok=True)
-    proc = subprocess.run(shlex.split(f'ffmpeg -y -i {video_path} -r {SOURCE_FPS} {output_dir}/frame_%08d.png'))
+    # proc = subprocess.run(shlex.split(f'ffmpeg -y -i {video_path} -r {SOURCE_FPS} {output_dir}/frame_%08d.png'))
+    proc = subprocess.run(shlex.split(f'ffmpeg -y -i {video_path} -r {SOURCE_FPS} {output_dir}/frame_%d.png'))
     if proc.returncode == 0:
         print(f"Video unpacked to {output_dir}")
     else:
@@ -141,7 +142,7 @@ def resize_images_in_directory(input_dir):
 
 if __name__ == "__main__":
     # OUTPUT_DIR = "./evout"
-    OUTPUT_DIR = "/Users/n.laptev/development/gba/katawa/graphics/video/temp_emi_imgs"
+    OUTPUT_DIR = "/Users/n.laptev/development/libagmv/examples/simple_gba_video_encode/tc_act2_emi"
     video_path = "/Users/n.laptev/development/ksre/game/video/tc_act2_emi.mkv"
     unpack_video(video_path, OUTPUT_DIR)
     resize_images_in_directory(OUTPUT_DIR)

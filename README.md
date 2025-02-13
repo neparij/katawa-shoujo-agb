@@ -32,6 +32,9 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano fra
    - Verify: `arm-none-eabi-gcc --version`
 2. **Python 3.12** for tools.
 3. **Butano** [afska's fork](https://github.com/afska/butano)
+4. ***For CLion IDE users***:
+   - Open "Settings" > "Advanced Settings" > "Makefile"
+   - Replace "--just-print" with "V=1" for analyzer options.
 
 ---
 

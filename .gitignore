@@ -2,10 +2,13 @@
 .qt/
 .qtc_clangd/
 *.iws
+gbfs_files/#original/
 build/
+site/
 .idea_modules/
 .DS_Store
 *.gba
 *.elf
 *.sav
+*.ss*
 katawa.creator.user

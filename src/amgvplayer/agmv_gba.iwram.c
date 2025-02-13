@@ -55,6 +55,8 @@ unsigned int channel_a_vblanks_remaining = 0;
 unsigned int channel_a_total_vblanks = 0;
 unsigned int channel_b_vblanks_remaining = 0;
 
+AMGV_THREAD_STATE thread;
+
 #define INLINE static inline __attribute__((always_inline))
 
 void Open(File* file, const u8* data, u32 len){
@@ -497,81 +499,81 @@ void AGMV_IWRAM AGMV_DecompressLZSS(File* file, u8* bitstream_data, u32 usize){
     }
 }
 
-int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
-    u32 i, bits, size = agmv->header.width * agmv->header.height, usize, width, height, yoffset;
-    u32 block_size, block_w, block_h, pframe_count;
-    u16 offset, *palette0, *palette1, color;
-    u16* img_data, *iframe_data, *pframe_data, *img_ptr, frame_type, color_array[8];
-    u16 vq2color1, vq2color2, prev_color;
+int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv, unsigned char quart){
+    u32 size = agmv->header.width * agmv->header.height;
+    u32 i, yoffset, bits, block_size, block_w, block_h;
+    u16 offset, color;
+    u16* img_ptr;
+    u8 byte, fbit;
     s8 n;
-    u8 byte, index, fbit, *bitstream_data, version;
-    // Bool v4;
-    Bool v1, v4;
     int x, y;
 
-    v1 = FALSE;
-    v4 = FALSE;
-    agmv->bitstream->pos = 0;
+    if (quart == 0) {
+        thread.v1 = FALSE;
+        thread.v4 = FALSE;
+        agmv->bitstream->pos = 0;
 
-    seek(file,8,SEEK_CUR);
+        seek(file,8,SEEK_CUR);
 
-    frame_type = AGMV_ReadShort(file);
-    agmv->frame_chunk->frame_type = frame_type;
-    agmv->frame_chunk->uncompressed_size = AGMV_ReadLong(file);
-    agmv->frame_chunk->compressed_size = AGMV_ReadLong(file);
 
-    usize = agmv->frame_chunk->uncompressed_size;
+        thread.frame_type = AGMV_ReadShort(file);
+        agmv->frame_chunk->frame_type = thread.frame_type;
+        agmv->frame_chunk->uncompressed_size = AGMV_ReadLong(file);
+        agmv->frame_chunk->compressed_size = AGMV_ReadLong(file);
 
-    width  = agmv->frame->width;
-    height = agmv->frame->height;
-    version = agmv->header.version;
+        thread.usize = agmv->frame_chunk->uncompressed_size;
 
-    bitstream_data = agmv->bitstream->data;
+        thread.width  = agmv->frame->width;
+        thread.height = agmv->frame->height;
+        thread.version = agmv->header.version;
 
-    img_data = agmv->frame->img_data;
-    iframe_data = agmv->iframe->img_data;
-    pframe_data = agmv->prev_frame->img_data;
+        thread.bitstream_data = agmv->bitstream->data;
 
-    palette0 = agmv->header.palette0;
-    palette1 = agmv->header.palette1;
+        thread.img_data = agmv->frame->img_data;
+        thread.iframe_data = agmv->iframe->img_data;
+        thread.pframe_data = agmv->prev_frame->img_data;
 
-    vq2color1 = agmv->vq2color1;
-    vq2color2 = agmv->vq2color2;
-    prev_color = agmv->prev_fill_color;
+        thread.palette0 = agmv->header.palette0;
+        thread.palette1 = agmv->header.palette1;
 
-    if(version == 7 || version == 8 || version == 101){
-        const u8* current_data = file->data + file->pos;
-        if ((u32)(file->data + file->pos) & 1) {
-            bitstream_data++;
+        thread.vq2color1 = agmv->vq2color1;
+        thread.vq2color2 = agmv->vq2color2;
+        thread.prev_color = agmv->prev_fill_color;
+
+        if(thread.version == 7 || thread.version == 8 || thread.version == 101){
+            const u8* current_data = file->data + file->pos;
+            if ((u32)(file->data + file->pos) & 1) {
+                thread.bitstream_data++;
+            }
+            AGMV_ReadNBytes(file,thread.bitstream_data,thread.usize);
         }
-        AGMV_ReadNBytes(file,bitstream_data,usize);
-    }
-    else{
-        AGMV_DecompressLZSS(file,bitstream_data,usize);
+        else{
+            AGMV_DecompressLZSS(file,thread.bitstream_data,thread.usize);
+        }
+
+        if(thread.version == 5 || thread.version == 7){
+            thread.v1 = TRUE;
+        }
+
+        if(thread.version == 10 || thread.version == 101){
+            thread.v4 = TRUE;
+        }
+
+        if(agmv->frame_chunk->frame_type == AGMV_IFRAME){
+            agmv->pframe_count = 0;
+        }
+        else{
+            agmv->pframe_count++;
+        }
+        thread.pframe_count = agmv->pframe_count;
     }
 
-    if(version == 5 || version == 7){
-        v1 = TRUE;
-    }
+    unsigned char quart_size = thread.height / 4;
+    for(y = quart * quart_size; y < (quart + 1) * quart_size; y += 4){
+        yoffset = y * thread.width;
+        for(x = 0; x < thread.width; x += 4){
 
-    if(version == 10 || version == 101){
-        v4 = TRUE;
-    }
-
-    if(agmv->frame_chunk->frame_type == AGMV_IFRAME){
-        agmv->pframe_count = 0;
-    }
-    else{
-        agmv->pframe_count++;
-    }
-
-    pframe_count = agmv->pframe_count;
-
-    for(y = 0; y < height; y += 4){
-        yoffset = y * width;
-        for(x = 0; x < width; x += 4){
-
-            bits       = *(bitstream_data++);
+            bits       = *(thread.bitstream_data++);
             block_size = (bits >> 6) & 3;
             byte       = (bits & 0x3f);
             block_w    = AGMV_GetBlockWidth(block_size);
@@ -579,72 +581,72 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
 
             offset = x + yoffset;
 
-            img_ptr = &img_data[offset];
+            img_ptr = &thread.img_data[offset];
 
             switch(byte){
             case AGMV_NORMAL_FLAG:{
-                if(v1){
+                if(thread.v1){
                     for(i = 0; i < 5; i++){
-                        index = *(bitstream_data++);
-                        fbit = (index >> 7);
-                        bits = (index & 0x7f);
+                        thread.index = *(thread.bitstream_data++);
+                        fbit = (thread.index >> 7);
+                        bits = (thread.index & 0x7f);
 
-                        if(bits >= 127) bits = *(bitstream_data++);
-                        color_array[i] = fbit ? palette1[bits] : palette0[bits];
+                        if(bits >= 127) bits = *(thread.bitstream_data++);
+                        thread.color_array[i] = fbit ? thread.palette1[bits] : thread.palette0[bits];
 
                         if(i <= 1){
-                            img_ptr[i] = color_array[i];
+                            img_ptr[i] = thread.color_array[i];
                         }
                     }
                 }
-                else if(v4){
+                else if(thread.v4){
                     for(i = 0; i < 5; i++){
-                        bits = *(bitstream_data++);
-                        byte = *(bitstream_data++);
+                        bits = *(thread.bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
-                        color_array[i] = bits << 8 | byte;
+                        thread.color_array[i] = bits << 8 | byte;
 
                         if(i <= 1){
-                            img_ptr[i] = color_array[i];
+                            img_ptr[i] = thread.color_array[i];
                         }
                     }
                 }
                 else{
                     for(i = 0; i < 5; i++){
-                        color_array[i] = palette0[*(bitstream_data++)];
+                        thread.color_array[i] = thread.palette0[*(thread.bitstream_data++)];
 
                         if(i <= 1){
-                            img_ptr[i] = color_array[i];
+                            img_ptr[i] = thread.color_array[i];
                         }
                     }
                 }
 
-                img_ptr += width;
+                img_ptr += thread.width;
 
-                img_ptr[0] = AGMV_InterpColor(color_array[0],color_array[2]);
-                img_ptr[1] = AGMV_InterpColor(color_array[1],color_array[3]);
+                img_ptr[0] = AGMV_InterpColor(thread.color_array[0],thread.color_array[2]);
+                img_ptr[1] = AGMV_InterpColor(thread.color_array[1],thread.color_array[3]);
 
-                img_ptr += width;
+                img_ptr += thread.width;
 
-                img_ptr[0] = color_array[2];
-                img_ptr[1] = color_array[3];
+                img_ptr[0] = thread.color_array[2];
+                img_ptr[1] = thread.color_array[3];
 
-                img_ptr += width;
+                img_ptr += thread.width;
 
-                img_ptr[0] = img_ptr[1] = color_array[4];
+                img_ptr[0] = img_ptr[1] = thread.color_array[4];
 
                 x -= 2;
             }break;
             case AGMV_PCOPY_FLAG:{
 
-                AGMV_BlockCopy(img_data,pframe_data,offset,offset,block_w,block_h,width);
+                AGMV_BlockCopy(thread.img_data,thread.pframe_data,offset,offset,block_w,block_h,thread.width);
 
                 x += (block_size == 1 || block_size == 3) ? 4 : (block_size == 2) ? -2 : 0;
             }break;
             case AGMV_COPY_FLAG:{
 
-                if(pframe_count > 1)
-                    AGMV_BlockCopy(img_data,iframe_data,offset,offset,block_w,block_h,width);
+                if(thread.pframe_count > 1)
+                    AGMV_BlockCopy(thread.img_data,thread.iframe_data,offset,offset,block_w,block_h,thread.width);
 
                 x += (block_size == 1 || block_size == 3) ? 4 : (block_size == 2) ? -2 : 0;
             }break;
@@ -654,7 +656,7 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
                 s8 mx, my;
                 int mvx, mvy;
 
-                bits = *(bitstream_data++);
+                bits = *(thread.bitstream_data++);
 
                 mx = ((bits >> 4) & 0x0f) - 8;
                 my = (bits & 0x0f) - 8;
@@ -662,53 +664,53 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
                 mvx = mx + x;
                 mvy = my + y;
 
-                if(mvx + block_w >= width || mvy + block_h >= height){
+                if(mvx + block_w >= thread.width || mvy + block_h >= thread.height){
                     break;
                 }
 
-                offset2 = mvx + mvy * width;
+                offset2 = mvx + mvy * thread.width;
 
                 if(byte == AGMV_MV_FLAG){
-                    AGMV_BlockCopy(img_data,iframe_data,offset,offset2,block_w,block_h,width);
+                    AGMV_BlockCopy(thread.img_data,thread.iframe_data,offset,offset2,block_w,block_h,thread.width);
                 }
                 else{
-                    AGMV_BlockCopy(img_data,pframe_data,offset,offset2,block_w,block_h,width);
+                    AGMV_BlockCopy(thread.img_data,thread.pframe_data,offset,offset2,block_w,block_h,thread.width);
                 }
 
                 x += (block_size == 1 || block_size == 3) ? 4 : (block_size == 2) ? -2 : 0;
             }break;
             case AGMV_FILL_FLAG:{
-                if(v4){
-                    bits = *(bitstream_data++);
-                    byte = *(bitstream_data++);
+                if(thread.v4){
+                    bits = *(thread.bitstream_data++);
+                    byte = *(thread.bitstream_data++);
 
                     color = bits << 8 | byte;
                 }
-                else if(v1){
-                    index = *(bitstream_data++);
-                    fbit = (index >> 7);
-                    bits = (index & 0x7f);
+                else if(thread.v1){
+                    thread.index = *(thread.bitstream_data++);
+                    fbit = (thread.index >> 7);
+                    bits = (thread.index & 0x7f);
 
-                    if(bits >= 127) bits = *(bitstream_data++);
-                    color = fbit ? palette1[bits] : palette0[bits];
+                    if(bits >= 127) bits = *(thread.bitstream_data++);
+                    color = fbit ? thread.palette1[bits] : thread.palette0[bits];
                 }
                 else{
-                    color = palette0[*(bitstream_data++)];
+                    color = thread.palette0[*(thread.bitstream_data++)];
                 }
 
-                AGMV_Memset16(color_array,color,block_w);
+                AGMV_Memset16(thread.color_array,color,block_w);
 
-                AGMV_BlockFill(img_ptr,color_array,block_w,block_h,width);
+                AGMV_BlockFill(img_ptr,thread.color_array,block_w,block_h,thread.width);
 
-                prev_color = color;
+                thread.prev_color = color;
 
                 x += (block_size == 1 || block_size == 3) ? 4 : (block_size == 2) ? -2 : 0;
             }break;
             case AGMV_PFILL_FLAG:{
 
-                AGMV_Memset16(color_array,prev_color,block_w);
+                AGMV_Memset16(thread.color_array,thread.prev_color,block_w);
 
-                AGMV_BlockFill(img_ptr,color_array,block_w,block_h,width);
+                AGMV_BlockFill(img_ptr,thread.color_array,block_w,block_h,thread.width);
 
                 x += (block_size == 1 || block_size == 3) ? 4 : (block_size == 2) ? -2 : 0;
             }break;
@@ -719,7 +721,7 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
             case AGMV_ICOPYR_FLAG:{
                 u32 ix, iy, ioffset, sx, sy;
 
-                bits = *(bitstream_data++);
+                bits = *(thread.bitstream_data++);
 
                 sx = (bits >> 4) & 15;
                 sy = (bits & 15);
@@ -731,9 +733,9 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
                     ix = x + sx; iy = y - sy;
                 }
 
-                ioffset = ix + iy * width;
+                ioffset = ix + iy * thread.width;
 
-                AGMV_BlockCopy(img_data,img_data,offset,ioffset,block_w,block_h,width);
+                AGMV_BlockCopy(thread.img_data,thread.img_data,offset,ioffset,block_w,block_h,thread.width);
 
                 x += (block_size == 1 || block_size == 3) ? 4 : (block_size == 2) ? -2 : 0;
             }break;
@@ -753,29 +755,29 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
 
                     for(i = 0; i < 2; i++){
 
-                        byte = *(bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
                         mx = (s8)(byte);
 
-                        byte = *(bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
                         my = (s8)(byte);
 
                         mvx = mx + xoffset_arr[i];
                         mvy = my + y;
 
-                        if(mvx + 4 >= width || mvy + 4 >= height){
+                        if(mvx + 4 >= thread.width || mvy + 4 >= thread.height){
                             break;
                         }
 
                         offset  = offset_arr[i];
-                        offset2 = mvx + mvy * width;
+                        offset2 = mvx + mvy * thread.width;
 
-                        if(pframe_count > 1){
-                            AGMV_BlockCopy(img_data,pframe_data,offset,offset2,4,4,width);
+                        if(thread.pframe_count > 1){
+                            AGMV_BlockCopy(thread.img_data,thread.pframe_data,offset,offset2,4,4,thread.width);
                         }
                         else{
-                            AGMV_BlockCopy(img_data,iframe_data,offset,offset2,4,4,width);
+                            AGMV_BlockCopy(thread.img_data,thread.iframe_data,offset,offset2,4,4,thread.width);
                         }
                     }
 
@@ -785,7 +787,7 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
 
                     offset_arr[0] = offset;
                     offset_arr[1] = offset + 2;
-                    offset_arr[2] = offset + width + width;
+                    offset_arr[2] = offset + thread.width + thread.width;
                     offset_arr[3] = offset_arr[2] + 2;
 
                     xoffset_arr[0] = x = xoffset_arr[2] = x;
@@ -795,7 +797,7 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
                     yoffset_arr[2] = yoffset_arr[3] = y + 2;
 
                     for(i = 0; i < 4; i++){
-                        byte = *(bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
                         mx = ((byte >> 4) & 0x0f) - 8;
                         my = (byte & 0x0f) - 8;
@@ -803,30 +805,30 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
                         mvx = mx + xoffset_arr[i];
                         mvy = my + yoffset_arr[i];
 
-                        if(mvx + 2 >= width || mvy + 2 >= height){
+                        if(mvx + 2 >= thread.width || mvy + 2 >= thread.height){
                             break;
                         }
 
                         offset  = offset_arr[i];
-                        offset2 = mvx + mvy * width;
+                        offset2 = mvx + mvy * thread.width;
 
-                        if(pframe_count > 1){
-                            AGMV_BlockCopy(img_data,pframe_data,offset,offset2,2,2,width);
+                        if(thread.pframe_count > 1){
+                            AGMV_BlockCopy(thread.img_data,thread.pframe_data,offset,offset2,2,2,thread.width);
                         }
                         else{
-                            AGMV_BlockCopy(img_data,iframe_data,offset,offset2,2,2,width);
+                            AGMV_BlockCopy(thread.img_data,thread.iframe_data,offset,offset2,2,2,thread.width);
                         }
                     }
                 }
                 else{
 
                     offset_arr[0] =  offset;
-                    offset_arr[1] =  offset + width + width;
+                    offset_arr[1] =  offset + thread.width + thread.width;
 
                     yoffset_arr[0] = y; yoffset_arr[1] = y + 2;
 
                     for(i = 0; i < 2; i++){
-                        byte = *(bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
                         mx = ((byte >> 4) & 0x0f) - 8;
                         my = (byte & 0x0f) - 8;
@@ -834,18 +836,18 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
                         mvx = mx + x;
                         mvy = my + yoffset_arr[i];
 
-                        if(mvx + 2 >= width || mvy + 2 >= height){
+                        if(mvx + 2 >= thread.width || mvy + 2 >= thread.height){
                             break;
                         }
 
                         offset  = offset_arr[i];
-                        offset2 = mvx + mvy * width;
+                        offset2 = mvx + mvy * thread.width;
 
-                        if(pframe_count > 1){
-                            AGMV_BlockCopy(img_data,pframe_data,offset,offset2,2,2,width);
+                        if(thread.pframe_count > 1){
+                            AGMV_BlockCopy(thread.img_data,thread.pframe_data,offset,offset2,2,2,thread.width);
                         }
                         else{
-                            AGMV_BlockCopy(img_data,iframe_data,offset,offset2,2,2,width);
+                            AGMV_BlockCopy(thread.img_data,thread.iframe_data,offset,offset2,2,2,thread.width);
                         }
                     }
 
@@ -856,156 +858,155 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
             case AGMV_PVQ2_FLAG:{
 
                 if(byte == AGMV_VQ2_FLAG){
-                    if(v4){
+                    if(thread.v4){
                         for(i = 0; i < 2; i++){
-                            bits = *(bitstream_data++);
-                            byte = *(bitstream_data++);
+                            bits = *(thread.bitstream_data++);
+                            byte = *(thread.bitstream_data++);
 
-                            color_array[i] =  bits << 8 | byte;
+                            thread.color_array[i] =  bits << 8 | byte;
                         }
                     }
-                    else if(v1){
+                    else if(thread.v1){
                         for(i = 0; i < 2; i++){
-                            index = *(bitstream_data++);
-                            fbit = (index >> 7);
-                            bits = (index & 0x7f);
+                            thread.index = *(thread.bitstream_data++);
+                            fbit = (thread.index >> 7);
+                            bits = (thread.index & 0x7f);
 
-                            if(bits >= 127) bits = *(bitstream_data++);
-                            color_array[i] = fbit ? palette1[bits] : palette0[bits];
+                            if(bits >= 127) bits = *(thread.bitstream_data++);
+                            thread.color_array[i] = fbit ? thread.palette1[bits] : thread.palette0[bits];
                         }
                     }
                     else{
-                        color_array[0] = palette0[*(bitstream_data++)];
-                        color_array[1] = palette0[*(bitstream_data++)];
+                        thread.color_array[0] = thread.palette0[*(thread.bitstream_data++)];
+                        thread.color_array[1] = thread.palette0[*(thread.bitstream_data++)];
                     }
 
-                    vq2color1 = color_array[0];
-                    vq2color2 = color_array[1];
+                    thread.vq2color1 = thread.color_array[0];
+                    thread.vq2color2 = thread.color_array[1];
                 }
                 else{
-                    color_array[0] = vq2color1;
-                    color_array[1] = vq2color2;
+                    thread.color_array[0] = thread.vq2color1;
+                    thread.color_array[1] = thread.vq2color2;
                 }
-
                 if(block_size == AGMV_BLOCK_4x4){
-                    byte = *(bitstream_data++);
+                    byte = *(thread.bitstream_data++);
 
-                    *(img_ptr++) = color_array[byte >> 7];
-                    *(img_ptr++) = color_array[(byte >> 6) & 1];
-                    *(img_ptr++) = color_array[(byte >> 5) & 1];
-                    *(img_ptr++) = color_array[(byte >> 4) & 1];
+                    *(img_ptr++) = thread.color_array[byte >> 7];
+                    *(img_ptr++) = thread.color_array[(byte >> 6) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 5) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 4) & 1];
 
-                    img_ptr += width - 4;
+                    img_ptr += thread.width - 4;
 
-                    *(img_ptr++) = color_array[(byte >> 3) & 1];
-                    *(img_ptr++) = color_array[(byte >> 2) & 1];
-                    *(img_ptr++) = color_array[(byte >> 1) & 1];
-                    *(img_ptr++) = color_array[byte & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 3) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 2) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 1) & 1];
+                    *(img_ptr++) = thread.color_array[byte & 1];
 
-                    img_ptr += width - 4;
+                    img_ptr += thread.width - 4;
 
-                    byte = *(bitstream_data++);
+                    byte = *(thread.bitstream_data++);
 
-                    *(img_ptr++) = color_array[byte >> 7];
-                    *(img_ptr++) = color_array[(byte >> 6) & 1];
-                    *(img_ptr++) = color_array[(byte >> 5) & 1];
-                    *(img_ptr++) = color_array[(byte >> 4) & 1];
+                    *(img_ptr++) = thread.color_array[byte >> 7];
+                    *(img_ptr++) = thread.color_array[(byte >> 6) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 5) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 4) & 1];
 
-                    img_ptr += width - 4;
+                    img_ptr += thread.width - 4;
 
-                    *(img_ptr++) = color_array[(byte >> 3) & 1];
-                    *(img_ptr++) = color_array[(byte >> 2) & 1];
-                    *(img_ptr++) = color_array[(byte >> 1) & 1];
-                    *(img_ptr++) = color_array[byte & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 3) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 2) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 1) & 1];
+                    *(img_ptr++) = thread.color_array[byte & 1];
                 }
                 else if(block_size == AGMV_BLOCK_8x4 || block_size == AGMV_BLOCK_8x8){
                     for(i = 0; i < block_h; i++){
-                        byte = *(bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
                         for(n = 7; n >= 0; n--)
-                            *(img_ptr++) = color_array[(byte >> n) & 1];
+                            *(img_ptr++) = thread.color_array[(byte >> n) & 1];
 
-                        img_ptr += width - 8;
+                        img_ptr += thread.width - 8;
                     }
 
                     x += 4;
                 }
                 else{
-                    byte = *(bitstream_data++);
+                    byte = *(thread.bitstream_data++);
 
-                    *(img_ptr++) = color_array[byte >> 7];
-                    *(img_ptr++) = color_array[(byte >> 6) & 1];
+                    *(img_ptr++) = thread.color_array[byte >> 7];
+                    *(img_ptr++) = thread.color_array[(byte >> 6) & 1];
 
-                    img_ptr += width - 2;
+                    img_ptr += thread.width - 2;
 
-                    *(img_ptr++) = color_array[(byte >> 5) & 1];
-                    *(img_ptr++) = color_array[(byte >> 4) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 5) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 4) & 1];
 
-                    img_ptr += width - 2;
+                    img_ptr += thread.width - 2;
 
-                    *(img_ptr++) = color_array[(byte >> 3) & 1];
-                    *(img_ptr++) = color_array[(byte >> 2) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 3) & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 2) & 1];
 
-                    img_ptr += width - 2;
+                    img_ptr += thread.width - 2;
 
-                    *(img_ptr++) = color_array[(byte >> 1) & 1];
-                    *(img_ptr++) = color_array[byte & 1];
+                    *(img_ptr++) = thread.color_array[(byte >> 1) & 1];
+                    *(img_ptr++) = thread.color_array[byte & 1];
 
                     x -= 2;
                 }
             }break;
             case AGMV_VQ4_FLAG:{
-                if(v4){
+                if(thread.v4){
                     for(i = 0; i < 4; i++){
-                        bits = *(bitstream_data++);
-                        byte = *(bitstream_data++);
+                        bits = *(thread.bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
-                        color_array[i] =  bits << 8 | byte;
+                        thread.color_array[i] =  bits << 8 | byte;
                     }
                 }
-                else if(v1){
+                else if(thread.v1){
                     for(i = 0; i < 4; i++){
-                        index = *(bitstream_data++);
-                        fbit = (index >> 7);
-                        bits = (index & 0x7f);
+                        thread.index = *(thread.bitstream_data++);
+                        fbit = (thread.index >> 7);
+                        bits = (thread.index & 0x7f);
 
-                        if(bits >= 127) bits = *(bitstream_data++);
-                        color_array[i] = fbit ? palette1[bits] : palette0[bits];
+                        if(bits >= 127) bits = *(thread.bitstream_data++);
+                        thread.color_array[i] = fbit ? thread.palette1[bits] : thread.palette0[bits];
                     }
                 }
                 else{
                     for(i = 0; i < 4; i++){
-                        color_array[i] = palette0[*(bitstream_data++)];
+                        thread.color_array[i] = thread.palette0[*(thread.bitstream_data++)];
                     }
                 }
 
                 if(block_size == AGMV_BLOCK_4x4){
                     for(i = 0; i < 4; i++){
-                        byte = *(bitstream_data++);
-                        *(img_ptr++) = color_array[(byte >> 6) & 3];
-                        *(img_ptr++) = color_array[(byte >> 4) & 3];
-                        *(img_ptr++) = color_array[(byte >> 2) & 3];
-                        *(img_ptr++) = color_array[byte & 3];
-                        img_ptr += width - 4;
+                        byte = *(thread.bitstream_data++);
+                        *(img_ptr++) = thread.color_array[(byte >> 6) & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 4) & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 2) & 3];
+                        *(img_ptr++) = thread.color_array[byte & 3];
+                        img_ptr += thread.width - 4;
                     }
                 }
                 else{
                     for(i = 0; i < block_h; i++){
-                        byte = *(bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
-                        *(img_ptr++) = color_array[(byte >> 6) & 3];
-                        *(img_ptr++) = color_array[(byte >> 4) & 3];
-                        *(img_ptr++) = color_array[(byte >> 2) & 3];
-                        *(img_ptr++) = color_array[byte & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 6) & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 4) & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 2) & 3];
+                        *(img_ptr++) = thread.color_array[byte & 3];
 
-                        byte = *(bitstream_data++);
+                        byte = *(thread.bitstream_data++);
 
-                        *(img_ptr++) = color_array[(byte >> 6) & 3];
-                        *(img_ptr++) = color_array[(byte >> 4) & 3];
-                        *(img_ptr++) = color_array[(byte >> 2) & 3];
-                        *(img_ptr++) = color_array[byte & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 6) & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 4) & 3];
+                        *(img_ptr++) = thread.color_array[(byte >> 2) & 3];
+                        *(img_ptr++) = thread.color_array[byte & 3];
 
-                        img_ptr += width - 8;
+                        img_ptr += thread.width - 8;
                     }
 
                     x += 4;
@@ -1015,17 +1016,34 @@ int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv){
         }
     }
 
-    if(frame_type == AGMV_IFRAME){
-        AGMV_DMACopy16(img_data,iframe_data,size);
+    int dma_offset = (size * quart / 4);
+    if(thread.frame_type == AGMV_IFRAME){
+        AGMV_DMACopy16(thread.img_data + dma_offset,thread.iframe_data + dma_offset, size / 4);
     }
     else{
-        AGMV_DMACopy16(img_data,pframe_data,size);
+        AGMV_DMACopy16(thread.img_data + dma_offset,thread.pframe_data + dma_offset,size / 4);
     }
 
-    agmv->vq2color1 = vq2color1;
-    agmv->vq2color2 = vq2color2;
-    agmv->prev_fill_color = prev_color;
-    agmv->frame_count++;
+    if (quart == 3) {
+        agmv->vq2color1 = thread.vq2color1;
+        agmv->vq2color2 = thread.vq2color2;
+        agmv->prev_fill_color = thread.prev_color;
+        agmv->frame_count++;
+    }
+
+    // if (quart == 3) {
+    //     if(thread.frame_type == AGMV_IFRAME){
+    //         AGMV_DMACopy16(thread.img_data,thread.iframe_data,size);
+    //     }
+    //     else{
+    //         AGMV_DMACopy16(thread.img_data,thread.pframe_data,size);
+    //     }
+
+    //     agmv->vq2color1 = thread.vq2color1;
+    //     agmv->vq2color2 = thread.vq2color2;
+    //     agmv->prev_fill_color = thread.prev_color;
+    //     agmv->frame_count++;
+    // }
 
     return NO_ERR;
 }

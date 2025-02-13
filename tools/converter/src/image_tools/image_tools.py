@@ -22,7 +22,8 @@ class ImageTools:
                sprite_size: tuple[int, int] | None = None,
                num_color_cluster_passes: int = 256,
                num_tile_cluster_passes: int = 256,
-               use_sample_palette: str | None = None):
+               use_sample_palette: str | None = None,
+               add_boundary_pixels: bool = False):
 
         if use_sample_palette:
             sample_palette_image = Image.open(use_sample_palette)
@@ -64,6 +65,17 @@ class ImageTools:
         if remove_size and remove_offset:
             remove = Image.new("RGBA", remove_size, ImageTools.TRANSPARENT_COLOR)
             canvas.paste(remove, remove_offset)
+
+        # if add_boundary_pixels:
+        #     if not use_sample_palette:
+        #         raise Exception("Boundary pixels can only be added when using a sample palette.")
+        #     index = 2
+        #     sample_palette_data = sample_palette_image.palette.palette  # Raw palette data as bytes
+        #     non_transparent_color = tuple(sample_palette_data[index * 3:index * 3 + 3])  # Get RGB values
+        #     canvas.putpixel((0, 0), non_transparent_color)
+        #     canvas.putpixel((511, 0), non_transparent_color)
+        #     canvas.putpixel((0, 255), non_transparent_color)
+        #     canvas.putpixel((511, 255), non_transparent_color)
 
         if not use_sample_palette:
             print(f"Quantizing: {output_filename}")
@@ -131,7 +143,8 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
                           remove_size=remove_size, remove_offset=remove_offset,
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
-                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp")
+                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp",
+                          add_boundary_pixels=True)
 
     @staticmethod
     def resize_character_emotion_sprite(input_filename: str, output_filename: str, sprite_offset: tuple[int, int],

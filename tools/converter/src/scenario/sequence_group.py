@@ -40,13 +40,14 @@ class SequenceGroup:
     def add_answer(self, answer = None, condition = None, callback = None):
         self.conditions.append(ConditionWrapper(condition, callback=callback, answer=answer))
 
-    def add_sequence_item(self, item: SequenceItem):
+    def add_sequence_item(self, linepack: List[SequenceItem], item: SequenceItem):
         if isinstance(item, SequenceItem):
             if self.type == SequenceGroupType.CONDITION:
                 self.conditions[-1].sequence.append(item)
             elif self.type == SequenceGroupType.MENU and self.conditions:
                 self.conditions[-1].sequence.append(item)
             else:
+                linepack.append(item)
                 self.sequence.append(item)
         else:
             raise TypeError("item must be an instance of SequenceItem or its subclasses")

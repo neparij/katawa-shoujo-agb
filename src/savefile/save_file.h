@@ -80,7 +80,6 @@ namespace ks {
 
             // States
             bool adult_warning_shown;
-            unsigned char video_playback_state; // Will be used as enum value (OP_1, TC_ACT2_EMI, etc) to restore game state after soft-resetting
 
             // Save Slots
             SaveSlotProgressData slot[TOTAL_SAVE_SLOTS];

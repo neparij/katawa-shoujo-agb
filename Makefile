@@ -28,22 +28,30 @@
 #
 # All directories are specified relative to the project directory where the makefile is found.
 #---------------------------------------------------------------------------------------------------------------------
+#DEBUGUSERFLAGS := -g
+#DEBUGUSERCXXFLAGS := -ggdb
+
+#DEBUGUSERFLAGS :=
+#DEBUGUSERCXXFLAGS :=
+
 TARGET      	:=  $(notdir $(CURDIR))
 BUILD       	:=  build
 LIBBUTANO   	:=  ../afska_butano/butano
 PYTHON      	:=  python3
 SOURCES     	:=  ../afska_butano/common/src \
-		    src \
+		    		src \
                     src/amgvplayer \
                     src/gsmplayer \
                     src/gsmplayer/core \
+                    src/videoplayer \
                     src/savefile \
                     src/scripts \
-		    src/utils \
+		    		src/utils \
                     src/utils/gbfs
 INCLUDES    	:=  include \
 					include/sprite_metas \
-					../butano/common/include
+					../afska_butano/common/include \
+					../afska_butano/butano/include
 DATA        	:=  video
 VIDEO			:=  video
 GRAPHICS    	:=  graphics \
@@ -51,19 +59,20 @@ GRAPHICS    	:=  graphics \
 					graphics/event \
 					graphics/characters/shizu \
 					graphics/characters/misha \
-                                        graphics/characters/emi \
+					graphics/characters/emi \
 					graphics/characters/rin \
-                                        graphics/characters/lilly \
-                                        graphics/characters/hanako \
-                                        graphics/characters/kenji \
-                                        graphics/characters/nurse \
-                                        graphics/characters/yuuko \
+					graphics/characters/lilly \
+					graphics/characters/hanako \
+					graphics/characters/kenji \
+					graphics/characters/nurse \
+					graphics/characters/yuuko \
+					graphics/characters/muto \
 					../butano/common/graphics
 AUDIO       	:=  audio
 DMGAUDIO    	:=  dmg_audio
 ROMTITLE    	:=  KATAWASHOUJO
 ROMCODE     	:=  NPKS
-USERFLAGS   	:=  -DBN_CFG_SPRITES_MAX_ITEMS=256 # -Ofast -DBN_CFG_BGS_MAX_ITEMS=4 # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
+USERFLAGS   	:=  -std=c++20 -DBN_CFG_SPRITES_MAX_ITEMS=256 # -Ofast -DBN_CFG_BGS_MAX_ITEMS=4 # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
 USERCXXFLAGS	:=  # -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections
 USERASFLAGS 	:=  
 USERLDFLAGS 	:=  -Wl,--print-memory-usage #-Wl,--gc-sections -Wl,--print-memory-usage
@@ -85,8 +94,6 @@ VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
 # export OFILES_BIN := $(addsuffix .o,$(VIDEOBINFILES))
 # export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
-
-
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .bin extension
 #---------------------------------------------------------------------------------
@@ -94,7 +101,6 @@ VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
 #---------------------------------------------------------------------------------
 		@echo $(notdir $<)
 		@$(bin2o)
-
 
 
 #---------------------------------------------------------------------------------------------------------------------

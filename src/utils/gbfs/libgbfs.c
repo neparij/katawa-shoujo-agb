@@ -32,9 +32,6 @@ IN THE SOFTWARE.
    also assumes that the target uses 16-bit short and 32-bit longs.
 */
 
-typedef unsigned short u16;
-typedef unsigned long u32;
-
 #include <stdlib.h>
 #include <string.h>
 

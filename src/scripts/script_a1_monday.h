@@ -2,12 +2,14 @@
 #define KS_SCRIPT_A1_MONDAY
 
 #include "../scenemanager.h"
+#include "../character.h"
 #include "bn_regular_bg_items_op_snowywoods.h"
 #include "bn_regular_bg_items_other_iwanako.h"
 #include "bn_regular_bg_items_hosp_room.h"
 #include "bn_regular_bg_items_school_gate.h"
 #include "bn_regular_bg_items_school_courtyard.h"
 #include "bn_regular_bg_items_school_lobby.h"
+#include "bn_regular_bg_items_muto_bg_basic.h"
 #include "bn_regular_bg_items_school_staircase2.h"
 #include "bn_regular_bg_items_school_hallway3.h"
 #include "bn_regular_bg_items_hisao_class.h"
@@ -32,6 +34,9 @@
 #include "bn_regular_bg_items_kenji_bg_basic.h"
 #include "bn_regular_bg_items_school_dormhisao_ss.h"
 #include "bn_regular_bg_items_school_dormhisao_ni.h"
+#include "bn_sprite_items_muto_spr_basic_normal.h"
+#include "bn_sprite_items_muto_spr_basic_smile.h"
+#include "bn_sprite_items_muto_spr_basic_irritated.h"
 #include "bn_sprite_items_misha_spr_perky_smile.h"
 #include "bn_sprite_items_misha_spr_cross_laugh.h"
 #include "bn_sprite_items_misha_spr_hips_grin.h"
@@ -61,6 +66,7 @@
 #include "bn_sprite_items_kenji_spr_basic_tsun.h"
 #include "bn_sprite_items_kenji_spr_basic_happy.h"
 #include "bn_sprite_items_kenji_spr_basic_neutral.h"
+#include "muto_basic.h"
 #include "misha_perky.h"
 #include "misha_cross.h"
 #include "misha_hips.h"
@@ -72,6 +78,8 @@
 #include "hanako_defarms.h"
 #include "nurse.h"
 #include "kenji_basic.h"
+#include "video_op_1_agmv.h"
+#include "video_tc_act1_agmv.h"
 namespace ks {
     class ScriptA1Monday {
         public:

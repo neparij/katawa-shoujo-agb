@@ -17,6 +17,7 @@ class ShowPosition(Enum):
     OFFSCREENRIGHT = "offscreenright"
     LEFT = "left"
     RIGHT = "right"
+    CENTER = "center"
 
 class ShowItem(SequenceItem):
     def some_method(self):

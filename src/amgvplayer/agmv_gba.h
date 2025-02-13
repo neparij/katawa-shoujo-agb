@@ -537,6 +537,16 @@ typedef enum AGMV_FRAME_TYPE{
     AGMV_PFRAME = 0x2,
 }AGMV_FRAME_TYPE;
 
+typedef struct AMGV_THREAD_STATE{
+    u32 usize, width, height;
+    u32 pframe_count;
+    u16 *palette0, *palette1;
+    u16* img_data, *iframe_data, *pframe_data, frame_type, color_array[8];
+    u16 vq2color1, vq2color2, prev_color;
+    u8 index, *bitstream_data, version;
+    Bool v1, v4;
+}AMGV_THREAD_STATE;
+
 /*-----------------AGMV DECODING------------------*/
 
 void AGMV_IWRAM AGMV_DecompressLZSS(File* file, u8* bitstream_data, u32 usize);
@@ -544,7 +554,8 @@ void AGMV_DisableAllAudio(AGMV* agmv);
 void AGMV_EnableAllAudio(AGMV* agmv);
 int AGMV_DecodeHeader(File* file, AGMV* agmv);
 void DestroyAGMV(AGMV* agmv);
-int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv);
+// int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv);
+int AGMV_IWRAM AGMV_DecodeFrameChunk(File* file, AGMV* agmv, unsigned char quart);
 int AGMV_IWRAM AGMV_DecodeAudioChunk(File* file, AGMV* agmv);
 
 #define AGMV_MODE_3   0x3
@@ -596,27 +607,19 @@ static inline Bool AGMV_IWRAM AGMV_IsVideoDone(AGMV* agmv){
     else return FALSE;
 }
 
-static inline void AGMV_IWRAM AGMV_StreamMovie(AGMV* agmv){
+static inline void AGMV_IWRAM AGMV_StreamMovie(AGMV* agmv, unsigned char quart){
     u32 offset;
     if(agmv->video_state == AGMV_VIDEO_PLAY){
         if(!AGMV_IsVideoDone(agmv)){
-            AGMV_FindNextFrameChunk(agmv->file);
+            if (quart == 3) {
+                AGMV_FindNextFrameChunk(agmv->file);
+                offset    = tell(agmv->file);
+            }
 
-            offset    = tell(agmv->file);
 
-            AGMV_DecodeFrameChunk(agmv->file,agmv);
-            AGMV_StoreFrameOffset(agmv,offset);
-
-            if(agmv->header.total_audio_duration != 0){
-                AGMV_FindNextAudioChunk(agmv->file);
-
-                if(agmv->audio_state == AGMV_AUDIO_PLAY){
-                    AGMV_DecodeAudioChunk(agmv->file,agmv);
-                    play_sound(agmv->audio_chunk->sample, agmv->audio_chunk->size , agmv->header.sample_rate, 'A');
-                }
-                else{
-                    AGMV_SkipAudioChunk(agmv->file);
-                }
+            AGMV_DecodeFrameChunk(agmv->file,agmv,quart);
+            if (quart == 3) {
+                AGMV_StoreFrameOffset(agmv,offset);
             }
         }
     }
