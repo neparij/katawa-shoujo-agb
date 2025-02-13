@@ -2,7 +2,9 @@
 
 # Katawa Shoujo - Game Boy Advance Port
 
-A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano framework](https://github.com/GValiente/butano). Includes Python tools to convert assets and scripts from the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
+A faithful adaptation of *Katawa Shoujo* for the GBA, powered by
+the [Butano framework](https://github.com/GValiente/butano). Includes Python tools to convert assets and scripts from
+the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
 
 <div style="display: flex; justify-content: flex-start;">
     <img src="site/agb-ks-screenshot-1.png" alt="Katawa Shoujo - Game Boy Advance Port (event screenshot)" style="width: 50%;">
@@ -24,17 +26,30 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano fra
 ## Requirements
 
 1. **DevkitARM** ([Setup Guide](https://devkitpro.org/wiki/Getting_Started))
-   - Windows: Use [DevkitPro Installer](https://github.com/devkitPro/installer/releases/latest).
-   - macOS/Linux: Install via `devkitpro-pacman`.
-     ```bash
-     sudo dkp-pacman -S devkitARM
-     ```
-   - Verify: `arm-none-eabi-gcc --version`
+    - Windows: Use [DevkitPro Installer](https://github.com/devkitPro/installer/releases/latest).
+    - macOS/Linux: Install via `devkitpro-pacman`.
+      ```bash
+      sudo dkp-pacman -S devkitARM
+      ```
+    - Verify: `arm-none-eabi-gcc --version`
 2. **Python 3.12** for tools.
 3. **Butano** [afska's fork](https://github.com/afska/butano)
 4. ***For CLion IDE users***:
-   - Open "Settings" > "Advanced Settings" > "Makefile"
-   - Replace "--just-print" with "V=1" for analyzer options.
+    - Install `compiledb`
+        - macOS:
+          ```bash
+          brew install compiledb
+          ```
+        - Linux:
+          ```bash
+          pip install --user compiledb
+          ```
+    - Generate `compile_commands.json`:
+      ```bash
+      compiledb make -j$(nproc)
+      ```
+    - Import the project in CLion as a Compilation Database project
+    - Configure the devkitARM toolchain in CLion (see devkitARM setup guides)
 
 ---
 
@@ -55,11 +70,15 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by the [Butano fra
 - **[afska](https://github.com/afska)** for GSM Player integration for Butano
 - **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
 - **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the video player.
-- **[Katawa Shoujo: Re-Engineered](https://codeberg.org/fhs/katawa-shoujo-re-engineered)** by **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katawa Shoujo to the modern Ren'Py engine.
+- **[Katawa Shoujo: Re-Engineered](https://codeberg.org/fhs/katawa-shoujo-re-engineered)** by
+  **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katawa Shoujo to the modern Ren'Py
+  engine.
 
 ---
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License**. See the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the
+**Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License**.
+See the [LICENSE](LICENSE.md) file for details.
 

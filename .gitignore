@@ -12,3 +12,4 @@ site/
 *.sav
 *.ss*
 katawa.creator.user
+compile_commands.json
