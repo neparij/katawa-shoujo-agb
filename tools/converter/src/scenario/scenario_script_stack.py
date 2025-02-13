@@ -24,7 +24,7 @@ class ScenarioScriptStack:
             return 0
         return self.stack[-1][1]
 
-    def current(self):
+    def current(self) -> SequenceGroup|None:
         if len(self.stack) == 0:
             return None
         return self.stack[-1][0]

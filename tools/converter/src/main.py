@@ -1,6 +1,5 @@
 import argparse
 import os
-from time import sleep
 from typing import List
 
 from src.scenario_reader import ScenarioReader

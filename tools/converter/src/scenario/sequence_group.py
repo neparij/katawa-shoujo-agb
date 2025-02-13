@@ -10,10 +10,12 @@ class SequenceGroupType(Enum):
     CONDITION = "condition"
 
 
+# TODO: Make AnswerWrapper with condition support as separate class
 class ConditionWrapper:
-    def __init__(self, condition, callback = None):
+    def __init__(self, condition, callback = None, answer = None):
         self.function_callback = callback
         self.condition = condition
+        self.answer = answer
         self.sequence: List[SequenceItem] = []
 
     def __str__(self):
@@ -33,15 +35,19 @@ class SequenceGroup:
         return f"SequenceGroup(name={self.name}, type={self.type}, sequence={self.sequence}, translation_identifiers={self.translation_identifiers}, conditions={self.conditions})"
 
     def add_condition(self, condition = None, callback = None):
-        self.conditions.append(ConditionWrapper(condition, callback))
+        self.conditions.append(ConditionWrapper(condition, callback=callback, answer=None))
 
-    def add_sequence_item(self, item: SequenceItem):
+    def add_answer(self, answer = None, condition = None, callback = None):
+        self.conditions.append(ConditionWrapper(condition, callback=callback, answer=answer))
+
+    def add_sequence_item(self, linepack: List[SequenceItem], item: SequenceItem):
         if isinstance(item, SequenceItem):
             if self.type == SequenceGroupType.CONDITION:
                 self.conditions[-1].sequence.append(item)
             elif self.type == SequenceGroupType.MENU and self.conditions:
                 self.conditions[-1].sequence.append(item)
             else:
+                linepack.append(item)
                 self.sequence.append(item)
         else:
             raise TypeError("item must be an instance of SequenceItem or its subclasses")

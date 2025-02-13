@@ -4,16 +4,16 @@ import math
 # Configuration
 # FONT_PATH = "/Library/Fonts/cjkFonts-allseto.ttf"
 FONT_PATH = "/Library/Fonts/playtime.ttf"
-FONT_SIZE = 12  # Font size for characters
-CHAR_WIDTH = 16  # Width of each character
+FONT_SIZE = 9  # Font size for characters
+CHAR_WIDTH = 8  # Width of each character
 CHAR_HEIGHT = 16  # Height of each character
-CHAR_SPACE_WIDTH = 6
+CHAR_SPACE_WIDTH = 8
 
 FONT_NAME = "variable_" + str(CHAR_WIDTH) + "x" + str(CHAR_HEIGHT) + "_font"
 COLUMNS = 1  # Number of characters per row
-BACKGROUND_COLOR = (0, 255, 0, 255)
-TEXT_COLOR = (255, 255, 255, 255)
-OUTLINE_COLOR = (0, 0, 0, 255)
+BACKGROUND_COLOR = (224, 232, 40, 255)
+TEXT_COLOR = (32, 112, 48, 255)
+OUTLINE_COLOR = (224, 232, 40, 255)
 
 # Cyrillic characters (А-Я, а-я, Ё, ё)
 BASIC_LATIN = ''.join(chr(i) for i in range(0x0021, 0x007F))  # ! to ~
@@ -49,9 +49,9 @@ def draw_text_with_shadow(draw, position, text, font, text_color, outline_color,
     char_width = char_bbox[2] - char_bbox[0]
 
     x, y = position
-    # Draw shadow
-    draw.text((x + 1, y), text, font=font, fill=outline_color, anchor="lm")
-    draw.text((x + 1, y + 1), text, font=font, fill=outline_color, anchor="lm")
+    # # Draw shadow
+    # draw.text((x + 1, y), text, font=font, fill=outline_color, anchor="lm")
+    # draw.text((x + 1, y + 1), text, font=font, fill=outline_color, anchor="lm")
 
     # Draw the main text
     draw.fontmode = "1"

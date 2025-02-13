@@ -33,12 +33,15 @@ Before you #include "gbfs.h", you should define the following types:
 Your gba.h should do this for you.
 */
 
+#include "gba_types.h"
+
 #ifndef INCLUDE_GBFS_H
 #define INCLUDE_GBFS_H
 
 #pragma GCC system_header
 
 #ifdef __cplusplus
+
 extern "C" {
 #endif
 
@@ -60,19 +63,19 @@ typedef struct GBFS_FILE {
 
 typedef struct GBFS_ENTRY {
   char name[24];             /* filename, nul-padded */
-  unsigned long len;         /* length of object in bytes */
-  unsigned long data_offset; /* in bytes from beginning of file */
+  u32 len;         /* length of object in bytes */
+  u32 data_offset; /* in bytes from beginning of file */
 } GBFS_ENTRY;
 
 const GBFS_FILE* find_first_gbfs_file(const void* start);
 const void* skip_gbfs_file(const GBFS_FILE* file);
 const void* gbfs_get_obj(const GBFS_FILE* file,
                          const char* name,
-                         unsigned long* len);
+                         u32* len);
 const void* gbfs_get_nth_obj(const GBFS_FILE* file,
                              size_t n,
                              char* name,
-                             unsigned long* len);
+                             u32* len);
 void* gbfs_copy_obj(void* dst, const GBFS_FILE* file, const char* name);
 size_t gbfs_count_objs(const GBFS_FILE* file);
 

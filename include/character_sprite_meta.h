@@ -5,11 +5,12 @@ namespace ks {
 
 class character_sprite_meta {
 public:
-    constexpr character_sprite_meta(const int offset_x, const int offset_y):
-        offset_x(offset_x),
-        offset_y(offset_y) {}
-    const int offset_x;
-    const int offset_y;
+    constexpr character_sprite_meta(const int initial_offset_x, const int initial_offset_y) :
+        offset_x{initial_offset_x},
+        offset_y{initial_offset_y} {}
+
+    int offset_x;
+    int offset_y;
 };
 
 }

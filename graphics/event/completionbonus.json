@@ -1,4 +1,5 @@
 {
     "type": "regular_bg",
-    "compression": "auto"
+    "compression": "auto_no_huffman",
+    "colors": 128
 }
