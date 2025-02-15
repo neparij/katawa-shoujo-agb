@@ -7,20 +7,20 @@ the [Butano framework](https://github.com/GValiente/butano). Includes Python too
 the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
 
 <div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-main-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Main Menu)" style="width: 50%;">
-    <img src="site/agb-ks-screenshot-extras-cinema-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Extras Menu - Cinema)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-main-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Main Menu)" style="width: 45%;">
+    <img src="site/agb-ks-screenshot-extras-cinema-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Extras Menu - Cinema)" style="width: 45%;">
 </div>
 <div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-translations-en.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - En)" style="width: 50%;">
-    <img src="site/agb-ks-screenshot-translations-ru.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - Ru)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-translations-en.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - En)" style="width: 45%;">
+    <img src="site/agb-ks-screenshot-translations-ru.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - Ru)" style="width: 45%;">
 </div>
 <div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-rin-introduced.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Rin Introduced)" style="width: 50%;">
-    <img src="site/agb-ks-screenshot-rin-close.png" alt="Katawa Shoujo - Game Boy Advance Port (Closeup view - Rin)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-rin-introduced.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Rin Introduced)" style="width: 45%;">
+    <img src="site/agb-ks-screenshot-rin-close.png" alt="Katawa Shoujo - Game Boy Advance Port (Closeup view - Rin)" style="width: 45%;">
 </div>
 <div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-thursday-emi.png" alt="Katawa Shoujo - Game Boy Advance Port (Emi)" style="width: 50%;">
-    <img src="site/agb-ks-screenshot-thursday-showdown.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Showdown)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-thursday-emi.png" alt="Katawa Shoujo - Game Boy Advance Port (Emi)" style="width: 45%;">
+    <img src="site/agb-ks-screenshot-thursday-showdown.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Showdown)" style="width: 45%;">
 </div>
 
 
