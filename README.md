@@ -7,18 +7,30 @@ the [Butano framework](https://github.com/GValiente/butano). Includes Python too
 the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
 
 <div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-1.png" alt="Katawa Shoujo - Game Boy Advance Port (event screenshot)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-main-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Main Menu)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-extras-cinema-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Extras Menu - Cinema)" style="width: 50%;">
 </div>
 <div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-2-en.png" alt="Katawa Shoujo - Game Boy Advance Port (dialog screenshot - en)" style="width: 50%;">
-    <img src="site/agb-ks-screenshot-2-ru.png" alt="Katawa Shoujo - Game Boy Advance Port (dialog screenshot - ru)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-translations-en.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - En)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-translations-ru.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - Ru)" style="width: 50%;">
 </div>
+<div style="display: flex; justify-content: flex-start;">
+    <img src="site/agb-ks-screenshot-rin-introduced.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Rin Introduced)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-rin-close.png" alt="Katawa Shoujo - Game Boy Advance Port (Closeup view - Rin)" style="width: 50%;">
+</div>
+<div style="display: flex; justify-content: flex-start;">
+    <img src="site/agb-ks-screenshot-thursday-emi.png" alt="Katawa Shoujo - Game Boy Advance Port (Emi)" style="width: 50%;">
+    <img src="site/agb-ks-screenshot-thursday-showdown.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Showdown)" style="width: 50%;">
+</div>
+
 
 ---
 
 ## Features
 
 - **Visual Novel Gameplay** optimized for GBA.
+- **The entire OST** carefully adapted for the GBA.
+- **Video Cutscenes** fits alongside the game.
 - **Tools** for converting assets and scripts.
 
 ---
@@ -33,7 +45,8 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
       ```
     - Verify: `arm-none-eabi-gcc --version`
 2. **Python 3.12** for tools.
-3. **Butano** [afska's fork](https://github.com/afska/butano)
+3. **[Butano](https://github.com/neparij/butano/tree/custom_audio_upgrade)**
+   fork with custom audio integrated (uses branch `custom_audio_upgrade`)
 4. ***For CLion IDE users***:
     - Install `compiledb`
         - macOS:
@@ -69,7 +82,8 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 - **[Butano Framework](https://github.com/GValiente/butano)** by GValiente for the GBA development framework.
 - **[afska](https://github.com/afska)** for GSM Player integration for Butano
 - **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
-- **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the video player.
+- **[8ad](https://pineight.com/gba/#8ad)** by Damian Yerrick.
+- **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the AGMV video codec.
 - **[Katawa Shoujo: Re-Engineered](https://codeberg.org/fhs/katawa-shoujo-re-engineered)** by
   **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katawa Shoujo to the modern Ren'Py
   engine.

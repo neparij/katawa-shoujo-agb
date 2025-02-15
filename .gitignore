@@ -1,6 +1,7 @@
 .idea/
 .qt/
 .qtc_clangd/
+.cache/
 *.iws
 gbfs_files/#original/
 build/

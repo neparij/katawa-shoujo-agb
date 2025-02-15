@@ -36,9 +36,9 @@
 
 TARGET      	:=  $(notdir $(CURDIR))
 BUILD       	:=  build
-LIBBUTANO   	:=  ../afska_butano/butano
+LIBBUTANO   	:=  ../butano/butano
 PYTHON      	:=  python3
-SOURCES     	:=  ../afska_butano/common/src \
+SOURCES     	:=  ../butano/common/src \
 		    		src \
                     src/amgvplayer \
                     src/gsmplayer \
@@ -50,8 +50,8 @@ SOURCES     	:=  ../afska_butano/common/src \
                     src/utils/gbfs
 INCLUDES    	:=  include \
 					include/sprite_metas \
-					../afska_butano/common/include \
-					../afska_butano/butano/include
+					../butano/common/include \
+					../butano/butano/include
 DATA        	:=  video
 VIDEO			:=  video
 GRAPHICS    	:=  graphics \
