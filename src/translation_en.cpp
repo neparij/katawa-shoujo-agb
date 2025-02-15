@@ -8,8 +8,8 @@ namespace ks {
 
 class TranslationEn : public Translation {
 public:
-    TranslationType type() {
-        return TranslationType::EN;
+    language_t type() {
+        return LANG_ENGLISH;
     }
     const char* language() {return screens_english();}
 
@@ -26,7 +26,13 @@ public:
     const char* menu_play_a1_thursday() {return "Act 1. Thursday (beta)";}
     const char* menu_play_all() {return "Play all available";}
     const char* menu_video_test() {return "Video tests";}
-    const char* menu_language() {return "Language";}
+
+    const char* menu_options_high_contrast() {return "High contrast";}
+    const char* menu_options_hdisabled() {return "Disable adult content";}
+    bn::array<char*, 4> menu_options_disable_disturbing_content() {
+        return {"Skip hurtful adult scenes",};
+    }
+    const char* menu_options_language() {return "Language";}
 
     const char* menu_start() {return "Start";}
     const char* menu_saves() {return "Saves";}

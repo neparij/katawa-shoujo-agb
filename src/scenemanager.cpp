@@ -35,6 +35,8 @@
 #include "video_4ls_agmv.h"
 #include "video_op_1_agmv.h"
 
+#include "savefile/save_file.h"
+
 namespace ks {
 
 // alignas(4) u8* EWRAM_DATA text_db;
@@ -58,6 +60,7 @@ bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_attribut
 
 bn::vector<unsigned char, 5> answers_index_map;
 ks::saves::SaveSlotProgressData progress;
+ks::saves::SaveSlotProgressData initial_progress;
 bool in_replay = false;
 
 bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;
@@ -123,15 +126,20 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("Decompress Scene file...");
     LZ77UnCompWRAM((u32)compressed_data, (u32)text_db);
     BN_LOG("EWRAM AFTER ", bn::memory::available_alloc_ewram());
-    BN_LOG("Decoded TextDB:", text_db);
-    for (u32 i = 0; i < 16; i++) {
-        BN_LOG("TextDB byte [", i, "]: ", text_db[i], " Char: ", (char)text_db[i]);
-    }
+    // BN_LOG("Decoded TextDB:", text_db);
+    // for (u32 i = 0; i < 16; i++) {
+    //     BN_LOG("TextDB byte [", i, "]: ", text_db[i], " Char: ", (char)text_db[i]);
+    // }
 
     BN_LOG("Set Window boundaries");
     left_window.set_boundaries(-80,-120,80,0);
     right_window.set_boundaries(-80,0,80,120);
     BN_LOG("SceneManager init done!");
+}
+
+void SceneManager::set_initial_progress(const ks::saves::SaveSlotProgressData &value) {
+    initial_progress = value;
+    ks::saves::log_progress(initial_progress);
 }
 
 void SceneManager::set_background(const bn::regular_bg_item& bg, const int position_x, const int position_y, const int dissolve_time) {
@@ -993,7 +1001,7 @@ void SceneManager::exit_scenario_from_ingame_menu() {
     }
 
     free_resources();
-    if (text_db) {
+    if (text_db != nullptr) {
         bn::memory::ewram_free(text_db);
     }
 }

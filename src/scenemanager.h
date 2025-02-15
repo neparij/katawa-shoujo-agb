@@ -69,6 +69,7 @@ public:
     // Acions
     static void free_resources();
     static void set(const ks::SceneManager instance);
+    static void set_initial_progress(const ks::saves::SaveSlotProgressData& value);
     // static void set_background(const bn::regular_bg_item& bg);
     static void set_background(const bn::regular_bg_item& bg,
                                const int position_x,
@@ -165,6 +166,7 @@ extern bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_a
 
 extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
+extern ks::saves::SaveSlotProgressData initial_progress;
 extern bool in_replay;
 
 extern bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;

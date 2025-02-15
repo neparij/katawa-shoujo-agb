@@ -14,13 +14,16 @@
 #include "variable_16x16_sprite_font.h"
 #include "videoplayer/video_player.h"
 
+#include "bn_bg_palettes.h"
+#include "bn_sprite_palettes.h"
+
 // #include <variable_16x16_sprite_font.h>
 
 namespace ks {
     namespace globals {
         bool exit_scenario = false;
         ks::Translation* i18n;// = new TranslationEn();
-        ks::TranslationType language = ks::TranslationType::EN;
+        ks::saves::SaveSettingsData settings = ks::saves::SaveSettingsData();
 
         void main_update() {
 
@@ -77,7 +80,7 @@ namespace ks {
             // BN_LOG("PLA", player_sfx_isPlaying());
             player_init();
             player_sfx_init();
-            set_language(language);
+            set_language(settings.language);
 
             if (clear_color.has_value()) {
                 bn::bg_palettes::set_transparent_color(clear_color);
@@ -93,6 +96,8 @@ namespace ks {
             ks::progress_icon_sprites->clear();
             ks::static_text_sprites->clear();
             ks::animated_text_sprites->clear();
+
+            ks::globals::accessibility_apply();
         }
 
         void init_engine() {
@@ -107,6 +112,9 @@ namespace ks {
 
             // delete &ks::text_db;
             // delete ks::globals::i18n;
+
+            bn::memory::log_alloc_ewram_status();
+
             delete ks::progress_icon_sprites;
             delete ks::static_text_sprites;
             delete ks::animated_text_sprites;
@@ -114,19 +122,21 @@ namespace ks {
             delete ks::dialog;
             delete ks::globals::i18n;
 
+            bn::memory::log_alloc_ewram_status();
+
             player_unload();
             player_sfx_unload();
         }
 
-        void set_language(ks::TranslationType tl) {
-            language = tl;
+        void set_language(language_t tl) {
+            settings.language = tl;
 
-            if (language == ks::TranslationType::EN) {
+            if (settings.language == LANG_ENGLISH) {
                 // ks::globals::i18n = ks::globals::translations::en;
                 // ks::globals::i18n = &ks::TranslationEn::i18n;
                 // ks::globals::i18n = new ks::TranslationEn();
                 ks::globals::i18n = new (translation_buffer) ks::TranslationEn();
-            } else if (language == ks::TranslationType::RU) {
+            } else if (settings.language == LANG_RUSSIAN) {
                 // ks::globals::i18n = ks::globals::translations::ru;
                 // ks::globals::i18n = &ks::TranslationRu::i18n;
                 // ks::globals::i18n = new ks::TranslationRu();
@@ -136,6 +146,12 @@ namespace ks {
             }
 
         }
+
+        void accessibility_apply() {
+            bn::bg_palettes::set_contrast(bn::fixed(ks::globals::settings.high_contrast ? 0.2 : 0));
+            bn::sprite_palettes::set_contrast(bn::fixed(ks::globals::settings.high_contrast ? 0.2 : 0));
+        }
+
 
 
         namespace colors {

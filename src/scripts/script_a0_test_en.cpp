@@ -5,8 +5,8 @@ namespace ks {
         public:
             static void a0_actname_scene1() {
                 ks::SceneManager::free_resources();
-                ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, 0);
-                ks::SceneManager::update_visuals();
+                IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, 0));
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1", 0));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1", 1));
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("a0-s1", 2));
@@ -26,6 +26,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1", 7));
             }
             static void a0_actname() {
+                IF_NOT_EXIT(ks::SceneManager::set_initial_progress(ks::progress));
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a0_test", "en", script_a0_test_en_intl)));
             
                 IF_NOT_EXIT(a0_actname_scene1());

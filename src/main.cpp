@@ -80,6 +80,8 @@
 #include "bn_sprite_items_ui_icon_16_tc4_shizune.h"
 
 
+#include "bn_sprite_items_ui_button_check_0.h"
+#include "bn_sprite_items_ui_button_check_1.h"
 
 #include "bn_regular_bg_items_ui_test_paldraw.h"
 #include "bn_regular_bg_items_ui_test_paldraw_b.h"
@@ -92,14 +94,6 @@
 #include <BN_LOG.h>
 
 using size_type = int;
-namespace
-{
-    struct sram_data
-    {
-        bn::array<char, 32> format_tag;
-        bool video_shown = false;
-    };
-}
 
 typedef enum menuEnum {
     MENU_MAIN    = 0,
@@ -143,7 +137,7 @@ void draw_progress_icons() {
 
 void open_main_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
     state = MENU_MAIN;
-    bn::string<64> version("v0.2.7+02769");
+    bn::string<64> version("v0.2.7+02791");
     ks::main_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
 
     indexes->clear();
@@ -298,11 +292,12 @@ void update_extras_cinema_menu(int select) {
     }
 }
 
-void open_options_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
+void open_options_menu(menuEnum &state, bn::vector<signed char, 64>* indexes, bn::vector<bn::sprite_ptr, 8>* checkboxes) {
     state = MENU_OPTIONS;
     ks::main_background = bn::regular_bg_items::ui_bg_menu.create_bg(0, 0);
 
     indexes->clear();
+    checkboxes->clear();
     ks::static_text_sprites->clear();
     ks::progress_icon_sprites->clear();
     ks::globals::main_update();
@@ -310,13 +305,62 @@ void open_options_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
     ks::text_generator->set_one_sprite_per_character(false);
     ks::text_generator->set_left_alignment();
 
-    ks::text_generator->generate(-ks::device::screen_width_half + 22, -20 + (12 * 5), bn::format<64>("{}: {}", ks::globals::i18n->menu_language(), ks::globals::i18n->language()), *ks::static_text_sprites);
+    unsigned char yy = 0;
+    constexpr unsigned char y_spacing = 16;
+    ks::static_text_sprites->push_back(bn::sprite_items::ui_button_check_0.create_sprite(-ks::device::screen_width_half + 30 , -48 + yy));
+    checkboxes->push_back(ks::static_text_sprites->back());
+    ks::text_generator->generate(-ks::device::screen_width_half + 22 + 16, -48 + yy, ks::globals::i18n->menu_options_high_contrast(), *ks::static_text_sprites);
+    yy += y_spacing;
     indexes->resize(ks::static_text_sprites->size(), 0);
+
+    ks::static_text_sprites->push_back(bn::sprite_items::ui_button_check_0.create_sprite(-ks::device::screen_width_half + 30 , -48 + yy));
+    checkboxes->push_back(ks::static_text_sprites->back());
+    ks::text_generator->generate(-ks::device::screen_width_half + 22 + 16, -48 + yy, ks::globals::i18n->menu_options_hdisabled(), *ks::static_text_sprites);
+    yy += y_spacing;
+    indexes->resize(ks::static_text_sprites->size(), 1);
+
+    // ks::text_generator->generate(-ks::device::screen_width_half + 22, -20 + (12 * 4), bn::format<64>("{}: {}", "Skip hurtful adult scenes", "x"), *ks::static_text_sprites);
+    ks::static_text_sprites->push_back(bn::sprite_items::ui_button_check_0.create_sprite(-ks::device::screen_width_half + 30 , -48 + yy));
+    checkboxes->push_back(ks::static_text_sprites->back());
+    auto disturbing_option_arr = ks::globals::i18n->menu_options_disable_disturbing_content();
+    BN_LOG("SZ: ", disturbing_option_arr.size());
+    for (const char* line : disturbing_option_arr) {
+        if (line != nullptr) {
+            ks::text_generator->generate(-ks::device::screen_width_half + 22 + 16, -48 + yy, line, *ks::static_text_sprites);
+            yy += 10;
+        } else {
+            yy += y_spacing - 10;
+            break;
+        }
+    }
+    // ks::text_generator->generate(-ks::device::screen_width_half + 22 + 16, -48 + yy, "Пропуск сцен для взрослых,", *ks::static_text_sprites);
+    // yy += 10;
+    // ks::text_generator->generate(-ks::device::screen_width_half + 22 + 16, -48 + yy, "которые могут причинить", *ks::static_text_sprites);
+    // yy += 10;
+    // ks::text_generator->generate(-ks::device::screen_width_half + 22 + 16, -48 + yy, "боль", *ks::static_text_sprites);
+    // yy += y_spacing;
+    indexes->resize(ks::static_text_sprites->size(), 2);
+
+    ks::text_generator->generate(-ks::device::screen_width_half + 22, -48 + yy, bn::format<64>("{}: {}", ks::globals::i18n->menu_options_language(), ks::globals::i18n->language()), *ks::static_text_sprites);
+    indexes->resize(ks::static_text_sprites->size(), 3);
+    yy += y_spacing;
     ks::globals::sound_update();
 
     ks::text_generator->generate(-ks::device::screen_width_half + 22, ks::device::screen_height_half - 22, ks::globals::i18n->menu_back(), *ks::static_text_sprites);
-    indexes->resize(ks::static_text_sprites->size(), 1);
+    indexes->resize(ks::static_text_sprites->size(), 4);
     ks::globals::sound_update();
+}
+
+void update_options_menu(bn::vector<bn::sprite_ptr, 8>* checkboxes) {
+    checkboxes->at(0).set_tiles(ks::globals::settings.high_contrast
+                                    ? bn::sprite_items::ui_button_check_1.tiles_item()
+                                    : bn::sprite_items::ui_button_check_0.tiles_item());
+    checkboxes->at(1).set_tiles(ks::globals::settings.hdisabled
+                                    ? bn::sprite_items::ui_button_check_1.tiles_item()
+                                    : bn::sprite_items::ui_button_check_0.tiles_item());
+    checkboxes->at(2).set_tiles(ks::globals::settings.disable_disturbing_content
+                                    ? bn::sprite_items::ui_button_check_1.tiles_item()
+                                    : bn::sprite_items::ui_button_check_0.tiles_item());
 }
 
 float bezier_f(float t)
@@ -381,6 +425,14 @@ int main()
     ks::globals::init_engine(COLOR_WHITE);
     BN_ASSERT(fs != NULL, "GBFS file not found.\nUse the ROM that ends with .out.gba!");
 
+    bool isNewSave = ks::saves::initialize();
+    if (isNewSave) {
+        bool isNewSaveAgain = ks::saves::initialize();
+        BN_ASSERT(!isNewSaveAgain, "Failed to initialize saves.");
+    }
+
+    ks::globals::settings = ks::saves::getSettings();
+
     ks::SceneManager::fade_in(COLOR_WHITE, 30);
     if (SHOW_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
@@ -416,6 +468,7 @@ int main()
 
     menuEnum state;
     bn::vector<signed char, 64> selection_index;
+    bn::vector<bn::sprite_ptr, 8> checkboxes_ptrs;
 
     while(true)
     {
@@ -489,7 +542,7 @@ int main()
                     } else if (state == MENU_EXTRAS) {
                         menuItemsCount = 7;
                     } else if (state == MENU_OPTIONS) {
-                        menuItemsCount = 2;
+                        menuItemsCount = 5;
                     }
 
                     select += bn::keypad::down_pressed() ? 1 : -1;
@@ -534,6 +587,8 @@ int main()
                     update_extras_menu(select);
                 } else if (state == MENU_OPTIONS) {
                     select = 3;
+                    checkboxes_ptrs.clear();
+                    ks::saves::saveSettings(ks::globals::settings);
                     open_main_menu(state, &selection_index);
                 } else {
                     select = 0;
@@ -557,7 +612,8 @@ int main()
                     }
                     if (select == 3) {
                         select = 0;
-                        open_options_menu(state, &selection_index);
+                        open_options_menu(state, &selection_index, &checkboxes_ptrs);
+                        update_options_menu(&checkboxes_ptrs);
                     }
                 } else if (state == MENU_SAVES) {
                     if (select == 5) {
@@ -653,19 +709,32 @@ int main()
                         // bn::core::reset();
                     }
                 } else if (state == MENU_OPTIONS) {
-                    if (select == 1) {
+                    if (select == 4) {
                         select = 3;
+                        checkboxes_ptrs.clear();
+                        ks::saves::saveSettings(ks::globals::settings);
                         open_main_menu(state, &selection_index);
                     } else {
                         if (select == 0) {
-                            if (ks::globals::i18n->type() == ks::TranslationType::EN) {
-                                ks::globals::set_language(ks::TranslationType::RU);
-                            } else if (ks::globals::i18n->type() == ks::TranslationType::RU) {
-                                ks::globals::set_language(ks::TranslationType::EN);
+                            ks::globals::settings.high_contrast = !ks::globals::settings.high_contrast;
+                            ks::globals::accessibility_apply();
+                            update_options_menu(&checkboxes_ptrs);
+                        } else if (select == 1) {
+                            ks::globals::settings.hdisabled = !ks::globals::settings.hdisabled;
+                            update_options_menu(&checkboxes_ptrs);
+                        } else if (select == 2) {
+                            ks::globals::settings.disable_disturbing_content = !ks::globals::settings.disable_disturbing_content;
+                            update_options_menu(&checkboxes_ptrs);
+                        } else if (select == 3) {
+                            if (ks::globals::i18n->type() == LANG_ENGLISH) {
+                                ks::globals::set_language(LANG_RUSSIAN);
+                            } else if (ks::globals::i18n->type() == LANG_RUSSIAN) {
+                                ks::globals::set_language(LANG_ENGLISH);
                             } else {
                                 BN_ERROR("Unkown language was selected");
                             }
-                            open_options_menu(state, &selection_index);
+                            open_options_menu(state, &selection_index, &checkboxes_ptrs);
+                            update_options_menu(&checkboxes_ptrs);
                         }
                     }
                 }
@@ -735,6 +804,9 @@ int main()
         ks::globals::main_update();
         bn::bg_palettes::set_fade_intensity(0);
         bn::sprite_palettes::set_fade_intensity(0);
+
+        ks::globals::release_engine();
+        ks::globals::init_engine(ks::globals::colors::BLACK);
     }
 }
 

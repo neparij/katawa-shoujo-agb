@@ -135,6 +135,7 @@ class ScenarioWriter:
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::free_resources();')
             elif label.is_initial:
+                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_initial_progress(ks::progress));')
                 sequences.append(
                     f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n')
             for sequence in label.sequence:
@@ -324,7 +325,7 @@ class ScenarioWriter:
 
         return [
             # * 60 == 1x speed; * 30 == 2x speed.
-            f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {int(bg.dissolve_time * 30)});']
+            f'IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {int(bg.dissolve_time * 30)}));']
         # if bg.position == BgShowPosition.DEFAULT:
         #     return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background});']
         # else:
@@ -385,16 +386,16 @@ class ScenarioWriter:
 
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
         if music.action == MusicAction.PLAY:
-            return [f'ks::SceneManager::music_play("{music.music}.gsm");']
+            return [f'IF_NOT_EXIT(ks::SceneManager::music_play("{music.music}.gsm"));']
         elif music.action == MusicAction.STOP:
-            return [f'ks::SceneManager::music_stop();']
+            return [f'IF_NOT_EXIT(ks::SceneManager::music_stop());']
         return []
 
     def process_sequence_sound(self, group: SequenceGroup, sound: SoundItem) -> List[str]:
         if sound.action == SoundAction.PLAY:
-            return [f'ks::SceneManager::sfx_play("{sound.sound}.8ad");']
+            return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad"));']
         elif sound.action == SoundAction.STOP:
-            return [f'ks::SceneManager::sfx_stop();']
+            return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop());']
         return []
 
     def process_sequence_return(self, group, ret: ReturnItem) -> List[str]:
@@ -520,15 +521,15 @@ class ScenarioWriter:
 
                 if show.position == ShowPosition.DEFAULT:
                     result.append(
-                        f'ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name});')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name}));')
                 else:
                     result.append(
-                        f'ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name}, {position[0]}, {position[1]});')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name}, {position[0]}, {position[1]}));')
                 return result
             # Move if not default position and variant is not provided
             if show.position != ShowPosition.DEFAULT:
                 result.append(
-                    f'ks::SceneManager::set_character_position({character_index}, {position[0]}, {position[1]});')
+                    f'IF_NOT_EXIT(ks::SceneManager::set_character_position({character_index}, {position[0]}, {position[1]}));')
 
             return result
 
@@ -562,7 +563,7 @@ class ScenarioWriter:
         else:
             raise TypeError("Unknown BgShowPosition type")
         return [
-            f'ks::SceneManager::set_background_position({position[0]}, {position[1]});']
+            f'IF_NOT_EXIT(ks::SceneManager::set_background_position({position[0]}, {position[1]}));']
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         character_index = self.characters.get(show_transform.sprite)
@@ -570,10 +571,10 @@ class ScenarioWriter:
         if character_index is None:
             raise f'"{show_transform.sprite}" is not in character index. Attempt to transform not shown character?'
         return [
-            f'ks::SceneManager::set_character_position({character_index}, {show_transform.x}, 0);']
+            f'IF_NOT_EXIT(ks::SceneManager::set_character_position({character_index}, {show_transform.x}, 0));']
 
     def process_sequence_update_visuals(self, group: SequenceGroup, update_visuals: UpdateVisualsItem) -> List[str]:
-        return [f'ks::SceneManager::update_visuals();']
+        return [f'IF_NOT_EXIT(ks::SceneManager::update_visuals());']
 
     def process_sequence_show_video(self, group: SequenceGroup, show_video: ShowVideoItem) -> List[str]:
         if not show_video.video in self.videos:

@@ -1,19 +1,16 @@
 #ifndef TRANSLATIONS_H
 #define TRANSLATIONS_H
 
+#include "definitions.h"
+#include "bn_array.h"
 
 namespace ks {
-
-enum class TranslationType {
-    EN,
-    RU,
-};
 class Translation
 {
 public:
 
     virtual ~Translation() = default;
-    virtual TranslationType type() = 0;
+    virtual language_t type() = 0;
     virtual const char* language() = 0;
 
     virtual void (*script_a1_monday())() = 0;
@@ -29,7 +26,11 @@ public:
     virtual const char* menu_play_a1_thursday() = 0;
     virtual const char* menu_play_all() = 0;
     virtual const char* menu_video_test() = 0;
-    virtual const char* menu_language() = 0;
+
+    virtual const char* menu_options_high_contrast() = 0;
+    virtual const char* menu_options_hdisabled() = 0;
+    virtual bn::array<char*, 4> menu_options_disable_disturbing_content() = 0;
+    virtual const char* menu_options_language() = 0;
 
     virtual const char* menu_start() = 0;
     virtual const char* menu_saves() = 0;

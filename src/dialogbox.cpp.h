@@ -82,6 +82,10 @@ namespace ks
             return _hidden;
         }
 
+        static bn::fixed transparency_alpha() {
+            return bn::fixed(ks::globals::settings.high_contrast ? 1.0 : 0.7);
+        }
+
         void reset_title() {
             _title_sprites.clear();
             talkbox_actor_sprites.clear();
@@ -185,7 +189,7 @@ namespace ks
         }
 
         void hide_blend() {
-            bn::blending::set_transparency_alpha(0.7);
+            bn::blending::set_transparency_alpha(transparency_alpha());
             auto alpha_action = bn::blending_transparency_alpha_to_action(10, 0.0);
             set_blending(true);
             while (!alpha_action.done()) {
@@ -203,7 +207,7 @@ namespace ks
 
         void show_blend() {
             bn::blending::set_transparency_alpha(0);
-            auto alpha_action = bn::blending_transparency_alpha_to_action(10, 0.7);
+            auto alpha_action = bn::blending_transparency_alpha_to_action(10, transparency_alpha());
             set_blending(true);
             set_show_talkboxes(true);
             while (!alpha_action.done()) {
@@ -211,7 +215,7 @@ namespace ks
                 ks::globals::main_update();
             }
             alpha_action.reset();
-            bn::blending::set_transparency_alpha(0.7);
+            bn::blending::set_transparency_alpha(transparency_alpha());
             finalize_blending();
             _hidden = false;
         }
@@ -271,7 +275,7 @@ namespace ks
             if (_hidden) {
                 show_blend();
             } else {
-                bn::blending::set_transparency_alpha(0.7);
+                bn::blending::set_transparency_alpha(transparency_alpha());
                 finalize_blending();
             }
 

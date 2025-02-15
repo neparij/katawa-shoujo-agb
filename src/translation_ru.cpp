@@ -7,8 +7,8 @@
 namespace ks {
 class TranslationRu : public Translation {
 public:
-    TranslationType type() {
-        return TranslationType::RU;
+    language_t type() {
+        return LANG_RUSSIAN;
     }
     const char* language() {return screens_russian();}
 
@@ -25,7 +25,13 @@ public:
     const char* menu_play_a1_thursday() {return "Акт 1. Четверг (beta)";}
     const char* menu_play_all() {return "Играть все доступные";}
     const char* menu_video_test() {return "Тест видео";}
-    const char* menu_language() {return "Язык";}
+
+    const char* menu_options_high_contrast() {return "Повышенный контраст";}
+    const char* menu_options_hdisabled() {return "Отключить 18+ контент";}
+    bn::array<char*, 4> menu_options_disable_disturbing_content() {
+        return {"Пропуск сцен для взрослых,", "которые могут причинить", "боль",};
+    }
+    const char* menu_options_language() {return "Язык";}
 
     const char* menu_start() {return "Старт";}
     const char* menu_saves() {return "Сохранения";}

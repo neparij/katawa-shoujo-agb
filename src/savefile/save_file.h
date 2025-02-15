@@ -1,12 +1,12 @@
 #ifndef SAVE_FILE_H
 #define SAVE_FILE_H
 
-#include "bn_sram.h"
+#include <bn_array.h>
+#include "definitions.h"
 
 namespace ks {
     namespace saves {
-
-        const int TOTAL_SAVE_SLOTS = 64;
+        constexpr int TOTAL_SAVE_SLOTS = 500;
 
         /*
          * This struct represents the current game session data.
@@ -15,11 +15,11 @@ namespace ks {
          * PS: Grouped by routes and ordered the same way I have played Katawa Shoujo.
          */
         struct __attribute__((__packed__)) SaveSlotProgressData {
-
             // Act 1 data
             unsigned char attraction_hanako;
             unsigned char attraction_sc;
-            bool im_new_here; // That's hardcoded string from scenario 'Hi! I'm new here. Hisao Nakai. We're in the same class.' in choices
+            // That's hardcoded string from scenario 'Hi! I'm new here. Hisao Nakai. We're in the same class.' in choices
+            bool im_new_here;
             bool talk_with_hanako;
             bool wait_for_shizu;
             bool promised;
@@ -30,7 +30,7 @@ namespace ks {
             bool fun_fun_at_office;
             bool not_much_talking;
             bool are_student_council;
-            unsigned char force_route; // FR_RIN, etc... It should work somehow with Enum
+            forceRoute_t force_route;
 
             // Emi route data
             bool run_with_emi;
@@ -67,28 +67,43 @@ namespace ks {
             bool mention_the_letter;
         };
 
-        struct __attribute__((__packed__)) SaveFileData {
-            // Integrity
-            unsigned integrityHash;
-
+        struct __attribute__((__packed__)) SaveSettingsData {
             // User Settings
-            unsigned char language;
+            language_t language;
             bool hdisabled;
             bool disable_disturbing_content;
-            bool high_contrasrt;
+            bool high_contrast;
             unsigned char text_speed;
 
             // States
             bool adult_warning_shown;
+        };
 
-            // Save Slots
+        struct __attribute__((__packed__)) SaveFileData {
+            // Integrity
+            bn::array<char, 16> integrityTag;
+            unsigned integrityVersion;
+
+            SaveSettingsData settings;
             SaveSlotProgressData slot[TOTAL_SAVE_SLOTS];
         };
 
-        extern SaveFileData data;
+        // extern SaveFileData data;
 
-        void load();
-        void save();
+        void log_progress(SaveSlotProgressData &progress);
+
+        void log_settings(SaveSettingsData &settings);
+
+        void load(SaveFileData* data_ptr);
+
+        void save(SaveFileData* data_ptr);
+
+        bool isValid(SaveFileData* data_ptr);
+
+        bool initialize();
+
+        SaveSettingsData getSettings();
+        void saveSettings(SaveSettingsData settings);
     }
 }
 
