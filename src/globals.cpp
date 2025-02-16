@@ -132,15 +132,9 @@ namespace ks {
             settings.language = tl;
 
             if (settings.language == LANG_ENGLISH) {
-                // ks::globals::i18n = ks::globals::translations::en;
-                // ks::globals::i18n = &ks::TranslationEn::i18n;
-                // ks::globals::i18n = new ks::TranslationEn();
-                ks::globals::i18n = new (translation_buffer) ks::TranslationEn();
+                i18n = new (translation_buffer) TranslationEn();
             } else if (settings.language == LANG_RUSSIAN) {
-                // ks::globals::i18n = ks::globals::translations::ru;
-                // ks::globals::i18n = &ks::TranslationRu::i18n;
-                // ks::globals::i18n = new ks::TranslationRu();
-                ks::globals::i18n = new (translation_buffer) ks::TranslationRu();
+                i18n = new (translation_buffer) TranslationRu();
             } else {
                 BN_ERROR("Unkown language");
             }
@@ -148,8 +142,8 @@ namespace ks {
         }
 
         void accessibility_apply() {
-            bn::bg_palettes::set_contrast(bn::fixed(ks::globals::settings.high_contrast ? 0.2 : 0));
-            bn::sprite_palettes::set_contrast(bn::fixed(ks::globals::settings.high_contrast ? 0.2 : 0));
+            bn::bg_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
+            bn::sprite_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
         }
 
 

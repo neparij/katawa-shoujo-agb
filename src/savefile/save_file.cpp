@@ -7,8 +7,6 @@
 #include <bn_memory.h>
 #include <gba_types.h>
 
-// BN_DATA_EWRAM_BSS ks::saves::SaveFileData ks::saves::data;
-
 #define INTEGRITY_VERSION 2121210001
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
 
@@ -21,7 +19,7 @@ inline bn::array<char, 16> getIntegrityTag() {
     return expected_format_tag;
 }
 
-void ks::saves::load(SaveFileData* data_ptr) {
+void ks::saves::load(SaveFileData *data_ptr) {
     BN_LOG("Load save data to ptr ", data_ptr);
     BN_ASSERT(data_ptr != nullptr, "Unable to load. Data pointer is null.");
     bn::sram::read(*data_ptr);
@@ -29,7 +27,7 @@ void ks::saves::load(SaveFileData* data_ptr) {
     // TODO: save and load using offsets with spans (reduce time for saving and loading)
 }
 
-void ks::saves::save(SaveFileData* data_ptr) {
+void ks::saves::save(SaveFileData *data_ptr) {
     BN_LOG("Save save data to ptr ", data_ptr);
     BN_ASSERT(data_ptr != nullptr, "Unable to save. Data pointer is null.");
     BN_ASSERT(isValid(data_ptr), "Unable to save. Data is corrupted.");
@@ -40,29 +38,20 @@ bool ks::saves::initialize() {
     bool valid = false;
     BN_LOG("Initializing saves...");
 
-    BN_LOG("Free EWRAM init1: ", bn::memory::available_alloc_ewram());
-    auto* save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
-    BN_LOG("Free EWRAM init2: ", bn::memory::available_alloc_ewram());
-
+    auto *save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
     load(save_data);
-
-    BN_LOG("Validating save data...");
     valid = isValid(save_data);
-
-    BN_LOG("Free EWRAM init3: ", bn::memory::available_alloc_ewram());
     bn::memory::ewram_free(save_data);
-    BN_LOG("Free EWRAM init4: ", bn::memory::available_alloc_ewram());
 
     if (!valid) {
         save_data = new SaveFileData();
-        save_data->integrityTag = getIntegrityTag();
-        save_data->integrityVersion = INTEGRITY_VERSION;
+        save_data->integrity_begin.tag = getIntegrityTag();
+        save_data->integrity_end.tag = getIntegrityTag();
+        save_data->integrity_begin.version = INTEGRITY_VERSION;
+        save_data->integrity_end.version = INTEGRITY_VERSION;
 
-        BN_LOG("Free EWRAM init5: ", bn::memory::available_alloc_ewram());
         save(save_data);
-        BN_LOG("Free EWRAM init6: ", bn::memory::available_alloc_ewram());
         bn::memory::ewram_free(save_data);
-        BN_LOG("Free EWRAM init7: ", bn::memory::available_alloc_ewram());
         return true;
     }
 
@@ -70,47 +59,161 @@ bool ks::saves::initialize() {
 }
 
 
-bool ks::saves::isValid(SaveFileData* data_ptr) {
-    BN_LOG("isValid?");
-
-    // BN_LOG("integrityTag", data_ptr->integrityTag);
-    BN_LOG("integrityVersion", data_ptr->integrityVersion);
-
-    if (data_ptr->integrityTag != getIntegrityTag()) {
+bool ks::saves::isValid(const SaveFileData *data_ptr) {
+    if (data_ptr->integrity_begin.tag != getIntegrityTag()) {
+        BN_LOG("SaveFileData begin integrity tag does not match.");
         return false;
     }
-    if (data_ptr->integrityVersion != INTEGRITY_VERSION) {
+    if (data_ptr->integrity_begin.version != INTEGRITY_VERSION) {
+        BN_LOG("SaveFileData begin integrity version does not match.");
+        return false;
+    }
+    if (data_ptr->integrity_end.tag != getIntegrityTag()) {
+        BN_LOG("SaveFileData end integrity tag does not match.");
+        return false;
+    }
+    if (data_ptr->integrity_end.version != INTEGRITY_VERSION) {
+        BN_LOG("SaveFileData end integrity version does not match.");
         return false;
     }
 
+    BN_LOG("SaveFileData integrity is valid.");
     return true;
 }
 
-ks::saves::SaveSettingsData ks::saves::getSettings() {
-    BN_LOG("Get Settings");
-    auto* save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
-    load(save_data);
-    SaveSettingsData settings = save_data->settings;
-    bn::memory::ewram_free(save_data);
+bool ks::saves::isValid(const SaveSlotProgressData *data_ptr, const unsigned int slot) {
+    if (data_ptr->integrity != 0xFFFF - slot) {
+        BN_LOG("SaveSlotProgressData integrity does not match.");
+        return false;
+    }
+
+    BN_LOG("SaveSlotProgressData integrity is valid.");
+    return true;
+}
+
+unsigned short ks::saves::getTotalSaveSlots() {
+    return TOTAL_SAVE_SLOTS;
+}
+
+unsigned short ks::saves::getUsedSaveSlots() {
+    unsigned short used_slots = 0;
+    for (unsigned int i = 0; i < TOTAL_SAVE_SLOTS; i++) {
+        bool has_data;
+        bn::sram::read_offset(has_data, getSaveSlotDataOffset(i));
+        if (has_data) {
+            used_slots++;
+        } else {
+            return used_slots;
+        }
+    }
+
+    return used_slots;
+}
+
+int ks::saves::getSettingsDataOffset() {
+    return sizeof(SaveIntegrityData);
+}
+
+int ks::saves::getAutosaveDataOffset() {
+    return sizeof(SaveIntegrityData) +
+           sizeof(SaveSettingsData);
+}
+
+int ks::saves::getSaveSlotDataOffset(const unsigned int slot) {
+    return sizeof(SaveIntegrityData) +
+           sizeof(SaveSettingsData) +
+           sizeof(SaveSlotProgressData) +
+           sizeof(SaveSlotProgressData) * slot;
+}
+
+ks::saves::SaveSettingsData ks::saves::readSettings() {
+    BN_LOG("Read Settings");
+    SaveSettingsData settings;
+    bn::sram::read_offset(settings, getSettingsDataOffset());
 
     log_settings(settings);
     return settings;
 }
 
-void ks::saves::saveSettings(const SaveSettingsData settings) {
-    // bn::core::update();
-    BN_LOG("Save Settings");
-    BN_LOG("Free EWRAM on save: ", bn::memory::available_alloc_ewram());
-    BN_LOG("Size of SFD: ", sizeof(SaveFileData));
-    auto* save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
-    BN_LOG("Free EWRAM on save after alloc: ", bn::memory::available_alloc_ewram());
-    load(save_data);
-    save_data->settings = settings;
-    save(save_data);
-    bn::memory::ewram_free(save_data);
+void ks::saves::writeSettings(const SaveSettingsData settings) {
+    BN_LOG("Write Settings");
+    bn::sram::write_offset(settings, getSettingsDataOffset());
+
+    const SaveSettingsData saved_settings = readSettings();
+    BN_ASSERT(settings == saved_settings, "Writing settings failed. SRAM data does not match.");
 }
 
-void ks::saves::log_progress(SaveSlotProgressData& progress) {
+ks::saves::SaveSlotMetadata ks::saves::readAutosaveMetadata() {
+    BN_LOG("Read Autosave Metadata");
+    SaveSlotMetadata metadata;
+    bn::sram::read_offset(metadata, getAutosaveDataOffset());
+
+    return metadata;
+}
+
+ks::saves::SaveSlotProgressData ks::saves::readAutosave() {
+    BN_LOG("Read Autosave");
+    SaveSlotProgressData progress;
+    bn::sram::read_offset(progress, getAutosaveDataOffset());
+
+    log_progress(progress);
+    return progress;
+}
+
+void ks::saves::writeAutosave(SaveSlotProgressData progress) {
+    BN_LOG("Write Autosave");
+    progress.metadata.has_data = true;
+    progress.integrity = 0xFFFF - 1024;
+    bn::sram::write_offset(progress, getAutosaveDataOffset());
+
+    const SaveSlotProgressData saved_progress = readAutosave();
+    BN_ASSERT(progress == saved_progress, "Writing autosave failed. SRAM data does not match.");
+}
+
+ks::saves::SaveSlotMetadata ks::saves::readSlotMetadata(const unsigned int slot) {
+    BN_LOG("Read Save Slot Metadata ", slot);
+    SaveSlotMetadata metadata;
+    bn::sram::read_offset(metadata, getSaveSlotDataOffset(slot));
+
+    return metadata;
+}
+
+ks::saves::SaveSlotProgressData ks::saves::readSaveSlot(const unsigned int slot) {
+    BN_LOG("Read Save Slot ", slot);
+    SaveSlotProgressData progress;
+    bn::sram::read_offset(progress, getSaveSlotDataOffset(slot));
+
+    log_progress(progress);
+    return progress;
+}
+
+void ks::saves::writeSaveSlot(const unsigned int slot, SaveSlotProgressData progress) {
+    BN_LOG("Write Save Slot ", slot);
+    progress.metadata.has_data = true;
+    progress.integrity = 0xFFFF - slot;
+    bn::sram::write_offset(progress, getSaveSlotDataOffset(slot));
+
+    const SaveSlotProgressData saved_progress = readSaveSlot(slot);
+    BN_ASSERT(progress == saved_progress, "Writing save slot failed. SRAM data does not match.");
+}
+
+// Deletes save slot and re-organize save slots in save data (remove current slot, shift the remaining)
+void ks::saves::deleteSaveSlot(const unsigned int slot) {
+    // Remove the save slot data
+    bn::sram::write_offset(SaveSlotProgressData{}, getSaveSlotDataOffset(slot));
+
+    // Shift the remaining save slots
+    for (unsigned int i = slot + 1; i < TOTAL_SAVE_SLOTS; i++) {
+        SaveSlotProgressData progress = readSaveSlot(i);
+        progress.integrity = 0xFFFF - (i - 1);
+        writeSaveSlot(i - 1, progress);
+    }
+
+    // Delete the last save slot
+    bn::sram::write_offset(SaveSlotProgressData{}, getSaveSlotDataOffset(TOTAL_SAVE_SLOTS - 1));
+}
+
+void ks::saves::log_progress(SaveSlotProgressData &progress) {
     BN_LOG("Progress:");
     BN_LOG("  ACT 1 DATA:");
     BN_LOG("    attraction_hanako: ", progress.attraction_hanako);

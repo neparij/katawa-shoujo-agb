@@ -13,11 +13,17 @@
 #include "savefile/save_file.h"
 
 
+// #define IF_NOT_EXIT(step)                         \
+// step;                                             \
+// if (ks::globals::exit_scenario) {                 \
+//     return;                                       \
+// }
+
 #define IF_NOT_EXIT(step)                         \
-step;                                             \
 if (ks::globals::exit_scenario) {                 \
     return;                                       \
-}
+}                                                 \
+step;
 
 namespace ks {
 
@@ -66,10 +72,15 @@ public:
         : _scenario(scenario), _locale(locale), _script_tl_index(translations) {}
     constexpr ~SceneManager() = default;
 
-    // Acions
+
     static void free_resources();
     static void set(const ks::SceneManager instance);
-    static void set_initial_progress(const ks::saves::SaveSlotProgressData& value);
+    static void set_savedata_progress(const ks::saves::SaveSlotProgressData& value);
+    static void set_script(const script_t script);
+    static void set_label(const label_t label);
+    static void autosave();
+
+    // Acions
     // static void set_background(const bn::regular_bg_item& bg);
     static void set_background(const bn::regular_bg_item& bg,
                                const int position_x,
@@ -166,7 +177,7 @@ extern bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_a
 
 extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
-extern ks::saves::SaveSlotProgressData initial_progress;
+extern ks::saves::SaveSlotProgressData savedata_progress;
 extern bool in_replay;
 
 extern bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;

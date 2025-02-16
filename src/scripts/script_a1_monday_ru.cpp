@@ -5,6 +5,8 @@ namespace ks {
         public:
             static void a1_monday_out_cold() {
                 ks::SceneManager::free_resources();
+                ks::SceneManager::set_label(LABEL_A1_MONDAY_OUT_COLD);
+                IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, 60));
                 // TODO: Show snow
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -120,6 +122,8 @@ namespace ks {
             }
             static void a1_monday_bundle_of_hisao() {
                 ks::SceneManager::free_resources();
+                ks::SceneManager::set_label(LABEL_A1_MONDAY_BUNDLE_OF_HISAO);
+                IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::centered, 43));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::hosp_room, 0, 0, 0));
                 // TODO: Show sakura
@@ -243,6 +247,8 @@ namespace ks {
             }
             static void a1_monday_gateway_effect() {
                 ks::SceneManager::free_resources();
+                ks::SceneManager::set_label(LABEL_A1_MONDAY_GATEWAY_EFFECT);
+                IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_gate, 0, 0, 90));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_happiness.gsm"));
@@ -319,6 +325,8 @@ namespace ks {
             }
             static void a1_monday_enter_stage_left() {
                 ks::SceneManager::free_resources();
+                ks::SceneManager::set_label(LABEL_A1_MONDAY_ENTER_STAGE_LEFT);
+                IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 185));
@@ -573,6 +581,8 @@ namespace ks {
             }
             static void a1_monday_in_the_nursery() {
                 ks::SceneManager::free_resources();
+                ks::SceneManager::set_label(LABEL_A1_MONDAY_IN_THE_NURSERY);
+                IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_staircase2, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 274));
@@ -789,6 +799,8 @@ namespace ks {
             }
             static void a1_monday_nobodys_room() {
                 ks::SceneManager::free_resources();
+                ks::SceneManager::set_label(LABEL_A1_MONDAY_NOBODYS_ROOM);
+                IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_courtyard, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_pearly.gsm"));
@@ -936,7 +948,8 @@ namespace ks {
             
             }
             static void a1_monday() {
-                IF_NOT_EXIT(ks::SceneManager::set_initial_progress(ks::progress));
+                ks::SceneManager::set_script(SCRIPT_A1_MONDAY);
+                IF_NOT_EXIT(ks::SceneManager::set_savedata_progress(ks::progress));
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "ru", script_a1_monday_ru_intl)));
             
                 IF_NOT_EXIT(a1_monday_out_cold());

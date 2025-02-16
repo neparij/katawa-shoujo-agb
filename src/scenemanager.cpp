@@ -60,7 +60,7 @@ bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_attribut
 
 bn::vector<unsigned char, 5> answers_index_map;
 ks::saves::SaveSlotProgressData progress;
-ks::saves::SaveSlotProgressData initial_progress;
+ks::saves::SaveSlotProgressData savedata_progress;
 bool in_replay = false;
 
 bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;
@@ -137,10 +137,23 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("SceneManager init done!");
 }
 
-void SceneManager::set_initial_progress(const ks::saves::SaveSlotProgressData &value) {
-    initial_progress = value;
-    ks::saves::log_progress(initial_progress);
+void SceneManager::set_savedata_progress(const ks::saves::SaveSlotProgressData &value) {
+    savedata_progress = value;
 }
+
+void SceneManager::set_script(const script_t script) {
+    progress.metadata.script = script;
+}
+
+void SceneManager::set_label(const label_t label) {
+    progress.metadata.label = label;
+}
+
+void SceneManager::autosave() {
+    savedata_progress.metadata = progress.metadata;
+    ks::saves::writeAutosave(savedata_progress);
+}
+
 
 void SceneManager::set_background(const bn::regular_bg_item& bg, const int position_x, const int position_y, const int dissolve_time) {
     // TODO: rewrite to support "scene" token
@@ -894,6 +907,15 @@ void SceneManager::open_ingame_menu() {
             if (bn::keypad::a_pressed()) {
                 if (selected == 0) {
                     action_performed = true;
+                }
+                if (selected == 3) {
+                    unsigned short used_saves = ks::saves::getUsedSaveSlots();
+                    if (used_saves < ks::saves::getTotalSaveSlots()) {
+                        BN_LOG("Save game to slot ", used_saves);
+                        ks::saves::writeSaveSlot(used_saves, savedata_progress);
+                    } else {
+                        BN_LOG("No more slots available");
+                    }
                 }
                 if (selected == 5) {
                     action_performed = true;

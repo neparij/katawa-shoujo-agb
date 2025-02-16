@@ -50,7 +50,7 @@ public:
     unsigned int menu_extras_cinema_xoffset() {return 0;}
     unsigned int menu_extras_return_xoffset() {return 0;}
 
-    const char* menu_back() {return "< Back";}
+    const char* menu_back() {return "Back";}
 
     const char* screens_english() {return "English";}
     const char* screens_russian() {return "Russian";}
@@ -65,6 +65,65 @@ public:
     const char* screens_playtime() {return "Playtime";}
     const char* screens_current_scene() {return "Scene";}
     const char* screens_current_track() {return "Track";}
+
+    // virtual char* script(script_t script) = 0;
+    // virtual char* label(label_t label) = 0;
+    const char* label(label_t label) override {
+        switch (label) {
+            case LABEL_A1_MONDAY_OUT_COLD: return "Out Cold";
+            case LABEL_A1_MONDAY_BUNDLE_OF_HISAO: return "Bundle of Hisao";
+            case LABEL_A1_MONDAY_GATEWAY_EFFECT: return "Gateway Effect";
+            case LABEL_A1_MONDAY_ENTER_STAGE_LEFT: return "Enter Stage Left";
+            case LABEL_A1_MONDAY_IN_THE_NURSERY: return "In the Nursery";
+            case LABEL_A1_MONDAY_NOBODYS_ROOM: return "Nobody's Room";
+            case LABEL_A1_TUESDAY_SMALLTALK: return "Smalltalk";
+            case LABEL_A1_TUESDAY_RISK_VS_REWARD: return "Risk vs. Reward";
+            case LABEL_A1_TUESDAY_PSEUDO_TEA_COSY: return "Pseudo Tea Cosy";
+            case LABEL_A1_TUESDAY_SHARED_LIBRARY: return "Shared Library";
+            case LABEL_A1_TUESDAY_BIZARRE_AND_SURREAL: return "Bizarre and Surreal";
+            case LABEL_A1_WEDNESDAY_LUNCH_EVOLUTION_THEORY: return "Lunch Evolution Theory";
+            case LABEL_A1_WEDNESDAY_SHORT_SHARP_SHOCK: return "Short Sharp Shock";
+            case LABEL_A1_WEDNESDAY_MEET_CUTE: return "Meet Cute";
+            case LABEL_A1_WEDNESDAY_DETOUR_AHEAD: return "Detour Ahead";
+            case LABEL_A1_WEDNESDAY_SIP_P1: return "Sip (Part 1)";
+            case LABEL_A1_WEDNESDAY_IT_BUILDS_CHARACTER: return "It Builds Character";
+            case LABEL_A1_WEDNESDAY_A_PRIVATE_LUNCH: return "A Private Lunch";
+            case LABEL_A1_WEDNESDAY_WAYLAY: return "Waylay";
+            case LABEL_A1_WEDNESDAY_THE_OTHER_GREEN: return "The Other Green";
+            case LABEL_A1_THURSDAY_THE_RUNNING_GIRL: return "The Running Girl";
+            case LABEL_A1_THURSDAY_SOAP: return "Soap";
+            case LABEL_A1_THURSDAY_COLD_WAR: return "Cold War";
+            case LABEL_A1_THURSDAY_PROOF_OF_COMPETENCY: return "Proof of Competency";
+            case LABEL_A1_THURSDAY_EVENT_HORIZON: return "Event Horizon";
+            case LABEL_A1_THURSDAY_ABOVE_AND_BEYOND: return "Above and Beyond";
+            case LABEL_A1_THURSDAY_PAINT_BY_NUMBERS: return "Paint by Numbers";
+            case LABEL_A1_THURSDAY_THINGS_YOU_CAN_DO: return "Things You Can Do";
+            case LABEL_A1_FRIDAY_EXERCISE: return "Exercise";
+            case LABEL_A1_FRIDAY_INVISIBLE_HAT: return "Invisible Hat";
+            case LABEL_A1_FRIDAY_HOME_FIELD_ADVANTAGE: return "Home Field Advantage";
+            case LABEL_A1_FRIDAY_NO_RECOVERY: return "No Recovery";
+            case LABEL_A1_FRIDAY_SLOW_RECOVERY: return "Slow Recovery";
+            case LABEL_A1_FRIDAY_NO_FREE_LUNCH: return "No Free Lunch";
+            case LABEL_A1_FRIDAY_FOOT_AND_MOUTH: return "Foot and Mouth";
+            case LABEL_A1_FRIDAY_MIND_YOUR_STEP: return "Mind Your Step";
+            case LABEL_A1_SATURDAY_SUPPORT: return "Support";
+            case LABEL_A1_SATURDAY_AN_AESTHETICS: return "An Aesthetics";
+            case LABEL_A1_SATURDAY_CREATIVE_PAIN: return "Creative Pain";
+            case LABEL_A1_SATURDAY_PROPER_EXERCISE: return "Proper Exercise";
+            case LABEL_A1_SATURDAY_SIP_P2: return "Sip (Part 2)";
+            case LABEL_A1_SATURDAY_SHANGHAIED: return "Shanghaied";
+            case LABEL_A1_SATURDAY_QUIET: return "Quiet";
+            case LABEL_A1_SUNDAY_DONT_PANIC: return "Don't Panic";
+            case LABEL_A1_SUNDAY_IS_CARNIVAL: return "Is Carnival!";
+            case LABEL_A1_SUNDAY_CLOUDS_IN_MY_HEAD: return "Clouds in My Head";
+            case LABEL_A1_SUNDAY_PROMISE_OF_TIME: return "Promise of Time";
+            case LABEL_A1_SUNDAY_NC5XB3: return "Nc5xb3";
+            case LABEL_A1_SUNDAY_MOVEMENT: return "Movement";
+            case LABEL_A1_SUNDAY_THROWING_BALLS: return "Throwing Balls";
+            case LABEL_A1_SUNDAY_THE_DEEP_END: return "The Deep End";
+            default: return "Unknown Label";
+        }
+    }
 
     const char* definitions_no_scene() {return "No scene";}
     const char* definitions_nothing() {return "Nothing";}

@@ -6,15 +6,64 @@
 
 namespace ks {
     namespace saves {
-        constexpr int TOTAL_SAVE_SLOTS = 500;
+        constexpr unsigned short TOTAL_SAVE_SLOTS = 500;
+
+        struct __attribute__((__packed__)) SaveIntegrityData {
+            bn::array<char, 16> tag;
+            unsigned version;
+        };
+
+        struct __attribute__((__packed__)) SaveSettingsData {
+            // User Settings
+            language_t language;
+            bool hdisabled;
+            bool disable_disturbing_content;
+            bool high_contrast;
+            unsigned char text_speed;
+
+            // States
+            bool adult_warning_shown;
+
+            bool operator==(const SaveSettingsData &other) const {
+                return language == other.language &&
+                       hdisabled == other.hdisabled &&
+                       disable_disturbing_content == other.disable_disturbing_content &&
+                       high_contrast == other.high_contrast &&
+                       text_speed == other.text_speed &&
+                       adult_warning_shown == other.adult_warning_shown;
+            }
+        };
+
+        struct __attribute__((__packed__)) SaveSlotMetadata {
+            bool has_data;
+            script_t script;
+            label_t label;
+
+            unsigned short hours_played;
+            unsigned char minutes_played;
+            unsigned char seconds_played;
+
+            bool operator==(const ks::saves::SaveSlotMetadata &other) const {
+                return has_data == other.has_data &&
+                       script == other.script &&
+                       label == other.label &&
+                       hours_played == other.hours_played &&
+                       minutes_played == other.minutes_played &&
+                       seconds_played == other.seconds_played;
+            }
+        };
 
         /*
          * This struct represents the current game session data.
          * Used to save all your decisions in one save slot.
          *
+         * Important! It contains all the flags that are set on scenario was started and choices were made.
+         *
          * PS: Grouped by routes and ordered the same way I have played Katawa Shoujo.
          */
         struct __attribute__((__packed__)) SaveSlotProgressData {
+            SaveSlotMetadata metadata;
+
             // Act 1 data
             unsigned char attraction_hanako;
             unsigned char attraction_sc;
@@ -65,27 +114,60 @@ namespace ks {
             bool want_true;
             bool address_it;
             bool mention_the_letter;
-        };
 
-        struct __attribute__((__packed__)) SaveSettingsData {
-            // User Settings
-            language_t language;
-            bool hdisabled;
-            bool disable_disturbing_content;
-            bool high_contrast;
-            unsigned char text_speed;
+            // Integrity check (0xFFFF-i)
+            unsigned short integrity;
 
-            // States
-            bool adult_warning_shown;
+            bool operator==(const SaveSlotProgressData &other) const {
+                return metadata == other.metadata &&
+                       attraction_hanako == other.attraction_hanako &&
+                       attraction_sc == other.attraction_sc &&
+                       im_new_here == other.im_new_here &&
+                       talk_with_hanako == other.talk_with_hanako &&
+                       wait_for_shizu == other.wait_for_shizu &&
+                       promised == other.promised &&
+                       wanted_introduce == other.wanted_introduce &&
+                       side_lilly == other.side_lilly &&
+                       go_for_it == other.go_for_it &&
+                       kick_shizu == other.kick_shizu &&
+                       fun_fun_at_office == other.fun_fun_at_office &&
+                       not_much_talking == other.not_much_talking &&
+                       are_student_council == other.are_student_council &&
+                       force_route == other.force_route &&
+                       run_with_emi == other.run_with_emi &&
+                       have_a_minute == other.have_a_minute &&
+                       got_advice == other.got_advice &&
+                       talk_to_her_mom == other.talk_to_her_mom &&
+                       let_misha_know == other.let_misha_know &&
+                       pressed_emi == other.pressed_emi &&
+                       rin_amazing == other.rin_amazing &&
+                       its_refreshing == other.its_refreshing &&
+                       be_like_rin == other.be_like_rin &&
+                       believes_in_rin == other.believes_in_rin &&
+                       believes_in_half == other.believes_in_half &&
+                       what_about_emi == other.what_about_emi &&
+                       cant_leave_alone == other.cant_leave_alone &&
+                       want_to_support == other.want_to_support &&
+                       explain == other.explain &&
+                       is_true == other.is_true &&
+                       refuse_misha == other.refuse_misha &&
+                       ask_hanako == other.ask_hanako &&
+                       like_hanako == other.like_hanako &&
+                       go_to_the_city == other.go_to_the_city &&
+                       agree_with_lilly == other.agree_with_lilly &&
+                       want_true == other.want_true &&
+                       address_it == other.address_it &&
+                       mention_the_letter == other.mention_the_letter &&
+                       integrity == other.integrity;
+            }
         };
 
         struct __attribute__((__packed__)) SaveFileData {
-            // Integrity
-            bn::array<char, 16> integrityTag;
-            unsigned integrityVersion;
-
+            SaveIntegrityData integrity_begin;
             SaveSettingsData settings;
+            SaveSlotProgressData autosave;
             SaveSlotProgressData slot[TOTAL_SAVE_SLOTS];
+            SaveIntegrityData integrity_end;
         };
 
         // extern SaveFileData data;
@@ -94,16 +176,43 @@ namespace ks {
 
         void log_settings(SaveSettingsData &settings);
 
-        void load(SaveFileData* data_ptr);
+        void load(SaveFileData *data_ptr);
 
-        void save(SaveFileData* data_ptr);
+        void save(SaveFileData *data_ptr);
 
-        bool isValid(SaveFileData* data_ptr);
+        bool isValid(const SaveFileData *data_ptr);
+
+        bool isValid(const SaveSlotProgressData *data_ptr, unsigned int slot);
+
+        unsigned short getTotalSaveSlots();
+
+        unsigned short getUsedSaveSlots();
+
+        int getSettingsDataOffset();
+
+        int getAutosaveDataOffset();
+
+        int getSaveSlotDataOffset(unsigned int slot);
 
         bool initialize();
 
-        SaveSettingsData getSettings();
-        void saveSettings(SaveSettingsData settings);
+        SaveSettingsData readSettings();
+
+        void writeSettings(SaveSettingsData settings);
+
+        SaveSlotMetadata readAutosaveMetadata();
+
+        SaveSlotProgressData readAutosave();
+
+        void writeAutosave(SaveSlotProgressData progress);
+
+        SaveSlotMetadata readSlotMetadata(unsigned int slot);
+
+        SaveSlotProgressData readSaveSlot(unsigned int slot);
+
+        void writeSaveSlot(unsigned int slot, SaveSlotProgressData progress);
+
+        void deleteSaveSlot(unsigned int slot);
     }
 }
 

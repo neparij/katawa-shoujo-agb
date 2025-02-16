@@ -82,6 +82,10 @@
 
 #include "bn_sprite_items_ui_button_check_0.h"
 #include "bn_sprite_items_ui_button_check_1.h"
+#include "bn_sprite_items_ui_button_a.h"
+#include "bn_sprite_items_ui_button_b.h"
+#include "bn_sprite_items_ui_button_l.h"
+#include "bn_sprite_items_ui_button_r.h"
 
 #include "bn_regular_bg_items_ui_test_paldraw.h"
 #include "bn_regular_bg_items_ui_test_paldraw_b.h"
@@ -102,6 +106,7 @@ typedef enum menuEnum {
     MENU_OPTIONS = 3,
 
     MENU_EXTRAS_CINEMA = 4,
+    MENU_DEBUG_ACTS   = 21,
 } menuEnum;
 
 void draw_progress_icons() {
@@ -143,8 +148,9 @@ void open_main_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
     indexes->clear();
     ks::static_text_sprites->clear();
     ks::progress_icon_sprites->clear();
-    draw_progress_icons();
+    ks::globals::main_update();
 
+    draw_progress_icons();
     ks::globals::main_update();
 
     ks::text_generator->set_one_sprite_per_character(false);
@@ -166,8 +172,61 @@ void open_main_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
     ks::globals::sound_update();
 }
 
-void open_saves_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
+void open_saves_menu(menuEnum &state, bn::vector<signed char, 64>* indexes, bn::vector<short, 3>* saveslot_index, unsigned short from, unsigned short total_saves, bool need_update = true) {
     state = MENU_SAVES;
+    ks::main_background = bn::regular_bg_items::ui_bg_menu.create_bg(0, 0);
+
+    indexes->clear();
+    saveslot_index->clear();
+    ks::static_text_sprites->clear();
+    ks::progress_icon_sprites->clear();
+    if (need_update) {
+        ks::globals::main_update();
+    }
+
+    ks::text_generator->set_one_sprite_per_character(false);
+    ks::text_generator->set_left_alignment();
+
+    signed char selection_index = 0;
+    unsigned char tile_index = 0;
+
+    unsigned short to = bn::max(0, from - 3);
+
+    for (unsigned short i = from; i > to; i--, tile_index++, selection_index += 1) {
+        bool is_autosave = i == total_saves + 1;
+        ks::saves::SaveSlotMetadata slot;
+        if (is_autosave) {
+            slot = ks::saves::readAutosaveMetadata();
+        } else {
+            slot = ks::saves::readSlotMetadata(i - 1);
+        }
+
+        if (is_autosave) {
+            ks::text_generator->generate(-ks::device::screen_width_half + 22, -40 + (32 * (tile_index)), bn::format<64>("auto: {}", ks::globals::i18n->label(slot.label)), *ks::static_text_sprites);
+        } else {
+            ks::text_generator->generate(-ks::device::screen_width_half + 22, -40 + (32 * (tile_index)), bn::format<64>("{}: {}", i, ks::globals::i18n->label(slot.label)), *ks::static_text_sprites);
+        }
+        ks::text_generator->generate(
+            -ks::device::screen_width_half + 22,
+            -40 + (32 * (tile_index) + 12),
+            bn::format<64>(
+                "Played: {}:{}:{}",
+                slot.hours_played,
+                bn::format<2>(slot.minutes_played < 10 ? "0{}" : "{}", slot.minutes_played),
+                bn::format<2>(slot.seconds_played < 10 ? "0{}" : "{}", slot.seconds_played)),
+            *ks::static_text_sprites);
+        indexes->resize(ks::static_text_sprites->size(), selection_index);
+        saveslot_index->push_back(is_autosave ? -1 : i - 1);
+    }
+
+    ks::static_text_sprites->push_back(bn::sprite_items::ui_button_b.create_sprite(-ks::device::screen_width_half + 30 , ks::device::screen_height_half - 22));
+    ks::text_generator->generate(-ks::device::screen_width_half + 40, ks::device::screen_height_half - 22, ks::globals::i18n->menu_back(), *ks::static_text_sprites);
+    indexes->resize(ks::static_text_sprites->size(), 3);
+    ks::globals::sound_update();
+}
+
+void open_debug_acts_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
+    state = MENU_DEBUG_ACTS;
     ks::main_background = bn::regular_bg_items::ui_bg_menu.create_bg(0, 0);
 
     indexes->clear();
@@ -431,7 +490,7 @@ int main()
         BN_ASSERT(!isNewSaveAgain, "Failed to initialize saves.");
     }
 
-    ks::globals::settings = ks::saves::getSettings();
+    ks::globals::settings = ks::saves::readSettings();
 
     ks::SceneManager::fade_in(COLOR_WHITE, 30);
     if (SHOW_INTRO) {
@@ -468,11 +527,14 @@ int main()
 
     menuEnum state;
     bn::vector<signed char, 64> selection_index;
+    bn::vector<short, 3> saveslot_index;
     bn::vector<bn::sprite_ptr, 8> checkboxes_ptrs;
 
     while(true)
     {
         int select = 0;
+        int total_saves = 0;
+        int saves_from_cursor = 0;
         bool scene_selected = false;
         bool need_fade_in = true;
         bool need_repalette = true;
@@ -512,7 +574,44 @@ int main()
 
             if (bn::keypad::up_pressed() || bn::keypad::down_pressed()) {
                 need_repalette = true;
-                if (state == MENU_EXTRAS) {
+                if (state == MENU_SAVES) {
+                    if (bn::keypad::up_pressed()) {
+                        unsigned char additional_slot = ks::saves::readAutosaveMetadata().has_data ? 1 : 0;
+                        if (select == 0 && saves_from_cursor < total_saves + additional_slot) {
+                            saves_from_cursor++;
+                            open_saves_menu(state, &selection_index, &saveslot_index, saves_from_cursor, total_saves, false);
+                        } else if (select == 3) {
+                            if (saveslot_index.empty()) {
+                                select = 3;
+                            } else {
+                                select = saveslot_index.size() - 1;
+                            }
+                        } else {
+                            select--;
+                        }
+                    } else if (bn::keypad::down_pressed()) {
+                        if (select == 2 && saves_from_cursor > 3) {
+                            saves_from_cursor--;
+                            open_saves_menu(state, &selection_index, &saveslot_index, saves_from_cursor, total_saves, false);
+                        } else {
+                            if (saveslot_index.empty()) {
+                                select = 3;
+                            } else if (select == saveslot_index.size() - 1) {
+                                select = 3;
+                            } else {
+                                select++;
+                            }
+                        }
+
+                        // else if (select == bn::min(2, total_saves - 1)) {
+                        //     select = 3;
+                        // } else {
+                        //     select++;
+                        // }
+                    }
+
+                    select = bn::min(3, bn::max(0, select));
+                } else if (state == MENU_EXTRAS) {
                     if (select != 4 && bn::keypad::down_pressed()) {
                         select = 4;
                         update_extras_menu(select);
@@ -537,7 +636,7 @@ int main()
                     char menuItemsCount = 0;
                     if (state == MENU_MAIN) {
                         menuItemsCount = 4;
-                    } else if (state == MENU_SAVES) {
+                    } else if (state == MENU_DEBUG_ACTS) {
                         menuItemsCount = 6;
                     } else if (state == MENU_EXTRAS) {
                         menuItemsCount = 7;
@@ -588,7 +687,7 @@ int main()
                 } else if (state == MENU_OPTIONS) {
                     select = 3;
                     checkboxes_ptrs.clear();
-                    ks::saves::saveSettings(ks::globals::settings);
+                    ks::saves::writeSettings(ks::globals::settings);
                     open_main_menu(state, &selection_index);
                 } else {
                     select = 0;
@@ -603,7 +702,13 @@ int main()
                     }
                     if (select == 1) {
                         select = 0;
-                        open_saves_menu(state, &selection_index);
+                        // open_debug_acts_menu(state, &selection_index);
+                        total_saves = ks::saves::getUsedSaveSlots();
+                        saves_from_cursor = total_saves;
+                        if (ks::saves::readAutosaveMetadata().has_data) {
+                            saves_from_cursor++;
+                        }
+                        open_saves_menu(state, &selection_index, &saveslot_index,  saves_from_cursor, total_saves);
                     }
                     if (select == 2) {
                         select = 0;
@@ -616,6 +721,13 @@ int main()
                         update_options_menu(&checkboxes_ptrs);
                     }
                 } else if (state == MENU_SAVES) {
+                    if (select == 3) {
+                        select = 1;
+                        open_main_menu(state, &selection_index);
+                    } else {
+                        // TODO: SAVE GAME LOADING
+                    }
+                } else if (state == MENU_DEBUG_ACTS) {
                     if (select == 5) {
                         select = 1;
                         open_main_menu(state, &selection_index);
@@ -712,7 +824,7 @@ int main()
                     if (select == 4) {
                         select = 3;
                         checkboxes_ptrs.clear();
-                        ks::saves::saveSettings(ks::globals::settings);
+                        ks::saves::writeSettings(ks::globals::settings);
                         open_main_menu(state, &selection_index);
                     } else {
                         if (select == 0) {
@@ -781,7 +893,7 @@ int main()
             ks::globals::i18n->script_a1_tuesday()();
             ks::globals::i18n->script_a1_wednesday()();
             ks::globals::i18n->script_a1_thursday()();
-        } else if (state == MENU_SAVES) {
+        } else if (state == MENU_DEBUG_ACTS) {
             if (select == 0) {
                 ks::ScriptA0TestEn().a0_actname();
             } else if (select == 1) {
