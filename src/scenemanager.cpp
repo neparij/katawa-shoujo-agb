@@ -62,6 +62,8 @@ bn::vector<unsigned char, 5> answers_index_map;
 ks::saves::SaveSlotProgressData progress;
 ks::saves::SaveSlotProgressData savedata_progress;
 bool in_replay = false;
+bool is_loading = false;
+unsigned char savedata_answer_index = 0;
 
 bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;
 bn::vector<bn::sprite_ptr, 64>* static_text_sprites;
@@ -137,8 +139,9 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("SceneManager init done!");
 }
 
-void SceneManager::set_savedata_progress(const ks::saves::SaveSlotProgressData &value) {
+void SceneManager::init_savedata(const ks::saves::SaveSlotProgressData &value) {
     savedata_progress = value;
+    savedata_answer_index = 0;
 }
 
 void SceneManager::set_script(const script_t script) {
@@ -149,9 +152,32 @@ void SceneManager::set_label(const label_t label) {
     progress.metadata.label = label;
 }
 
+void SceneManager::set_line_hash(const unsigned int line_hash) {
+    if (is_loading && savedata_progress.reproduction.line_hash == line_hash) {
+        is_loading = false;
+        update_visuals();
+    }
+    BN_LOG("Set line hash: ", line_hash);
+    progress.reproduction.line_hash = line_hash;
+}
+
 void SceneManager::autosave() {
+    if (is_loading) {
+        return;
+    }
     savedata_progress.metadata = progress.metadata;
+    savedata_progress.reproduction = progress.reproduction;
+    BN_LOG("Savedata progress linehash: ", savedata_progress.reproduction.line_hash);
+    BN_LOG("Savedata progress answers count: ", savedata_progress.reproduction.answer_indices.size());
     ks::saves::writeAutosave(savedata_progress);
+}
+
+void SceneManager::save(unsigned short slot_index) {
+    savedata_progress.metadata = progress.metadata;
+    savedata_progress.reproduction = progress.reproduction;
+    BN_LOG("Savedata progress linehash: ", savedata_progress.reproduction.line_hash);
+    BN_LOG("Savedata progress answers count: ", savedata_progress.reproduction.answer_indices.size());
+    ks::saves::writeSaveSlot(slot_index, savedata_progress);
 }
 
 
@@ -256,6 +282,10 @@ void SceneManager::set_background_position(const int position_x, const int posit
 }
 
 void SceneManager::show_dialog(const ks::character_definition& actor, int tl_key) {
+    if (is_loading) {
+        return;
+    }
+
     BN_LOG("SH1");
     _cached_actor = actor;
     _cached_tl_key = tl_key;
@@ -288,6 +318,10 @@ void SceneManager::show_dialog(const char* actor_name, int tl_key) {
 }
 
 void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr, 5> answers) {
+    if (is_loading) {
+        return;
+    }
+
     bool redisplay_dialog = false;  // Prevents re-showing dialog unnecessarily
 
     // TODO: IDEAAA!!!! TO USE 1024 SIZED MESSAGE I CAN USE TWO METHOD CALLS INSIDE WHILE CYCLE.
@@ -345,7 +379,12 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
 }
 
 int SceneManager::get_dialog_question_answer() {
-    return answers_index_map.at(dialog->get_answer_index());
+    if (is_loading) {
+        return savedata_progress.reproduction.answer_indices.at(savedata_answer_index++);
+    }
+    const unsigned char answer = answers_index_map.at(dialog->get_answer_index());
+    progress.reproduction.answer_indices[savedata_answer_index++] = answer;
+    return answer;
 }
 
 void SceneManager::show_character(const int character_index,
@@ -515,6 +554,10 @@ void SceneManager::hide_character(const int character_index) {
 }
 
 void SceneManager::update_visuals() {
+    if (is_loading) {
+        return;
+    }
+
     bool incomplete = true;
     bool show_blend = false;
     // bool hide_blend = false;
@@ -720,6 +763,10 @@ void SceneManager::sfx_stop() {
 }
 
 void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file, bn::color clear) {
+    if (is_loading) {
+        return;
+    }
+
     // Free last sound chunks
     player_stop();
     player_sfx_stop();
@@ -912,7 +959,7 @@ void SceneManager::open_ingame_menu() {
                     unsigned short used_saves = ks::saves::getUsedSaveSlots();
                     if (used_saves < ks::saves::getTotalSaveSlots()) {
                         BN_LOG("Save game to slot ", used_saves);
-                        ks::saves::writeSaveSlot(used_saves, savedata_progress);
+                        save(used_saves);
                     } else {
                         BN_LOG("No more slots available");
                     }

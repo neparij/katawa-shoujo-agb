@@ -138,7 +138,7 @@ class ScenarioWriter:
                 sequences.append(f'IF_NOT_EXIT(ks::SceneManager::autosave());')
             elif label.is_initial:
                 sequences.append(f'ks::SceneManager::set_script(SCRIPT_{label.name.upper()});')
-                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_savedata_progress(ks::progress));')
+                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));')
                 sequences.append(
                     f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n')
             for sequence in label.sequence:
@@ -372,13 +372,14 @@ class ScenarioWriter:
 
             self.tl_indexes[dialog.id] = tl_index  # Store the index for the id
 
+        hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
-            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
+            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
             # return [f'scene.add_dialog("{dialog.actor_ref}", \"{resulted_hash}\");']
         elif dialog.actor:
-            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog("{dialog.actor}", {tl_index}));']
+            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog("{dialog.actor}", {tl_index}));']
         else:
-            return [f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
+            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
         return [

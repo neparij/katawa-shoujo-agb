@@ -725,6 +725,7 @@ int main()
                         select = 1;
                         open_main_menu(state, &selection_index);
                     } else {
+                        scene_selected = true;
                         // TODO: SAVE GAME LOADING
                     }
                 } else if (state == MENU_DEBUG_ACTS) {
@@ -893,6 +894,11 @@ int main()
             ks::globals::i18n->script_a1_tuesday()();
             ks::globals::i18n->script_a1_wednesday()();
             ks::globals::i18n->script_a1_thursday()();
+        } else if (state == MENU_SAVES) {
+            auto i = saveslot_index.at(select);
+            ks::progress = ks::saves::readSaveSlot(i);
+            ks::is_loading = true;
+            ks::globals::i18n->script_a1_monday()();
         } else if (state == MENU_DEBUG_ACTS) {
             if (select == 0) {
                 ks::ScriptA0TestEn().a0_actname();

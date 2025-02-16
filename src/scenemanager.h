@@ -75,10 +75,12 @@ public:
 
     static void free_resources();
     static void set(const ks::SceneManager instance);
-    static void set_savedata_progress(const ks::saves::SaveSlotProgressData& value);
+    static void init_savedata(const ks::saves::SaveSlotProgressData& value);
     static void set_script(const script_t script);
     static void set_label(const label_t label);
+    static void set_line_hash(const unsigned int line_hash);
     static void autosave();
+    static void save(unsigned short slot_index);
 
     // Acions
     // static void set_background(const bn::regular_bg_item& bg);
@@ -179,6 +181,8 @@ extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
 extern ks::saves::SaveSlotProgressData savedata_progress;
 extern bool in_replay;
+extern bool is_loading;
+extern unsigned char savedata_answer_index;
 
 extern bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;
 extern bn::vector<bn::sprite_ptr, 64>* static_text_sprites;

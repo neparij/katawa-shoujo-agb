@@ -53,6 +53,14 @@ namespace ks {
             }
         };
 
+        struct __attribute__((__packed__)) SaveSlotReproductionData {
+            // This stores current scenario line hash in 0x00000000 - 0xFFFFFFFF range
+            unsigned int line_hash;
+
+            // This stores up to 8 answer indices
+            bn::array<unsigned char, 8> answer_indices;
+        };
+
         /*
          * This struct represents the current game session data.
          * Used to save all your decisions in one save slot.
@@ -63,6 +71,7 @@ namespace ks {
          */
         struct __attribute__((__packed__)) SaveSlotProgressData {
             SaveSlotMetadata metadata;
+            SaveSlotReproductionData reproduction;
 
             // Act 1 data
             unsigned char attraction_hanako;
