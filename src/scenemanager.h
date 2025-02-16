@@ -29,8 +29,9 @@ namespace ks {
 
 struct background_visuals_ptr
 {
+    bn::optional<bn::regular_bg_item> current_bg_item;
     bn::optional<bn::regular_bg_item> bg_item;
-    bn::regular_bg_ptr* background;
+    // bn::regular_bg_ptr* background;
     bn::fixed alpha;
     bool will_show;
     bool will_hide;
@@ -43,6 +44,8 @@ struct background_visuals_ptr
 struct character_visuals_ptr
 {
     int index;
+    bn::optional<bn::regular_bg_item> current_bg_item;
+    bn::optional<bn::sprite_item> current_sprite_item;
     bn::optional<bn::regular_bg_item> bg_item;
     bn::optional<bn::sprite_item> sprite_item;
     bn::optional<ks::character_sprite_meta> sprite_meta;

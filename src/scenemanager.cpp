@@ -73,18 +73,31 @@ ks::character_definition SceneManager::_cached_actor;
 int SceneManager::_cached_tl_key = -1;
 
 void SceneManager::free_resources() {
-    delete &background_visual.background;
+
     background_visual.bg_item.reset();
-    while (character_visuals.size() < character_visuals.max_size()) {
-        character_visuals.push_back(character_visuals_ptr());
-    }
+    main_background.reset();
+    secondary_background.reset();
+
     for (auto &visual : character_visuals) {
         visual.background.reset();
         visual.sprite.reset();
+        visual.bg_item.reset();
+        visual.sprite_item.reset();
+        visual.current_bg_item.reset();
+        visual.current_sprite_item.reset();
     }
+    character_visuals.clear();
+
+    BN_LOG("Free resources...");
+    bn::core::update();
 }
 
 void SceneManager::set(const ks::SceneManager instance) {
+    free_resources();
+    while (character_visuals.size() < character_visuals.max_size()) {
+        character_visuals.push_back(character_visuals_ptr());
+    }
+
     BN_LOG("RESET SCENE");
     scene.reset();
     BN_LOG("Set SM Instance");
@@ -182,94 +195,105 @@ void SceneManager::save(unsigned short slot_index) {
 
 
 void SceneManager::set_background(const bn::regular_bg_item& bg, const int position_x, const int position_y, const int dissolve_time) {
-    // TODO: rewrite to support "scene" token
-    // temporaly hide chars
+
+    background_visual.bg_item = bg;
+    background_visual.position_x = position_x;
+    background_visual.position_y = position_y;
+    background_visual.dissolve_time = dissolve_time;
+
     for (int i = 0; i < character_visuals.size(); i++) {
         hide_character(i, false);
     }
 
-    ks::globals::sound_update();
-    if (background_visual.bg_item != bg) {
-        bool with_dissolve = dissolve_time > 0;
-        bool have_background = main_background.has_value();
-        bool have_characters = false;
-        for (auto& v : character_visuals) {
-            if (v.sprite.has_value()) {
-                have_characters = true;
-            }
-        }
 
-        BN_LOG("WITH DISSOLVE: ", with_dissolve);
-        BN_LOG("HAVE BG: ", have_background);
-        BN_LOG("HAVE CHARS: ", have_characters);
-
-        background_visual.bg_item = bg;
-        background_visual.position_x = position_x;
-        background_visual.position_y = position_y;
-        background_visual.dissolve_on_top = false;
-
-        if (with_dissolve && have_background && !have_characters) {
-            // with_dissolve = false;
-            // main_background.reset();
-            // main_background = bg.create_bg(position_x, position_y);
-            // main_background->set_z_order(10);
-
-            // background_visual.background = &main_background.value();
-
-
-            // // main_background->set_tiles()
-            // background_visual.dissolve_on_top = true;
-            // secondary_background.reset();
-            // secondary_background = bg.create_bg(position_x, position_y);
-            // secondary_background->set_z_order(9);
-
-            // background_visual.background = &secondary_background.value();
-
-            // First — Attempt to create dissolve BG:
-            secondary_background.reset();
-            secondary_background = bg.create_bg_optional(position_x, position_y);
-            if (secondary_background.has_value()) {
-                secondary_background->set_priority(3);
-                secondary_background->set_z_order(9);
-                background_visual.dissolve_on_top = true;
-                background_visual.background = &secondary_background.value();
-            } else {
-                for (int i = 0; i < 10; i++) {
-                    BN_LOG("!!! Unable to create DISSOLVE BG !!!");
-                }
-                with_dissolve = false;
-                main_background.reset();
-                main_background = bg.create_bg(position_x, position_y);
-                main_background->set_priority(3);
-                main_background->set_z_order(10);
-
-                background_visual.background = &main_background.value();
-            }
-        } else {
-            // delete &background_visual.background;
-            main_background.reset();
-            main_background = bg.create_bg(position_x, position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
-
-            background_visual.background = &main_background.value();
-        }
-
-        if (with_dissolve && !(have_background && have_characters)) {
-            background_visual.will_show = true;
-            background_visual.dissolve_time = dissolve_time;
-        } else {
-            background_visual.will_show = false;
-            background_visual.dissolve_time = 0;
-        }
-    } else {
-        BN_LOG("Set position of BG!!!!");
-        BN_LOG("X: ", position_x, "; Y: ", position_y);
-        background_visual.position_x = position_x;
-        background_visual.position_y = position_y;
-    }
-
-    ks::globals::sound_update();
+    // // TODO: rewrite to support "scene" token
+    // // temporaly hide chars
+    // for (int i = 0; i < character_visuals.size(); i++) {
+    //     hide_character(i, false);
+    // }
+    //
+    // ks::globals::sound_update();
+    // if (background_visual.bg_item != bg) {
+    //     bool with_dissolve = dissolve_time > 0;
+    //     bool have_background = main_background.has_value();
+    //     bool have_characters = false;
+    //     for (auto& v : character_visuals) {
+    //         if (v.sprite.has_value()) {
+    //             have_characters = true;
+    //         }
+    //     }
+    //
+    //     BN_LOG("WITH DISSOLVE: ", with_dissolve);
+    //     BN_LOG("HAVE BG: ", have_background);
+    //     BN_LOG("HAVE CHARS: ", have_characters);
+    //
+    //     background_visual.bg_item = bg;
+    //     background_visual.position_x = position_x;
+    //     background_visual.position_y = position_y;
+    //     background_visual.dissolve_on_top = false;
+    //
+    //     if (with_dissolve && have_background && !have_characters) {
+    //         // with_dissolve = false;
+    //         // main_background.reset();
+    //         // main_background = bg.create_bg(position_x, position_y);
+    //         // main_background->set_z_order(10);
+    //
+    //         // background_visual.background = &main_background.value();
+    //
+    //
+    //         // // main_background->set_tiles()
+    //         // background_visual.dissolve_on_top = true;
+    //         // secondary_background.reset();
+    //         // secondary_background = bg.create_bg(position_x, position_y);
+    //         // secondary_background->set_z_order(9);
+    //
+    //         // background_visual.background = &secondary_background.value();
+    //
+    //         // First — Attempt to create dissolve BG:
+    //         secondary_background.reset();
+    //         secondary_background = bg.create_bg_optional(position_x, position_y);
+    //         if (secondary_background.has_value()) {
+    //             secondary_background->set_priority(3);
+    //             secondary_background->set_z_order(9);
+    //             background_visual.dissolve_on_top = true;
+    //             background_visual.background = &secondary_background.value();
+    //         } else {
+    //             for (int i = 0; i < 10; i++) {
+    //                 BN_LOG("!!! Unable to create DISSOLVE BG !!!");
+    //             }
+    //             with_dissolve = false;
+    //             main_background.reset();
+    //             main_background = bg.create_bg(position_x, position_y);
+    //             main_background->set_priority(3);
+    //             main_background->set_z_order(10);
+    //
+    //             background_visual.background = &main_background.value();
+    //         }
+    //     } else {
+    //         // delete &background_visual.background;
+    //         main_background.reset();
+    //         main_background = bg.create_bg(position_x, position_y);
+    //         main_background->set_priority(3);
+    //         main_background->set_z_order(10);
+    //
+    //         background_visual.background = &main_background.value();
+    //     }
+    //
+    //     if (with_dissolve && !(have_background && have_characters)) {
+    //         background_visual.will_show = true;
+    //         background_visual.dissolve_time = dissolve_time;
+    //     } else {
+    //         background_visual.will_show = false;
+    //         background_visual.dissolve_time = 0;
+    //     }
+    // } else {
+    //     BN_LOG("Set position of BG!!!!");
+    //     BN_LOG("X: ", position_x, "; Y: ", position_y);
+    //     background_visual.position_x = position_x;
+    //     background_visual.position_y = position_y;
+    // }
+    //
+    // ks::globals::sound_update();
 }
 
 // void SceneManager::set_background(const bn::regular_bg_item& bg) {
@@ -395,95 +419,111 @@ void SceneManager::show_character(const int character_index,
                                   const int position_y,
                                   const bool position_change,
                                   const bool restoring = false) {
-    bool was_shown_before = character_visuals.at(character_index).background.has_value();
 
-    // TODO: make restoring as separate method
-    if (!restoring) {
-        character_visuals.at(character_index).index = character_index;
-        character_visuals.at(character_index).bg_item = bg;
-        character_visuals.at(character_index).sprite_item = sprite;
-        character_visuals.at(character_index).sprite_meta = sprite_meta;
 
-        if (position_change && !was_shown_before) {
-            character_visuals.at(character_index).position_x = position_x;
-            character_visuals.at(character_index).position_y = position_y;
-        }
-        // if (!was_shown_before) {
-        //     dialog->hide_blend();
-        // }
+    // background_visual.bg_item = bg;
+    // background_visual.position_x = position_x;
+    // background_visual.position_y = position_y;
+    // background_visual.dissolve_time = dissolve_time;
+
+    character_visuals.at(character_index).index = character_index;
+    character_visuals.at(character_index).bg_item = bg;
+    character_visuals.at(character_index).sprite_item = sprite;
+    character_visuals.at(character_index).sprite_meta = sprite_meta;
+    if (position_change) {
+        character_visuals.at(character_index).position_x = position_x;
+        character_visuals.at(character_index).position_y = position_y;
     }
 
-    // DISABLE DISSOLVING BG IF ANY!!!!
-    // TODO: Refactor to displayable queue
-    if (background_visual.dissolve_on_top) {
-        BN_LOG("!!! CANCEL DISSOLVE ON TOP !!!");
-
-        background_visual.dissolve_on_top = false;
-        background_visual.will_show = false;
-        background_visual.dissolve_time = 0;
-        BN_LOG(" - main BG reset");
-        main_background.reset();
-        BN_LOG(" - secondary BG reset");
-        secondary_background.reset();
-
-        BN_LOG(" - create new main BG");
-        main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-        main_background->set_priority(3);
-        main_background->set_z_order(10);
-
-        BN_LOG(" - update BG pointer");
-        background_visual.background = &main_background.value();
-
-        ks::globals::main_update();
-        BN_LOG("!!! CANCEL DISSOLVE ON TOP - DONE !!!");
-    }
-
-    BN_LOG("SHOW CHARACTER ", character_index);
-
-    ks::globals::sound_update();
-    character_visuals.at(character_index).background.reset();
-    character_visuals.at(character_index).background = character_visuals.at(character_index).bg_item->create_bg(character_visuals.at(character_index).position_x,
-                                                                    character_visuals.at(character_index).position_y);
-    character_visuals.at(character_index).background->set_priority(2);
-    character_visuals.at(character_index).background->set_z_order(10);
-    ks::globals::sound_update();
-
-    character_visuals.at(character_index).sprite.reset();
-    character_visuals.at(character_index).sprite = character_visuals.at(character_index).sprite_item->create_sprite(character_visuals.at(character_index).position_x + sprite_meta.offset_x,
-                                                                        character_visuals.at(character_index).position_y + sprite_meta.offset_y);
-    character_visuals.at(character_index).offset_x = sprite_meta.offset_x;
-    character_visuals.at(character_index).offset_y = sprite_meta.offset_y;
-    character_visuals.at(character_index).sprite->set_bg_priority(2);
-    character_visuals.at(character_index).sprite->set_z_order(10);
-
-    // set_character_window_visibility(character_visuals.at(character_index).background.value(), position_x, position_y);
-    set_character_window_visibility(character_visuals.at(character_index).background.value());
-
-    if (!restoring) {
-        if (!was_shown_before) {
-            character_visuals.at(character_index).will_show = true;
-            // character_visuals.at(character_index).alpha = 1.0;
-
-
-            // bn::blending::set_transparency_alpha(0);
-            // auto spr_alpha_action = bn::blending_transparency_alpha_to_action(20, 1);
-            // character_visuals.at(character_index).sprite->set_blending_enabled(true);
-            // character_visuals.at(character_index).background->set_blending_enabled(true);
-            // while (!spr_alpha_action.done()) {
-            //     spr_alpha_action.update();
-
-            //     ks::globals::main_update();
-            // }
-            // character_visuals.at(character_index).sprite->set_blending_enabled(false);
-            // character_visuals.at(character_index).background->set_blending_enabled(false);
-        }
-
-        // ks::globals::main_update();
-
-        if (position_change && was_shown_before) {
-            set_character_position(character_index, position_x, position_y);
-        }
-    }
+    // bool was_shown_before = character_visuals.at(character_index).background.has_value();
+    //
+    // // TODO: make restoring as separate method
+    // if (!restoring) {
+    //     character_visuals.at(character_index).index = character_index;
+    //     character_visuals.at(character_index).bg_item = bg;
+    //     character_visuals.at(character_index).sprite_item = sprite;
+    //     character_visuals.at(character_index).sprite_meta = sprite_meta;
+    //
+    //     if (position_change && !was_shown_before) {
+    //         character_visuals.at(character_index).position_x = position_x;
+    //         character_visuals.at(character_index).position_y = position_y;
+    //     }
+    //     // if (!was_shown_before) {
+    //     //     dialog->hide_blend();
+    //     // }
+    // }
+    //
+    // // DISABLE DISSOLVING BG IF ANY!!!!
+    // // TODO: Refactor to displayable queue
+    // if (background_visual.dissolve_on_top) {
+    //     BN_LOG("!!! CANCEL DISSOLVE ON TOP !!!");
+    //
+    //     background_visual.dissolve_on_top = false;
+    //     background_visual.will_show = false;
+    //     background_visual.dissolve_time = 0;
+    //     BN_LOG(" - main BG reset");
+    //     main_background.reset();
+    //     BN_LOG(" - secondary BG reset");
+    //     secondary_background.reset();
+    //
+    //     BN_LOG(" - create new main BG");
+    //     main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+    //     main_background->set_priority(3);
+    //     main_background->set_z_order(10);
+    //
+    //     BN_LOG(" - update BG pointer");
+    //     background_visual.background = &main_background.value();
+    //
+    //     ks::globals::main_update();
+    //     BN_LOG("!!! CANCEL DISSOLVE ON TOP - DONE !!!");
+    // }
+    //
+    // BN_LOG("SHOW CHARACTER ", character_index);
+    //
+    // ks::globals::sound_update();
+    // character_visuals.at(character_index).background.reset();
+    // character_visuals.at(character_index).background = character_visuals.at(character_index).bg_item->create_bg(character_visuals.at(character_index).position_x,
+    //                                                                 character_visuals.at(character_index).position_y);
+    // character_visuals.at(character_index).background->set_priority(2);
+    // character_visuals.at(character_index).background->set_z_order(10);
+    // ks::globals::sound_update();
+    //
+    // character_visuals.at(character_index).sprite.reset();
+    // character_visuals.at(character_index).sprite = character_visuals.at(character_index).sprite_item->create_sprite(character_visuals.at(character_index).position_x + sprite_meta.offset_x,
+    //                                                                     character_visuals.at(character_index).position_y + sprite_meta.offset_y);
+    // character_visuals.at(character_index).offset_x = sprite_meta.offset_x;
+    // character_visuals.at(character_index).offset_y = sprite_meta.offset_y;
+    // character_visuals.at(character_index).sprite->set_bg_priority(2);
+    // character_visuals.at(character_index).sprite->set_z_order(10);
+    //
+    // // set_character_window_visibility(character_visuals.at(character_index).background.value(), position_x, position_y);
+    // set_character_window_visibility(character_visuals.at(character_index).background.value());
+    //
+    // if (!restoring) {
+    //     if (!was_shown_before) {
+    //         character_visuals.at(character_index).will_show = true;
+    //         // character_visuals.at(character_index).alpha = 1.0;
+    //
+    //
+    //         // bn::blending::set_transparency_alpha(0);
+    //         // auto spr_alpha_action = bn::blending_transparency_alpha_to_action(20, 1);
+    //         // character_visuals.at(character_index).sprite->set_blending_enabled(true);
+    //         // character_visuals.at(character_index).background->set_blending_enabled(true);
+    //         // while (!spr_alpha_action.done()) {
+    //         //     spr_alpha_action.update();
+    //
+    //         //     ks::globals::main_update();
+    //         // }
+    //         // character_visuals.at(character_index).sprite->set_blending_enabled(false);
+    //         // character_visuals.at(character_index).background->set_blending_enabled(false);
+    //     }
+    //
+    //     // ks::globals::main_update();
+    //
+    //     if (position_change && was_shown_before) {
+    //         set_character_position(character_index, position_x, position_y);
+    //     }
+    // }
 }
 
 void SceneManager::show_character(const int character_index,
@@ -540,10 +580,6 @@ void SceneManager::hide_character(const int character_index, const bool need_upd
     character_visuals.at(character_index).bg_item.reset();
     character_visuals.at(character_index).sprite_item.reset();
     character_visuals.at(character_index).sprite_meta.reset();
-    character_visuals.at(character_index).background.reset();
-    character_visuals.at(character_index).sprite.reset();
-    character_visuals.at(character_index).position_x = 0;
-    character_visuals.at(character_index).position_y = 0;
     if (need_update) {
         ks::globals::main_update();
     }
@@ -558,170 +594,484 @@ void SceneManager::update_visuals() {
         return;
     }
 
-    bool incomplete = true;
-    bool show_blend = false;
-    // bool hide_blend = false;
-    bool bg_show_blend = false;
-    bn::vector<bn::regular_bg_move_to_action, 9> bg_moves;
-    bn::vector<bn::sprite_move_to_action, 8> spr_moves;
-    bn::vector<bn::regular_bg_ptr, 4> bg_blend_ptrs;
-    bn::vector<bn::sprite_ptr, 4> spr_blend_ptrs;
+    bn::vector<bn::regular_bg_move_to_action, 5> bg_moves;
+    bn::vector<bn::sprite_move_to_action, 4> spr_moves;
     bn::optional<bn::blending_transparency_alpha_to_action> blend_action;
-    bn::optional<bn::blending_transparency_alpha_to_action> bg_blend_action;
+    bool in_progress = false;
 
-    bg_moves.clear();
-    spr_moves.clear();
-    bg_blend_ptrs.clear();
-    spr_blend_ptrs.clear();
+    /// COLLECT INFO
+    BN_LOG("COLLECT INFO");
+    if (!main_background.has_value()) {
+        background_visual.current_bg_item.reset();
+    }
+
+    bool background_want_change = background_visual.current_bg_item.has_value() && background_visual.bg_item.has_value() &&
+                                  background_visual.current_bg_item != background_visual.bg_item;
+    bool background_want_hide = background_visual.current_bg_item.has_value() && !background_visual.bg_item.has_value();
+    bool background_want_show = !background_visual.current_bg_item.has_value() && background_visual.bg_item.has_value();
+    bool background_want_dissolve = background_visual.dissolve_time != 0 && (background_want_change || background_want_hide || background_want_show);
+    bool background_want_move = !background_want_change && !background_want_hide && !background_want_show &&
+                                (background_visual.position_x != main_background->position().x() ||
+                                background_visual.position_y != main_background->position().y());
+
+    // bool characters_changed = false;
+    bool characters_want_dissolve = false;
+    bool characters_want_show = false;
+    bool characters_want_hide = false;
+    for (auto &visual : character_visuals) {
+        // characters_changed = characters_changed || visual.current_bg_item != visual.bg_item;
+        bool character_want_show = !visual.current_bg_item.has_value() && visual.bg_item.has_value();
+        bool character_want_hide = visual.background.has_value() &&
+                                   visual.current_bg_item.has_value() && !visual.bg_item.has_value();
+
+        visual.will_show = character_want_show;
+        visual.will_hide = character_want_hide;
+
+        if (visual.background.has_value() && (background_want_change || background_want_hide || background_want_show)) {
+            visual.will_hide = true;
+        }
+
+        characters_want_dissolve = characters_want_dissolve || visual.will_show || visual.will_hide;
+        characters_want_show = characters_want_show || visual.will_show;
+        characters_want_hide = characters_want_hide || visual.will_hide;
+    }
+
+    /// HIDE DIALOGS (WITH DISSOLVE)
+    BN_LOG("HIDE DIALOGS (WITH DISSOLVE)");
+    if (background_want_dissolve || characters_want_dissolve) {
+        if (!dialog->is_hidden()) {
+            dialog->hide_blend();
+        }
+    }
+
+    /// CHANGE CHARACTER POSES
+    BN_LOG("CHANGE CHARACTER POSES");
+    for (auto &visual : character_visuals) {
+        if (!visual.bg_item.has_value() || !visual.sprite_item.has_value()) {
+            visual.current_bg_item.reset();
+            visual.current_sprite_item.reset();
+            continue;
+        }
+        if (!visual.will_show && !visual.will_hide) {
+            bn::fixed x = visual.background->position().x();
+            bn::fixed y = visual.background->position().y();
+
+            if (visual.bg_item != visual.current_bg_item) {
+
+                visual.background.reset();
+                visual.background = visual.bg_item->create_bg(0, 0);
+                visual.background->set_priority(2);
+                visual.background->set_z_order(10);
+                visual.current_bg_item = visual.bg_item;
+            }
+
+            if (visual.sprite_item != visual.current_sprite_item) {
+                visual.sprite.reset();
+                visual.sprite = visual.sprite_item->create_sprite(0, 0);
+                visual.sprite->set_bg_priority(2);
+                visual.sprite->set_z_order(10);
+
+                visual.current_sprite_item = visual.sprite_item;
+            }
+
+            if (visual.background.has_value()) {
+                visual.background->set_position(x, y);
+                set_character_window_visibility(visual.background.value());
+            }
+            if (visual.sprite.has_value()) {
+                visual.sprite->set_position(x + visual.offset_x + visual.sprite_meta->offset_x,
+                                            y + visual.sprite_meta->offset_y);
+            }
+        }
+    }
 
 
-    if (background_visual.position_x != background_visual.background->position().x() ||
-        background_visual.position_y != background_visual.background->position().y()) {
-        bg_moves.push_back(bn::regular_bg_move_to_action(*background_visual.background,
+    /// HIDE CHARACTERS (WITH DISSOLVE)
+    /// TODO: investigate if we need to move characters when hiding
+    BN_LOG("HIDE CHARACTERS (WITH DISSOLVE)");
+    if (characters_want_hide) {
+        BN_LOG("Some characters want to hide!");
+        for (auto &visual : character_visuals) {
+            if (!visual.background.has_value()) {
+                continue;
+            }
+            if (visual.will_hide && visual.background.has_value() && visual.sprite.has_value()) {
+                BN_LOG("WANT TO HIDE: ", visual.index);
+                visual.background->set_visible(true);
+                visual.sprite->set_visible(true);
+                visual.background->set_blending_enabled(true);
+                visual.sprite->set_blending_enabled(true);
+                bn::blending::set_transparency_alpha(bn::fixed(1));
+                blend_action = bn::blending_transparency_alpha_to_action(20, 0.0);
+            }
+        }
+        while (!blend_action->done()) {
+            blend_action->update();
+            globals::main_update();
+        }
+        blend_action.reset();
+        for (auto &visual : character_visuals) {
+            if (visual.will_hide) {
+                visual.background.reset();
+                visual.sprite.reset();
+                visual.current_bg_item.reset();
+                visual.current_sprite_item.reset();
+            }
+        }
+    }
+
+    /// HIDE BACKGROUNDS (WITH DISSOLVE)
+    BN_LOG("HIDE BACKGROUNDS (WITH DISSOLVE)");
+    if (background_want_hide) {
+        BN_LOG("Will hide BG with dissolve!");
+        if (background_want_dissolve) {
+            main_background->set_visible(true);
+            main_background->set_blending_enabled(true);
+            bn::blending::set_transparency_alpha(bn::fixed(1));
+            blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 0.0);
+            while (!blend_action->done()) {
+                blend_action->update();
+                globals::main_update();
+            }
+
+        }
+
+        main_background.reset();
+        background_visual.current_bg_item.reset();
+        blend_action.reset();
+    }
+
+    /// CHANGE BACKGROUNDS (WITH DISSOLVE)
+    BN_LOG("CHANGE BACKGROUNDS (WITH DISSOLVE)");
+    if (background_want_change) {
+        BN_LOG("WANT TO CHANGE!");
+        bool background_fallback_dissolve = false;
+        if (background_want_dissolve) {
+            BN_LOG("WANT TO DISSOLVE!");
+            secondary_background.reset();
+            secondary_background = background_visual.bg_item->create_bg_optional(background_visual.position_x, background_visual.position_y);
+            if (secondary_background.has_value()) {
+                BN_LOG("WILL DISSOLVE!");
+                secondary_background->set_priority(3);
+                secondary_background->set_z_order(9);
+
+                secondary_background->set_visible(true);
+                secondary_background->set_blending_enabled(true);
+                bn::blending::set_transparency_alpha(bn::fixed(0));
+                blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
+                while (!blend_action->done()) {
+                    blend_action->update();
+                    globals::main_update();
+                }
+
+                main_background.reset();
+                secondary_background.reset();
+
+                main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+                main_background->set_priority(3);
+                main_background->set_z_order(10);
+                blend_action.reset();
+            } else {
+                background_fallback_dissolve = true;
+            }
+        }
+
+        if (!background_want_dissolve || background_fallback_dissolve) {
+            main_background.reset();
+            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            main_background->set_priority(3);
+            main_background->set_z_order(10);
+        }
+
+        background_visual.current_bg_item = background_visual.bg_item;
+    }
+
+    /// SHOW BACKGROUNDS (WITH DISSOLVE)
+    BN_LOG("SHOW BACKGROUNDS (WITH DISSOLVE)");
+    if (background_want_show) {
+        BN_LOG("Will show BG with dissolve!");
+        main_background.reset();
+        main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+        main_background->set_priority(3);
+        main_background->set_z_order(10);
+        if (background_want_dissolve) {
+            main_background->set_visible(true);
+            main_background->set_blending_enabled(true);
+            bn::blending::set_transparency_alpha(bn::fixed(0));
+            blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
+            while (!blend_action->done()) {
+                blend_action->update();
+                globals::main_update();
+            }
+            main_background->set_blending_enabled(false);
+            blend_action.reset();
+        }
+
+        background_visual.current_bg_item = background_visual.bg_item;
+    }
+
+    /// SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND
+    BN_LOG("SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND");
+    if (characters_want_show) {
+        bool will_blend = false;
+        for (auto &visual : character_visuals) {
+            if (!visual.bg_item.has_value()) {
+                continue;
+            }
+            if (visual.will_show) {
+                BN_LOG("WILL SHOW: ", visual.index);
+                visual.background = visual.bg_item->create_bg(visual.position_x, visual.position_y);
+                visual.background->set_priority(2);
+                visual.background->set_z_order(10);
+                visual.background->set_blending_enabled(true);
+                visual.sprite = visual.sprite_item->create_sprite(
+                    visual.position_x + visual.offset_x + visual.sprite_meta->offset_x,
+                    visual.position_y + visual.offset_y + visual.sprite_meta->offset_y);
+                visual.sprite->set_bg_priority(2);
+                visual.sprite->set_z_order(10);
+                visual.sprite->set_blending_enabled(true);
+
+                visual.current_bg_item = visual.bg_item;
+                visual.current_sprite_item = visual.sprite_item;
+
+                set_character_window_visibility(visual.background.value());
+                will_blend = true;
+            }
+        }
+        if (will_blend) {
+            bn::blending::set_transparency_alpha(bn::fixed(0));
+            blend_action = bn::blending_transparency_alpha_to_action(20, 1.0);
+        }
+    }
+
+    // TODO: uncomment whe ready.
+    if (background_want_move) {
+        bg_moves.push_back(bn::regular_bg_move_to_action(*main_background,
                                                          20,
                                                          background_visual.position_x,
                                                          background_visual.position_y));
     }
-    if (background_visual.will_show) {
-        bg_show_blend = true;
+    for (auto &visual : character_visuals) {
+        bool character_want_move = visual.background.has_value() &&
+                                   (visual.position_x != visual.background->position().x() ||
+                                   visual.position_y != visual.background->position().y());
+        if (character_want_move) {
+            bg_moves.push_back(bn::regular_bg_move_to_action(*visual.background, 20, visual.position_x, visual.position_y));
+            spr_moves.push_back(bn::sprite_move_to_action(*visual.sprite, 20,
+                visual.position_x + visual.offset_x + visual.sprite_meta->offset_x,
+                visual.position_y + visual.offset_y + visual.sprite_meta->offset_y));
+        }
     }
 
+    in_progress = true;
+    while (in_progress && (blend_action.has_value() || !bg_moves.empty() || !spr_moves.empty())) {
+        in_progress = false;
+        if (blend_action.has_value() && !blend_action->done()) {
+            blend_action->update();
+            in_progress = true;
+        }
+        for (auto& action : bg_moves) {
+            if (!action.done()) {
+                action.update();
+                in_progress = true;
+                for (auto &visual : character_visuals) {
+                    if (!visual.background.has_value()) {
+                        continue;
+                    }
+                    set_character_window_visibility(visual.background.value());
+                }
+            }
+        }
+        for (auto& action : spr_moves) {
+            if (!action.done()) {
+                action.update();
+                in_progress = true;
+            }
+        }
+        globals::main_update();
+    }
     for (auto &visual : character_visuals) {
-        if (!visual.background.has_value()) {
+        if (!visual.bg_item.has_value()) {
             continue;
         }
-
         if (visual.will_show) {
-            show_blend = true;
-            bg_blend_ptrs.push_back(visual.background.value());
-            spr_blend_ptrs.push_back(visual.sprite.value());
-        }
-
-        if (visual.position_x != visual.background->position().x() ||
-            visual.position_y != visual.background->position().y()) {
-
-
-
-            bg_moves.push_back(bn::regular_bg_move_to_action(visual.background.value(),
-                                                             20,
-                                                             visual.position_x,
-                                                             visual.position_y));
-            spr_moves.push_back(bn::sprite_move_to_action(visual.sprite.value(),
-                                                          20,
-                                                          visual.position_x + visual.offset_x,
-                                                          visual.position_y + visual.offset_y));
+            visual.background->set_blending_enabled(false);
+            visual.sprite->set_blending_enabled(false);
         }
     }
 
-    if (bg_show_blend) {
-        background_visual.background->set_visible(false);
-        if (!dialog->is_hidden()) {
-            dialog->hide_blend();
-        }
-    }
-
-    if (show_blend) {
-        for (auto blending_bg : bg_blend_ptrs) {
-            blending_bg.set_visible(false);
-        }
-        for (auto blending_spr : spr_blend_ptrs) {
-            blending_spr.set_visible(false);
-        }
-        if (!dialog->is_hidden()) {
-            dialog->hide_blend();
-        }
-    }
-
-    if (bg_show_blend) {
-        bn::blending::set_transparency_alpha(0.0);
-        background_visual.background->set_visible(true);
-        background_visual.background->set_blending_enabled(true);
-        bg_blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
-    }
-
-    // BLEND BG
-    while (bg_blend_action.has_value() && !bg_blend_action->done()) {
-        bg_blend_action->update();
-        ks::globals::main_update();
-    }
-    if (background_visual.background) {
-        background_visual.background->set_blending_enabled(false);
-        if (background_visual.dissolve_on_top) {
-            background_visual.dissolve_on_top = false;
-            BN_LOG("REPLACE BG!");
-            main_background.reset();
-            // main_background = secondary_background.value();
-            secondary_background.reset();
-            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
-            background_visual.background = &main_background.value();
-            bn::core::update();
-        }
-    }
-
-    if (show_blend) {
-        for (auto blending_bg : bg_blend_ptrs) {
-            blending_bg.set_blending_enabled(true);
-            blending_bg.set_visible(true);
-        }
-        for (auto blending_spr : spr_blend_ptrs) {
-            blending_spr.set_blending_enabled(true);
-            blending_spr.set_visible(true);
-        }
-
-        bn::blending::set_transparency_alpha(0.0);
-        blend_action = bn::blending_transparency_alpha_to_action(20, 1.0);
-    }
-
-    // BLEND and MOVES chars
-    while (incomplete) {
-        incomplete = false;
-
-        for (auto &action : bg_moves) {
-            BN_LOG("MOVE CHARACTER");
-            if (!action.done()) {
-                incomplete = true;
-
-                action.update();
-                // set_character_window_visibility(action.bg(), action.final_position().x(), action.final_position().y());
-                set_character_window_visibility(action.bg());
-            }
-        }
-
-        for (auto &action : spr_moves) {
-            if (!action.done()) {
-                incomplete = true;
-
-                action.update();
-            }
-        }
-
-        if (show_blend) {
-            if (!blend_action->done()) {
-                incomplete = true;
-
-                blend_action->update();
-            }
-        }
-
-        ks::globals::main_update();
-    }
-    if (background_visual.will_show) {
-        background_visual.will_show = false;
-    }
-    for (auto &visual : character_visuals) {
-        if (visual.will_show) {
-            visual.will_show = false;
-        }
-    }
-    for (auto blending_bg : bg_blend_ptrs) {
-        blending_bg.set_blending_enabled(false);
-    }
-    for (auto blending_spr : spr_blend_ptrs) {
-        blending_spr.set_blending_enabled(false);
-    }
+    /// discard: SHOW DIALOGS (WITH DISSOLVE)
 }
+
+// void SceneManager::update_visuals() {
+//     if (is_loading) {
+//         return;
+//     }
+//
+//     bool incomplete = true;
+//     bool show_blend = false;
+//     // bool hide_blend = false;
+//     bool bg_show_blend = false;
+//     bn::vector<bn::regular_bg_move_to_action, 9> bg_moves;
+//     bn::vector<bn::sprite_move_to_action, 8> spr_moves;
+//     bn::vector<bn::regular_bg_ptr, 4> bg_blend_ptrs;
+//     bn::vector<bn::sprite_ptr, 4> spr_blend_ptrs;
+//     bn::optional<bn::blending_transparency_alpha_to_action> blend_action;
+//     bn::optional<bn::blending_transparency_alpha_to_action> bg_blend_action;
+//
+//     bg_moves.clear();
+//     spr_moves.clear();
+//     bg_blend_ptrs.clear();
+//     spr_blend_ptrs.clear();
+//
+//
+//     if (background_visual.position_x != background_visual.background->position().x() ||
+//         background_visual.position_y != background_visual.background->position().y()) {
+//         bg_moves.push_back(bn::regular_bg_move_to_action(*background_visual.background,
+//                                                          20,
+//                                                          background_visual.position_x,
+//                                                          background_visual.position_y));
+//     }
+//     if (background_visual.will_show) {
+//         bg_show_blend = true;
+//     }
+//
+//     for (auto &visual : character_visuals) {
+//         if (!visual.background.has_value()) {
+//             continue;
+//         }
+//
+//         if (visual.will_show) {
+//             show_blend = true;
+//             bg_blend_ptrs.push_back(visual.background.value());
+//             spr_blend_ptrs.push_back(visual.sprite.value());
+//         }
+//
+//         if (visual.position_x != visual.background->position().x() ||
+//             visual.position_y != visual.background->position().y()) {
+//
+//
+//
+//             bg_moves.push_back(bn::regular_bg_move_to_action(visual.background.value(),
+//                                                              20,
+//                                                              visual.position_x,
+//                                                              visual.position_y));
+//             spr_moves.push_back(bn::sprite_move_to_action(visual.sprite.value(),
+//                                                           20,
+//                                                           visual.position_x + visual.offset_x,
+//                                                           visual.position_y + visual.offset_y));
+//         }
+//     }
+//
+//     if (bg_show_blend) {
+//         background_visual.background->set_visible(false);
+//         if (!dialog->is_hidden()) {
+//             dialog->hide_blend();
+//         }
+//     }
+//
+//     if (show_blend) {
+//         for (auto blending_bg : bg_blend_ptrs) {
+//             blending_bg.set_visible(false);
+//         }
+//         for (auto blending_spr : spr_blend_ptrs) {
+//             blending_spr.set_visible(false);
+//         }
+//         if (!dialog->is_hidden()) {
+//             dialog->hide_blend();
+//         }
+//     }
+//
+//     if (bg_show_blend) {
+//         bn::blending::set_transparency_alpha(0.0);
+//         background_visual.background->set_visible(true);
+//         background_visual.background->set_blending_enabled(true);
+//         bg_blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
+//     }
+//
+//     // BLEND BG
+//     while (bg_blend_action.has_value() && !bg_blend_action->done()) {
+//         bg_blend_action->update();
+//         ks::globals::main_update();
+//     }
+//     if (background_visual.background) {
+//         background_visual.background->set_blending_enabled(false);
+//         if (background_visual.dissolve_on_top) {
+//             background_visual.dissolve_on_top = false;
+//             BN_LOG("REPLACE BG!");
+//             main_background.reset();
+//             // main_background = secondary_background.value();
+//             secondary_background.reset();
+//             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+//             main_background->set_priority(3);
+//             main_background->set_z_order(10);
+//             background_visual.background = &main_background.value();
+//             bn::core::update();
+//         }
+//     }
+//
+//     if (show_blend) {
+//         for (auto blending_bg : bg_blend_ptrs) {
+//             blending_bg.set_blending_enabled(true);
+//             blending_bg.set_visible(true);
+//         }
+//         for (auto blending_spr : spr_blend_ptrs) {
+//             blending_spr.set_blending_enabled(true);
+//             blending_spr.set_visible(true);
+//         }
+//
+//         bn::blending::set_transparency_alpha(0.0);
+//         blend_action = bn::blending_transparency_alpha_to_action(20, 1.0);
+//     }
+//
+//     // BLEND and MOVES chars
+//     while (incomplete) {
+//         incomplete = false;
+//
+//         for (auto &action : bg_moves) {
+//             BN_LOG("MOVE CHARACTER");
+//             if (!action.done()) {
+//                 incomplete = true;
+//
+//                 action.update();
+//                 // set_character_window_visibility(action.bg(), action.final_position().x(), action.final_position().y());
+//                 set_character_window_visibility(action.bg());
+//             }
+//         }
+//
+//         for (auto &action : spr_moves) {
+//             if (!action.done()) {
+//                 incomplete = true;
+//
+//                 action.update();
+//             }
+//         }
+//
+//         if (show_blend) {
+//             if (!blend_action->done()) {
+//                 incomplete = true;
+//
+//                 blend_action->update();
+//             }
+//         }
+//
+//         ks::globals::main_update();
+//     }
+//     if (background_visual.will_show) {
+//         background_visual.will_show = false;
+//     }
+//     for (auto &visual : character_visuals) {
+//         if (visual.will_show) {
+//             visual.will_show = false;
+//         }
+//     }
+//     for (auto blending_bg : bg_blend_ptrs) {
+//         blending_bg.set_blending_enabled(false);
+//     }
+//     for (auto blending_spr : spr_blend_ptrs) {
+//         blending_spr.set_blending_enabled(false);
+//     }
+// }
 
 void SceneManager::music_play(const char* filename) {
     music_play(filename, 0);
@@ -1032,27 +1382,10 @@ void SceneManager::close_ingame_menu() {
         if (!character_visual.sprite_item.has_value()) continue;
         if (!character_visual.sprite_meta.has_value()) continue;
         BN_LOG("Restoring char ", character_visual.index);
-
-        SceneManager::show_character(
-            character_visual.index,
-            character_visual.bg_item.value(),
-            character_visual.sprite_item.value(),
-            character_visual.sprite_meta.value(),
-            character_visual.position_x,
-            character_visual.position_y,
-            false,
-            true);
+        character_visual.current_bg_item.reset();
+        character_visual.current_sprite_item.reset();
+        character_visual.will_show = true;
     }
-
-    // Enable blending for characters
-    for (auto& char_visual : character_visuals) {
-        if (char_visual.background.has_value() && char_visual.sprite.has_value()) {
-            char_visual.will_show = true;
-        //     char_visual.background->set_blending_enabled(true);
-        //     char_visual.sprite->set_blending_enabled(true);
-        }
-    }
-
     update_visuals();
 }
 

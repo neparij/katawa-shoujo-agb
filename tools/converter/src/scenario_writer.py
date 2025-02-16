@@ -133,7 +133,6 @@ class ScenarioWriter:
         for label in self.get_labels():
             sequences = []
             if label.is_called_inline and not label.is_initial:
-                sequences.append(f'ks::SceneManager::free_resources();')
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
                 sequences.append(f'IF_NOT_EXIT(ks::SceneManager::autosave());')
             elif label.is_initial:
@@ -144,7 +143,8 @@ class ScenarioWriter:
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
-                    sequences.extend(sequence_code)
+                    for seq in sequence_code:
+                        sequences.append(seq)
             # if label.is_called_inline and not label.is_initial:
             #     sequences.append("scene.start();\n")
             #     sequences.extend([
@@ -585,7 +585,7 @@ class ScenarioWriter:
             self.videos.append(show_video.video)
         return [
         #     # f'ks::SceneManager::free_resources();',
-            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_agmv, video_{show_video.video}_agmv_size, "video_{show_video.video}.gsm"));'
+            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_agmv, video_{show_video.video}_agmv_size, "video_{show_video.video}.gsm"));\n'
             f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n'
         ]
 

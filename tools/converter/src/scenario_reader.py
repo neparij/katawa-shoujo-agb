@@ -136,6 +136,7 @@ class ScenarioReader:
 
         # if SequenceType.SHOW in self.linepack_events or SequenceType.SHOW_TRANSFORM in self.linepack_events:
         if (has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW) or
+                has_sequence_item_with_type(self.linepack_events, SequenceType.HIDE) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW_TRANSFORM) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND)):
             self.stack.current().add_sequence_item(self.linepack_events, UpdateVisualsItem())

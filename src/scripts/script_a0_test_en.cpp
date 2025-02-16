@@ -4,7 +4,6 @@ namespace ks {
     class ScriptA0TestEn : public ScriptA0Test {
         public:
             static void a0_actname_scene1() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A0_ACTNAME_SCENE1);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, 0));

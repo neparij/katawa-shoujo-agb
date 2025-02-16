@@ -4,7 +4,6 @@ namespace ks {
     class ScriptA1ThursdayRu : public ScriptA1Thursday {
         public:
             static void a1_thursday_the_running_girl() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_THE_RUNNING_GIRL);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_alarmclock.8ad"));
@@ -288,6 +287,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(0, -184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(0);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 if (ks::progress.promised || ks::in_replay) {
                     ScriptA1ThursdayRu::a1_thursday_the_running_girl__condition_3_0();
                 } 
@@ -303,7 +303,6 @@ namespace ks {
             
             }
             static void a1_thursday_soap() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_SOAP);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_dormext_half, 0, 0, 15));
@@ -578,7 +577,6 @@ namespace ks {
             
             }
             static void a1_thursday_cold_war() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_COLD_WAR);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 0, 0, 0));
@@ -939,7 +937,6 @@ namespace ks {
             
             }
             static void a1_thursday_proof_of_competency() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_PROOF_OF_COMPETENCY);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
@@ -1186,7 +1183,6 @@ namespace ks {
             
             }
             static void a1_thursday_event_horizon() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_EVENT_HORIZON);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
@@ -1201,6 +1197,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(5, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xE4C8CFA4);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 344));
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
@@ -1423,6 +1420,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 403));
                 ks::SceneManager::hide_character(4);
                 ks::SceneManager::hide_character(3);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x02185E6E);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 404));
                 ks::SceneManager::set_line_hash(0x061EC5B0);
@@ -1771,6 +1769,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x03CFF588);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 485));
                 ks::SceneManager::hide_character(4);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(3, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -2018,7 +2017,6 @@ namespace ks {
             
             }
             static void a1_thursday_above_and_beyond() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_ABOVE_AND_BEYOND);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
@@ -2200,7 +2198,6 @@ namespace ks {
             
             }
             static void a1_thursday_paint_by_numbers() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_PAINT_BY_NUMBERS);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
@@ -2216,6 +2213,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(3);
                 ks::SceneManager::hide_character(4);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x1156596A);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 568));
                 ks::SceneManager::set_line_hash(0xDC6CA379);
@@ -2341,6 +2339,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(5, -184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x21B7F47A);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 611));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_lobby, 0, 0, 30));
@@ -2470,6 +2469,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 655));
                 ks::SceneManager::hide_character(2);
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // renpy.music.set_volume(0.5, 2.0, channel="ambient"); TODO: unknown assignment
                 ks::SceneManager::set_line_hash(0x1051B46A);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 656));
@@ -2565,6 +2565,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(5, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_character(1, bn::regular_bg_items::kenji_bg_basic, bn::sprite_items::kenji_spr_basic_neutral, ks::sprite_metas::kenji_basic));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_kenji.gsm"));
@@ -2643,6 +2644,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x17D0BDDC);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 709));
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x68269C77);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 710));
                 ks::SceneManager::set_line_hash(0x36572ACE);
@@ -2686,6 +2688,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0xE6E318E8);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 722));
                 ks::SceneManager::hide_character(1);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(5, 48, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(2, -48, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(0, 0));
@@ -2800,6 +2803,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
                 ks::SceneManager::hide_character(2);
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x27A9B4EF);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 759));
                 ks::SceneManager::set_line_hash(0x21FAE71A);
@@ -2815,7 +2819,6 @@ namespace ks {
             
             }
             static void a1_thursday_things_you_can_do() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_THINGS_YOU_CAN_DO);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
@@ -2826,6 +2829,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(5, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x340EDDD2);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 763));
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
@@ -3376,6 +3380,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0xB84DD6E2);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 922));
                 ks::SceneManager::hide_character(2);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x484BF91B);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 923));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(3, -48, 0));
@@ -3410,6 +3415,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 930));
                 ks::SceneManager::hide_character(3);
                 ks::SceneManager::hide_character(4);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x3504C139);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 931));
                 return;

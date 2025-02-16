@@ -4,7 +4,6 @@ namespace ks {
     class ScriptA1MondayEn : public ScriptA1Monday {
         public:
             static void a1_monday_out_cold() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_MONDAY_OUT_COLD);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, 60));
@@ -67,10 +66,12 @@ namespace ks {
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartslow.8ad"));
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xCC98ED33);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 22));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::other_iwanako, 0, 0, 0));
@@ -99,6 +100,7 @@ namespace ks {
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x02127230);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Iwanako", 31));
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
@@ -106,10 +108,12 @@ namespace ks {
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartfast.8ad"));
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x018CC0D8);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("Iwanako", 32));
                 ks::SceneManager::set_line_hash(0x4AD3C7E8);
@@ -127,20 +131,24 @@ namespace ks {
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xD0B07492);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 38));
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartfast.8ad"));
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartslow.8ad"));
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartfast.8ad"));
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide heartattack
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartstop.8ad"));
                 // TODO: Show heartattack
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -164,7 +172,6 @@ namespace ks {
             
             }
             static void a1_monday_bundle_of_hisao() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_MONDAY_BUNDLE_OF_HISAO);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 ks::SceneManager::set_line_hash(0x82D891D9);
@@ -388,7 +395,6 @@ namespace ks {
             
             }
             static void a1_monday_gateway_effect() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_MONDAY_GATEWAY_EFFECT);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_gate, 0, 0, 90));
@@ -497,6 +503,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 182));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(0);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x1F2150DE);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mu, 183));
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
@@ -509,7 +516,6 @@ namespace ks {
             
             }
             static void a1_monday_enter_stage_left() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_MONDAY_ENTER_STAGE_LEFT);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3, 0, 0, 0));
@@ -579,6 +585,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0xB2730054);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mu, 206));
                 ks::SceneManager::hide_character(0);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x8D223F85);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 207));
                 ks::SceneManager::set_line_hash(0xE7348B9F);
@@ -867,7 +874,6 @@ namespace ks {
             
             }
             static void a1_monday_in_the_nursery() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_MONDAY_IN_THE_NURSERY);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_staircase2, 0, 0, 30));
@@ -888,6 +894,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x45D47B21);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 278));
                 ks::SceneManager::hide_character(1);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x0FE332B9);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 279));
                 ks::SceneManager::set_line_hash(0x8D78BB32);
@@ -951,6 +958,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(3, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(3);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xF18CF595);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 296));
                 ks::SceneManager::set_line_hash(0x7721506A);
@@ -994,6 +1002,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 308));
                 ks::SceneManager::hide_character(2);
                 ks::SceneManager::hide_character(1);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x114167BC);
@@ -1035,6 +1044,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
                 ks::SceneManager::hide_character(2);
                 ks::SceneManager::hide_character(1);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x4F40B0C6);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 318));
                 ks::SceneManager::set_line_hash(0x5675899C);
@@ -1197,7 +1207,6 @@ namespace ks {
             
             }
             static void a1_monday_nobodys_room() {
-                ks::SceneManager::free_resources();
                 ks::SceneManager::set_label(LABEL_A1_MONDAY_NOBODYS_ROOM);
                 IF_NOT_EXIT(ks::SceneManager::autosave());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_courtyard, 0, 0, 30));
@@ -1345,6 +1354,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x0B782252);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::ke, 432));
                 ks::SceneManager::hide_character(5);
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
                 ks::SceneManager::set_line_hash(0x9D00FD5B);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 433));
@@ -1405,6 +1415,7 @@ namespace ks {
                 // TODO: Show pills
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 // TODO: Hide pills
+                IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x3E92260D);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 457));
                 ks::SceneManager::set_line_hash(0x819E5F09);
@@ -1440,10 +1451,12 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "en", script_a1_monday_en_intl)));
             
                 IF_NOT_EXIT(a1_monday_out_cold());
-                IF_NOT_EXIT(ks::SceneManager::show_video(video_op_1_agmv, video_op_1_agmv_size, "video_op_1.gsm"));IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "en", script_a1_monday_en_intl)));
+                IF_NOT_EXIT(ks::SceneManager::show_video(video_op_1_agmv, video_op_1_agmv_size, "video_op_1.gsm"));
+            IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "en", script_a1_monday_en_intl)));
             
                 IF_NOT_EXIT(a1_monday_bundle_of_hisao());
-                IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act1_agmv, video_tc_act1_agmv_size, "video_tc_act1.gsm"));IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "en", script_a1_monday_en_intl)));
+                IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act1_agmv, video_tc_act1_agmv_size, "video_tc_act1.gsm"));
+            IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "en", script_a1_monday_en_intl)));
             
                 IF_NOT_EXIT(a1_monday_gateway_effect());
                 IF_NOT_EXIT(a1_monday_enter_stage_left());
