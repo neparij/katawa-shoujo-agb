@@ -25,6 +25,13 @@ if (ks::globals::exit_scenario) {                 \
 }                                                 \
 step;
 
+#define SKIP_IF_LOAD_ANOTHER_SCENE(val)           \
+if (ks::is_loading) {                             \
+    if (ks::progress.metadata.script != val) {    \
+        return;                                   \
+    }                                             \
+}
+
 namespace ks {
 
 struct background_visuals_ptr
@@ -78,7 +85,7 @@ public:
 
     static void free_resources();
     static void set(const ks::SceneManager instance);
-    static void init_savedata(const ks::saves::SaveSlotProgressData& value);
+    static void init_savedata(ks::saves::SaveSlotProgressData &value);
     static void set_script(const script_t script);
     static void set_label(const label_t label);
     static void set_line_hash(const unsigned int line_hash);

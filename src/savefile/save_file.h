@@ -191,7 +191,7 @@ namespace ks {
 
         bool isValid(const SaveFileData *data_ptr);
 
-        bool isValid(const SaveSlotProgressData *data_ptr, unsigned int slot);
+        bool isValid(const SaveSlotProgressData *data_ptr, short slot);
 
         unsigned short getTotalSaveSlots();
 

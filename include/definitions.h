@@ -2,13 +2,13 @@
 #define DEFINITIONS_H
 
 typedef unsigned char forceRoute_t;
-#define FR_NONE   ((forceRoute)0)
-#define FR_EMI    ((forceRoute)1)
-#define FR_HANAKO ((forceRoute)2)
-#define FR_LILLY  ((forceRoute)3)
-#define FR_RIN    ((forceRoute)4)
-#define FR_SHIZU  ((forceRoute)5)
-#define FR_KENJI  ((forceRoute)6)
+#define FR_NONE   ((forceRoute_t)0)
+#define FR_EMI    ((forceRoute_t)1)
+#define FR_HANAKO ((forceRoute_t)2)
+#define FR_LILLY  ((forceRoute_t)3)
+#define FR_RIN    ((forceRoute_t)4)
+#define FR_SHIZU  ((forceRoute_t)5)
+#define FR_KENJI  ((forceRoute_t)6)
 
 typedef unsigned char language_t;
 #define LANG_ENGLISH ((language_t)0)

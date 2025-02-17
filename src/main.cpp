@@ -97,6 +97,8 @@
 #include "bn_sprite_items_hanako.h"
 #include <BN_LOG.h>
 
+#include "ingametimer.h"
+
 using size_type = int;
 
 typedef enum menuEnum {
@@ -888,17 +890,109 @@ int main()
         player_stop();
 
         ks::SceneManager::fade_reset();
-        if (state == MENU_MAIN) {
+        ks::timer::init();
+        ks::timer::start_ingame_timer();
+        if (state == MENU_MAIN || MENU_SAVES) {
+
+            if (state == MENU_SAVES) {
+                const short i = saveslot_index.at(select);
+                BN_LOG("Slot: ", i);
+                if (i == -1) {
+                    ks::progress = ks::saves::readAutosave();
+                } else {
+                    ks::progress = ks::saves::readSaveSlot(i);
+                }
+                BN_ASSERT(ks::saves::isValid(&ks::progress, i), "Invalid save slot");
+                ks::is_loading = true;
+            }
             // Play all scenes
             ks::globals::i18n->script_a1_monday()();
             ks::globals::i18n->script_a1_tuesday()();
             ks::globals::i18n->script_a1_wednesday()();
             ks::globals::i18n->script_a1_thursday()();
-        } else if (state == MENU_SAVES) {
-            auto i = saveslot_index.at(select);
-            ks::progress = ks::saves::readSaveSlot(i);
-            ks::is_loading = true;
-            ks::globals::i18n->script_a1_monday()();
+            // ks::globals::i18n->script_a1_friday()();
+            // ks::globals::i18n->script_a1_saturday()();
+            // ks::globals::i18n->script_a1_sunday()();
+
+            if (ks::progress.force_route == FR_EMI) {
+                // video: tc_act2_emi
+                // ks::globals::i18n->script_a2_emi()();
+                // video: tc_act3_emi
+                // ks::globals::i18n->script_a3_emi()();
+                if (ks::progress.have_a_minute && ks::progress.talk_to_her_mom || ks::progress.let_misha_know) {
+                    // GOOD ENDING
+                    // video: tc_act4_emi
+                    // ks::globals::i18n->script_a4_emi()();
+                    // credits: credits_emi
+                } else {
+                    // BAD ENDING
+                }
+            } else if (ks::progress.force_route == FR_HANAKO) {
+                // video: tc_act2_hanako
+                // ks::globals::i18n->script_a2_hanako()();
+                // video: tc_act3_hanako
+                // ks::globals::i18n->script_a3_hanako()();
+                // video: tc_act4_hanako
+                // ks::globals::i18n->script_a4_hanako()();
+                if (ks::progress.go_to_the_city && ks::progress.agree_with_lilly) {
+                    // GOOD ENDING
+                    // credits: credits_hanako
+                } else if (ks::progress.go_to_the_city) {
+                    // SAD ENDING
+                } else {
+                    // RAGE ENDING
+                }
+            } else if (ks::progress.force_route == FR_LILLY) {
+                // video: tc_act2_lilly
+                // ks::globals::i18n->script_a2_lilly()();
+                // video: tc_act3_lilly
+                // ks::globals::i18n->script_a3_lilly()();
+                // video: tc_act4_lilly
+                // ks::globals::i18n->script_a4_lilly()();
+                if (ks::progress.want_true && ks::progress.address_it && ks::progress.mention_the_letter) {
+                    // GOOD ENDING
+                    // credits: credits_lilly
+                } else {
+                    // BAD ENDING
+                }
+            } else if (ks::progress.force_route == FR_RIN) {
+                // video: tc_act2_rin
+                // ks::globals::i18n->script_a2_rin()();
+                // video: tc_act3_rin
+                // ks::globals::i18n->script_a3_rin()();
+                // video: tc_act4_rin
+                if (!ks::progress.explain) {
+                    // video: tc_act4_rin
+                    // ks::globals::i18n->script_a4_rin()();
+                    if (ks::progress.is_true) {
+                        // TRUE ENDING
+                    } else {
+                        // GOOD ENDING
+                        // credits: credits_rin
+                    }
+                } else {
+                    // BAD ENDING
+                }
+            } else if (ks::progress.force_route == FR_SHIZU) {
+                // video: tc_act2_shizune
+                // ks::globals::i18n->script_a2_shizune()();
+                // video: tc_act3_shizune
+                // ks::globals::i18n->script_a3_shizune()();
+                // video: tc_act4_shizune
+                // ks::globals::i18n->script_a4_shizune()();
+                if (ks::progress.refuse_misha) {
+                    // GOOD ENDING
+                    // credits: credits_shizune
+                } else {
+                    // BAD ENDING
+                }
+            } else {
+                // Show blood red scene with Dissolve 4s
+                // KENJI ENDING
+            }
+
+            // credits
+
         } else if (state == MENU_DEBUG_ACTS) {
             if (select == 0) {
                 ks::ScriptA0TestEn().a0_actname();
@@ -913,6 +1007,7 @@ int main()
             }
         }
 
+        ks::timer::reset();
         ks::SceneManager::free_resources();
         ks::globals::exit_scenario = false;
         ks::main_background.reset();

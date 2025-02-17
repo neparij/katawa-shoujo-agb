@@ -5,7 +5,9 @@ namespace ks {
         public:
             static void a1_wednesday_lunch_evolution_theory() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_LUNCH_EVOLUTION_THEORY);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_happiness.gsm"));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -183,7 +185,9 @@ namespace ks {
             }
             static void a1_wednesday_short_sharp_shock() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_SHORT_SHARP_SHOCK);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x97D8710A);
@@ -315,7 +319,9 @@ namespace ks {
             }
             static void a1_wednesday_meet_cute() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_MEET_CUTE);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x8EC5FE95);
@@ -429,7 +435,9 @@ namespace ks {
             }
             static void a1_wednesday_detour_ahead() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_DETOUR_AHEAD);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::suburb_roadcenter, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_tranquil.gsm"));
@@ -1138,7 +1146,9 @@ namespace ks {
             }
             static void a1_wednesday_sip_p1() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_SIP_P1);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_dreamy.gsm"));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_miyagi, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -1322,7 +1332,9 @@ namespace ks {
             }
             static void a1_wednesday_it_builds_character() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_IT_BUILDS_CHARACTER);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xEAC0AAF5);
@@ -1570,7 +1582,9 @@ namespace ks {
             }
             static void a1_wednesday_a_private_lunch() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_A_PRIVATE_LUNCH);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xA13A14DD);
@@ -1906,7 +1920,9 @@ namespace ks {
             }
             static void a1_wednesday_waylay() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_WAYLAY);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_hallway3, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_blank, ks::sprite_metas::shizu_behind, 0, 0));
@@ -2308,7 +2324,9 @@ namespace ks {
             }
             static void a1_wednesday_the_other_green() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_THE_OTHER_GREEN);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_soothing.gsm"));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_courtyard, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -2570,6 +2588,7 @@ namespace ks {
             
             }
             static void a1_wednesday() {
+                SKIP_IF_LOAD_ANOTHER_SCENE(SCRIPT_A1_WEDNESDAY);
                 ks::SceneManager::set_script(SCRIPT_A1_WEDNESDAY);
                 IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_wednesday", "en", script_a1_wednesday_en_intl)));

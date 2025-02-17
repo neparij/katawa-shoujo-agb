@@ -16,6 +16,7 @@
 
 #include "bn_bg_palettes.h"
 #include "bn_sprite_palettes.h"
+#include "ingametimer.h"
 
 // #include <variable_16x16_sprite_font.h>
 
@@ -56,6 +57,7 @@ namespace ks {
         void BN_CODE_IWRAM ISR_VBlank() {
             player_onVBlank();
             player_sfx_onVBlank();
+            timer::update();
         }
 
         // Updates the sound only, while waiting for V-Blank.

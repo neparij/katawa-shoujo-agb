@@ -32,6 +32,7 @@
 // #include "bn_regular_bg_position_hbe_ptr.h"
 // #include "bn_regular_bg_attributes_hbe_ptr.h"
 
+#include "ingametimer.h"
 #include "video_4ls_agmv.h"
 #include "video_op_1_agmv.h"
 
@@ -152,7 +153,11 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("SceneManager init done!");
 }
 
-void SceneManager::init_savedata(const ks::saves::SaveSlotProgressData &value) {
+void SceneManager::init_savedata(ks::saves::SaveSlotProgressData &value) {
+    if (!is_loading) {
+        value.reproduction.answer_indices.fill(0);
+        value.reproduction.line_hash = 0;
+    }
     savedata_progress = value;
     savedata_answer_index = 0;
 }
@@ -166,9 +171,11 @@ void SceneManager::set_label(const label_t label) {
 }
 
 void SceneManager::set_line_hash(const unsigned int line_hash) {
-    if (is_loading && savedata_progress.reproduction.line_hash == line_hash) {
-        is_loading = false;
-        update_visuals();
+    if (is_loading) {
+        if (savedata_progress.reproduction.line_hash == line_hash || savedata_progress.reproduction.line_hash == 0) {
+            is_loading = false;
+            update_visuals();
+        }
     }
     BN_LOG("Set line hash: ", line_hash);
     progress.reproduction.line_hash = line_hash;
@@ -1121,6 +1128,7 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
     player_stop();
     player_sfx_stop();
     ks::globals::sound_update();
+    ks::timer::pause_ingame_timer();
 
     bool is_act_video = true;
 
@@ -1150,6 +1158,8 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
     // Re-init Butano Core
     ks::globals::release_engine();
     ks::globals::init_engine();
+
+    ks::timer::resume_ingame_timer();
 }
 
 void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file) {
@@ -1159,6 +1169,8 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
 
 void SceneManager::open_ingame_menu() {
     const int TRANSITION_STEPS = 16;
+
+    ks::timer::pause_ingame_timer();
 
     // bn::bg_palettes::set_fade_color(BLACK);
     // bn::sprite_palettes::set_fade_color(BLACK);
@@ -1242,7 +1254,14 @@ void SceneManager::open_ingame_menu() {
     static_text_sprites->clear();
     ks::text_generator->set_center_alignment();
     ks::text_generator->set_one_sprite_per_character(false);
-    ks::text_generator->generate(0, -ks::device::screen_height_half + 8, bn::format<64>("{}: {}", ks::globals::i18n->screens_playtime(), "0:00:00"), *static_text_sprites);
+    ks::text_generator->generate(0, -ks::device::screen_height_half + 8,
+            bn::format<64>(
+                "{}: {}:{}:{}",
+                ks::globals::i18n->screens_playtime(),
+                progress.metadata.hours_played,
+                bn::format<2>(progress.metadata.minutes_played < 10 ? "0{}" : "{}", progress.metadata.minutes_played),
+                bn::format<2>(progress.metadata.seconds_played < 10 ? "0{}" : "{}", progress.metadata.seconds_played)),
+        *static_text_sprites);
     ks::globals::sound_update();
     selection_index.resize(static_text_sprites->size(), -1);
 
@@ -1386,10 +1405,16 @@ void SceneManager::close_ingame_menu() {
         character_visual.current_sprite_item.reset();
         character_visual.will_show = true;
     }
+
+    ks::timer::resume_ingame_timer();
     update_visuals();
 }
 
 void SceneManager::exit_scenario_from_ingame_menu() {
+    if (!in_replay) {
+        autosave();
+    }
+
     static_text_sprites->clear();
     animated_text_sprites->clear();
     secondary_background.reset();

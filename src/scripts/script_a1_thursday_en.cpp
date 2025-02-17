@@ -5,7 +5,9 @@ namespace ks {
         public:
             static void a1_thursday_the_running_girl() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_THE_RUNNING_GIRL);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_alarmclock.8ad"));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_dormhisao, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -304,7 +306,9 @@ namespace ks {
             }
             static void a1_thursday_soap() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_SOAP);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_dormext_half, 0, 0, 15));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xC0BCA7F5);
@@ -578,7 +582,9 @@ namespace ks {
             }
             static void a1_thursday_cold_war() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_COLD_WAR);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_normal.gsm"));
@@ -938,7 +944,9 @@ namespace ks {
             }
             static void a1_thursday_proof_of_competency() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_PROOF_OF_COMPETENCY);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_daily.gsm"));
@@ -1184,7 +1192,9 @@ namespace ks {
             }
             static void a1_thursday_event_horizon() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_EVENT_HORIZON);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::show_character(4, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_frown, ks::sprite_metas::shizu_behind));
                 IF_NOT_EXIT(ks::SceneManager::show_character(3, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_frown, ks::sprite_metas::misha_hips));
@@ -2018,7 +2028,9 @@ namespace ks {
             }
             static void a1_thursday_above_and_beyond() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_ABOVE_AND_BEYOND);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::music_play("music_tranquil.gsm"));
@@ -2199,7 +2211,9 @@ namespace ks {
             }
             static void a1_thursday_paint_by_numbers() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_PAINT_BY_NUMBERS);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::music_stop());
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::show_character(5, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_timid, ks::sprite_metas::hanako_emb));
@@ -2820,7 +2834,9 @@ namespace ks {
             }
             static void a1_thursday_things_you_can_do() {
                 ks::SceneManager::set_label(LABEL_A1_THURSDAY_THINGS_YOU_CAN_DO);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 8, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::show_character(5, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_timid, ks::sprite_metas::hanako_emb));
                 IF_NOT_EXIT(ks::SceneManager::show_character(4, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_frown, ks::sprite_metas::shizu_behind));
@@ -3253,6 +3269,7 @@ namespace ks {
             
             }
             static void a1_thursday() {
+                SKIP_IF_LOAD_ANOTHER_SCENE(SCRIPT_A1_THURSDAY);
                 ks::SceneManager::set_script(SCRIPT_A1_THURSDAY);
                 IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_thursday", "en", script_a1_thursday_en_intl)));

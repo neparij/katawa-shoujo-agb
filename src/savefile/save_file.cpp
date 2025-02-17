@@ -50,6 +50,11 @@ bool ks::saves::initialize() {
         save_data->integrity_begin.version = INTEGRITY_VERSION;
         save_data->integrity_end.version = INTEGRITY_VERSION;
 
+        // TODO: savegame restoration if any
+        // Should go through all save slots and check if they are have any data and valid
+        // Then restore it one-by-one.
+        // Log the restoration process.
+
         save(save_data);
         bn::memory::ewram_free(save_data);
         return true;
@@ -81,8 +86,15 @@ bool ks::saves::isValid(const SaveFileData *data_ptr) {
     return true;
 }
 
-bool ks::saves::isValid(const SaveSlotProgressData *data_ptr, const unsigned int slot) {
-    if (data_ptr->integrity != 0xFFFF - slot) {
+bool ks::saves::isValid(const SaveSlotProgressData *data_ptr, const short slot) {
+    BN_ASSERT(slot == -1 || (slot >= 0 && slot < TOTAL_SAVE_SLOTS), "Invalid slot number: ", slot);
+
+    if (slot == -1) {
+        if (data_ptr->integrity != 0xFFFF - 1024) {
+            BN_LOG("AutosaveSlotProgressData integrity does not match.");
+            return false;
+        }
+    } else if (data_ptr->integrity != 0xFFFF - slot) {
         BN_LOG("SaveSlotProgressData integrity does not match.");
         return false;
     }
@@ -215,6 +227,22 @@ void ks::saves::deleteSaveSlot(const unsigned int slot) {
 
 void ks::saves::log_progress(SaveSlotProgressData &progress) {
     BN_LOG("Progress:");
+
+    BN_LOG("  METADATA:");
+    BN_LOG("    has_data: ", progress.metadata.has_data);
+    BN_LOG("    script: ", progress.metadata.script);
+    BN_LOG("    label: ", progress.metadata.label);
+    BN_LOG("    hours_played: ", progress.metadata.hours_played);
+    BN_LOG("    minutes_played: ", progress.metadata.minutes_played);
+    BN_LOG("    seconds_played: ", progress.metadata.seconds_played);
+
+    BN_LOG(" REPRODUCTION DATA:");
+    BN_LOG("    line_hash: ", progress.reproduction.line_hash);
+    BN_LOG("    answer_indices:");
+    for (unsigned char answer_index : progress.reproduction.answer_indices) {
+        BN_LOG("      ", answer_index);
+    }
+
     BN_LOG("  ACT 1 DATA:");
     BN_LOG("    attraction_hanako: ", progress.attraction_hanako);
     BN_LOG("    attraction_sc: ", progress.attraction_sc);

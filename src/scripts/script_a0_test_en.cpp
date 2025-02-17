@@ -5,7 +5,9 @@ namespace ks {
         public:
             static void a0_actname_scene1() {
                 ks::SceneManager::set_label(LABEL_A0_ACTNAME_SCENE1);
-                IF_NOT_EXIT(ks::SceneManager::autosave());
+                if (!ks::in_replay) {
+                    IF_NOT_EXIT(ks::SceneManager::autosave());
+                }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xA9C688F3);
@@ -35,6 +37,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1", 7));
             }
             static void a0_actname() {
+                SKIP_IF_LOAD_ANOTHER_SCENE(SCRIPT_A0_ACTNAME);
                 ks::SceneManager::set_script(SCRIPT_A0_ACTNAME);
                 IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a0_test", "en", script_a0_test_en_intl)));
