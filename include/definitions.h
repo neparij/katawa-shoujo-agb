@@ -14,6 +14,11 @@ typedef unsigned char language_t;
 #define LANG_ENGLISH ((language_t)0)
 #define LANG_RUSSIAN ((language_t)1)
 
+typedef unsigned char sound_channel_t;
+#define SOUND_CHANNEL_MUSIC ((sound_channel_t)0)
+#define SOUND_CHANNEL_SOUND ((sound_channel_t)1)
+#define SOUND_CHANNEL_AMBIENT ((sound_channel_t)2)
+#define SOUND_CHANNEL_VIDEO ((sound_channel_t)0)
 
 typedef unsigned char script_t;
 #define SCRIPT_A0_ACTNAME  ((script_t)0xFF)

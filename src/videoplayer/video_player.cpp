@@ -1,9 +1,11 @@
 #include "video_player.h"
 #include "../amgvplayer/agmv_gba.h"
-#include "../gsmplayer/player_sfx.h"
-#include "../gsmplayer/player.h"
+#include "../gsmplayer/player_8ad.h"
+#include "../gsmplayer/player_gsm.h"
 #include "../globals.h"
 #include <gba_interrupt.h>
+
+#include "../sound_manager.h"
 
 #define VP_INLINE static inline __attribute__((always_inline))
 #define VP_IWRAM __attribute__((section(".iwram")))
@@ -48,13 +50,12 @@ VP_INLINE void VP_IWRAM update()
     }
 
 
-    player_update(0, [](unsigned current) {});
-    player_sfx_update();
+    ks::sound_manager::update();
     VBlankIntrWait();
 
     if (willRender && quart_number == 4) {
         if (g_currentFrame == 0) {
-            player_playGSM(g_audio_file);
+            ks::sound_manager::play<SOUND_CHANNEL_MUSIC>(g_audio_file);
         }
         if (AGMV_IsVideoDone(g_agmv)) {
             g_is_finished = true;
@@ -68,7 +69,7 @@ VP_INLINE void VP_IWRAM update()
     if (KEY_DOWN_NOW(KEY_START)) {
         // TODO: REMOVE
         g_is_finished = true;
-        player_stop();
+        playerGSM_stop();
     }
 
 }

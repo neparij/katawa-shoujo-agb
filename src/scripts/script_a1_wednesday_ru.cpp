@@ -8,7 +8,7 @@ namespace ks {
                 if (!ks::in_replay) {
                     IF_NOT_EXIT(ks::SceneManager::autosave());
                 }
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_happiness.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_happiness.gsm", 120));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x4262C6AB);
@@ -83,7 +83,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(1, -90, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(420));
                 ks::SceneManager::set_line_hash(0xC107F01A);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 20));
                 ks::SceneManager::set_line_hash(0xCEF0D918);
@@ -148,7 +148,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 40));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_daily.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_daily.gsm", 60));
                 ks::SceneManager::set_line_hash(0x88C42ECC);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 41));
                 ks::SceneManager::set_line_hash(0x60774D70);
@@ -260,19 +260,19 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x0E5DC708);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi, 70));
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_emisprinting.8ad"));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(60));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(3, -184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(3);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::sfx_stop());
+                IF_NOT_EXIT(ks::SceneManager::sfx_stop(90));
                 ks::SceneManager::set_line_hash(0xFCB47840);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 71));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(0, 48, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(1, -48, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(-8, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_normal.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_normal.gsm", 180));
                 ks::SceneManager::set_line_hash(0xFE58BD8C);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 72));
                 IF_NOT_EXIT(ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_frown, ks::sprite_metas::shizu_basic));
@@ -391,12 +391,12 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x1CAD35EB);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi, 70));
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_emisprinting.8ad"));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(60));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(3, -184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(3);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::sfx_stop());
+                IF_NOT_EXIT(ks::SceneManager::sfx_stop(90));
                 ks::SceneManager::set_line_hash(0x1888D9FD);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 94));
                 ks::SceneManager::set_line_hash(0x64DB04C0);
@@ -440,7 +440,7 @@ namespace ks {
                 }
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::suburb_roadcenter, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_tranquil.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_tranquil.gsm", 180));
                 ks::SceneManager::set_line_hash(0x34B497E9);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 102));
                 ks::SceneManager::set_line_hash(0x4A4305FA);
@@ -589,7 +589,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
                 ks::SceneManager::set_line_hash(0x807FE879);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 142));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(180));
                 ks::SceneManager::set_line_hash(0x986CD418);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 143));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::shizu_shanghai_borednormal, 0, 0, 0));
@@ -604,7 +604,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 145));
                 ks::SceneManager::set_line_hash(0x85E23B35);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 146));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_comedy.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_comedy.gsm", 30));
                 IF_NOT_EXIT(ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_smug, ks::sprite_metas::shizu_adjust, -184, 0));
                 IF_NOT_EXIT(ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -792,7 +792,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xF8F0BCA1);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 190));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(720));
                 IF_NOT_EXIT(ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_blank, ks::sprite_metas::shizu_behind));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x45D6FD04);
@@ -853,7 +853,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 11));
                 ks::SceneManager::set_line_hash(0x74C349A4);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 207));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_running.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_running.gsm", 240));
                 IF_NOT_EXIT(ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_smug, ks::sprite_metas::shizu_adjust));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x5078A78F);
@@ -994,7 +994,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 237));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::suburb_shanghaiext, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(300));
                 ks::SceneManager::set_line_hash(0x75783270);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 238));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::suburb_roadcenter, 0, 0, 30));
@@ -1031,7 +1031,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 248));
                 // TODO: Hide black
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_shizune.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_shizune.gsm", 60));
                 IF_NOT_EXIT(ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips, -184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(-8, 0));
@@ -1137,7 +1137,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 270));
                 ks::SceneManager::set_line_hash(0xE87A5822);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 271));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(240));
                 if (ks::in_replay) {
                     ScriptA1WednesdayRu::a1_wednesday_detour_ahead__condition_0_0();
                 } 
@@ -1149,7 +1149,7 @@ namespace ks {
                 if (!ks::in_replay) {
                     IF_NOT_EXIT(ks::SceneManager::autosave());
                 }
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_dreamy.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_dreamy.gsm", 120));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_miyagi, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xE1D1A6E1);
@@ -1282,7 +1282,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 310));
                 ks::SceneManager::hide_character(4);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(480));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(2, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -1344,7 +1344,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_scienceroom, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_normalbell.8ad"));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_tranquil.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_tranquil.gsm", 180));
                 ks::SceneManager::set_line_hash(0x20F77B41);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 326));
                 ks::SceneManager::set_line_hash(0x92B4C56A);
@@ -1414,7 +1414,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0xCE461EAA);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 355));
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_doorslam.8ad"));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(18));
                 IF_NOT_EXIT(ks::SceneManager::show_character(5, bn::regular_bg_items::muto_bg_basic, bn::sprite_items::muto_spr_basic_irritated, ks::sprite_metas::muto_basic));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xE7C70B53);
@@ -1425,7 +1425,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(1, 48, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_comedy.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_comedy.gsm", 30));
                 ks::SceneManager::set_line_hash(0x0D77629E);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 357));
                 ks::SceneManager::set_line_hash(0x2B70409D);
@@ -1498,7 +1498,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 384));
                 IF_NOT_EXIT(ks::SceneManager::show_character(5, bn::regular_bg_items::muto_bg_basic, bn::sprite_items::muto_spr_basic_smile, ks::sprite_metas::muto_basic));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(120));
                 ks::SceneManager::set_line_hash(0xB422EDEA);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 385));
                 ks::SceneManager::set_line_hash(0x61941B7C);
@@ -1511,7 +1511,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 10));
                 ks::SceneManager::set_line_hash(0x1A0619B5);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 388));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_running.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_running.gsm", 30));
                 IF_NOT_EXIT(ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x004D5E43);
@@ -1571,7 +1571,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 407));
                 ks::SceneManager::set_line_hash(0x112E8C8A);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 408));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(240));
                 ks::SceneManager::set_line_hash(0xFDBCAB59);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 409));
                 if (ks::in_replay) {
@@ -1613,7 +1613,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 420));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::rin_eating, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_rin.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_rin.gsm", 30));
                 ks::SceneManager::set_line_hash(0xA79973E7);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 421));
                 ks::SceneManager::set_line_hash(0x3FA7854C);
@@ -1701,7 +1701,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::rin, 453));
                 ks::SceneManager::set_line_hash(0x70E77483);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 454));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(300));
                 ks::SceneManager::set_line_hash(0x3BCA0EDD);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::rin, 455));
                 ks::SceneManager::set_line_hash(0x1748D04A);
@@ -1737,7 +1737,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x7BFDDAB6);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::rin, 468));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_rin.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_rin.gsm", 30));
                 ks::SceneManager::set_line_hash(0x50C27624);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 469));
                 ks::SceneManager::set_line_hash(0x61F293AF);
@@ -1784,7 +1784,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 484));
                 ks::SceneManager::set_line_hash(0x054A5057);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 10));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(480));
                 ks::SceneManager::hide_character(6);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xDAA463CD);
@@ -1803,7 +1803,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 491));
                 ks::SceneManager::set_line_hash(0x32C0A479);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 492));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_dreamy.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_dreamy.gsm", 480));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(-8, 0));
                 IF_NOT_EXIT(ks::SceneManager::show_character(6, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, ks::sprite_metas::rin_basic, 80, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -2101,7 +2101,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::hide_character(6);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(360));
                 ks::SceneManager::set_line_hash(0xA6E32D5B);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 580));
                 ks::SceneManager::set_line_hash(0xDC446D7C);
@@ -2147,7 +2147,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 594));
                 IF_NOT_EXIT(ks::SceneManager::show_character(7, bn::regular_bg_items::nurse_bg, bn::sprite_items::nurse_spr_grin, ks::sprite_metas::nurse, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_nurse.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_nurse.gsm", 30));
                 ks::SceneManager::set_line_hash(0xDFF45854);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::nk, 595));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(7, -48, 0));
@@ -2235,7 +2235,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x4236E5A0);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::nk, 619));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(60));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(-8, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(6, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(7, 0, 0));
@@ -2259,7 +2259,7 @@ namespace ks {
                 ScriptA1WednesdayRu::a1_wednesday_waylay__menu_question_0();
                 ks::SceneManager::set_line_hash(0xF949416C);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 625));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_nurse.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_nurse.gsm", 30));
                 IF_NOT_EXIT(ks::SceneManager::show_character(7, bn::regular_bg_items::nurse_bg, bn::sprite_items::nurse_spr_neutral, ks::sprite_metas::nurse));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x248825FA);
@@ -2272,7 +2272,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xCF63F77A);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::nk, 629));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(120));
                 ks::SceneManager::hide_character(7);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));
@@ -2327,7 +2327,7 @@ namespace ks {
                 if (!ks::in_replay) {
                     IF_NOT_EXIT(ks::SceneManager::autosave());
                 }
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_soothing.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_soothing.gsm", 240));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_courtyard, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xFECEB943);
@@ -2488,7 +2488,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::rin, 704));
                 ks::SceneManager::hide_character(6);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(420));
                 ks::SceneManager::set_line_hash(0xA0E65FDC);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 705));
                 ks::SceneManager::set_line_hash(0x255842F7);
@@ -2505,7 +2505,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 710));
                 ks::SceneManager::set_line_hash(0xBAF68BAD);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 711));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_another.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_another.gsm", 60));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::mural_start, 0, 0, 30));
                 IF_NOT_EXIT(ks::SceneManager::show_character(6, bn::regular_bg_items::rin_bg_basic_close, bn::sprite_items::rin_spr_basic_deadpan_close, ks::sprite_metas::rin_basic_close, 48, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -2557,7 +2557,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 10));
                 ks::SceneManager::set_line_hash(0xBCA2DBBD);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 726));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(420));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::school_dormext_start_ss, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x33A974D7);
@@ -2623,7 +2623,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_impact.8ad"));
                 ks::SceneManager::set_line_hash(0xA1F6BE42);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 736));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_emi.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_emi.gsm", 120));
                 IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::emi_knockeddown, 0, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x2B04D678);
@@ -2660,7 +2660,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 746));
                 ks::SceneManager::set_line_hash(0xB45119EA);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 747));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(120));
                 ks::SceneManager::set_line_hash(0x74717B02);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 748));
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartfast.8ad"));
@@ -2700,7 +2700,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x151E811A);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi_, 753));
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_emi.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_emi.gsm", 12));
                 ks::SceneManager::set_line_hash(0xE713C894);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 754));
                 ks::SceneManager::set_line_hash(0x41A852A9);
@@ -2726,7 +2726,7 @@ namespace ks {
                 return;
             }
             static void a1c6o1() {
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(360));
                 ks::SceneManager::set_line_hash(0x11F20E6C);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 763));
                 ks::SceneManager::set_line_hash(0x6DFE421F);
@@ -2749,7 +2749,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 771));
                 ks::SceneManager::set_line_hash(0x8E2B0A11);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 772));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(120));
                 return;
             }
             static void a1c6o2() {
@@ -2808,7 +2808,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x109010F5);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 791));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(360));
                 ks::SceneManager::set_line_hash(0xD23CFDCE);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 792));
                 ks::SceneManager::set_line_hash(0x905C4BFB);
@@ -2852,7 +2852,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_character(4, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_weaksmile, ks::sprite_metas::lilly_cane, -48, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_play("music_lilly.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::music_play("music_lilly.gsm", 180));
                 IF_NOT_EXIT(ks::SceneManager::show_character(2, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_smile, ks::sprite_metas::hanako_emb));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x68DBE54E);
@@ -2951,7 +2951,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 838));
                 ks::SceneManager::set_line_hash(0x61ECB201);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 839));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(60));
                 return;
             }
             static void a1c6o3() {
@@ -2994,7 +2994,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
                 IF_NOT_EXIT(ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, ks::sprite_metas::misha_hips));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(300));
                 ks::SceneManager::set_line_hash(0x5FA969DE);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 848));
                 ks::SceneManager::set_line_hash(0xFE403445);
@@ -3151,7 +3151,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 887));
                 IF_NOT_EXIT(ks::SceneManager::show_character(0, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_happy, ks::sprite_metas::shizu_adjust));
                 IF_NOT_EXIT(ks::SceneManager::show_character(1, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_grin, ks::sprite_metas::misha_cross));
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(120));
                 ks::SceneManager::set_line_hash(0x58B710FB);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 888));
             }
@@ -3176,7 +3176,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 235));
                 ks::SceneManager::hide_character(1);
                 ks::SceneManager::hide_character(0);
-                IF_NOT_EXIT(ks::SceneManager::music_stop());
+                IF_NOT_EXIT(ks::SceneManager::music_stop(240));
                 ks::SceneManager::set_line_hash(0x110688B8);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 892));
                 ks::SceneManager::set_line_hash(0xC5DC1417);

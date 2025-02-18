@@ -6,15 +6,16 @@
 
 typedef unsigned char timer_state_t;
 #define TIMER_STATE_NONE ((timer_state_t)0)
-#define TIMER_STATE_COUNTING ((timer_state_t)1)
-#define TIMER_STATE_PAUSED ((timer_state_t)2)
+#define TIMER_STATE_READY ((timer_state_t)1)
+#define TIMER_STATE_COUNTING ((timer_state_t)2)
+#define TIMER_STATE_PAUSED ((timer_state_t)3)
 
 
 namespace ks {
     namespace timer {
         extern bn::optional<bn::timer> _internal_timer;
 
-        extern timer_state_t state_ingame;
+        extern timer_state_t state;
 
         extern void init();
 

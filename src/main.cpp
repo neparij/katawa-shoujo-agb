@@ -4,7 +4,6 @@
 #include "bn_keypad.h"
 #include "bn_bg_palettes.h"
 
-
 #include "bn_string.h"
 #include "bn_format.h"
 #include "bn_sprite_text_generator.h"
@@ -13,6 +12,7 @@
 
 #include "bn_bg_palettes.h"
 #include "scenemanager.h"
+#include "sound_manager.h"
 #include "constants.h"
 #include "globals.h"
 
@@ -29,8 +29,8 @@
 
 
 #include "scripts/script_a0_test_en.cpp"
-#include "gsmplayer/player.h"
-#include "gsmplayer/player_sfx.h"
+#include "gsmplayer/player_gsm.h"
+#include "gsmplayer/player_8ad.h"
 
 #include "bn_regular_bg_items_video_end_4ls.h"
 #include "bn_regular_bg_items_ui_bg_menu.h"
@@ -493,10 +493,12 @@ int main()
     }
 
     ks::globals::settings = ks::saves::readSettings();
+    ks::timer::init();
 
     ks::SceneManager::fade_in(COLOR_WHITE, 30);
     if (SHOW_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
+        ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);
         ks::SceneManager::show_video(video_4ls_agmv, video_4ls_agmv_size, "video_4ls.gsm", COLOR_BLACK);
 
         // Show the 4LS intro video (p2 - native gfx playback)
@@ -531,6 +533,7 @@ int main()
     bn::vector<signed char, 64> selection_index;
     bn::vector<short, 3> saveslot_index;
     bn::vector<bn::sprite_ptr, 8> checkboxes_ptrs;
+    ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
 
     while(true)
     {
@@ -548,8 +551,7 @@ int main()
 
         int temp_music_index = 37;
         BN_LOG("Music entries size: ", temp_music_index);
-        player_playGSM("music_menus.gsm");
-        player_setLoop(true);
+        ks::sound_manager::play<SOUND_CHANNEL_MUSIC>("music_menus.gsm");
 
         bn::sprite_palette_item original_palette_item = ks::text_generator->palette_item();
         bn::sprite_palette_item beige_palette_item = bn::sprite_items::variable_16x16_font_beige.palette_item();
@@ -570,8 +572,7 @@ int main()
                 temp_music_index = (temp_music_index + 38) % 38;
                 BN_LOG("MUSIC.ID=", temp_music_index);
                 BN_LOG("MUSIC.NAME=", music_entries[temp_music_index].name);
-                player_playGSM(music_entries[temp_music_index].gsm_file);
-                player_setLoop(true);
+                ks::sound_manager::play<SOUND_CHANNEL_MUSIC>(music_entries[temp_music_index].gsm_file);
             }
 
             if (bn::keypad::up_pressed() || bn::keypad::down_pressed()) {
@@ -754,8 +755,8 @@ int main()
                         open_extras_menu(state, &selection_index);
                         update_extras_menu(select);
                     } else {
-                        player_stop();
-                        player_sfx_stop();
+                        playerGSM_stop();
+                        player8AD_stop();
 
                         if (select == 0) {
                             ks::SceneManager::show_video(video_op_1_agmv, video_op_1_agmv_size, "video_op_1.gsm", COLOR_BLACK);
@@ -816,8 +817,7 @@ int main()
                         need_fade_in = true;
 
 
-                        player_playGSM("music_menus.gsm");
-                        player_setLoop(true);
+                        ks::sound_manager::play<SOUND_CHANNEL_MUSIC>("music_menus.gsm");
                         open_extras_cinema_menu(state, &selection_index);
                         update_extras_cinema_menu(select);
 
@@ -879,6 +879,7 @@ int main()
             ks::globals::main_update();
         }
 
+        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(30);
         ks::SceneManager::fade_out(COLOR_BLACK);
         // _text_sprites.clear();
         ks::static_text_sprites->clear();
@@ -887,10 +888,8 @@ int main()
         ks::secondary_background.reset();
         ks::globals::main_update();
         // _bottom_icon.reset();
-        player_stop();
 
         ks::SceneManager::fade_reset();
-        ks::timer::init();
         ks::timer::start_ingame_timer();
         if (state == MENU_MAIN || MENU_SAVES) {
 

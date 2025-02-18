@@ -8,8 +8,8 @@
 #include "bn_sprite_ptr.h"
 #include "gba_systemcalls.h"
 #include "gba_video.h"
-#include "gsmplayer/player.h"
-#include "gsmplayer/player_sfx.h"
+#include "gsmplayer/player_gsm.h"
+#include "gsmplayer/player_8ad.h"
 #include "scenemanager.h"
 #include "variable_16x16_sprite_font.h"
 #include "videoplayer/video_player.h"
@@ -17,6 +17,7 @@
 #include "bn_bg_palettes.h"
 #include "bn_sprite_palettes.h"
 #include "ingametimer.h"
+#include "sound_manager.h"
 
 // #include <variable_16x16_sprite_font.h>
 
@@ -27,36 +28,12 @@ namespace ks {
         ks::saves::SaveSettingsData settings = ks::saves::SaveSettingsData();
 
         void main_update() {
-
             bn::core::update();
-            // REG_BG0HOFS = -80;
-            // REG_BG1HOFS = -80;
-            // REG_BG2HOFS = 120;
-            // REG_BG3HOFS = 120;
-
-            // REG_BG0CNT |= BG_16_COLOR;
-            // REG_BG1CNT |= BG_16_COLOR;
-            // REG_BG2CNT |= BG_16_COLOR;
-            // REG_BG3CNT |= BG_16_COLOR;
-
-            // REG_BG2CNT |= BG_SIZE_3;
-            // REG_BG3CNT |= BG_SIZE_3;
-
-            // if (buffer == g_front_buffer) {
-            //     REG_DISPCNT &= ~SHOW_BACKBUFFER;
-            //     return g_back_buffer;
-            // } else {
-            //     REG_DISPCNT |= SHOW_BACKBUFFER;
-            //     return g_front_buffer;
-            // }
-
-            player_update(0, [](unsigned current) {});
-            player_sfx_update();
-        };
+            ks::sound_manager::update();
+        }
 
         void BN_CODE_IWRAM ISR_VBlank() {
-            player_onVBlank();
-            player_sfx_onVBlank();
+            ks::sound_manager::on_vblank();
             timer::update();
         }
 
@@ -73,15 +50,13 @@ namespace ks {
             {
                 VBlankIntrWait();
             }
-            player_update(0, [](unsigned current) {});
-            player_sfx_update();
+            ks::sound_manager::update();
         }
 
         void init_engine(const bn::optional<bn::color> &clear_color) {
             bn::core::init(clear_color, bn::string_view(), ks::globals::ISR_VBlank);
             // BN_LOG("PLA", player_sfx_isPlaying());
-            player_init();
-            player_sfx_init();
+            ks::sound_manager::init();
             set_language(settings.language);
 
             if (clear_color.has_value()) {
@@ -124,10 +99,10 @@ namespace ks {
             delete ks::dialog;
             delete ks::globals::i18n;
 
-            bn::memory::log_alloc_ewram_status();
+            // bn::memory::log_alloc_ewram_status();
 
-            player_unload();
-            player_sfx_unload();
+            playerGSM_unload();
+            player8AD_unload();
         }
 
         void set_language(language_t tl) {

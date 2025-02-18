@@ -22,17 +22,17 @@ typedef struct ADGlobals
 
 extern ADGlobals ad;
 
-void player_sfx_init();
-void player_sfx_unload();
-void player_sfx_play(const char* name);
-void player_sfx_setLoop(bool enable);
-void player_sfx_setPause(bool enable);
-PlayerSFXState player_sfx_getState();
-void player_sfx_setState(PlayerSFXState state);
-void player_sfx_stop();
-bool player_sfx_isPlaying();
-void player_sfx_onVBlank();
-void player_sfx_update();
+void player8AD_init();
+void player8AD_unload();
+void player8AD_play(const char* name);
+void player8AD_set_loop(bool enable);
+void player8AD_set_pause(bool enable);
+PlayerSFXState player8AD_get_state();
+void player8AD_set_state(PlayerSFXState state);
+void player8AD_stop();
+bool player8AD_is_playing();
+void player8AD_on_vblank();
+void player8AD_update();
 
 
 

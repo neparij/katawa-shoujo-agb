@@ -8,13 +8,13 @@
 namespace ks {
     namespace timer {
         bn::optional<bn::timer> _internal_timer;
-
-        timer_state_t state_ingame = TIMER_STATE_NONE;
+        BN_DATA_EWRAM timer_state_t state;
 
         void init() {
             BN_LOG("Init timer");
             _internal_timer.reset();
             _internal_timer = bn::timer();
+            state = TIMER_STATE_READY;
         }
 
         void update() {
@@ -34,38 +34,42 @@ namespace ks {
 
         void reset_ingame_timer() {
             BN_LOG("Reset ingame timer");
+            state = TIMER_STATE_NONE;
             ks::progress.metadata.hours_played = 0;
             ks::progress.metadata.minutes_played = 0;
             ks::progress.metadata.seconds_played = 0;
-            state_ingame = TIMER_STATE_NONE;
+            state = TIMER_STATE_READY;
         }
 
         void start_ingame_timer() {
             reset_ingame_timer();
             BN_ASSERT(_internal_timer.has_value(), "Timer not initialized");
             _internal_timer->restart();
-            state_ingame = TIMER_STATE_COUNTING;
+            state = TIMER_STATE_COUNTING;
         }
 
 
         void resume_ingame_timer() {
-            if (state_ingame == TIMER_STATE_PAUSED) {
+            BN_ASSERT(state != TIMER_STATE_NONE, "Timer state not initialized");
+            if (state == TIMER_STATE_PAUSED) {
                 BN_LOG("Resume ingame timer");
                 BN_ASSERT(_internal_timer.has_value(), "Timer not initialized");
                 _internal_timer->restart();
-                state_ingame = TIMER_STATE_COUNTING;
+                state = TIMER_STATE_COUNTING;
             }
         }
 
         void pause_ingame_timer() {
-            if (state_ingame == TIMER_STATE_COUNTING) {
+            BN_ASSERT(state != TIMER_STATE_NONE, "Timer state not initialized");
+            if (state == TIMER_STATE_COUNTING) {
                 BN_LOG("Pause ingame timer");
-                state_ingame = TIMER_STATE_PAUSED;
+                state = TIMER_STATE_PAUSED;
             }
         }
 
         void ingame_timer_update() {
-            if (state_ingame != TIMER_STATE_COUNTING) {
+            BN_ASSERT(state != TIMER_STATE_NONE, "Timer state not initialized");
+            if (state != TIMER_STATE_COUNTING) {
                 return;
             }
             ks::progress.metadata.seconds_played++;

@@ -14,14 +14,14 @@ from src.dto.condition_item import ConditionItem
 from src.dto.dialog_item import DialogItem
 from src.dto.hide_item import HideItem
 from src.dto.menu_item import MenuItem
-from src.dto.music_item import MusicItem, MusicAction
+from src.dto.music_item import MusicItem, MusicAction, MusicEffect
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
 from src.dto.show_item import ShowItem, ShowEvent, ShowPosition
 from src.dto.show_transform_item import ShowTransformItem
 from src.dto.show_video_item import ShowVideoItem
-from src.dto.sound_item import SoundItem, SoundAction
+from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name, sanitize_comment_text
@@ -393,16 +393,28 @@ class ScenarioWriter:
 
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
         if music.action == MusicAction.PLAY:
-            return [f'IF_NOT_EXIT(ks::SceneManager::music_play("{music.music}.gsm"));']
+            if music.effect == MusicEffect.FADEIN:
+                return [f'IF_NOT_EXIT(ks::SceneManager::music_play("{music.music}.gsm", {int(music.value * 60)}));']
+            else:
+                return [f'IF_NOT_EXIT(ks::SceneManager::music_play("{music.music}.gsm"));']
         elif music.action == MusicAction.STOP:
-            return [f'IF_NOT_EXIT(ks::SceneManager::music_stop());']
+            if music.effect == MusicEffect.FADEOUT:
+                return [f'IF_NOT_EXIT(ks::SceneManager::music_stop({int(music.value * 60)}));']
+            else:
+                return [f'IF_NOT_EXIT(ks::SceneManager::music_stop());']
         return []
 
     def process_sequence_sound(self, group: SequenceGroup, sound: SoundItem) -> List[str]:
         if sound.action == SoundAction.PLAY:
-            return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad"));']
+            if sound.effect == SoundEffect.FADEIN:
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad", {int(sound.value * 60)}));']
+            else:
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad"));']
         elif sound.action == SoundAction.STOP:
-            return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop());']
+            if sound.effect == SoundEffect.FADEOUT:
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop({int(sound.value * 60)}));']
+            else:
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop());']
         return []
 
     def process_sequence_return(self, group, ret: ReturnItem) -> List[str]:

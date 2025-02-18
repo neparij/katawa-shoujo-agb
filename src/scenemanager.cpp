@@ -8,8 +8,8 @@
 #include "bn_sprite_actions.h"
 #include "bn_blending_actions.h"
 #include "globals.h"
-#include "gsmplayer/player.h"
-#include "gsmplayer/player_sfx.h"
+#include "gsmplayer/player_gsm.h"
+#include "gsmplayer/player_8ad.h"
 #include "translation.h"
 #include "utils/scenario_reader.h"
 #include "utils/lz77.h"
@@ -33,6 +33,7 @@
 // #include "bn_regular_bg_attributes_hbe_ptr.h"
 
 #include "ingametimer.h"
+#include "sound_manager.h"
 #include "video_4ls_agmv.h"
 #include "video_op_1_agmv.h"
 
@@ -1082,21 +1083,40 @@ void SceneManager::update_visuals() {
 
 void SceneManager::music_play(const char* filename) {
     music_play(filename, 0);
+    //
+    // player_setVolume(0);
+    // ks::gsm_volume_to_action action = ks::gsm_volume_to_action(60, 1);
+    // while (!action.done()) {
+    //     action.update();
+    //     ks::globals::main_update();
+    // }
+    // action = ks::gsm_volume_to_action(120, 0);
+    // while (!action.done()) {
+    //     action.update();
+    //     ks::globals::main_update();
+    // }
 }
 
-void SceneManager::music_play(const char* filename, bn::fixed fade) {
+void SceneManager::music_play(const char* filename, const int fade) {
     BN_LOG("Play GSM ", filename, " with fade ", fade);
-    if (player_isPlaying()) {
-        player_stop();
+    ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+    if (fade > 0) {
+        ks::sound_manager::set_fadein_action<SOUND_CHANNEL_MUSIC>(fade);
     }
-    player_playGSM(filename);
-    player_setLoop(true);
+    ks::sound_manager::play<SOUND_CHANNEL_MUSIC>(filename);
     ks::globals::main_update();
 }
 
 void SceneManager::music_stop() {
-    if (player_isPlaying()) {
-        player_stop();
+    music_stop(0);
+}
+
+void SceneManager::music_stop(const int fade) {
+    BN_LOG("Stop GSM with fade ", fade);
+    if (fade > 0) {
+        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(fade);
+    } else {
+        ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
     }
 }
 
@@ -1104,19 +1124,19 @@ void SceneManager::sfx_play(const char* filename) {
     sfx_play(filename, 0);
 }
 
-void SceneManager::sfx_play(const char* filename, bn::fixed fade) {
+void SceneManager::sfx_play(const char* filename, const int fade) {
     BN_LOG("Play SFX ", filename, " with fade ", fade);
-    if (player_sfx_isPlaying()) {
-        player_sfx_stop();
-    }
-    player_sfx_play(filename);
-    player_sfx_setLoop(false);
+    ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
+    ks::sound_manager::play<SOUND_CHANNEL_SOUND>(filename);
 }
 
 void SceneManager::sfx_stop() {
-    if (player_sfx_isPlaying()) {
-        player_sfx_stop();
-    }
+    sfx_stop(0);
+}
+
+void SceneManager::sfx_stop(const int fade) {
+    BN_LOG("Stop SFX with fade ", fade);
+    ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
 }
 
 void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file, bn::color clear) {
@@ -1125,8 +1145,8 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
     }
 
     // Free last sound chunks
-    player_stop();
-    player_sfx_stop();
+    playerGSM_stop();
+    player8AD_stop();
     ks::globals::sound_update();
     ks::timer::pause_ingame_timer();
 

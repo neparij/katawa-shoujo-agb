@@ -132,11 +132,13 @@ public:
     static void hide_character(const int character_index, const bool need_update);
     static void update_visuals();
     static void music_play(const char *filename);
-    static void music_play(const char *filename, bn::fixed fade);
+    static void music_play(const char *filename, const int fade);
     static void music_stop();
+    static void music_stop(const int fade);
     static void sfx_play(const char *filename);
-    static void sfx_play(const char *filename, bn::fixed fade);
+    static void sfx_play(const char *filename, const int fade);
     static void sfx_stop();
+    static void sfx_stop(const int fade);
 
     static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file, bn::color clear);
     static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file);

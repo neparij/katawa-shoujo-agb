@@ -11,7 +11,7 @@ IN THE SOFTWARE.
 
 */
 
-#include "player_sfx.h"
+#include "player_8ad.h"
 
 #include <gba_dma.h>
 #include <gba_input.h>
@@ -181,53 +181,53 @@ INLINE void load_file(const char* name) {
   is_paused = false;
 }
 
-CODE_ROM void player_sfx_init() {
+CODE_ROM void player8AD_init() {
   fs = find_first_gbfs_file(0);
   // turn_on_sound();
   init();
 }
 
-CODE_ROM void player_sfx_unload() {
+CODE_ROM void player8AD_unload() {
   disable_audio_dma();
 }
 
-CODE_ROM void player_sfx_play(const char* name) {
+CODE_ROM void player8AD_play(const char* name) {
   load_file(name);
 }
 
-CODE_ROM void player_sfx_setLoop(bool enable) {
+CODE_ROM void player8AD_set_loop(bool enable) {
   is_looping = enable;
 }
 
-CODE_ROM void player_sfx_setPause(bool enable) {
+CODE_ROM void player8AD_set_pause(bool enable) {
   is_paused = enable;
 }
 
-CODE_ROM PlayerSFXState player_sfx_getState() {
-  PlayerSFXState state;
-  state.pos = src_pos;
-  state.isPlaying = src != NULL;
-  state.isLooping = is_looping;
-  return state;
-}
+// CODE_ROM PlayerSFXState player_sfx_getState() {
+//   PlayerSFXState state;
+//   state.pos = src_pos;
+//   state.isPlaying = src != NULL;
+//   state.isLooping = is_looping;
+//   return state;
+// }
+//
+// CODE_ROM void player_sfx_setState(PlayerSFXState state) {
+//   src_pos = state.pos;
+//   is_looping = is_looping;
+//   did_run = false;
+// }
 
-CODE_ROM void player_sfx_setState(PlayerSFXState state) {
-  src_pos = state.pos;
-  is_looping = is_looping;
-  did_run = false;
-}
-
-CODE_ROM void player_sfx_stop() {
+CODE_ROM void player8AD_stop() {
   stop();
   is_looping = false;
   is_paused = false;
 }
 
-CODE_ROM bool player_sfx_isPlaying() {
+CODE_ROM bool player8AD_is_playing() {
   return src != NULL;
 }
 
-void player_sfx_onVBlank() {
+void player8AD_on_vblank() {
   if (src != NULL) {
     dsound_start_audio_copy(double_buffers[cur_buffer]);
   }
@@ -244,7 +244,7 @@ void player_sfx_onVBlank() {
   did_run = false;
 }
 
-void player_sfx_update() {
+void player8AD_update() {
   if (is_paused || src == NULL) {
     mute();
     return;
@@ -261,7 +261,7 @@ void player_sfx_update() {
       start_ad(src);
       did_run = false;
     } else
-      player_sfx_stop();
+      player8AD_stop();
   });
 }
 
@@ -322,7 +322,7 @@ void decode_ad(signed char *dst, const unsigned char *src, unsigned int len)
             last_sample = -32768;
         if(last_sample > 32767)
             last_sample = 32767;
-        *dst++ = last_sample >> 8;
+        *dst++ = last_sample >> 8; // TODO: apply volume `*dst++ = (last_sample >> 8) * volume;`
 
         len--;
     }

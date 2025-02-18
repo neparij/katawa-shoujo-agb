@@ -1,4 +1,4 @@
-#include "player.h"
+#include "player_gsm.h"
 
 #include <gba_dma.h>
 #include <gba_input.h>
@@ -107,9 +107,9 @@ static u32 decode_pos = 160, cur_buffer = 0;
 static s8* buffer;
 static int last_sample = 0;
 
-INLINE void gsm_init(gsm r) {
-  memset((char*)r, 0, sizeof(*r));
-  r->nrp = 40;
+INLINE void gsm_init(const gsm gsm_state_ptr) {
+  memset((char*)gsm_state_ptr, 0, sizeof(*gsm_state_ptr));
+  gsm_state_ptr->nrp = 40;
 }
 
 INLINE void mute() {
@@ -202,7 +202,7 @@ INLINE void load_file(const char* name, bool isPCM) {
   src_pos = 0;
 }
 
-CODE_ROM void player_init() {
+CODE_ROM void playerGSM_init() {
   fs = find_first_gbfs_file(0);
   turn_on_sound();
   init();
@@ -212,11 +212,11 @@ CODE_ROM void player_init() {
   PlaybackState.isLooping = false;
 }
 
-CODE_ROM void player_unload() {
+CODE_ROM void playerGSM_unload() {
   disable_audio_dma();
 }
 
-CODE_ROM void player_playGSM(const char* name) {
+CODE_ROM void playerGSM_play(const char* name) {
   load_file(name, false);
 }
 
@@ -224,15 +224,15 @@ CODE_ROM void player_playPCM(const char* name) {
   load_file(name, true);
 }
 
-CODE_ROM void player_setLoop(bool enable) {
+CODE_ROM void playerGSM_set_loop(bool enable) {
   PlaybackState.isLooping = enable;
 }
 
-CODE_ROM void player_setPause(bool enable) {
+CODE_ROM void playerGSM_set_pause(bool enable) {
   is_paused = enable;
 }
 
-CODE_ROM void player_seek(unsigned int msecs) {
+CODE_ROM void playerGSM_seek(unsigned int msecs) {
     // msecs = cursor * msecsPerByte
     // msecsPerByte = AS_MSECS / FRACUMUL_PRECISION ~= 0.267
     // => msecs = cursor * 0.267
@@ -246,24 +246,28 @@ CODE_ROM void player_seek(unsigned int msecs) {
     current_audio_chunk = 0;
 }
 
-CODE_ROM unsigned int player_getCursor() {
+CODE_ROM unsigned int playerGSM_get_cursor() {
   return src_pos;
 }
 
-CODE_ROM void player_setCursor(unsigned int cursor) {
+CODE_ROM void playerGSM_set_cursor(unsigned int cursor) {
   src_pos = cursor;
 }
 
-CODE_ROM void player_setRate(int newRate) {
+CODE_ROM void playerGSM_set_rate(int newRate) {
   rate = newRate;
   rate_counter = 0;
 }
 
-CODE_ROM void player_setVolume(const float newVolume) {
+CODE_ROM float playerGSM_get_volume() {
+    return volume;
+}
+
+CODE_ROM void playerGSM_set_volume(const float newVolume) {
     volume = newVolume;
 }
 
-CODE_ROM void player_stop() {
+CODE_ROM void playerGSM_stop() {
   stop();
 
   PlaybackState.msecs = 0;
@@ -275,11 +279,11 @@ CODE_ROM void player_stop() {
   current_audio_chunk = 0;
 }
 
-CODE_ROM bool player_isPlaying() {
+CODE_ROM bool playerGSM_is_playing() {
   return src != NULL;
 }
 
-void player_onVBlank() {
+void playerGSM_on_vblank() {
   dsound_start_audio_copy(double_buffers[cur_buffer]);
 
   if (!did_run)
@@ -302,7 +306,7 @@ CODE_ROM void update_rate() {
   }
 }
 
-void player_update(int expectedAudioChunk,
+void playerGSM_update(int expectedAudioChunk,
                    void (*onAudioChunks)(unsigned int current)) {
   if (is_paused) {
     mute();
@@ -341,9 +345,9 @@ void player_update(int expectedAudioChunk,
       },
       {
         if (PlaybackState.isLooping)
-          player_seek(0);
+          playerGSM_seek(0);
         else {
-          player_stop();
+          playerGSM_stop();
           PlaybackState.hasFinished = true;
         }
       });
