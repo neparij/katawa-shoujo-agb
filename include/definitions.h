@@ -1,6 +1,17 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+typedef unsigned char gameState_t;
+#define GS_INIT ((gameState_t)0)
+#define GS_MENU_MAIN ((gameState_t)1)
+#define GS_MENU_SAVES ((gameState_t)2)
+#define GS_MENU_EXTRAS ((gameState_t)3)
+#define GS_MENU_OPTIONS ((gameState_t)4)
+#define GS_MENU_EXTRAS_CINEMA ((gameState_t)5)
+#define GS_START_NEW_GAME ((gameState_t)6)
+#define GS_LOAD_GAME ((gameState_t)7)
+#define GS_RESET ((gameState_t)100)
+
 typedef unsigned char forceRoute_t;
 #define FR_NONE   ((forceRoute_t)0)
 #define FR_EMI    ((forceRoute_t)1)
