@@ -34,22 +34,31 @@
 #DEBUGUSERFLAGS :=
 #DEBUGUSERCXXFLAGS :=
 
+ifndef LIBSAVGBAABS
+	export LIBSAVGBAABS	:=	$(realpath ../libsavgba)
+endif
+
 TARGET      	:=  $(notdir $(CURDIR))
 BUILD       	:=  build
 LIBBUTANO   	:=  ../butano/butano
 PYTHON      	:=  python3
 SOURCES     	:=  ../butano/common/src \
+					../libsavgba/src \
 		    		src \
                     src/amgvplayer \
+                    src/events \
                     src/gsmplayer \
                     src/gsmplayer/core \
                     src/videoplayer \
+                    src/menu \
                     src/savefile \
                     src/scripts \
+                    src/shaders \
 		    		src/utils \
                     src/utils/gbfs
 INCLUDES    	:=  include \
 					include/sprite_metas \
+					../libsavgba/include \
 					../butano/common/include \
 					../butano/butano/include
 DATA        	:=  video
@@ -57,6 +66,7 @@ VIDEO			:=  video
 GRAPHICS    	:=  graphics \
 					graphics/bgs \
 					graphics/event \
+					graphics/event/custom \
 					graphics/characters/shizu \
 					graphics/characters/misha \
 					graphics/characters/emi \
@@ -79,9 +89,9 @@ USERLDFLAGS 	:=  -Wl,--print-memory-usage #-Wl,--gc-sections -Wl,--print-memory-
 USERLIBDIRS 	:=  $(DEVKITPRO)/libgba
 USERLIBS    	:=  -lmm -lgba
 DEFAULTLIBS 	:=  false
-STACKTRACE	:=	
+STACKTRACE		:=
 USERBUILD   	:=  
-EXTTOOL     	:=  
+EXTTOOL     	:=
 
 #---------------------------------------------------------------------------------------------------------------------
 # Export absolute butano path:

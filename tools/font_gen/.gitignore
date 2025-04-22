@@ -4,3 +4,5 @@ out/
 tiled/
 venv/
 venv-3.12/
+variable_16x16_*.bmp
+variable_16x16_*.widths.txt

@@ -1,9 +1,11 @@
 #include "video_player.h"
 #include "../amgvplayer/agmv_gba.h"
-#include "../gsmplayer/player_sfx.h"
-#include "../gsmplayer/player.h"
+#include "../gsmplayer/player_8ad.h"
+#include "../gsmplayer/player_gsm.h"
 #include "../globals.h"
 #include <gba_interrupt.h>
+
+#include "../sound_manager.h"
 
 #define VP_INLINE static inline __attribute__((always_inline))
 #define VP_IWRAM __attribute__((section(".iwram")))
@@ -48,13 +50,12 @@ VP_INLINE void VP_IWRAM update()
     }
 
 
-    player_update(0, [](unsigned current) {});
-    player_sfx_update();
+    ks::sound_manager::update();
     VBlankIntrWait();
 
     if (willRender && quart_number == 4) {
         if (g_currentFrame == 0) {
-            player_playGSM(g_audio_file);
+            ks::sound_manager::play<SOUND_CHANNEL_MUSIC>(g_audio_file);
         }
         if (AGMV_IsVideoDone(g_agmv)) {
             g_is_finished = true;
@@ -68,7 +69,7 @@ VP_INLINE void VP_IWRAM update()
     if (KEY_DOWN_NOW(KEY_START)) {
         // TODO: REMOVE
         g_is_finished = true;
-        player_stop();
+        ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
     }
 
 }
@@ -110,8 +111,14 @@ void videoplayer_init(const uint8_t* agmv_file, size_t agmv_size, const char* au
 
     // Set video mode and buffers
     REG_DISPCNT = MODE_5 | BG2_ENABLE;
+    REG_BG2CNT = 0x1C0B; // 0b0001110000001011
     REG_BG2PA = 128;  // For 240x160 video
     REG_BG2PD = 128;
+    REG_BG2X = 0;
+    REG_BG2Y = 0;
+    // BN_LOG("CNT: ", REG_BG2CNT);
+    // CNT: 2563
+    // CNT: 7179
 
     // Configure Timer 2 for 15 FPS (4375 * 2 ticks at 1:256 prescaler)
     REG_TM2CNT_H = 0;

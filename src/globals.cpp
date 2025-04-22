@@ -8,76 +8,74 @@
 #include "bn_sprite_ptr.h"
 #include "gba_systemcalls.h"
 #include "gba_video.h"
-#include "gsmplayer/player.h"
-#include "gsmplayer/player_sfx.h"
+#include "gsmplayer/player_gsm.h"
+#include "gsmplayer/player_8ad.h"
 #include "scenemanager.h"
 #include "variable_16x16_sprite_font.h"
 #include "videoplayer/video_player.h"
 
+#include "bn_bg_palettes.h"
+#include "bn_sprite_palettes.h"
+#include "ingametimer.h"
+#include "sound_manager.h"
+
+#include "common_variable_8x8_sprite_font.h"
 // #include <variable_16x16_sprite_font.h>
+
+#include "bn_sprite_items_variable_16x16_font_hi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_ha_pal.h"
+#include "bn_sprite_items_variable_16x16_font_emi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_rin_pal.h"
+#include "bn_sprite_items_variable_16x16_font_li_pal.h"
+#include "bn_sprite_items_variable_16x16_font_shi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_mi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_ke_pal.h"
+#include "bn_sprite_items_variable_16x16_font_mu_pal.h"
+#include "bn_sprite_items_variable_16x16_font_nk_pal.h"
+#include "bn_sprite_items_variable_16x16_font_no_pal.h"
+#include "bn_sprite_items_variable_16x16_font_yu_pal.h"
+#include "bn_sprite_items_variable_16x16_font_sa_pal.h"
+#include "bn_sprite_items_variable_16x16_font_aki_pal.h"
+#include "bn_sprite_items_variable_16x16_font_hh_pal.h"
+#include "bn_sprite_items_variable_16x16_font_hx_pal.h"
+#include "bn_sprite_items_variable_16x16_font_emm_pal.h"
+#include "bn_sprite_items_variable_16x16_font_sk_pal.h"
+#include "bn_sprite_items_variable_16x16_font_mk_pal.h"
 
 namespace ks {
     namespace globals {
         bool exit_scenario = false;
-        ks::Translation* i18n;// = new TranslationEn();
-        ks::TranslationType language = ks::TranslationType::EN;
+        ks::Translation *i18n; // = new TranslationEn();
+        ks::saves::SaveSettingsData settings = ks::saves::SaveSettingsData();
 
         void main_update() {
-
+            ks::SceneManager::update();
             bn::core::update();
-            // REG_BG0HOFS = -80;
-            // REG_BG1HOFS = -80;
-            // REG_BG2HOFS = 120;
-            // REG_BG3HOFS = 120;
-
-            // REG_BG0CNT |= BG_16_COLOR;
-            // REG_BG1CNT |= BG_16_COLOR;
-            // REG_BG2CNT |= BG_16_COLOR;
-            // REG_BG3CNT |= BG_16_COLOR;
-
-            // REG_BG2CNT |= BG_SIZE_3;
-            // REG_BG3CNT |= BG_SIZE_3;
-
-            // if (buffer == g_front_buffer) {
-            //     REG_DISPCNT &= ~SHOW_BACKBUFFER;
-            //     return g_back_buffer;
-            // } else {
-            //     REG_DISPCNT |= SHOW_BACKBUFFER;
-            //     return g_front_buffer;
-            // }
-
-            player_update(0, [](unsigned current) {});
-            player_sfx_update();
-        };
+            ks::sound_manager::update();
+        }
 
         void BN_CODE_IWRAM ISR_VBlank() {
-            player_onVBlank();
-            player_sfx_onVBlank();
+            ks::sound_manager::on_vblank();
+            timer::update();
         }
 
         // Updates the sound only, while waiting for V-Blank.
         // Used on expensive operations to reduce sound-flickering.
         void BN_CODE_IWRAM sound_update() {
-            if(REG_VCOUNT == 159)
-            {
-                while(REG_VCOUNT == 159)
-                {
+            if (REG_VCOUNT == 159) {
+                while (REG_VCOUNT == 159) {
                 }
-            }
-            else
-            {
+            } else {
                 VBlankIntrWait();
             }
-            player_update(0, [](unsigned current) {});
-            player_sfx_update();
+            ks::sound_manager::update();
         }
 
         void init_engine(const bn::optional<bn::color> &clear_color) {
             bn::core::init(clear_color, bn::string_view(), ks::globals::ISR_VBlank);
             // BN_LOG("PLA", player_sfx_isPlaying());
-            player_init();
-            player_sfx_init();
-            set_language(language);
+            ks::sound_manager::init();
+            set_language(settings.language);
 
             if (clear_color.has_value()) {
                 bn::bg_palettes::set_transparent_color(clear_color);
@@ -93,6 +91,8 @@ namespace ks {
             ks::progress_icon_sprites->clear();
             ks::static_text_sprites->clear();
             ks::animated_text_sprites->clear();
+
+            ks::globals::accessibility_apply();
         }
 
         void init_engine() {
@@ -102,11 +102,14 @@ namespace ks {
         void release_engine() {
             ks::main_background.reset();
             ks::secondary_background.reset();
-            ks::tertiary_background.reset();
+            ks::transition_bg.reset();
             // ks::scene.reset();
 
             // delete &ks::text_db;
             // delete ks::globals::i18n;
+
+            bn::memory::log_alloc_ewram_status();
+
             delete ks::progress_icon_sprites;
             delete ks::static_text_sprites;
             delete ks::animated_text_sprites;
@@ -114,34 +117,39 @@ namespace ks {
             delete ks::dialog;
             delete ks::globals::i18n;
 
-            player_unload();
-            player_sfx_unload();
+            // bn::memory::log_alloc_ewram_status();
+
+            playerGSM_unload();
+            player8AD_unload();
         }
 
-        void set_language(ks::TranslationType tl) {
-            language = tl;
+        void set_language(language_t tl) {
+            settings.language = tl;
 
-            if (language == ks::TranslationType::EN) {
-                // ks::globals::i18n = ks::globals::translations::en;
-                // ks::globals::i18n = &ks::TranslationEn::i18n;
-                // ks::globals::i18n = new ks::TranslationEn();
-                ks::globals::i18n = new (translation_buffer) ks::TranslationEn();
-            } else if (language == ks::TranslationType::RU) {
-                // ks::globals::i18n = ks::globals::translations::ru;
-                // ks::globals::i18n = &ks::TranslationRu::i18n;
-                // ks::globals::i18n = new ks::TranslationRu();
-                ks::globals::i18n = new (translation_buffer) ks::TranslationRu();
+            if (settings.language == LANG_ENGLISH) {
+                i18n = new(translation_buffer) TranslationEn();
+            } else if (settings.language == LANG_RUSSIAN) {
+                i18n = new(translation_buffer) TranslationRu();
             } else {
                 BN_ERROR("Unkown language");
             }
-
         }
 
+        void accessibility_apply() {
+            bn::bg_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
+            bn::sprite_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
+        }
 
         namespace colors {
-            constexpr bn::color BLACK = bn::color(0,0,0);
-            constexpr bn::color WHITE = bn::color(31,31,31);
-            constexpr bn::color RED = bn::color(31,0,0);
+            constexpr bn::color BLACK = bn::color(0, 0, 0);
+            constexpr bn::color WHITE = bn::color(31, 31, 31);
+            constexpr bn::color RED = bn::color(31, 0, 0);
+        }
+
+        namespace text_palettes {
+            // constexpr bn::sprite_palette_item original = bn::sprite_items::variable_16x16_font.palette_item();
+            constexpr bn::sprite_palette_item beige = bn::sprite_items::variable_16x16_font_beige_pal.palette_item();
+            constexpr bn::sprite_palette_item beige_selected = bn::sprite_items::variable_16x16_font_beige_selected_pal.palette_item();
         }
     }
 }
