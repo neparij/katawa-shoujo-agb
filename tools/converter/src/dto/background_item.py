@@ -9,15 +9,43 @@ class BgShowPosition(Enum):
     BGLEFT = "bgleft"
     BGRIGHT = "bgright"
 
+class BgTransition(Enum):
+    NONE = "SCENE_TRANSITION_NONE"
+    LOCATIONCHANGE = "SCENE_TRANSITION_LOCATIONCHANGE"
+    LOCATIONSKIP = "SCENE_TRANSITION_LOCATIONSKIP"
+    SHORTTIMESKIP = "SCENE_TRANSITION_SHORTTIMESKIP"
+    SHORTTIMESKIPSILENT = "SCENE_TRANSITION_SHORTTIMESKIPSILENT"
+    OPENEYE = "SCENE_TRANSITION_OPENEYE"
+    SHUTEYE = "SCENE_TRANSITION_SHUTEYE"
+    OPENEYEFAST = "SCENE_TRANSITION_OPENEYEFAST"
+    SHUTEYEFAST = "SCENE_TRANSITION_SHUTEYEFAST"
+    OPENEYE_SHOCK = "SCENE_TRANSITION_OPENEYE_SHOCK"
+    WHIP_RIGHT = "SCENE_TRANSITION_WHIP_RIGHT"
+    WHIP_LEFT = "SCENE_TRANSITION_WHIP_LEFT"
+    FLASHBACK = "SCENE_TRANSITION_FLASHBACK"
+    DELAYBLINDS = "SCENE_TRANSITION_DELAYBLINDS"
+    HANDS_IN = "SCENE_TRANSITION_HANDS_IN"
+    HANDS_OUT = "SCENE_TRANSITION_HANDS_OUT"
+    SOFTWIPEDOWN = "SCENE_TRANSITION_SOFTWIPEDOWN"
+    SOFTWIPEUP = "SCENE_TRANSITION_SOFTWIPEUP"
+    SILENTFLASH = "SCENE_TRANSITION_SILENTFLASH"
+    FLASH = "SCENE_TRANSITION_FLASH"
+    SILENTWHITEOUT = "SCENE_TRANSITION_SILENTWHITEOUT"
+    WHITEOUT = "SCENE_TRANSITION_WHITEOUT"
+    CAMERAFLASH = "SCENE_TRANSITION_CAMERAFLASH"
+    CAMERAFLASHLONG = "SCENE_TRANSITION_CAMERAFLASHLONG"
+    PASSOUTOP1 = "SCENE_TRANSITION_PASSOUTOP1"
+
 
 class BackgroundItem(SequenceItem):
     def some_method(self):
         pass
 
-    def __init__(self, background: str, position: BgShowPosition = BgShowPosition.DEFAULT, dissolve_time: float = 0):
+    def __init__(self, background: str, position: BgShowPosition = BgShowPosition.DEFAULT, transition: BgTransition = BgTransition.NONE, dissolve_time: float = 0):
         super().__init__(SequenceType.BACKGROUND)
         self.background = background
         self.position = position
+        self.transition = transition
         self.dissolve_time = dissolve_time
 
     def __str__(self):

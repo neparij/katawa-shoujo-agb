@@ -111,6 +111,49 @@ public:
     virtual const char* definitions_hh_() = 0;
     virtual const char* definitions_emm_() = 0;
 
+    const char* music(const music_t music) {
+        switch (music) {
+            case MUSIC_TRANQUIL: return "Afternoon";
+            case MUSIC_NURSE: return "Ah Eh I Oh You";
+            case MUSIC_SOOTHING: return "Air Guitar";
+            case MUSIC_TWINKLE: return "Aria de l'Etoile";
+            case MUSIC_MOONLIGHT: return "Breathlessly";
+            case MUSIC_RAIN: return "Caged Heart";
+            case MUSIC_TRAGIC: return "Cold Iron";
+            case MUSIC_COMFORT: return "Comfort";
+            case MUSIC_LILLY: return "Concord";
+            case MUSIC_DAILY: return "Daylight";
+            case MUSIC_EASE: return "Ease";
+            case MUSIC_ANOTHER: return "Everyday Fantasy";
+            case MUSIC_FRIENDSHIP: return "Friendship";
+            case MUSIC_HAPPINESS: return "Fripperies";
+            case MUSIC_COMEDY: return "Generic Happy Music";
+            case MUSIC_TENSION: return "High Tension";
+            case MUSIC_RUNNING: return "Hokabi";
+            case MUSIC_INNOCENCE: return "Innocence";
+            case MUSIC_HEART: return "Letting my Heart Speak";
+            case MUSIC_SERENE: return "Lullaby of Open Eyes";
+            case MUSIC_DRAMA: return "Moment of Decision";
+            case MUSIC_NIGHT: return "Nocturne";
+            case MUSIC_KENJI: return "Out of the Loop";
+            case MUSIC_HANAKO: return "Painful History";
+            case MUSIC_RIN: return "Parity";
+            case MUSIC_TIMESKIP: return "Passing of Time";
+            case MUSIC_DREAMY: return "Raindrops and Puddles";
+            case MUSIC_JAZZ: return "Red Velvet";
+            case MUSIC_ROMANCE: return "Romance in Andante II";
+            case MUSIC_CREDITS: return "Romance in Andante";
+            case MUSIC_MUSICBOX: return "Sarabande from BWV1010";
+            case MUSIC_NORMAL: return "School Days";
+            case MUSIC_SADNESS: return "Shadow of the Truth";
+            case MUSIC_EMI: return "Standing Tall";
+            case MUSIC_PEARLY: return "Stride";
+            case MUSIC_SHIZUNE: return "The Student Council";
+            case MUSIC_ONE: return "To Become One";
+            case MUSIC_MENUS: return "Wiosna";
+            default: return definitions_nothing();
+        }
+    }
 };
 }
 

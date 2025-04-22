@@ -69,7 +69,7 @@ VP_INLINE void VP_IWRAM update()
     if (KEY_DOWN_NOW(KEY_START)) {
         // TODO: REMOVE
         g_is_finished = true;
-        playerGSM_stop();
+        ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
     }
 
 }
@@ -111,8 +111,14 @@ void videoplayer_init(const uint8_t* agmv_file, size_t agmv_size, const char* au
 
     // Set video mode and buffers
     REG_DISPCNT = MODE_5 | BG2_ENABLE;
+    REG_BG2CNT = 0x1C0B; // 0b0001110000001011
     REG_BG2PA = 128;  // For 240x160 video
     REG_BG2PD = 128;
+    REG_BG2X = 0;
+    REG_BG2Y = 0;
+    // BN_LOG("CNT: ", REG_BG2CNT);
+    // CNT: 2563
+    // CNT: 7179
 
     // Configure Timer 2 for 15 FPS (4375 * 2 ticks at 1:256 prescaler)
     REG_TM2CNT_H = 0;

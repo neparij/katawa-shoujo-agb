@@ -5,6 +5,7 @@ from enum import Enum
 class SequenceType(Enum):
     ASSIGNMENT = "assignment"
     BACKGROUND = "background"
+    CUSTOM_EVENT = "custom_event"
     CONDITION = "condition"
     DIALOG = "dialog"
     MENU = "menu"
@@ -15,7 +16,9 @@ class SequenceType(Enum):
     SHOW = "show"
     SHOW_TRANSFORM = "show_transform"
     BACKGROUND_TRANSFORM = "background_transform"
+    BACKGROUND_TRANSITION = "background_transition"
     HIDE = "hide"
+    PAUSE = "pause"
     UPDATE_VISUALS = "update_visuals"
     SHOW_VIDEO = "show_video"
 

@@ -35,6 +35,11 @@ namespace ks {
         void reset_ingame_timer() {
             BN_LOG("Reset ingame timer");
             state = TIMER_STATE_NONE;
+            if (_internal_timer.has_value()) {
+                _internal_timer.reset();
+            }
+            _internal_timer = bn::timer();
+
             ks::progress.metadata.hours_played = 0;
             ks::progress.metadata.minutes_played = 0;
             ks::progress.metadata.seconds_played = 0;

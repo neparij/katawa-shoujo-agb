@@ -46,7 +46,9 @@
 #include "bn_regular_bg_items_rin_bg_negative_close.h"
 #include "bn_regular_bg_items_school_dormext_start_ss.h"
 #include "bn_regular_bg_items_school_dormext_half_ni.h"
-#include "bn_regular_bg_items_emi_knockeddown.h"
+#include "bn_regular_bg_items_emi_knockeddown_facepullout.h"
+#include "bn_regular_bg_items_emi_knockeddown_largepullout.h"
+#include "bn_regular_bg_items_emi_knockeddown_legs.h"
 #include "bn_regular_bg_items_hanako_bg_cover.h"
 #include "bn_sprite_items_shizu_spr_behind_smile.h"
 #include "bn_sprite_items_misha_spr_perky_smile.h"
@@ -162,6 +164,9 @@
 #include "rin_basic_close.h"
 #include "rin_negative_close.h"
 #include "hanako_cover.h"
+#include "../events/emi_knockeddown_facepullout.cpp.h"
+#include "../events/emi_knockeddown_largepullout.cpp.h"
+#include "../events/emi_knockeddown_legs.cpp.h"
 namespace ks {
     class ScriptA1Wednesday {
         public:

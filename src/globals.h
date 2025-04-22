@@ -5,6 +5,9 @@
 
 #include <bn_color.h>
 #include <bn_optional.h>
+#include <bn_sprite_items_variable_16x16_font.h>
+#include <bn_sprite_items_variable_16x16_font_hi_pal.h>
+#include <bn_sprite_palette_item.h>
 #include <bn_vector.h>
 
 #include "definitions.h"
@@ -37,6 +40,12 @@ namespace ks {
             extern const bn::color BLACK;
             extern const bn::color WHITE;
             extern const bn::color RED;
+        }
+
+        namespace text_palettes {
+            const bn::sprite_palette_item original = bn::sprite_items::variable_16x16_font.palette_item();
+            extern const bn::sprite_palette_item beige;
+            extern const bn::sprite_palette_item beige_selected;
         }
     }
 }

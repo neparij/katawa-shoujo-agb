@@ -16,6 +16,13 @@
 #include "constants.h"
 #include "globals.h"
 
+#include "menu/menu_main.cpp.h"
+#include "menu/menu_saves.cpp.h"
+#include "menu/menu_options.cpp.h"
+#include "menu/menu_extras.cpp.h"
+#include "menu/menu_extras_cinema.cpp.h"
+#include "menu/menu_debug_acts.cpp.h"
+
 
 #include "videoplayer/video_player.h"
 #include "video_4ls_agmv.h"
@@ -96,8 +103,55 @@
 #include "bn_regular_bg_items_emi_bed_smile.h"
 #include "bn_sprite_items_hanako.h"
 #include <BN_LOG.h>
+#include <bn_regular_bg_attributes.h>
+#include <bn_regular_bg_tiles_ptr.h>
 
 #include "ingametimer.h"
+
+#include <bn_affine_bg_attributes.h>
+#include <bn_affine_bg_ptr.h>
+#include <bn_affine_bg_tiles_ptr.h>
+
+#include "bn_affine_bg_items_test_clockwipe.h"
+#include "bn_affine_bg_items_test_delayblinds.h"
+#include "bn_affine_bg_items_test_dots_col.h"
+#include "bn_affine_bg_items_test_eyes.h"
+#include "bn_affine_bg_items_test_flashback.h"
+#include "bn_memory.h"
+#include "shaders/vram_dma_shader.h"
+
+// AFFINE TESTS
+#include <bn_affine_bg_attributes_hbe_ptr.h>
+#include <bn_affine_bg_builder.h>
+#include <bn_affine_bg_mat_attributes.h>
+#include <bn_sprite_builder.h>
+
+#include "bn_affine_bg_actions.h"
+#include "bn_affine_bg_items_emi_knockeddown_facepullout_left.h"
+#include "bn_affine_bg_items_emi_knockeddown_facepullout_left_i.h"
+#include "bn_affine_bg_items_emi_knockeddown_facepullout_right.h"
+#include "bn_affine_bg_items_emi_knockeddown_facepullout_right_i.h"
+#include "bn_affine_bg_items_rin_wisp5_left.h"
+#include "bn_affine_bg_items_rin_wisp5_right.h"
+
+
+#include "bn_affine_bg_items_rin_wisp1_top.h"
+#include "bn_affine_bg_items_rin_wisp1_bottom.h"
+#include "bn_affine_bg_items_rin_wisp1_full.h"
+#include "bn_affine_bg_items_rin_wisp2_top.h"
+#include "bn_affine_bg_items_rin_wisp2_bottom.h"
+#include "bn_affine_bg_items_rin_wisp2_full.h"
+#include "bn_affine_bg_items_rin_wisp3_top.h"
+#include "bn_affine_bg_items_rin_wisp3_bottom.h"
+#include "bn_affine_bg_items_rin_wisp3_full.h"
+#include "bn_affine_bg_items_rin_wisp4_top.h"
+#include "bn_affine_bg_items_rin_wisp4_bottom.h"
+#include "bn_affine_bg_items_rin_wisp4_full.h"
+#include "bn_affine_bg_items_rin_wisp5_top.h"
+#include "bn_affine_bg_items_rin_wisp5_bottom.h"
+#include "bn_affine_bg_items_rin_wisp5_full.h"
+#include "bn_affine_bg_items_rin_wisp_blurred_full.h"
+#include "bn_affine_bg_items_rin_wisp_smoke_focused_full.h"
 
 using size_type = int;
 
@@ -144,7 +198,9 @@ void draw_progress_icons() {
 
 void open_main_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
     state = MENU_MAIN;
-    bn::string<64> version("v0.2.7+02791");
+
+    auto m = new ks::MenuMain();
+    const bn::string<64> version("v0.2.9+69");
     ks::main_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
 
     indexes->clear();
@@ -263,6 +319,11 @@ void open_debug_acts_menu(menuEnum &state, bn::vector<signed char, 64>* indexes)
 void open_extras_menu(menuEnum &state, bn::vector<signed char, 64>* indexes) {
     state = MENU_EXTRAS;
     ks::main_background = bn::regular_bg_items::ui_bg_menu_extras.create_bg(0, 0);
+
+    indexes->clear();
+    ks::secondary_background.reset();
+    ks::static_text_sprites->clear();
+    ks::progress_icon_sprites->clear();
 
     indexes->clear();
     ks::static_text_sprites->clear();
@@ -429,53 +490,6 @@ float bezier_f(float t)
     return t * t * (3.0f - 2.0f * t);
 }
 
-
-struct music_entry {
-    const char* name;
-    const char* gsm_file;
-};
-
-constexpr music_entry music_entries[] = {
-    music_entry("Afternoon", "music_tranquil.gsm"),
-    music_entry("Ah Eh I Oh You", "music_nurse.gsm"),
-    music_entry("Air Guitar", "music_soothing.gsm"),
-    music_entry("Aria de l'Etoile", "music_twinkle.gsm"),
-    music_entry("Breathlessly", "music_moonlight.gsm"),
-    music_entry("Caged Heart", "music_rain.gsm"),
-    music_entry("Cold Iron", "music_tragic.gsm"),
-    music_entry("Comfort", "music_comfort.gsm"),
-    music_entry("Concord", "music_lilly.gsm"),
-    music_entry("Daylight", "music_daily.gsm"),
-    music_entry("Ease", "music_ease.gsm"),
-    music_entry("Everyday Fantasy", "music_another.gsm"),
-    music_entry("Friendship", "music_friendship.gsm") ,
-    music_entry("Fripperies", "music_happiness.gsm"),
-    music_entry("Generic Happy Music", "music_comedy.gsm"),
-    music_entry("High Tension", "music_tension.gsm"),
-    music_entry("Hokabi", "music_running.gsm"),
-    music_entry("Innocence", "music_innocence.gsm"),
-    music_entry("Letting my Heart Speak", "music_heart.gsm"),
-    music_entry("Lullaby of Open Eyes", "music_serene.gsm"),
-    music_entry("Moment of Decision", "music_drama.gsm"),
-    music_entry("Nocturne", "music_night.gsm"),
-    music_entry("Out of the Loop", "music_kenji.gsm"),
-    music_entry("Painful History", "music_hanako.gsm"),
-    music_entry("Parity", "music_rin.gsm"),
-    music_entry("Passing of Time", "music_timeskip.gsm"),
-    music_entry("Raindrops and Puddles", "music_dreamy.gsm"),
-    music_entry("Red Velvet", "music_jazz.gsm"),
-    music_entry("Romance in Andante II", "music_romance.gsm"),
-    music_entry("Romance in Andante", "music_credits.gsm"),
-    music_entry("Sarabande from BWV1010", "music_musicbox.gsm"),
-    music_entry("School Days", "music_normal.gsm"),
-    music_entry("Shadow of the Truth", "music_sadness.gsm"),
-    music_entry("Standing Tall", "music_emi.gsm"),
-    music_entry("Stride", "music_pearly.gsm"),
-    music_entry("The Student Council", "music_shizune.gsm"),
-    music_entry("To Become One", "music_one.gsm"),
-    music_entry("Wiosna", "music_menus.gsm")
-};
-
 const constexpr bool SHOW_INTRO = true;
 const constexpr bn::color COLOR_WHITE = bn::color(31,31,31);
 const constexpr bn::color COLOR_BLACK = bn::color(0,0,0);
@@ -535,6 +549,68 @@ int main()
     bn::vector<bn::sprite_ptr, 8> checkboxes_ptrs;
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
 
+
+
+
+    // // ::: AFFINEBG_192x192 in 256x256 halves RIN WISP (START) :::
+    // bn::optional<bn::affine_bg_ptr> affine_bg_one;
+    // bn::optional<bn::affine_bg_ptr> affine_bg_two;
+    //
+    // // affine_bg_one = bn::affine_bg_builder(bn::affine_bg_items::rin_wisp3_top)
+    // //     .set_position(0, 0)
+    // //     .set_scale(1.5)
+    // //     .set_wrapping_enabled(false)
+    // //     .build();
+    // // affine_bg_two = bn::affine_bg_builder(bn::affine_bg_items::rin_wisp3_bottom)
+    // //     .set_position(0, 0)
+    // //     .set_scale(1.5)
+    // //     .set_wrapping_enabled(false)
+    // //     .build();
+    //
+    //
+    // affine_bg_one = bn::affine_bg_builder(bn::affine_bg_items::rin_wisp_blurred_full)
+    //     .set_position(0, 0)
+    //     .set_scale(2.25)
+    //     .set_wrapping_enabled(false)
+    //     .set_priority(3)
+    //     .set_z_order(10)
+    //     .build();
+    // affine_bg_two = bn::affine_bg_builder(bn::affine_bg_items::rin_wisp_smoke_focused_full)
+    //     .set_position(0, 0)
+    //     .set_scale(2.25)
+    //     .set_wrapping_enabled(false)
+    //     .set_blending_enabled(true)
+    //     .set_priority(3)
+    //     .set_z_order(9)
+    //     .build();
+    //
+    // bn::fixed wisp_turn, smoke_turn = 0.00;
+    // bn::blending::set_transparency_and_intensity_alpha(0.0, 1.0);
+    //
+    // ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+    // ks::sound_manager::play(MUSIC_SERENE);
+    // ks::dialog->show("Rin", "It's not very tasty. Feels like inhaling the dust lying on top of a forgotten book about the memories of a dead kingdom.", false);
+    // while (!bn::keypad::start_pressed()) {
+    //     wisp_turn = (wisp_turn - 0.05 + 360) % 360;
+    //     smoke_turn = (smoke_turn + 0.05 + 360) % 360;
+    //
+    //     affine_bg_one->set_rotation_angle(wisp_turn);
+    //     // affine_bg_two->set_rotation_angle(wisp_turn);
+    //     affine_bg_two->set_rotation_angle(smoke_turn);
+    //     if (!ks::dialog->is_finished()) {
+    //         ks::dialog->update();
+    //     } else {
+    //         ks::dialog->hide();
+    //     }
+    //
+    //     ks::globals::main_update();
+    // }
+    //
+    // bn::blending::set_intensity_alpha(0);
+    // affine_bg_one.reset();
+    // affine_bg_two.reset();
+    // // ::: AFFINEBG_192x192 RIN WISP (END) :::
+
     while(true)
     {
         int select = 0;
@@ -546,16 +622,16 @@ int main()
 
         bn::bg_palettes::set_fade(COLOR_BLACK, bn::fixed(1));
         bn::sprite_palettes::set_fade(COLOR_BLACK, bn::fixed(1));
-
         open_main_menu(state, &selection_index);
 
         int temp_music_index = 37;
         BN_LOG("Music entries size: ", temp_music_index);
-        ks::sound_manager::play<SOUND_CHANNEL_MUSIC>("music_menus.gsm");
+        ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+        ks::sound_manager::play(MUSIC_MENUS);
 
         bn::sprite_palette_item original_palette_item = ks::text_generator->palette_item();
-        bn::sprite_palette_item beige_palette_item = bn::sprite_items::variable_16x16_font_beige.palette_item();
-        bn::sprite_palette_item beige_selected_palette_item = bn::sprite_items::variable_16x16_font_beige_selected.palette_item();
+        bn::sprite_palette_item beige_palette_item = bn::sprite_items::variable_16x16_font_beige_pal.palette_item();
+        bn::sprite_palette_item beige_selected_palette_item = bn::sprite_items::variable_16x16_font_beige_selected_pal.palette_item();
 
         // ks::globals::main_update();
 
@@ -570,9 +646,7 @@ int main()
                     temp_music_index--;
                 }
                 temp_music_index = (temp_music_index + 38) % 38;
-                BN_LOG("MUSIC.ID=", temp_music_index);
-                BN_LOG("MUSIC.NAME=", music_entries[temp_music_index].name);
-                ks::sound_manager::play<SOUND_CHANNEL_MUSIC>(music_entries[temp_music_index].gsm_file);
+                ks::sound_manager::play((music_t)temp_music_index + 1);
             }
 
             if (bn::keypad::up_pressed() || bn::keypad::down_pressed()) {
@@ -755,8 +829,9 @@ int main()
                         open_extras_menu(state, &selection_index);
                         update_extras_menu(select);
                     } else {
-                        playerGSM_stop();
-                        player8AD_stop();
+                        ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+                        ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
+                        ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
 
                         if (select == 0) {
                             ks::SceneManager::show_video(video_op_1_agmv, video_op_1_agmv_size, "video_op_1.gsm", COLOR_BLACK);
@@ -817,7 +892,7 @@ int main()
                         need_fade_in = true;
 
 
-                        ks::sound_manager::play<SOUND_CHANNEL_MUSIC>("music_menus.gsm");
+                        ks::sound_manager::play(MUSIC_MENUS);
                         open_extras_cinema_menu(state, &selection_index);
                         update_extras_cinema_menu(select);
 
@@ -864,7 +939,7 @@ int main()
                     bool is_selected = selection_index.at(i) == select;
                     bool is_action = selection_index.at(i) != -1;
                     if (!is_action) {
-                        ks::static_text_sprites->at(i).set_palette(original_palette_item);
+                        ks::static_text_sprites->at(i).set_palette(beige_selected_palette_item);
                     } else {
                         ks::static_text_sprites->at(i).set_palette(is_selected ? beige_selected_palette_item : beige_palette_item);
                     }
@@ -874,6 +949,9 @@ int main()
             if (need_fade_in) {
                 need_fade_in = false;
                 ks::SceneManager::fade_in(COLOR_BLACK);
+                // bn::bg_palettes::set_fade(COLOR_BLACK, bn::fixed(0));
+                // bn::sprite_palettes::set_fade(COLOR_BLACK, bn::fixed(0));
+                // ks::SceneManager::transition_fadein(bn::affine_bg_items::test_dots_col, 4,  true);
             }
 
             ks::globals::main_update();
@@ -881,6 +959,9 @@ int main()
 
         ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(30);
         ks::SceneManager::fade_out(COLOR_BLACK);
+        // ks::SceneManager::transition_fadeout(bn::affine_bg_items::test_dots_col, 4,  false);
+
+
         // _text_sprites.clear();
         ks::static_text_sprites->clear();
         ks::progress_icon_sprites->clear();

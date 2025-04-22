@@ -1,22 +1,25 @@
 import hashlib
 import re
-from typing import List, cast
+from typing import List, cast, Tuple
 
 from src.dto.assignment_item import AssignmentItem
-from src.dto.background_item import BackgroundItem, BgShowPosition
+from src.dto.background_item import BackgroundItem, BgShowPosition, BgTransition
 from src.dto.background_transform_item import BackgroundTransformItem
+from src.dto.background_transition_item import BackgroundTransitionItem
 from src.dto.condition_item import ConditionItem
+from src.dto.custom_event_item import CustomEventItem
 from src.dto.dialog_item import DialogItem
 from src.dto.hide_item import HideEvent, HideItem
 from src.dto.menu_item import MenuItem
 from src.dto.music_item import MusicItem, MusicAction, MusicEffect
+from src.dto.pause_item import PauseItem
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceType, SequenceItem
 from src.dto.show_item import ShowEvent, ShowItem, ShowPosition
 from src.dto.show_transform_item import ShowTransformItem
 from src.dto.show_video_item import ShowVideoItem
-from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
+from src.dto.sound_item import SoundItem, SoundAction, SoundEffect, SoundChannel
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
@@ -138,7 +141,10 @@ class ScenarioReader:
         if (has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.HIDE) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW_TRANSFORM) or
-                has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND)):
+                has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND_TRANSITION) or
+                has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND_TRANSFORM) or
+                has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND) or
+                has_sequence_item_with_type(self.linepack_events, SequenceType.CUSTOM_EVENT)):
             self.stack.current().add_sequence_item(self.linepack_events, UpdateVisualsItem())
         print("<<<<<<<<<<<<<<<<<<<<<<\n")
 
@@ -330,7 +336,29 @@ class ScenarioReader:
             # REMOVES TEMP
             # TODO: use specs
             event_bg_name = rewrite_motion_background(event_bg_name)
-            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(event_bg_name))
+            custom_event_bg, custom_event = get_custom_event(event_bg_name)
+            if custom_event_bg is not None and custom_event is not None:
+                event_bg_name = custom_event_bg
+                event = custom_event
+                self.stack.current().add_sequence_item(self.linepack_events, CustomEventItem(event_bg_name, event))
+            elif custom_event_bg is not None:
+                event_bg_name = custom_event_bg
+                self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(event_bg_name))
+            else:
+                self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(event_bg_name))
+            return
+
+        elif stripped_line.startswith("show passoutOP1"):
+            self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(BgTransition.PASSOUTOP1))
+            return
+
+        elif stripped_line.startswith("pause"):
+            value_match = re.search(r"pause (\d+\.\d+)", stripped_line)
+            value = float(value_match.group(1)) if value_match else 0
+            if value > 0:
+                self.stack.current().add_sequence_item(self.linepack_events, PauseItem(value))
+            else:
+                raise Exception(f"Invalid pause value: {stripped_line}")
             return
 
         elif stripped_line.startswith("play music"):
@@ -357,7 +385,17 @@ class ScenarioReader:
             fadein_match = re.search(r"fadein (\d+\.\d+)", stripped_line)
             fadein_time = float(fadein_match.group(1)) if fadein_match else 0
             self.stack.current().add_sequence_item(self.linepack_events, 
-                SoundItem(SoundAction.PLAY, music_name, SoundEffect.FADEIN if fadein_match else SoundEffect.NONE,
+                SoundItem(SoundAction.PLAY, music_name, SoundChannel.SOUND, SoundEffect.FADEIN if fadein_match else SoundEffect.NONE,
+                          fadein_time))
+            return
+
+        elif stripped_line.startswith("play ambient"):
+            parts = stripped_line.split()
+            music_name = parts[2]
+            fadein_match = re.search(r"fadein (\d+\.\d+)", stripped_line)
+            fadein_time = float(fadein_match.group(1)) if fadein_match else 0
+            self.stack.current().add_sequence_item(self.linepack_events,
+                SoundItem(SoundAction.PLAY, music_name, SoundChannel.AMBIENT, SoundEffect.FADEIN if fadein_match else SoundEffect.NONE,
                           fadein_time))
             return
 
@@ -365,7 +403,15 @@ class ScenarioReader:
             fadeout_match = re.search(r"fadeout (\d+\.\d+)", stripped_line)
             fadeout_time = float(fadeout_match.group(1)) if fadeout_match else 0
             self.stack.current().add_sequence_item(self.linepack_events, 
-                SoundItem(SoundAction.STOP, "", SoundEffect.FADEOUT if fadeout_match else SoundEffect.NONE,
+                SoundItem(SoundAction.STOP, "", SoundChannel.SOUND, SoundEffect.FADEOUT if fadeout_match else SoundEffect.NONE,
+                          fadeout_time))
+            return
+
+        elif stripped_line.startswith("stop ambient"):
+            fadeout_match = re.search(r"fadeout (\d+\.\d+)", stripped_line)
+            fadeout_time = float(fadeout_match.group(1)) if fadeout_match else 0
+            self.stack.current().add_sequence_item(self.linepack_events,
+                SoundItem(SoundAction.STOP, "", SoundChannel.AMBIENT, SoundEffect.FADEOUT if fadeout_match else SoundEffect.NONE,
                           fadeout_time))
             return
 
@@ -440,21 +486,50 @@ class ScenarioReader:
             return
 
         elif stripped_line.startswith("with "):
+            transition_match = re.match(r"^with ([\w_]+)$", stripped_line)
+            if transition_match:
+                transition_name = transition_match.group(1)
+                if transition_name in [t.name.lower() for t in BgTransition] and transition_name != "none":
+                    transition = cast(BgTransition, BgTransition[transition_name.upper()])
+                    for sequence in self.linepack_events:
+                        if sequence.type == SequenceType.BACKGROUND:
+                            sequence = cast(BackgroundItem, sequence)
+                            sequence.transition = transition
+                            return
+                        elif sequence.type == SequenceType.CUSTOM_EVENT:
+                            sequence = cast(CustomEventItem, sequence)
+                            sequence.transition = transition
+                            return
+                    self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(transition))
+                    return
             displayable_dissolve_match = re.match(r"^with Dissolve\(([\d.]+)\)$", stripped_line)
             if displayable_dissolve_match:
                 dissolve_time = float(displayable_dissolve_match.group(1))
                 for sequence in self.linepack_events:
-                    print(sequence)
-                    # if isinstance(item, SequenceItem):
                     if sequence.type == SequenceType.BACKGROUND:
                         sequence = cast(BackgroundItem, sequence)
+                        sequence.dissolve_time = dissolve_time
+                    elif sequence.type == SequenceType.CUSTOM_EVENT:
+                        sequence = cast(CustomEventItem, sequence)
                         sequence.dissolve_time = dissolve_time
             if stripped_line.startswith("with locationchange"):
                 dissolve_time = float(1)
                 for sequence in self.linepack_events:
                     if sequence.type == SequenceType.BACKGROUND:
                         sequence = cast(BackgroundItem, sequence)
-                    sequence.dissolve_time = dissolve_time
+                        sequence.dissolve_time = dissolve_time
+                    elif sequence.type == SequenceType.CUSTOM_EVENT:
+                        sequence = cast(CustomEventItem, sequence)
+                        sequence.dissolve_time = dissolve_time
+            elif stripped_line.startswith("with locationskip"):
+                dissolve_time = float(0.5)
+                for sequence in self.linepack_events:
+                    if sequence.type == SequenceType.BACKGROUND:
+                        sequence = cast(BackgroundItem, sequence)
+                        sequence.dissolve_time = dissolve_time
+                    elif sequence.type == SequenceType.CUSTOM_EVENT:
+                        sequence = cast(CustomEventItem, sequence)
+                        sequence.dissolve_time = dissolve_time
 
 
         else:
@@ -519,14 +594,36 @@ def rewrite_background(bg_name: str) -> str:
 def rewrite_motion_background(bg_name: str) -> str:
     # TODO: remove this method and allow motion backgrounds
     return (bg_name
-            .replace("_start", "")
-            .replace("_move", "")
-            .replace("_end", "")
+            .replace("other_iwanako_start", "other_iwanako")
+            # .replace("_start", "")
+            # .replace("_move", "")
+            # .replace("_end", "")
             .replace("_zoomout", "")
-            .replace("emi_knockeddown_facepullout", "emi_knockeddown")
-            .replace("emi_knockeddown_largepullout", "emi_knockeddown")
-            .replace("emi_knockeddown_legs", "emi_knockeddown")
+            # .replace("emi_knockeddown_facepullout", "emi_knockeddown")
+            # .replace("emi_knockeddown_largepullout", "emi_knockeddown")
+            # .replace("emi_knockeddown_legs", "emi_knockeddown")
             )
+
+def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[str, None] | tuple[None, None]:
+    # HISAO CLASS
+    if bg_name == "hisao_class_start":
+        return "hisao_class", "HisaoClassStartEvent"
+    elif bg_name == "hisao_class_move":
+        return "hisao_class", "HisaoClassMoveEvent"
+    elif bg_name == "hisao_class_end":
+        return "hisao_class", "HisaoClassEndEvent"
+
+    # EMI KNOCKEDDOWN
+    if bg_name == "emi_knockeddown_facepullout":
+        return "emi_knockeddown_facepullout", "EmiKnockeddownFacepulloutEvent"
+    elif bg_name == "emi_knockeddown_largepullout":
+        return "emi_knockeddown_largepullout", "EmiKnockeddownLargepulloutEvent"
+    elif bg_name == "emi_knockeddown_legs":
+        return "emi_knockeddown_legs", "EmiKnockeddownLegsEvent"
+    elif bg_name == "emi_knockeddown":
+        return "emi_knockeddown_largepullout", None
+
+    return None, None
 
 def has_sequence_item_with_type(linepack: List[SequenceItem], sequence_type: SequenceType) -> bool:
     for item in linepack:

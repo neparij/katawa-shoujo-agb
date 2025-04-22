@@ -32,8 +32,8 @@
 #include <bn_size.h>
 #include <bn_sprite_actions.h>
 
-#include "bn_sprite_items_variable_16x16_font_beige.h"
-#include "bn_sprite_items_variable_16x16_font_beige_selected.h"
+#include "bn_sprite_items_variable_16x16_font_beige_pal.h"
+#include "bn_sprite_items_variable_16x16_font_beige_selected_pal.h"
 
 namespace ks
 {
@@ -52,8 +52,8 @@ namespace ks
             _finalized_text_sprites(finalized_text_sprites),
             _animated_text_sprites(animated_text_sprites),
             original_palette_item(_text_generator->palette_item()),
-            beige_palette_item(bn::sprite_items::variable_16x16_font_beige.palette_item()),
-            beige_selected_palette_item(bn::sprite_items::variable_16x16_font_beige_selected.palette_item())
+            beige_palette_item(bn::sprite_items::variable_16x16_font_beige_pal.palette_item()),
+            beige_selected_palette_item(bn::sprite_items::variable_16x16_font_beige_selected_pal.palette_item())
         {
             reset_title();
             reset_message();
@@ -83,7 +83,7 @@ namespace ks
         }
 
         static bn::fixed transparency_alpha() {
-            return bn::fixed(ks::globals::settings.high_contrast ? 1.0 : 0.7);
+            return bn::fixed(ks::globals::settings.high_contrast ? 1.0 : 0.85);
         }
 
         void reset_title() {
@@ -197,12 +197,8 @@ namespace ks
                 ks::globals::main_update();
             }
 
-            set_blending(false);
             alpha_action.reset();
-            set_show_talkboxes(false);
-            reset_title();
-            reset_message();
-            _hidden = true;
+            hide();
         }
 
         void show_blend() {
@@ -220,16 +216,16 @@ namespace ks
             _hidden = false;
         }
 
-        void show(bn::string<32> actor, bn::string<1024> message)
-        {
-            // BN_LOG("Pointer (S) address: ", ks::gfx::static_text_tiles);
-            // BN_LOG("Pointer (A) address: ", ks::gfx::animated_text_tiles);
-
+        void show(const character_definition& actor, bn::string<1024> message) {
             reset_title();
             reset_message();
             reset_question();
 
-            _actor = actor;
+            if (actor.name() != "") {
+                _actor = &actor;  // Store pointer to the character definition
+            } else {
+                _actor = nullptr;  // No character
+            }
             _remaining_message = message;
 
             talkbox1 = bn::sprite_items::ui_talkbox1.create_sprite(-ks::device::screen_width_half + 32, ks::device::screen_height_half - 32);
@@ -251,16 +247,18 @@ namespace ks
 
             ks::globals::sound_update();
 
-            if (_actor.size() > 0) {
-
-                _text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52, _actor, _title_sprites);
-                int title_ends_x = -ks::device::screen_width_half + 8 + _text_generator->width(_actor);
+            if (_actor && _actor->name() != "") {
+                BN_LOG("Actor: ", _actor->name());
+                _text_generator->set_palette_item(_actor->who_color);
+                _text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52, _actor->name(), _title_sprites);
+                _text_generator->set_palette_item(original_palette_item);  // Reset to default palette
+                int title_ends_x = -ks::device::screen_width_half + 8 + _text_generator->width(_actor->name());
 
                 talkbox_actor_sprites.push_back(bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16, ks::device::screen_height_half - 44));
                 talkbox_actor_sprites.back().set_bg_priority(1);
                 unsigned char i = 1;
 
-                while (title_ends_x > -ks::device::screen_width_half + (i * 32) ) {
+                while (title_ends_x > -ks::device::screen_width_half + (i * 32)) {
                     talkbox_actor_sprites.push_back(bn::sprite_items::ui_talkbox_actor.create_sprite(-ks::device::screen_width_half + 16 + i * 32, ks::device::screen_height_half - 44));
                     talkbox_actor_sprites.back().set_bg_priority(1);
                     i++;
@@ -271,7 +269,6 @@ namespace ks
             }
 
             set_blending(true);
-
             if (_hidden) {
                 show_blend();
             } else {
@@ -282,11 +279,20 @@ namespace ks
             render_message_line(0, is_skipping());
         }
 
-        void restore_from_pause() {
-            if (!_remaining_message.empty()) {
-                show(_actor, _remaining_message);
-            }
+        void hide() {
+            set_blending(false);
+            set_show_talkboxes(false);
+            reset_title();
+            reset_message();
+            _hidden = true;
         }
+
+        // void restore_from_pause() {
+        //     if (!_remaining_message.empty()) {
+        //         // TODO:!!!!!!!!!!!!!!!!!!!!!!
+        //         show(_actor, _remaining_message, original_palette_item);
+        //     }
+        // }
 
         void show_question(bn::vector<bn::string<128>, 5>& answers) {
 
@@ -430,8 +436,7 @@ namespace ks
                 reset_message();
             } else {
                 _text_render_timer.restart();
-                bool quoted_start = _actor.size() != 0 && _text_render_prev_line_index == 0;
-
+                bool quoted_start = _actor && _actor->name() != "" && _text_render_prev_line_index == 0;
 
                 bn::string_view finalized_line(message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
                 BN_LOG("Render finalized line ", _text_render_line - 1);
@@ -457,9 +462,6 @@ namespace ks
                 }
             }
 
-            // ks::globals::sound_update();
-            // ks::globals::main_update();  // Yield control for VBlank updates
-
             int cursor_i = cursor;
             unsigned char cursor_x = 0;
             unsigned char word_width = 0;
@@ -470,7 +472,7 @@ namespace ks
             bool quoted_start = false;
             bool quoted_end = false;
 
-            if (_actor.size() != 0 && cursor == 0) {
+            if (_actor && _actor->name() != "" && cursor == 0) {
                 _word_buffer.append("\"");
                 quoted_start = true;
             }
@@ -490,7 +492,7 @@ namespace ks
 
                 if (is_eol) {
                     _word_buffer.append(part);
-                    if (_actor.size() != 0) {
+                    if (_actor && _actor->name() != "") {
                         _word_buffer.append("\"");
                         quoted_end = true;
                     }
@@ -525,7 +527,6 @@ namespace ks
                     } else {
                         _word_buffer.append(part);
                     }
-                    // _word_buffer.append(part);
                 }
             }
 
@@ -549,11 +550,6 @@ namespace ks
                 // BN_LOG("Animated sprites not empty. clear");
                 _animated_text_sprites->clear();
             }
-            // if (immediately) {
-            //     BN_LOG("Render animated... [SKIP by immediately]");
-            // } else {
-            //     BN_LOG("Render animated.......");
-            // }
             render_text_by_chunks_with_updates<128>(
                 0, _text_render_line * 12,
                 animated_line,
@@ -562,7 +558,6 @@ namespace ks
                 (quoted_end && _text_render_next_line_index == message.size()) ? "\"" : "",
                 true && !immediately
             );
-            // BN_LOG("Done!");
 
             write_animation();
         }
@@ -813,7 +808,6 @@ private:
         int _text_render_prev_line_length = 0;
         int _text_render_next_line_index = 0;
 
-
         bool _hidden = true;
 
         bn::sprite_text_generator* _text_generator;
@@ -843,9 +837,10 @@ private:
         bn::vector<bn::sprite_ptr, 8> _title_sprites;
 
         bn::timer _text_render_timer;
-        bn::string<32> _actor;
         bn::string<1024> _remaining_message;
         bn::string<64> _word_buffer; // May be resize form verylongphraseswithoutspaces
+
+        const character_definition* _actor = nullptr;  // Store pointer to character definition
 
         // Palettes
         bn::sprite_palette_item original_palette_item;

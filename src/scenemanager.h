@@ -3,14 +3,21 @@
 
 
 #include "bn_regular_bg_item.h"
+#include "bn_affine_bg_item.h"
 #include "character.h"
 #include "dialogbox.cpp.h"
 #include <bn_blending_transparency_attributes_hbe_ptr.h>
 #include <bn_regular_bg_ptr.h>
+#include <bn_affine_bg_ptr.h>
+#include <bn_unique_ptr.h>
+
 #include "character_sprite_meta.h"
 #include "gba_base.h"
 #include "gba_types.h"
 #include "savefile/save_file.h"
+#include "ext_bg_blocks_manager.h"
+#include "events/custom_event.h"
+#include "shaders/vram_dma_shader.h"
 
 
 // #define IF_NOT_EXIT(step)                         \
@@ -46,6 +53,16 @@ struct background_visuals_ptr
     int position_y;
     int dissolve_time;
     bool dissolve_on_top;
+    scene_transition_t transition;
+};
+
+struct character_restoration_data {
+    int index;
+    bn::regular_bg_item& bg_item;
+    bn::sprite_item& sprite_item;
+    character_sprite_meta& sprite_meta;
+    int position_x;
+    int position_y;
 };
 
 struct character_visuals_ptr
@@ -97,9 +114,18 @@ public:
     static void set_background(const bn::regular_bg_item& bg,
                                const int position_x,
                                const int position_y,
+                               scene_transition_t transition,
                                const int dissolve_time);
+    static void hide_background(scene_transition_t transition, int dissolve_time);
     static void set_background_position(const int position_x,
                                        const int position_y);
+    static void set_background_transition(scene_transition_t transition);
+
+    static void set_event(const bn::regular_bg_item& bg,
+                          const CustomEvent& event,
+                          scene_transition_t transition,
+                          int dissolve_time);
+
     static void show_dialog(const ks::character_definition& actor, int tl_key);
     static void show_dialog(const char* actor_name, int tl_key);
     static void show_dialog_question(bn::vector<ks::answer_ptr, 5> answers);
@@ -130,15 +156,21 @@ public:
     static void set_character_window_visibility(bn::regular_bg_ptr bg);
     static void hide_character(const int character_index);
     static void hide_character(const int character_index, const bool need_update);
+
+    static void perform_transition(scene_transition_t transition, const bn::optional<bn::regular_bg_item>& to);
+    static void perform_transition(scene_transition_t transition);
+
+    static void update();
+    static void update_transitions();
     static void update_visuals();
-    static void music_play(const char *filename);
-    static void music_play(const char *filename, const int fade);
+    static void music_play(music_t music);
+    static void music_play(music_t music, const int fade);
     static void music_stop();
     static void music_stop(const int fade);
-    static void sfx_play(const char *filename);
-    static void sfx_play(const char *filename, const int fade);
-    static void sfx_stop();
-    static void sfx_stop(const int fade);
+    static void sfx_play(const char *filename, const sound_channel_t channel);
+    static void sfx_play(const char *filename, const sound_channel_t channel, const int fade);
+    static void sfx_stop(const sound_channel_t channel);
+    static void sfx_stop(const sound_channel_t channel, const int fade);
 
     static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file, bn::color clear);
     static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file);
@@ -155,6 +187,10 @@ public:
     static void fade_out(const bn::color &color);
     static void fade_reset();
 
+    static inline shader_data init_transition_shader(const bn::affine_bg_item &transition_item, bool use_buffer);
+    static void transition_fadein(const bn::affine_bg_item &transition_item, int speed, bool reverse);
+    static void transition_fadeout(const bn::affine_bg_item &transition_item, int speed, bool reverse);
+
     constexpr const char* scenario() const { return _scenario; }
     constexpr const char* locale() const { return _locale; }
     constexpr const unsigned int* translation_index() const { return _script_tl_index; }
@@ -163,9 +199,6 @@ private:
     const char* _scenario;
     const char* _locale;
     const unsigned int* _script_tl_index;
-
-    static ks::character_definition _cached_actor;  // Cache for actor (used by ingame pause)
-    static int _cached_tl_key;       // Cache for tl_key (used by ingame pause)
 };
 
 // alignas(4) extern u8* text_db;
@@ -174,14 +207,20 @@ private:
 extern EWRAM_DATA u8 text_db[131072];
 // alignas(4) extern EWRAM_DATA u8 text_db[65536];
 extern u32 text_db_size;
+extern bn::string<1024> message;
 
 extern bn::optional<ks::SceneManager> scene;
 extern bn::sprite_text_generator* text_generator;
 extern ks::DialogBox* dialog;
 extern bn::optional<bn::regular_bg_ptr> main_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
-extern bn::optional<bn::regular_bg_ptr> tertiary_background;
+extern bn::optional<bn::affine_bg_ptr> transition_bg;
+// extern bn::optional<void (*)()> event_init;
+// extern bn::optional<void (*)()> event_update;
+// extern bn::optional<void (*)()> event_destroy;
+extern bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
 extern bn::vector<character_visuals_ptr, 8> character_visuals;
+extern bn::vector<character_restoration_data, 8> character_restoration;
 extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;

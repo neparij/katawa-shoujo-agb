@@ -2,18 +2,35 @@
 #define SAVE_FILE_H
 
 #include <bn_array.h>
+#include <BN_LOG.h>
+#include <bn_sram.h>
+#include <gba_types.h>
+
 #include "definitions.h"
+
+extern "C" {
+#include "gba_flash.h"
+int flash_write_byte(u32 addr, u8 data);
+void flash_switch_bank(int bank);
+}
+
+// #define AGB_ROM  ((u8*)0x8000000)
+// #define AGB_SRAM ((u8*)0xE000000)
+#define FLASH_SECTOR_SIZE_4KB  4096
+// #define _FLASH_WRITE(pa, pd) { *(((u16 *)AGB_ROM)+((pa)/2)) = pd; __asm("nop"); }
+
 
 namespace ks {
     namespace saves {
         constexpr unsigned short TOTAL_SAVE_SLOTS = 500;
+        constexpr unsigned char BLOCK_END = 0xFF;
 
-        struct __attribute__((__packed__)) SaveIntegrityData {
+        struct alignas(4) SaveIntegrityData {
             bn::array<char, 16> tag;
             unsigned version;
-        };
+        } ;
 
-        struct __attribute__((__packed__)) SaveSettingsData {
+        struct alignas(4) SaveSettingsData {
             // User Settings
             language_t language;
             bool hdisabled;
@@ -34,7 +51,7 @@ namespace ks {
             }
         };
 
-        struct __attribute__((__packed__)) SaveSlotMetadata {
+        struct alignas(4) SaveSlotMetadata {
             bool has_data;
             script_t script;
             label_t label;
@@ -53,7 +70,7 @@ namespace ks {
             }
         };
 
-        struct __attribute__((__packed__)) SaveSlotReproductionData {
+        struct __attribute__((__packed__)) alignas(4) SaveSlotReproductionData {
             // This stores current scenario line hash in 0x00000000 - 0xFFFFFFFF range
             unsigned int line_hash;
 
@@ -69,7 +86,7 @@ namespace ks {
          *
          * PS: Grouped by routes and ordered the same way I have played Katawa Shoujo.
          */
-        struct __attribute__((__packed__)) SaveSlotProgressData {
+        struct alignas(4) SaveSlotProgressData {
             SaveSlotMetadata metadata;
             SaveSlotReproductionData reproduction;
 
@@ -171,7 +188,7 @@ namespace ks {
             }
         };
 
-        struct __attribute__((__packed__)) SaveFileData {
+        struct alignas(4) SaveFileData {
             SaveIntegrityData integrity_begin;
             SaveSettingsData settings;
             SaveSlotProgressData autosave;
@@ -180,6 +197,8 @@ namespace ks {
         };
 
         // extern SaveFileData data;
+
+        void log_progress_metadata(SaveSlotMetadata &metadata);
 
         void log_progress(SaveSlotProgressData &progress);
 
@@ -222,6 +241,33 @@ namespace ks {
         void writeSaveSlot(unsigned int slot, SaveSlotProgressData progress);
 
         void deleteSaveSlot(unsigned int slot);
+
+        void flash_write_offset(u8 *data, int offset, int size);
+
+        bool is_flash();
+
+        template<typename Type>
+        void write_offset(const Type& source, int offset) {
+            if (is_flash()) {
+                BN_LOG("Write to flash");
+                return flash_write_offset((u8*) &source, offset, int(sizeof(Type)));
+            }
+            BN_LOG("Write to SRAM");
+            bn::sram::write_offset(source, offset);
+        }
+
+        template<typename Type>
+        void read_offset(Type& destination, int offset) {
+            if (is_flash()) {
+                BN_LOG("Read from flash");
+                int result = flash_read(offset, (u8 *) &destination, int(sizeof(Type)));
+                BN_ASSERT(result == 0, "Unable to read from flash. Reboot your console");
+                return;
+            }
+            BN_LOG("Read from SRAM");
+            bn::sram::read_offset(destination, offset);
+        }
+
     }
 }
 

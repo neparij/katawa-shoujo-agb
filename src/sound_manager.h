@@ -14,10 +14,14 @@ namespace ks::sound_manager {
 
     void update();
 
+    void restore_after_loading();
+
     BN_CODE_IWRAM void on_vblank();
 
     template<sound_channel_t Channel>
     void play(const char *name);
+
+    inline void play(music_t music);
 
     template<sound_channel_t Channel>
     void stop();

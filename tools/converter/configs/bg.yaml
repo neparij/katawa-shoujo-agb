@@ -1,0 +1,80 @@
+# Sizes found:
+# 1920 1080 ✅
+# 1920 1440 ✅ (only 1 bg - gallery_ext.jpg)
+# 2000 1200 ✅ (only 1 bg - op_snowywoods.jpg)
+# 2160 1080 ✅
+# 2160 1215 ✅ (is carnival scene BGs)
+# 2400 1200 ✅ (2 bgs - A3 Hanako)
+defaults:
+  - width: 1920
+    height: 1080
+    canvas:
+      width: 256
+      height: 256
+    actions:
+      - type: "crop"
+        width: 1620
+        height: 1080
+      - type: "resize"
+        width: 240
+        height: 160
+  - width: 2160
+    height: 1080
+    canvas:
+      width: 256
+      height: 256
+    actions:
+      - type: "crop"
+        width: 1728
+        height: 1080
+      - type: "resize"
+        width: 256
+        height: 160
+  - width: 2400 # TODO: what the size? see A3 Hanako
+    height: 1200
+    canvas:
+      width: 256
+      height: 256
+    actions:
+      - type: "crop"
+        width: 1920
+        height: 1200
+      - type: "resize"
+        width: 256
+        height: 160
+  - width: 2160 # This is "Is Carnival" scene BGs
+    height: 1215
+    canvas:
+      width: 256
+      height: 256
+    actions:
+      - type: "crop"
+        width: 1944
+        height: 1215
+      - type: "resize"
+        width: 256
+        height: 160
+
+convert:
+  - filename: "gallery_ext.jpg" # city_alley.jpg: 1920 1440
+    canvas:
+      width: 256
+      height: 256
+    actions:
+      - type: "crop"
+        width: 1620
+        height: 1430
+      - type: "resize"
+        width: 240
+        height: 212
+  - filename: "op_snowywoods.jpg" # op_snowywoods.jpg 2000 1200
+    canvas:
+      width: 256
+      height: 256
+    actions:
+      - type: "crop"
+        width: 1800
+        height: 1200
+      - type: "resize"
+        width: 240
+        height: 160

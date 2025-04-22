@@ -8,7 +8,7 @@ namespace ks {
                 if (!ks::in_replay) {
                     IF_NOT_EXIT(ks::SceneManager::autosave());
                 }
-                IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::op_snowywoods, 0, 0, SCENE_TRANSITION_NONE, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xA9C688F3);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1", 0));

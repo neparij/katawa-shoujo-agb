@@ -19,15 +19,37 @@
 #include "ingametimer.h"
 #include "sound_manager.h"
 
+#include "common_variable_8x8_sprite_font.h"
 // #include <variable_16x16_sprite_font.h>
+
+#include "bn_sprite_items_variable_16x16_font_hi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_ha_pal.h"
+#include "bn_sprite_items_variable_16x16_font_emi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_rin_pal.h"
+#include "bn_sprite_items_variable_16x16_font_li_pal.h"
+#include "bn_sprite_items_variable_16x16_font_shi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_mi_pal.h"
+#include "bn_sprite_items_variable_16x16_font_ke_pal.h"
+#include "bn_sprite_items_variable_16x16_font_mu_pal.h"
+#include "bn_sprite_items_variable_16x16_font_nk_pal.h"
+#include "bn_sprite_items_variable_16x16_font_no_pal.h"
+#include "bn_sprite_items_variable_16x16_font_yu_pal.h"
+#include "bn_sprite_items_variable_16x16_font_sa_pal.h"
+#include "bn_sprite_items_variable_16x16_font_aki_pal.h"
+#include "bn_sprite_items_variable_16x16_font_hh_pal.h"
+#include "bn_sprite_items_variable_16x16_font_hx_pal.h"
+#include "bn_sprite_items_variable_16x16_font_emm_pal.h"
+#include "bn_sprite_items_variable_16x16_font_sk_pal.h"
+#include "bn_sprite_items_variable_16x16_font_mk_pal.h"
 
 namespace ks {
     namespace globals {
         bool exit_scenario = false;
-        ks::Translation* i18n;// = new TranslationEn();
+        ks::Translation *i18n; // = new TranslationEn();
         ks::saves::SaveSettingsData settings = ks::saves::SaveSettingsData();
 
         void main_update() {
+            ks::SceneManager::update();
             bn::core::update();
             ks::sound_manager::update();
         }
@@ -40,14 +62,10 @@ namespace ks {
         // Updates the sound only, while waiting for V-Blank.
         // Used on expensive operations to reduce sound-flickering.
         void BN_CODE_IWRAM sound_update() {
-            if(REG_VCOUNT == 159)
-            {
-                while(REG_VCOUNT == 159)
-                {
+            if (REG_VCOUNT == 159) {
+                while (REG_VCOUNT == 159) {
                 }
-            }
-            else
-            {
+            } else {
                 VBlankIntrWait();
             }
             ks::sound_manager::update();
@@ -84,7 +102,7 @@ namespace ks {
         void release_engine() {
             ks::main_background.reset();
             ks::secondary_background.reset();
-            ks::tertiary_background.reset();
+            ks::transition_bg.reset();
             // ks::scene.reset();
 
             // delete &ks::text_db;
@@ -109,13 +127,12 @@ namespace ks {
             settings.language = tl;
 
             if (settings.language == LANG_ENGLISH) {
-                i18n = new (translation_buffer) TranslationEn();
+                i18n = new(translation_buffer) TranslationEn();
             } else if (settings.language == LANG_RUSSIAN) {
-                i18n = new (translation_buffer) TranslationRu();
+                i18n = new(translation_buffer) TranslationRu();
             } else {
                 BN_ERROR("Unkown language");
             }
-
         }
 
         void accessibility_apply() {
@@ -123,12 +140,16 @@ namespace ks {
             bn::sprite_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
         }
 
-
-
         namespace colors {
-            constexpr bn::color BLACK = bn::color(0,0,0);
-            constexpr bn::color WHITE = bn::color(31,31,31);
-            constexpr bn::color RED = bn::color(31,0,0);
+            constexpr bn::color BLACK = bn::color(0, 0, 0);
+            constexpr bn::color WHITE = bn::color(31, 31, 31);
+            constexpr bn::color RED = bn::color(31, 0, 0);
+        }
+
+        namespace text_palettes {
+            // constexpr bn::sprite_palette_item original = bn::sprite_items::variable_16x16_font.palette_item();
+            constexpr bn::sprite_palette_item beige = bn::sprite_items::variable_16x16_font_beige_pal.palette_item();
+            constexpr bn::sprite_palette_item beige_selected = bn::sprite_items::variable_16x16_font_beige_selected_pal.palette_item();
         }
     }
 }

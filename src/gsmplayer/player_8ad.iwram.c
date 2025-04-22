@@ -30,286 +30,243 @@ IN THE SOFTWARE.
 #define CODE_EWRAM __attribute__((section(".ewram")))
 #define INLINE static inline __attribute__((always_inline))
 
-// ------------------------------------
-// SFX player (for uncompressed s8 PCM)
-// ------------------------------------
-// Audio is taken from the embedded GBFS file in ROM.
-// FIFO channel A, Timer 0 and DMA1 are used.
-// The sample rate is 36314hz.
-// Each PCM chunk is 304 bytes and represents 304 samples.
-// Two chunks are copied per frame.
-
-static bool did_run = false;
-static bool is_looping = false;
-static bool is_paused = false;
-ADGlobals ad;
-
 static const signed char ima9_step_indices[16] =
-    {
-        -1, -1, -1, -1, 2, 4, 7, 12,
-        -1, -1, -1, -1, 2, 4, 7, 12
+{
+    -1, -1, -1, -1, 2, 4, 7, 12,
+    -1, -1, -1, -1, 2, 4, 7, 12
 };
 
 const unsigned short ima_step_table[89] =
-    {
-        7,    8,    9,   10,   11,   12,   13,   14,   16,   17,
-        19,   21,   23,   25,   28,   31,   34,   37,   41,   45,
-        50,   55,   60,   66,   73,   80,   88,   97,  107,  118,
-        130,  143,  157,  173,  190,  209,  230,  253,  279,  307,
-        337,  371,  408,  449,  494,  544,  598,  658,  724,  796,
-        876,  963, 1060, 1166, 1282, 1411, 1552, 1707, 1878, 2066,
-        2272, 2499, 2749, 3024, 3327, 3660, 4026, 4428, 4871, 5358,
-        5894, 6484, 7132, 7845, 8630, 9493,10442,11487,12635,13899,
-        15289,16818,18500,20350,22385,24623,27086,29794,32767
+{
+    7, 8, 9, 10, 11, 12, 13, 14, 16, 17,
+    19, 21, 23, 25, 28, 31, 34, 37, 41, 45,
+    50, 55, 60, 66, 73, 80, 88, 97, 107, 118,
+    130, 143, 157, 173, 190, 209, 230, 253, 279, 307,
+    337, 371, 408, 449, 494, 544, 598, 658, 724, 796,
+    876, 963, 1060, 1166, 1282, 1411, 1552, 1707, 1878, 2066,
+    2272, 2499, 2749, 3024, 3327, 3660, 4026, 4428, 4871, 5358,
+    5894, 6484, 7132, 7845, 8630, 9493, 10442, 11487, 12635, 13899,
+    15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
 };
 
-#define AUDIO_PROCESS_SFX(ON_STOP)                                       \
-  did_run = true;                                                    \
-  buffer = double_buffers[cur_buffer];                               \
-                                                                     \
-  if (src != NULL) {                                                 \
-    if (src_pos < src_len) {                                         \
-      u32 pending_bytes = src_len - src_pos;                         \
-      u32 bytes_to_read =                                            \
+#define AUDIO_PROCESS_SFX(CH, ON_STOP)                                   \
+  channels[CH].did_run = true;                                           \
+                                                                         \
+  if (channels[CH].src != NULL) {                                        \
+    if (channels[CH].src_pos < channels[CH].src_len) {                   \
+      u32 pending_bytes = channels[CH].src_len - channels[CH].src_pos;   \
+      u32 bytes_to_read =                                                \
           pending_bytes < BUFFER_SIZE_A ? pending_bytes : BUFFER_SIZE_A; \
-      src_pos += BUFFER_SIZE_A / 2;                                        \
-      if (src_pos >= src_len) {                                      \
-        ON_STOP;                                                     \
-      }                                                              \
-    } else {                                                         \
-      ON_STOP;                                                       \
-    }                                                                \
+      channels[CH].src_pos += BUFFER_SIZE_A / 2;                         \
+      if (channels[CH].src_pos >= channels[CH].src_len) {                \
+        ON_STOP;                                                         \
+      }                                                                  \
+    } else {                                                             \
+      ON_STOP;                                                           \
+    }                                                                    \
   }
 
-
-uint32_t fracumul(uint32_t x, uint32_t frac) __attribute__((long_call));
-static const GBFS_FILE* fs;
-static const u8* src = NULL;
-static u32 src_len = 0;
-static u32 src_pos = 0;
+static const GBFS_FILE *fs;
+static ADChannel channels[2];
 static s8 double_buffers[2][BUFFER_SIZE_A] __attribute__((aligned(4)));
-static u32 cur_buffer = 0;
-static s8* buffer;
+static u8 cur_buffer;
 
 INLINE void mute() {
-  DSOUNDCTRL = DSOUNDCTRL & CHANNEL_A_MUTE;
+    DSOUNDCTRL = DSOUNDCTRL & CHANNEL_A_MUTE;
 }
 
 INLINE void unmute() {
-  DSOUNDCTRL = DSOUNDCTRL | CHANNEL_A_UNMUTE;
+    DSOUNDCTRL = DSOUNDCTRL | CHANNEL_A_UNMUTE;
 }
 
-INLINE void turn_on_sound() {
-  SETSNDRES(1);
-  SNDSTAT = SNDSTAT_ENABLE;
-  DSOUNDCTRL = DSOUNDCTRL_SETTINGS;
-  mute();
-}
-
-INLINE void clear_buffers() {
+INLINE void clear_buffers(const u8 ch) {
     for (u32 i = 0; i < 2; i++) {
-        u32* bufferPtr = (u32*)double_buffers[i];
+        u32 *bufferPtr = (u32 *) channels[ch].double_buffers[i];
         for (u32 j = 0; j < BUFFER_SIZE_A / 4; j++)
             bufferPtr[j] = 0;
     }
 }
 
-
 INLINE void init() {
-  /* TMxCNT_L is count; TMxCNT_H is control */
-  REG_TM0CNT_H = 0;
-  REG_TM0CNT_L = 0x10000 - PERIOD_SIZE_A;
-  REG_TM0CNT_H = TIMER_16MHZ | TIMER_START;
+    REG_TM0CNT_H = 0;
+    REG_TM0CNT_L = 0x10000 - PERIOD_SIZE_A;
+    REG_TM0CNT_H = TIMER_16MHZ | TIMER_START;
 
-  mute();
-  src = NULL;
+    channels[0].src = NULL;
+    channels[1].src = NULL;
+    clear_buffers(0);
+    clear_buffers(1);
+
+    unmute();
 }
 
-INLINE void stop() {
-  mute();
-  src = NULL;
-  cur_buffer = 0;
-  clear_buffers();
+INLINE void stop(const u8 ch) {
+    channels[ch].src = NULL;
+    clear_buffers(ch);
 }
 
 INLINE void disable_audio_dma() {
-  // This convoluted process disables DMA1 in a "safe" way,
-  // avoiding DMA lockups.
-  //
-  // 32-bit write
-  // enabled = 1; start timing = immediately; transfer type = 32 bits;
-  // repeat = off; destination = fixed; other bits = no change
-  REG_DMA1CNT = (REG_DMA1CNT & 0xcdff /*0b00000000000000001100110111111111*/) |
-                (0x0004 << 16) | DMA_ENABLE | DMA32 | DMA_DST_FIXED;
-  //
-  // wait 4 cycles
-  asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
-  asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
+    // This convoluted process disables DMA1 in a "safe" way,
+    // avoiding DMA lockups.
+    //
+    // 32-bit write
+    // enabled = 1; start timing = immediately; transfer type = 32 bits;
+    // repeat = off; destination = fixed; other bits = no change
+    REG_DMA1CNT = (REG_DMA1CNT & 0xcdff /*0b00000000000000001100110111111111*/) |
+                  (0x0004 << 16) | DMA_ENABLE | DMA32 | DMA_DST_FIXED;
+    //
+    // wait 4 cycles
+    asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
+    asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
 
-  //
-  // 16-bit write
-  // enabled = 0; start timing = immediately; transfer type = 32 bits;
-  // repeat = off; destination = fixed; other bits = no change
-  REG_DMA1CNT_H = (REG_DMA1CNT_H & 0x4dff /*0b0100110111111111*/) |
-                  0x500 /*0b0000010100000000*/;  // DMA32 | DMA_DST_FIXED
-  //
-  // wait 4 more cycles
-  asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
-  asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
+    //
+    // 16-bit write
+    // enabled = 0; start timing = immediately; transfer type = 32 bits;
+    // repeat = off; destination = fixed; other bits = no change
+    REG_DMA1CNT_H = (REG_DMA1CNT_H & 0x4dff /*0b0100110111111111*/) |
+                    0x500 /*0b0000010100000000*/; // DMA32 | DMA_DST_FIXED
+    //
+    // wait 4 more cycles
+    asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
+    asm volatile("eor r0, r0; eor r0, r0" ::: "r0");
 }
 
-INLINE void dsound_start_audio_copy(const void* source) {
-  // disable DMA1
-  disable_audio_dma();
+INLINE void dsound_start_audio_copy(const void *source) {
+    // disable DMA1
+    disable_audio_dma();
 
-  // setup DMA1 for audio
-  REG_DMA1SAD = (intptr_t)source;
-  REG_DMA1DAD = (intptr_t)FIFO_ADDR_A;
-  REG_DMA1CNT = DMA_DST_FIXED | DMA_SRC_INC | DMA_REPEAT | DMA32 | DMA_SPECIAL |
-                DMA_ENABLE | 1;
+    // setup DMA1 for audio
+    REG_DMA1SAD = (intptr_t) source;
+    REG_DMA1DAD = (intptr_t) FIFO_ADDR_A;
+    REG_DMA1CNT = DMA_DST_FIXED | DMA_SRC_INC | DMA_REPEAT | DMA32 | DMA_SPECIAL |
+                  DMA_ENABLE | 1;
 }
 
-INLINE void load_file(const char* name) {
-  stop();
+INLINE void load_file(const char *name, const u8 ch) {
+    stop(ch);
 
-  src = gbfs_get_obj(fs, name, &src_len);
-  start_ad(src);
+    channels[ch].src = (u8 *) gbfs_get_obj(fs, name, &channels[ch].src_len);
+    start_ad(channels[ch].src, ch);
 
-  src_pos = 0;
+    channels[ch].src_pos = 0;
 
-  is_looping = false;
-  is_paused = false;
+    channels[ch].is_looping = false;
+    channels[ch].is_paused = false;
 }
 
 CODE_ROM void player8AD_init() {
-  fs = find_first_gbfs_file(0);
-  // turn_on_sound();
-  init();
+    fs = find_first_gbfs_file(0);
+    init();
 }
 
 CODE_ROM void player8AD_unload() {
-  disable_audio_dma();
+    disable_audio_dma();
 }
 
-CODE_ROM void player8AD_play(const char* name) {
-  load_file(name);
+CODE_ROM void player8AD_play(const char *name, const u8 ch) {
+    load_file(name, ch);
 }
 
-CODE_ROM void player8AD_set_loop(bool enable) {
-  is_looping = enable;
+CODE_ROM void player8AD_set_loop(bool enable, const u8 ch) {
+    channels[ch].is_looping = enable;
 }
 
-CODE_ROM void player8AD_set_pause(bool enable) {
-  is_paused = enable;
+CODE_ROM void player8AD_set_pause(bool enable, const u8 ch) {
+    channels[ch].is_paused = enable;
 }
 
-// CODE_ROM PlayerSFXState player_sfx_getState() {
-//   PlayerSFXState state;
-//   state.pos = src_pos;
-//   state.isPlaying = src != NULL;
-//   state.isLooping = is_looping;
-//   return state;
-// }
-//
-// CODE_ROM void player_sfx_setState(PlayerSFXState state) {
-//   src_pos = state.pos;
-//   is_looping = is_looping;
-//   did_run = false;
-// }
-
-CODE_ROM void player8AD_stop() {
-  stop();
-  is_looping = false;
-  is_paused = false;
+CODE_ROM void player8AD_stop(const u8 ch) {
+    stop(ch);
+    channels[ch].is_looping = false;
+    channels[ch].is_paused = false;
 }
 
-CODE_ROM bool player8AD_is_playing() {
-  return src != NULL;
+CODE_ROM bool player8AD_is_playing(const u8 ch) {
+    return channels[ch].src != NULL;
 }
 
 void player8AD_on_vblank() {
-  if (src != NULL) {
-    dsound_start_audio_copy(double_buffers[cur_buffer]);
-  }
+    if (channels[0].src != NULL || channels[1].src != NULL) {
+        unmute();
+        dsound_start_audio_copy(double_buffers[cur_buffer]);
+    } else {
+        mute();
+    }
 
-  if (!did_run)
-    return;
-
-  if (src != NULL) {
-    unmute();
-    // dsound_start_audio_copy(double_buffers[cur_buffer]);
-  }
-
-  cur_buffer = !cur_buffer;
-  did_run = false;
+    cur_buffer = !cur_buffer;
 }
 
 void player8AD_update() {
-  if (is_paused || src == NULL) {
-    mute();
-    return;
-  }
+    for (u8 ch = 0; ch < 2; ch++) {
+        if (channels[ch].src != NULL) {
+            decode_ad(channels[ch].double_buffers[cur_buffer], channels[ch].ad.data, BUFFER_SIZE_A, ch);
+            channels[ch].ad.data += BUFFER_SIZE_A >> 1;
 
-  decode_ad(double_buffers[cur_buffer], ad.data, BUFFER_SIZE_A);
-  // double_buffers
-  ad.data += BUFFER_SIZE_A >> 1;
+            AUDIO_PROCESS_SFX(ch, {
+                if (channels[ch].is_looping) {
+                    channels[ch].src_pos = 0;
+                    start_ad(channels[ch].src, ch);
+                    channels[ch].did_run = false;
+                } else
+                    player8AD_stop(ch);
+                });
+        }
+    }
 
-  // > audio processing (back buffer)
-  AUDIO_PROCESS_SFX({
-    if (is_looping) {
-      src_pos = 0;
-      start_ad(src);
-      did_run = false;
-    } else
-      player8AD_stop();
-  });
+    mix_audio(double_buffers[cur_buffer]);
 }
 
-INLINE int ima9_rescale(int step, unsigned int code)
-{
+INLINE int ima9_rescale(int step, unsigned int code) {
     /* 0,1,2,3,4,5,6,9 */
     int diff = step >> 3;
-    if(code & 1)
+    if (code & 1)
         diff += step >> 2;
-    if(code & 2)
+    if (code & 2)
         diff += step >> 1;
-    if(code & 4)
+    if (code & 4)
         diff += step;
-    if((code & 7) == 7)
+    if ((code & 7) == 7)
         diff += step >> 1;
-    if(code & 8)
+    if (code & 8)
         diff = -diff;
     return diff;
 }
 
-void start_ad(const unsigned char *data)
-{
-    ad.data = data;
-    ad.last_sample = 0;
-    ad.last_index = 0;
+void mix_audio(s8 *output_buffer) {
+    for (int i = 0; i < BUFFER_SIZE_A; i++) {
+        int mixed_sample = (int) channels[0].double_buffers[cur_buffer][i] + (int) channels[1].double_buffers[cur_buffer][i];
+
+        if (mixed_sample > 127) mixed_sample = 127;
+        else if (mixed_sample < -128) mixed_sample = -128;
+
+        output_buffer[i] = (s8) mixed_sample;
+    }
 }
 
-void decode_ad(signed char *dst, const unsigned char *src, unsigned int len)
-{
-    int last_sample = ad.last_sample;
-    int index = ad.last_index;
+void start_ad(const unsigned char *data, const u8 ch) {
+    channels[ch].ad.data = data;
+    channels[ch].ad.last_sample = 0;
+    channels[ch].ad.last_index = 0;
+}
+
+void decode_ad(signed char *dst, const unsigned char *src, unsigned int len, const u8 ch) {
+    int last_sample = channels[ch].ad.last_sample;
+    int index = channels[ch].ad.last_index;
     unsigned int by = 0;
 
-    while(len > 0)
-    {
+    while (len > 0) {
         int step, diff;
         unsigned int code;
 
-        if(index < 0)
+        if (index < 0)
             index = 0;
-        if(index > 88)
+        if (index > 88)
             index = 88;
         step = ima_step_table[index];
 
-        if(len & 1)
+        if (len & 1)
             code = by >> 4;
-        else
-        {
+        else {
             by = *src++;
             code = by & 0x0f;
         }
@@ -318,15 +275,15 @@ void decode_ad(signed char *dst, const unsigned char *src, unsigned int len)
         index += ima9_step_indices[code & 0x07];
 
         last_sample += diff;
-        if(last_sample < -32768)
+        if (last_sample < -32768)
             last_sample = -32768;
-        if(last_sample > 32767)
+        if (last_sample > 32767)
             last_sample = 32767;
         *dst++ = last_sample >> 8; // TODO: apply volume `*dst++ = (last_sample >> 8) * volume;`
 
         len--;
     }
 
-    ad.last_index = index;
-    ad.last_sample = last_sample;
+    channels[ch].ad.last_index = index;
+    channels[ch].ad.last_sample = last_sample;
 }

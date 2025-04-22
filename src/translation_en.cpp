@@ -121,7 +121,7 @@ public:
             case LABEL_A1_SUNDAY_MOVEMENT: return "Movement";
             case LABEL_A1_SUNDAY_THROWING_BALLS: return "Throwing Balls";
             case LABEL_A1_SUNDAY_THE_DEEP_END: return "The Deep End";
-            default: return "Unknown Label";
+            default: return definitions_no_scene();
         }
     }
 

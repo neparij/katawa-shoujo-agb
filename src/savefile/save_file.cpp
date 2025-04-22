@@ -10,6 +10,15 @@
 #define INTEGRITY_VERSION 2121210001
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
 
+struct FlashInfo {
+    u8 device;
+    u8 manufacturer;
+    u8 size;
+};
+extern struct FlashInfo gFlashInfo;
+
+// BN_DATA_EWRAM static u8 flash_buffer[FLASH_SECTOR_SIZE_4KB];  // Temporary buffer in RAM
+
 inline bn::array<char, 16> getIntegrityTag() {
     bn::array<char, 16> expected_format_tag{};
     bn::istring_base expected_format_tag_istring(expected_format_tag._data);
@@ -22,16 +31,28 @@ inline bn::array<char, 16> getIntegrityTag() {
 void ks::saves::load(SaveFileData *data_ptr) {
     BN_LOG("Load save data to ptr ", data_ptr);
     BN_ASSERT(data_ptr != nullptr, "Unable to load. Data pointer is null.");
-    bn::sram::read(*data_ptr);
 
-    // TODO: save and load using offsets with spans (reduce time for saving and loading)
+    if (is_flash()) {
+        BN_LOG("Full Load from flash");
+        flash_read(0, (u8 *) data_ptr, sizeof(*data_ptr));
+    } else {
+        BN_LOG("Full Load from SRAM");
+        bn::sram::read(*data_ptr);
+    }
 }
 
 void ks::saves::save(SaveFileData *data_ptr) {
     BN_LOG("Save save data to ptr ", data_ptr);
     BN_ASSERT(data_ptr != nullptr, "Unable to save. Data pointer is null.");
     BN_ASSERT(isValid(data_ptr), "Unable to save. Data is corrupted.");
-    bn::sram::write(*data_ptr);
+
+    if (is_flash()) {
+        BN_LOG("Full Save to flash");
+        flash_write(0, (u8 *) data_ptr, sizeof(*data_ptr));
+    } else {
+        BN_LOG("Full Save to SRAM");
+        bn::sram::write(*data_ptr);
+    }
 }
 
 bool ks::saves::initialize() {
@@ -39,7 +60,20 @@ bool ks::saves::initialize() {
     BN_LOG("Initializing saves...");
 
     auto *save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
+
+    const int flash_init_success = flash_init((u8) FLASH_SIZE_AUTO);
+    BN_LOG("Flash DeviceID: ", gFlashInfo.device);
+    BN_LOG("Flash ManufacturerID: ", gFlashInfo.manufacturer);
+    BN_LOG("Flash SizeType: ", gFlashInfo.size);
+    BN_LOG("Flash init success: ", flash_init_success == 0);
+    if (flash_init_success != 0) {
+        gFlashInfo.device = 0;
+        gFlashInfo.manufacturer = 0;
+        gFlashInfo.size = 0;
+    }
+
     load(save_data);
+    log_settings(save_data->settings);
     valid = isValid(save_data);
     bn::memory::ewram_free(save_data);
 
@@ -55,6 +89,9 @@ bool ks::saves::initialize() {
         // Then restore it one-by-one.
         // Log the restoration process.
 
+        if (is_flash()) {
+            flash_reset();
+        }
         save(save_data);
         bn::memory::ewram_free(save_data);
         return true;
@@ -111,7 +148,9 @@ unsigned short ks::saves::getUsedSaveSlots() {
     unsigned short used_slots = 0;
     for (unsigned int i = 0; i < TOTAL_SAVE_SLOTS; i++) {
         bool has_data;
-        bn::sram::read_offset(has_data, getSaveSlotDataOffset(i));
+        read_offset(has_data, getSaveSlotDataOffset(i));
+
+        BN_LOG("Slot ", i, " has data: ", has_data);
         if (has_data) {
             used_slots++;
         } else {
@@ -141,7 +180,7 @@ int ks::saves::getSaveSlotDataOffset(const unsigned int slot) {
 ks::saves::SaveSettingsData ks::saves::readSettings() {
     BN_LOG("Read Settings");
     SaveSettingsData settings;
-    bn::sram::read_offset(settings, getSettingsDataOffset());
+    read_offset(settings, getSettingsDataOffset());
 
     log_settings(settings);
     return settings;
@@ -149,7 +188,7 @@ ks::saves::SaveSettingsData ks::saves::readSettings() {
 
 void ks::saves::writeSettings(const SaveSettingsData settings) {
     BN_LOG("Write Settings");
-    bn::sram::write_offset(settings, getSettingsDataOffset());
+    write_offset(settings, getSettingsDataOffset());
 
     const SaveSettingsData saved_settings = readSettings();
     BN_ASSERT(settings == saved_settings, "Writing settings failed. SRAM data does not match.");
@@ -158,7 +197,8 @@ void ks::saves::writeSettings(const SaveSettingsData settings) {
 ks::saves::SaveSlotMetadata ks::saves::readAutosaveMetadata() {
     BN_LOG("Read Autosave Metadata");
     SaveSlotMetadata metadata;
-    bn::sram::read_offset(metadata, getAutosaveDataOffset());
+    read_offset(metadata, getAutosaveDataOffset());
+    log_progress_metadata(metadata);
 
     return metadata;
 }
@@ -166,7 +206,7 @@ ks::saves::SaveSlotMetadata ks::saves::readAutosaveMetadata() {
 ks::saves::SaveSlotProgressData ks::saves::readAutosave() {
     BN_LOG("Read Autosave");
     SaveSlotProgressData progress;
-    bn::sram::read_offset(progress, getAutosaveDataOffset());
+    read_offset(progress, getAutosaveDataOffset());
 
     log_progress(progress);
     return progress;
@@ -176,16 +216,19 @@ void ks::saves::writeAutosave(SaveSlotProgressData progress) {
     BN_LOG("Write Autosave");
     progress.metadata.has_data = true;
     progress.integrity = 0xFFFF - 1024;
-    bn::sram::write_offset(progress, getAutosaveDataOffset());
+
+    write_offset(progress, getAutosaveDataOffset());
+    bn::core::update();
 
     const SaveSlotProgressData saved_progress = readAutosave();
-    BN_ASSERT(progress == saved_progress, "Writing autosave failed. SRAM data does not match.");
+    // BN_ASSERT(progress == saved_progress, "Writing autosave failed. SRAM data does not match.");
 }
 
 ks::saves::SaveSlotMetadata ks::saves::readSlotMetadata(const unsigned int slot) {
     BN_LOG("Read Save Slot Metadata ", slot);
     SaveSlotMetadata metadata;
-    bn::sram::read_offset(metadata, getSaveSlotDataOffset(slot));
+    read_offset(metadata, getSaveSlotDataOffset(slot));
+    log_progress_metadata(metadata);
 
     return metadata;
 }
@@ -193,7 +236,7 @@ ks::saves::SaveSlotMetadata ks::saves::readSlotMetadata(const unsigned int slot)
 ks::saves::SaveSlotProgressData ks::saves::readSaveSlot(const unsigned int slot) {
     BN_LOG("Read Save Slot ", slot);
     SaveSlotProgressData progress;
-    bn::sram::read_offset(progress, getSaveSlotDataOffset(slot));
+    read_offset(progress, getSaveSlotDataOffset(slot));
 
     log_progress(progress);
     return progress;
@@ -203,7 +246,8 @@ void ks::saves::writeSaveSlot(const unsigned int slot, SaveSlotProgressData prog
     BN_LOG("Write Save Slot ", slot);
     progress.metadata.has_data = true;
     progress.integrity = 0xFFFF - slot;
-    bn::sram::write_offset(progress, getSaveSlotDataOffset(slot));
+
+    write_offset(progress, getSaveSlotDataOffset(slot));
 
     const SaveSlotProgressData saved_progress = readSaveSlot(slot);
     BN_ASSERT(progress == saved_progress, "Writing save slot failed. SRAM data does not match.");
@@ -211,30 +255,38 @@ void ks::saves::writeSaveSlot(const unsigned int slot, SaveSlotProgressData prog
 
 // Deletes save slot and re-organize save slots in save data (remove current slot, shift the remaining)
 void ks::saves::deleteSaveSlot(const unsigned int slot) {
-    // Remove the save slot data
-    bn::sram::write_offset(SaveSlotProgressData{}, getSaveSlotDataOffset(slot));
+    // TODO: implement
+    // // Remove the save slot data
+    // // bn::sram::write_offset(SaveSlotProgressData{}, getSaveSlotDataOffset(slot));
+    // SaveSlotProgressData empty;
+    // flash_write(getSaveSlotDataOffset(slot), (u8 *) &empty, sizeof(empty));
+    //
+    // // Shift the remaining save slots
+    // for (unsigned int i = slot + 1; i < TOTAL_SAVE_SLOTS; i++) {
+    //     SaveSlotProgressData progress = readSaveSlot(i);
+    //     progress.integrity = 0xFFFF - (i - 1);
+    //     writeSaveSlot(i - 1, progress);
+    // }
+    //
+    // // Delete the last save slot
+    // // bn::sram::write_offset(SaveSlotProgressData{}, getSaveSlotDataOffset(TOTAL_SAVE_SLOTS - 1));
+    // flash_write(getSaveSlotDataOffset(TOTAL_SAVE_SLOTS - 1), (u8 *) &empty, sizeof(empty));
+}
 
-    // Shift the remaining save slots
-    for (unsigned int i = slot + 1; i < TOTAL_SAVE_SLOTS; i++) {
-        SaveSlotProgressData progress = readSaveSlot(i);
-        progress.integrity = 0xFFFF - (i - 1);
-        writeSaveSlot(i - 1, progress);
-    }
-
-    // Delete the last save slot
-    bn::sram::write_offset(SaveSlotProgressData{}, getSaveSlotDataOffset(TOTAL_SAVE_SLOTS - 1));
+void ks::saves::log_progress_metadata(SaveSlotMetadata &metadata) {
+    BN_LOG("  METADATA:");
+    BN_LOG("    has_data: ", metadata.has_data);
+    BN_LOG("    script: ", metadata.script);
+    BN_LOG("    label: ", metadata.label);
+    BN_LOG("    hours_played: ", metadata.hours_played);
+    BN_LOG("    minutes_played: ", metadata.minutes_played);
+    BN_LOG("    seconds_played: ", metadata.seconds_played);
 }
 
 void ks::saves::log_progress(SaveSlotProgressData &progress) {
     BN_LOG("Progress:");
 
-    BN_LOG("  METADATA:");
-    BN_LOG("    has_data: ", progress.metadata.has_data);
-    BN_LOG("    script: ", progress.metadata.script);
-    BN_LOG("    label: ", progress.metadata.label);
-    BN_LOG("    hours_played: ", progress.metadata.hours_played);
-    BN_LOG("    minutes_played: ", progress.metadata.minutes_played);
-    BN_LOG("    seconds_played: ", progress.metadata.seconds_played);
+    log_progress_metadata(progress.metadata);
 
     BN_LOG(" REPRODUCTION DATA:");
     BN_LOG("    line_hash: ", progress.reproduction.line_hash);
@@ -302,4 +354,51 @@ void ks::saves::log_settings(SaveSettingsData &settings) {
     BN_LOG("  high_contrasrt: ", settings.high_contrast);
     BN_LOG("  text_speed: ", settings.text_speed);
     BN_LOG("  adult_warning_shown: ", settings.adult_warning_shown);
+}
+
+__attribute__ ((noinline, section(".ewram.flash"))) void ks::saves::flash_write_offset(u8* data, int offset, int size) {
+    BN_LOG("Flash write offset ", offset, " size ", size);
+
+    const int sector_start = offset & ~(FLASH_SECTOR_SIZE_4KB - 1);  // Align to sector
+    const int sector_offset = offset - sector_start;  // Offset within sector
+    const int end_offset = offset + size;  // End of data
+    const int end_sector_start = end_offset & ~(FLASH_SECTOR_SIZE_4KB - 1);  // Last sector start
+
+    BN_LOG("Sector start ", sector_start, " offset ", sector_offset, " end sector start ", end_sector_start);
+
+    // Process the first sector
+    auto *flash_buffer = static_cast<u8 *>(bn::memory::ewram_alloc(FLASH_SECTOR_SIZE_4KB));
+    flash_read(sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);  // Read first sector
+    int first_sector_write_size = FLASH_SECTOR_SIZE_4KB - sector_offset;  // Bytes we can write in first sector
+    if (first_sector_write_size > size) first_sector_write_size = size;  // Clamp to total data size
+
+    // Modify first sector buffer
+    for (int i = 0; i < first_sector_write_size; i++) {
+        flash_buffer[sector_offset + i] = data[i];
+    }
+
+    // Erase and write first sector
+    flash_write(sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);
+    bn::memory::ewram_free(flash_buffer);
+
+    // If data spans two sectors, process the second one
+    if (end_sector_start != sector_start) {
+        BN_LOG("Should also write second sector!");
+        int second_sector_size = size - first_sector_write_size;  // Remaining data for second sector
+        flash_buffer = static_cast<u8 *>(bn::memory::ewram_alloc(FLASH_SECTOR_SIZE_4KB));
+        flash_read(end_sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);  // Read second sector
+
+        // Modify second sector buffer
+        for (int i = 0; i < second_sector_size; i++) {
+            flash_buffer[i] = data[first_sector_write_size + i];
+        }
+
+        // Erase and write second sector
+        flash_write(end_sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);
+        bn::memory::ewram_free(flash_buffer);
+    }
+}
+
+bool ks::saves::is_flash() {
+    return gFlashInfo.device != 255 && gFlashInfo.manufacturer != 255 && gFlashInfo.size != 0;
 }

@@ -10,11 +10,14 @@ from src.character_sprite.character_sprite import CharacterDisplayableReplacemen
 from src.dto.assignment_item import AssignmentItem
 from src.dto.background_item import BackgroundItem, BgShowPosition
 from src.dto.background_transform_item import BackgroundTransformItem
+from src.dto.background_transition_item import BackgroundTransitionItem
 from src.dto.condition_item import ConditionItem
+from src.dto.custom_event_item import CustomEventItem
 from src.dto.dialog_item import DialogItem
 from src.dto.hide_item import HideItem
 from src.dto.menu_item import MenuItem
 from src.dto.music_item import MusicItem, MusicAction, MusicEffect
+from src.dto.pause_item import PauseItem
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
@@ -90,6 +93,9 @@ class ScenarioWriter:
 
         for sprite_meta in self.sprite_metas:
             h_code.append(include_header(sprite_meta))
+
+        for event in self.events:
+            h_code.append(include_header(f"{to_snake_case(event).removesuffix("_event")}.cpp", "../events/"))
 
         for video in self.videos:
             h_code.append(include_header(video, "video_", "_agmv"))
@@ -275,6 +281,8 @@ class ScenarioWriter:
             return self.process_sequence_assignment(group, cast(AssignmentItem, sequence))
         elif sequence.type == SequenceType.BACKGROUND:
             return self.process_sequence_background(group, cast(BackgroundItem, sequence))
+        elif sequence.type == SequenceType.CUSTOM_EVENT:
+            return self.process_sequence_custom_event(group, cast(CustomEventItem, sequence))
         elif sequence.type == SequenceType.CONDITION:
             return self.process_sequence_condition(group, cast(ConditionItem, sequence))
         elif sequence.type == SequenceType.DIALOG:
@@ -295,8 +303,12 @@ class ScenarioWriter:
             return self.process_sequence_hide(group, cast(HideItem, sequence))
         elif sequence.type == SequenceType.BACKGROUND_TRANSFORM:
             return self.process_sequence_bg_transform(group, cast(BackgroundTransformItem, sequence))
+        elif sequence.type == SequenceType.BACKGROUND_TRANSITION:
+            return self.process_sequence_bg_transition(group, cast(BackgroundTransitionItem, sequence))
         elif sequence.type == SequenceType.SHOW_TRANSFORM:
             return self.process_sequence_show_transform(group, cast(ShowTransformItem, sequence))
+        elif sequence.type == SequenceType.PAUSE:
+            return self.process_sequence_pause(group, cast(PauseItem, sequence))
         elif sequence.type == SequenceType.UPDATE_VISUALS:
             return self.process_sequence_update_visuals(group, cast(UpdateVisualsItem, sequence))
         elif sequence.type == SequenceType.SHOW_VIDEO:
@@ -313,6 +325,14 @@ class ScenarioWriter:
             print(f"Unknown assignment: {assignment.content}")
             return [f'// {assignment.content}; TODO: unknown assignment']
         # return [f'// scene.add_sequence(ks::AssignmentItem("{assignment.content}"));']
+
+    def process_sequence_custom_event(self, group: SequenceGroup, ev: CustomEventItem) -> List[str]:
+        if not ev.background in self.backgrounds:
+            self.backgrounds.append(ev.background)
+        if not ev.event in self.events:
+            self.events.append(ev.event)
+        return [
+            f'IF_NOT_EXIT(ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
         if not bg.background in self.backgrounds:
@@ -331,7 +351,7 @@ class ScenarioWriter:
 
         return [
             # * 60 == 1x speed; * 30 == 2x speed.
-            f'IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {int(bg.dissolve_time * 30)}));']
+            f'IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
         # if bg.position == BgShowPosition.DEFAULT:
         #     return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background});']
         # else:
@@ -394,9 +414,9 @@ class ScenarioWriter:
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
         if music.action == MusicAction.PLAY:
             if music.effect == MusicEffect.FADEIN:
-                return [f'IF_NOT_EXIT(ks::SceneManager::music_play("{music.music}.gsm", {int(music.value * 60)}));']
+                return [f'IF_NOT_EXIT(ks::SceneManager::music_play({music.music.upper()}, {int(music.value * 60)}));']
             else:
-                return [f'IF_NOT_EXIT(ks::SceneManager::music_play("{music.music}.gsm"));']
+                return [f'IF_NOT_EXIT(ks::SceneManager::music_play({music.music.upper()}));']
         elif music.action == MusicAction.STOP:
             if music.effect == MusicEffect.FADEOUT:
                 return [f'IF_NOT_EXIT(ks::SceneManager::music_stop({int(music.value * 60)}));']
@@ -407,14 +427,14 @@ class ScenarioWriter:
     def process_sequence_sound(self, group: SequenceGroup, sound: SoundItem) -> List[str]:
         if sound.action == SoundAction.PLAY:
             if sound.effect == SoundEffect.FADEIN:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad", {int(sound.value * 60)}));']
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad", {sound.channel.value}, {int(sound.value * 60)}));']
             else:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad"));']
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad", {sound.channel.value}));']
         elif sound.action == SoundAction.STOP:
             if sound.effect == SoundEffect.FADEOUT:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop({int(sound.value * 60)}));']
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop({sound.channel.value}, {int(sound.value * 60)}));']
             else:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop());']
+                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop({sound.channel.value}));']
         return []
 
     def process_sequence_return(self, group, ret: ReturnItem) -> List[str]:
@@ -438,20 +458,26 @@ class ScenarioWriter:
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
         # if not show.sprite in self.sprites:
         #     self.sprites.append(show.sprite)
-
         # TODO: rework, that's for test purposes only for the moment
-        if show.sprite not in PROCESSED_CHARACTERS:
+        if show.sprite == "black":
+            # TODO: show black behind bg
+            return [f'// TODO: Blackout ON.']
+        elif show.sprite not in PROCESSED_CHARACTERS:
             return [f'// TODO: Show {show.sprite}']
         else:
             character_index = self.characters.get(show.sprite)
             if show.position == ShowPosition.TWOLEFT:
-                position = (-48, 0)
+                # position = (-48, 0)
+                position = (int(-0.2 * 240), 0)
             elif show.position == ShowPosition.TWORIGHT:
-                position = (48, 0)
+                # position = (48, 0)
+                position = (int(0.2 * 240), 0)
             elif show.position == ShowPosition.CLOSELEFT:
-                position = (-60, 0)
+                # position = (-60, 0)
+                position = (int(-0.25 * 240), 0)
             elif show.position == ShowPosition.CLOSERIGHT:
                 position = (60, 0)
+                position = (int(0.25 * 240), 0)
             elif show.position == ShowPosition.OFFSCREENLEFT:
                 # TODO: Calculate bsed on sprite width
                 position = (-120 - 64, 0)
@@ -562,7 +588,9 @@ class ScenarioWriter:
         #     raise TypeError("Unknown ShowEvent type")
 
     def process_sequence_hide(self, group: SequenceGroup, hide: HideItem) -> List[str]:
-        if hide.sprite not in PROCESSED_CHARACTERS:
+        if hide.sprite == "black":
+            return [f'// TODO: Blackout OFF.']
+        elif hide.sprite not in PROCESSED_CHARACTERS:
             return [f'// TODO: Hide {hide.sprite}']
         else:
             character_index = self.characters.get(hide.sprite)
@@ -574,15 +602,20 @@ class ScenarioWriter:
         # TODO: remove deuplicated positions code!!!!!!
         print(bg_transform.position)
         if bg_transform.position == BgShowPosition.BGLEFT:
-            position = (8, 0)
+            position = (240 * 0.05, 0)
         elif bg_transform.position == BgShowPosition.BGRIGHT:
-            position = (-8, 0)
+            position = (-240 * 0.05, 0)
         elif bg_transform.position == BgShowPosition.CENTER:
             position = (0, 0)
         else:
             raise TypeError("Unknown BgShowPosition type")
         return [
             f'IF_NOT_EXIT(ks::SceneManager::set_background_position({position[0]}, {position[1]}));']
+
+    def process_sequence_bg_transition(self, group: SequenceGroup, bg_transition: BackgroundTransitionItem) -> List[str]:
+        return [
+            f'IF_NOT_EXIT(ks::SceneManager::set_background_transition({bg_transition.transition.value}));'
+        ]
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         character_index = self.characters.get(show_transform.sprite)
@@ -591,6 +624,9 @@ class ScenarioWriter:
             raise f'"{show_transform.sprite}" is not in character index. Attempt to transform not shown character?'
         return [
             f'IF_NOT_EXIT(ks::SceneManager::set_character_position({character_index}, {show_transform.x}, 0));']
+
+    def process_sequence_pause(self, group: SequenceGroup, pause: PauseItem) -> List[str]:
+        return [f'IF_NOT_EXIT(ks::SceneManager::pause({int(pause.value * 60)}));']
 
     def process_sequence_update_visuals(self, group: SequenceGroup, update_visuals: UpdateVisualsItem) -> List[str]:
         return [f'IF_NOT_EXIT(ks::SceneManager::update_visuals());']
@@ -669,6 +705,11 @@ def condition_signature(group: SequenceGroup, num: int):
 def to_pascal_case(s: str) -> str:
     return ''.join(word.capitalize() for word in s.split('_'))
 
+def to_snake_case(name):
+    name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    name = re.sub('__([A-Z])', r'_\1', name)
+    name = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name)
+    return name.lower()
 
 def to_cpp_condition(s: str) -> str:
     return (s.replace("not ", "!")
