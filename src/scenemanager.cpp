@@ -321,11 +321,12 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
     // and should release resources on each method pop from stack
     // WAAAAAAAAHAA!~
 
-    while (!ks::globals::exit_scenario) {
+    while (!globals::exit_scenario) {
         if (redisplay_dialog) {
+            dialog->restore_from_pause();
             while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
                 dialog->update();
-                ks::globals::main_update();
+                globals::main_update();
             }
         }
 
