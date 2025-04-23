@@ -509,7 +509,14 @@ class ScenarioReader:
                     elif sequence.type == SequenceType.CUSTOM_EVENT:
                         sequence = cast(CustomEventItem, sequence)
                         sequence.dissolve_time = dissolve_time
-            if stripped_line.startswith("with locationchange"):
+            if (stripped_line.startswith("with dissolve")
+                    or stripped_line.startswith("with locationchange")
+                    or stripped_line.startswith("with charachangealways")
+                    or stripped_line.startswith("with charachangeev")
+                    or stripped_line.startswith("with charaenter")
+                    or stripped_line.startswith("with charaexit")
+                    or stripped_line.startswith("with characlose")
+                    or stripped_line.startswith("with charadistant")):
                 dissolve_time = float(1)
                 for sequence in self.linepack_events:
                     if sequence.type == SequenceType.BACKGROUND:

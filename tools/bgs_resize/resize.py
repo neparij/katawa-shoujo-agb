@@ -280,7 +280,8 @@ def resize_events():
     # resize_images_in_directory(input_directory, quantize_palettes=8)
     # # resize_images_in_directory(input_directory, quantize=True, quantize_palettes=14)
     # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*14)
-    resize_images(image_files, output_directory, quantize=False, unquant_colors=16 * 8)
+    # TODO: WAS: resize_images(image_files, output_directory, quantize=False, unquant_colors=16 * 8)
+    resize_images(image_files, output_directory, quantize_palettes=8)
 
     ### HERE AND AFTER EVENTS (LILLY)
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/event"
@@ -308,6 +309,6 @@ def resize_backgrounds():
     # resize_images_in_directory(input_directory)
 
 if __name__ == "__main__":
-    resize_backgrounds()
+    # resize_backgrounds()
     resize_events()
-    write_background_metadata_store()
+    # write_background_metadata_store()

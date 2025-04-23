@@ -939,7 +939,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 247));
                 ks::SceneManager::set_line_hash(0x083B45CC);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 248));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::lilly_tearoom_open, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::lilly_tearoom_open, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x748D582E);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li_, 249));
@@ -967,7 +967,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 260));
                 ks::SceneManager::set_line_hash(0xF89BDD37);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 261));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::lilly_tearoom, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::lilly_tearoom, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xAE4CB4F7);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 262));
@@ -979,7 +979,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 265));
                 ks::SceneManager::set_line_hash(0x669524D9);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 266));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::lilly_tearoom_open, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::lilly_tearoom_open, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x877834B0);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li_, 267));
@@ -2186,7 +2186,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xB9D471E6);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::ha_, 657));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x8C2A6C31);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 658));
@@ -2194,7 +2194,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 659));
                 ks::SceneManager::set_line_hash(0xC8F25C6B);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 660));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xD6AF591F);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 661));
@@ -2221,7 +2221,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 669));
                 ks::SceneManager::set_line_hash(0x3694F21F);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 25));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x2CF460C8);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 670));
@@ -2229,19 +2229,19 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 671));
                 ks::SceneManager::set_line_hash(0x48D0D834);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 672));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0xE99A13C8);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 673));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x4AC8744E);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 674));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x7EBC3CAC);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 675));

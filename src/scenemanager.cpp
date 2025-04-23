@@ -568,6 +568,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
             main_background.reset();
+            ks::globals::main_update();
             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             main_background->set_priority(3);
             main_background->set_z_order(10);
@@ -589,6 +590,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
             main_background.reset();
+            ks::globals::main_update();
             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             main_background->set_priority(3);
             main_background->set_z_order(10);
@@ -609,6 +611,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         fade_out(ks::globals::colors::WHITE, 15);
         if (to.has_value()) {
             main_background.reset();
+            ks::globals::main_update();
             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             main_background->set_priority(3);
             main_background->set_z_order(10);
@@ -810,6 +813,8 @@ void SceneManager::update_visuals() {
         blend_action.reset();
     }
 
+    ks::globals::main_update();
+
     /// CHANGE BACKGROUNDS (WITH DISSOLVE)
     BN_LOG("CHANGE BACKGROUNDS (WITH DISSOLVE)");
     if (background_want_change) {
@@ -848,6 +853,7 @@ void SceneManager::update_visuals() {
 
                 ks::globals::sound_update();
             } else {
+                BN_LOG("!!!!!!!! background_change_fallback !!!!!!!!!");
                 background_change_fallback = true;
             }
         }
@@ -926,6 +932,8 @@ void SceneManager::update_visuals() {
         (*custom_event)->set_background(main_background.value());
         (*custom_event)->init();
     }
+
+    ks::globals::main_update();
 
     /// SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND
     BN_LOG("SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND");
