@@ -32,7 +32,7 @@ inline void game(const bool is_new_game) {
     ks::globals::i18n->script_a1_monday()();
     ks::globals::i18n->script_a1_tuesday()();
     ks::globals::i18n->script_a1_wednesday()();
-    // ks::globals::i18n->script_a1_thursday()();
+    ks::globals::i18n->script_a1_thursday()();
     // ks::globals::i18n->script_a1_friday()();
     // ks::globals::i18n->script_a1_saturday()();
     // ks::globals::i18n->script_a1_sunday()();
