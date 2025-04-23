@@ -1689,7 +1689,7 @@ void SceneManager::transition_fadeout(const bn::affine_bg_item &transition_item,
     BN_LOG("Start Transition Fadeout");
 
     if (reverse) {
-        for (int dissolve_i = 128; dissolve_i > 0; dissolve_i -= speed) {
+        for (int dissolve_i = 128; dissolve_i >= 0; dissolve_i -= speed) {
             shader_dissolve_out_inverted(shader.dwords, dissolve_i, shader.tiles_buffer, shader.vram_ptr, update_transitions);
             ks::globals::main_update();
         }
