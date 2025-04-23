@@ -5,6 +5,7 @@
 #include <bn_regular_bg_actions.h>
 
 #include "custom_event.h"
+#include "hisao_class.h"
 
 namespace ks {
     class HisaoClassMoveEvent final : public CustomEvent {

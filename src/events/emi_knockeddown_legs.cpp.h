@@ -3,10 +3,20 @@
 
 #include <BN_LOG.h>
 #include <bn_regular_bg_actions.h>
+#include "bn_regular_bg_items_emi_knockeddown_legs.h"
+#include "bn_sprite_items_thumb_emi_knockeddown.h"
 
 #include "custom_event.h"
 
 namespace ks {
+
+    namespace background_metas {
+        constexpr inline background_meta emi_knockeddown_legs(
+            bn::regular_bg_items::emi_knockeddown_legs,
+            bn::sprite_items::thumb_emi_knockeddown,
+            0xFFFF0004);
+    }
+
     class EmiKnockeddownLegsEvent final : public CustomEvent {
     public:
         EmiKnockeddownLegsEvent() = default;

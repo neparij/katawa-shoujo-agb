@@ -3,7 +3,7 @@
 
 #include "../scenemanager.h"
 #include "../character.h"
-#include "bn_regular_bg_items_op_snowywoods.h"
+#include "background_metas/op_snowywoods.h"
 namespace ks {
     class ScriptA0Test {
         public:

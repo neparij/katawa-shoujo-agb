@@ -2,9 +2,9 @@
 #define HISAO_CLASS_END_CPP_H
 
 #include <BN_LOG.h>
-#include <bn_regular_bg_actions.h>
 
 #include "custom_event.h"
+#include "hisao_class.h"
 
 namespace ks {
     class HisaoClassEndEvent final : public CustomEvent {

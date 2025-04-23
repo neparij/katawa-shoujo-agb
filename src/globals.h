@@ -13,6 +13,9 @@
 #include "definitions.h"
 #include "savefile/save_file.h"
 
+#define KS_AGB_VERSION "0.3.0+13"
+#define KS_SHOW_4LS_INTRO true
+
 static const GBFS_FILE* fs = find_first_gbfs_file(0);
 alignas(4) static u8 translation_buffer[4];
 

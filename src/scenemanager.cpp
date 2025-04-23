@@ -220,9 +220,10 @@ void SceneManager::save(unsigned short slot_index) {
 }
 
 
-void SceneManager::set_background(const bn::regular_bg_item& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time) {
+void SceneManager::set_background(const background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time) {
     custom_event.reset();
-    background_visual.bg_item = bg;
+    progress.metadata.thumbnail_hash = bg.hash;
+    background_visual.bg_item = bg.bg;
     background_visual.position_x = position_x;
     background_visual.position_y = position_y;
     background_visual.dissolve_time = dissolve_time;
@@ -266,7 +267,7 @@ void SceneManager::set_background_transition(const scene_transition_t transition
     background_visual.transition = transition;
 }
 
-void SceneManager::set_event(const bn::regular_bg_item &bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
+void SceneManager::set_event(const background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
     set_background(bg, 0, 0, transition, dissolve_time);
     custom_event = event.clone();
 }
@@ -320,11 +321,12 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
     // and should release resources on each method pop from stack
     // WAAAAAAAAHAA!~
 
-    while (!ks::globals::exit_scenario) {
+    while (!globals::exit_scenario) {
         if (redisplay_dialog) {
+            dialog->restore_from_pause();
             while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
                 dialog->update();
-                ks::globals::main_update();
+                globals::main_update();
             }
         }
 
@@ -566,6 +568,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
             main_background.reset();
+            ks::globals::main_update();
             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             main_background->set_priority(3);
             main_background->set_z_order(10);
@@ -587,6 +590,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
             main_background.reset();
+            ks::globals::main_update();
             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             main_background->set_priority(3);
             main_background->set_z_order(10);
@@ -607,6 +611,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         fade_out(ks::globals::colors::WHITE, 15);
         if (to.has_value()) {
             main_background.reset();
+            ks::globals::main_update();
             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             main_background->set_priority(3);
             main_background->set_z_order(10);
@@ -808,6 +813,8 @@ void SceneManager::update_visuals() {
         blend_action.reset();
     }
 
+    ks::globals::main_update();
+
     /// CHANGE BACKGROUNDS (WITH DISSOLVE)
     BN_LOG("CHANGE BACKGROUNDS (WITH DISSOLVE)");
     if (background_want_change) {
@@ -846,6 +853,7 @@ void SceneManager::update_visuals() {
 
                 ks::globals::sound_update();
             } else {
+                BN_LOG("!!!!!!!! background_change_fallback !!!!!!!!!");
                 background_change_fallback = true;
             }
         }
@@ -924,6 +932,8 @@ void SceneManager::update_visuals() {
         (*custom_event)->set_background(main_background.value());
         (*custom_event)->init();
     }
+
+    ks::globals::main_update();
 
     /// SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND
     BN_LOG("SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND");
@@ -1687,7 +1697,7 @@ void SceneManager::transition_fadeout(const bn::affine_bg_item &transition_item,
     BN_LOG("Start Transition Fadeout");
 
     if (reverse) {
-        for (int dissolve_i = 128; dissolve_i > 0; dissolve_i -= speed) {
+        for (int dissolve_i = 128; dissolve_i >= 0; dissolve_i -= speed) {
             shader_dissolve_out_inverted(shader.dwords, dissolve_i, shader.tiles_buffer, shader.vram_ptr, update_transitions);
             ks::globals::main_update();
         }

@@ -216,7 +216,7 @@ namespace ks
             _hidden = false;
         }
 
-        void show(const character_definition& actor, bn::string<1024> message) {
+        void show(const character_definition& actor, const bn::string<1024> &message) {
             reset_title();
             reset_message();
             reset_question();
@@ -226,7 +226,9 @@ namespace ks
             } else {
                 _actor = nullptr;  // No character
             }
-            _remaining_message = message;
+            if (message != _remaining_message) {
+                _remaining_message = message;
+            }
 
             talkbox1 = bn::sprite_items::ui_talkbox1.create_sprite(-ks::device::screen_width_half + 32, ks::device::screen_height_half - 32);
             talkbox2 = bn::sprite_items::ui_talkbox2.create_sprite(-ks::device::screen_width_half + 32 + 64, ks::device::screen_height_half - 32);
@@ -287,12 +289,15 @@ namespace ks
             _hidden = true;
         }
 
-        // void restore_from_pause() {
-        //     if (!_remaining_message.empty()) {
-        //         // TODO:!!!!!!!!!!!!!!!!!!!!!!
-        //         show(_actor, _remaining_message, original_palette_item);
-        //     }
-        // }
+         void restore_from_pause() {
+            if (!_remaining_message.empty()) {
+                if (_actor != nullptr) {
+                    show(*_actor, _remaining_message);
+                } else {
+                    show(definitions::no_char, _remaining_message);
+                }
+            }
+        }
 
         void show_question(bn::vector<bn::string<128>, 5>& answers) {
 

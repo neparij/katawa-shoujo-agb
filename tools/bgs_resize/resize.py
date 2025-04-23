@@ -1,3 +1,4 @@
+import hashlib
 import os
 import json
 from PIL import Image, ImageOps
@@ -8,43 +9,49 @@ PINK_COLOR = (255, 0, 255)  # Pink background color
 QUANTIZE = True
 IGNORE_IMAGES = [
     "hisao_class",
-    "emi_knockeddown",
-    "emi_knockeddown_large"
+    "emi_knockeddown_large",
+    "emi_knockeddown"
 ]
 
-def resize_images_in_directory(input_dir, quantize=True, affine_bg=False, quantize_palettes=8, unquant_colors : int = 256):
-    """Resize all images in the input directory and save them in the output directory."""
-    image_files = [f for f in os.listdir(input_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif'))]
+BG_INCLUDE_VFX_IMAGES = [
+    "mural_start",
+    "mural_unfinished"
+]
 
+HEADERS_DIR = "/Users/n.laptev/development/gba/katawa/include"
+BG_META_HEADERS_DIR = os.path.join(HEADERS_DIR, "background_metas")
+
+BG_META_STORAGE = []
+
+def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, unquant_colors : int = 256):
     if not image_files:
         print("No image files found in the specified directory.")
         return
 
-    os.makedirs(OUTPUT_DIR, exist_ok=True)  # Create output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)  # Create output directory if it doesn't exist
+    os.makedirs(f"{output_dir}/thumbs", exist_ok=True)  # Create output directory if it doesn't exist
 
     for image_file in image_files:
-        if os.path.splitext(image_file)[0] in IGNORE_IMAGES:
+        output_file_name = f"{os.path.splitext(os.path.basename(image_file))[0]}.bmp"  # Save as BMP
+        output_path = os.path.join(output_dir, output_file_name)
+        output_meta_path = os.path.join(output_dir, "thumbs", f"thumb_{output_file_name}")
+
+        process_image_savefile_thumbnail(image_file, output_meta_path)
+        create_thumbnail_json_metadata(os.path.join(output_dir, "thumbs", "thumb_" + output_file_name))
+
+        if os.path.splitext(output_file_name)[0] in IGNORE_IMAGES:
             print(f"Skipping {image_file} as it is in the ignore list.")
             continue
 
-        input_path = os.path.join(input_dir, image_file)
-        output_file_name = f"{os.path.splitext(image_file)[0]}.bmp"  # Save as BMP
-        output_path = os.path.join(OUTPUT_DIR, output_file_name)
-
         try:
-            if affine_bg:
-                # process_image_affine(input_path, output_path, unquant_colors)
-                process_image_affine_interlaced(input_path, output_path, unquant_colors)
-                create_json_metadata(output_path.replace('.bmp', '_left.bmp'), quantize, unquant_colors, True)
-                create_json_metadata(output_path.replace('.bmp', '_right.bmp'), quantize, unquant_colors, True)
-                create_json_metadata(output_path.replace('.bmp', '_left_i.bmp'), quantize, unquant_colors, True)
-                create_json_metadata(output_path.replace('.bmp', '_right_i.bmp'), quantize, unquant_colors, True)
-            elif quantize:
-                process_image_quantized(input_path, output_path, quantize_palettes)
-                create_json_metadata(output_path, quantize, unquant_colors, affine_bg)
+            if quantize:
+                process_image_quantized(image_file, output_path, quantize_palettes)
+                create_json_metadata(output_path, quantize, unquant_colors)
             else:
-                process_image(input_path, output_path, unquant_colors)
-                create_json_metadata(output_path, quantize, unquant_colors, affine_bg)
+                process_image(image_file, output_path, unquant_colors)
+                create_json_metadata(output_path, quantize, unquant_colors)
+
+            write_background_metadata(os.path.splitext(output_file_name)[0])
         except Exception as e:
             print(f"Error processing {image_file}: {e}")
 
@@ -109,162 +116,6 @@ def process_image_quantized(input_path, output_path, quantize_palettes: int):
     quantized.save(output_path, format="BMP")
     print(f"Resized, Quantized and saved: {output_path}")
 
-def process_image_affine(input_path, output_path, colors : int = 256):
-    canvas = Image.new("RGB", (256, 256), PINK_COLOR)
-    source_image = Image.open(input_path).convert("RGB")
-
-    gba_resize_factor = 160 / 1080
-    extra_width = source_image.width - 1920
-    extra_height = source_image.height - 1080
-    extra_width_percentage = extra_width / 1920
-    extra_height_percentage = extra_height / 1080
-
-    print("Extra size percentage:", extra_width_percentage, extra_height_percentage)
-    gba_extra_width = int(240 * extra_width_percentage)
-    gba_extra_height = int(160 * extra_height_percentage)
-    print("GBA extra width:", gba_extra_width)
-    print("GBA extra height:", gba_extra_height)
-
-    gba_extra_width = min(gba_extra_width, 16)
-    gba_extra_height = min(gba_extra_height, 64)
-    # print("GBA extra width:", gba_extra_width)
-    # print("GBA extra height:", gba_extra_height)
-
-    if extra_width < 0:
-        raise Exception(f"Extra width is negative: {extra_width}")
-
-    source_height_resized = ImageOps.scale(source_image, gba_resize_factor, resample=Image.Resampling.LANCZOS)
-
-    crop_x = source_height_resized.width - (240 + gba_extra_width)
-    crop_y = source_height_resized.height - (160 + gba_extra_height)
-
-    source_cropped = ImageOps.crop(source_height_resized, (crop_x // 2, crop_y // 2, crop_x // 2, crop_y // 2))
-    source_height_reduced = source_cropped.resize((source_cropped.width, source_cropped.height // 2), Image.LANCZOS)
-    canvas.paste(source_height_reduced, ((256 - source_height_reduced.width) // 2, (256 - source_height_reduced.height) // 2))
-
-    palette_image = canvas.convert("P", palette=Image.Palette.ADAPTIVE, colors=colors)
-    palette = palette_image.getpalette()
-    palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
-
-    # Ensure pink is explicitly the first color in the palette
-    if PINK_COLOR not in palette_colors:
-        raise RuntimeError(f"Warning: Pink color {PINK_COLOR} is not in the palette!")
-
-    first_color_index = palette_colors.index(PINK_COLOR)
-    remap = list(range(len(palette_colors)))
-    if first_color_index != 0:
-        # Swap pink with the first palette color
-        remap[0], remap[first_color_index] = remap[first_color_index], remap[0]
-
-    # Remap the palette to make pink the first color
-    img_remapped = palette_image.remap_palette(remap)
-    # img_remapped = palette_image
-
-    # Generate "Left" and "Right" part of bg to use two 256 tiles packs as max
-    img_remapped_left = img_remapped.copy()
-    # fill right part  of "img_remapped_left" with pink color:
-    for x in range(128, 256):
-        for y in range(0, 256):
-            img_remapped_left.putpixel((x, y), 0)
-    img_remapped_left.save(output_path.replace(".bmp", "_left.bmp"), format="BMP")
-
-    img_remapped_right = img_remapped.copy()
-    # fill left part  of "img_remapped_right" with pink color:
-    for x in range(0, 128):
-        for y in range(0, 256):
-            img_remapped_right.putpixel((x, y), 0)
-    img_remapped_right.save(output_path.replace(".bmp", "_right.bmp"), format="BMP")
-    #
-    #
-    # # Save the result as BMP
-    # img_remapped.save(output_path, format="BMP")
-    print(f"Resized and saved: {output_path}")
-
-
-def process_image_affine_interlaced(input_path, output_path, colors : int = 256):
-    canvas = Image.new("RGB", (256, 256), PINK_COLOR)
-    source_image = Image.open(input_path).convert("RGB")
-
-    gba_resize_factor = 160 / 1080
-    extra_width = source_image.width - 1920
-    extra_height = source_image.height - 1080
-    extra_width_percentage = extra_width / 1920
-    extra_height_percentage = extra_height / 1080
-
-    print("Extra size percentage:", extra_width_percentage, extra_height_percentage)
-    gba_extra_width = int(240 * extra_width_percentage)
-    gba_extra_height = int(160 * extra_height_percentage)
-    print("GBA extra width:", gba_extra_width)
-    print("GBA extra height:", gba_extra_height)
-
-    gba_extra_width = min(gba_extra_width, 16)
-    gba_extra_height = min(gba_extra_height, 64)
-    # print("GBA extra width:", gba_extra_width)
-    # print("GBA extra height:", gba_extra_height)
-
-    if extra_width < 0:
-        raise Exception(f"Extra width is negative: {extra_width}")
-
-    source_height_resized = ImageOps.scale(source_image, gba_resize_factor, resample=Image.Resampling.LANCZOS)
-
-    crop_x = source_height_resized.width - (240 + gba_extra_width)
-    crop_y = source_height_resized.height - (160 + gba_extra_height)
-
-    source_cropped = ImageOps.crop(source_height_resized, (crop_x // 2, crop_y // 2, crop_x // 2, crop_y // 2))
-    canvas.paste(source_cropped, ((256 - source_cropped.width) // 2, (256 - source_cropped.height) // 2))
-
-    palette_image = canvas.convert("P", palette=Image.Palette.ADAPTIVE, colors=colors)
-    palette = palette_image.getpalette()
-    palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
-
-    # Ensure pink is explicitly the first color in the palette
-    if PINK_COLOR not in palette_colors:
-        raise RuntimeError(f"Warning: Pink color {PINK_COLOR} is not in the palette!")
-
-    first_color_index = palette_colors.index(PINK_COLOR)
-    remap = list(range(len(palette_colors)))
-    if first_color_index != 0:
-        # Swap pink with the first palette color
-        remap[0], remap[first_color_index] = remap[first_color_index], remap[0]
-
-    # Remap the palette to make pink the first color
-    img_remapped = palette_image.remap_palette(remap)
-    # img_remapped = palette_image
-
-    # Generate "Left" and "Right" part of bg to use two 256 tiles packs as max
-    img_remapped_left = Image.new("P", (256, 256), PINK_COLOR)
-    img_remapped_left_i = Image.new("P", (256, 256), PINK_COLOR)
-    img_remapped_left.putpalette(img_remapped.getpalette())
-    img_remapped_left_i.putpalette(img_remapped.getpalette())
-    # fill right part  of "img_remapped_left" with pink color:
-    for x in range(0, 128):
-        for y in range(0, 256):
-            pixel = img_remapped.getpixel((x, y))
-            if y % 2 == 0:
-                img_remapped_left.putpixel((x, y // 2), pixel)
-            else:
-                img_remapped_left_i.putpixel((x, (y - 1) // 2), pixel)
-    img_remapped_left.save(output_path.replace(".bmp", "_left.bmp"), format="BMP")
-    img_remapped_left_i.save(output_path.replace(".bmp", "_left_i.bmp"), format="BMP")
-
-    # Generate "Left" and "Right" part of bg to use two 256 tiles packs as max
-    img_remapped_right = Image.new("P", (256, 256), PINK_COLOR)
-    img_remapped_right_i = Image.new("P", (256, 256), PINK_COLOR)
-    img_remapped_right.putpalette(img_remapped.getpalette())
-    img_remapped_right_i.putpalette(img_remapped.getpalette())
-    # fill right part  of "img_remapped_left" with pink color:
-    for x in range(128, 256):
-        for y in range(0, 256):
-            pixel = img_remapped.getpixel((x, y))
-            if y % 2 == 0:
-                img_remapped_right.putpixel((x, y // 2), pixel)
-            else:
-                img_remapped_right_i.putpixel((x, (y - 1) // 2), pixel)
-    img_remapped_right.save(output_path.replace(".bmp", "_right.bmp"), format="BMP")
-    img_remapped_right_i.save(output_path.replace(".bmp", "_right_i.bmp"), format="BMP")
-
-    print(f"Resized and saved: {output_path}")
-
 def process_image(input_path, output_path, colors : int = 256):
     """Process an image: resize, add pink background, remap palette, and save as BMP."""
     # Create a 256x256 image filled with pink
@@ -307,21 +158,44 @@ def process_image(input_path, output_path, colors : int = 256):
     img_remapped.save(output_path, format="BMP")
     print(f"Resized and saved: {output_path}")
 
+def process_image_savefile_thumbnail(input_path, output_path):
+    pink_background = Image.new("RGB", (64, 32), PINK_COLOR)
+    source_image = Image.open(input_path).convert("RGB")
 
-def create_json_metadata(image_path, quantize, unquant_colors: int, affine_bg: bool):
+    source_resized = ImageOps.fit(source_image, (48, 32), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
+    pink_background.paste(source_resized, (8, 0))
+
+    palette_image = pink_background.convert("P", palette=Image.Palette.ADAPTIVE, colors=16)
+
+    palette = palette_image.getpalette()
+    palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
+
+    if PINK_COLOR not in palette_colors:
+        raise Exception(f"Pink color {PINK_COLOR} is not in the palette!")
+        # print(f"Warning: Pink color {PINK_COLOR} is not in the palette!")
+        return
+
+    first_color_index = palette_colors.index(PINK_COLOR)
+    remap = list(range(len(palette_colors)))
+    if first_color_index != 0:
+        remap[0], remap[first_color_index] = remap[first_color_index], remap[0]
+
+    img_remapped = palette_image.remap_palette(remap)
+
+    # Save the result as BMP
+    img_remapped.save(output_path, format="BMP")
+    print(f"Resized and saved: {output_path}")
+
+def create_json_metadata(image_path, quantize, unquant_colors: int):
     """Create a JSON metadata file for the image."""
     json_path = f"{os.path.splitext(image_path)[0]}.json"
     metadata = {
-        "type": "regular_bg" if not affine_bg else "affine_bg",
-        # "type": "affine_bg",
+        "type": "regular_bg",
     }
 
-    if quantize and not affine_bg:
+    if quantize:
         metadata["bpp_mode"] = "bpp_4_manual"
         metadata["compression"] = "auto_no_huffman"
-    elif affine_bg:
-        metadata["compression"] = "auto_no_huffman"
-        metadata["colors"] = unquant_colors
     else:
         metadata["compression"] = "auto_no_huffman"
         metadata["colors"] = unquant_colors
@@ -339,54 +213,102 @@ def create_json_metadata(image_path, quantize, unquant_colors: int, affine_bg: b
 
     print(f"Metadata saved: {json_path}")
 
+def create_thumbnail_json_metadata(image_path):
+    json_path = f"{os.path.splitext(image_path)[0]}.json"
+    metadata = {
+        "type": "sprite",
+        "bpp_mode": "bpp_4",
+        "colors_count": 16,
+        "compression": "auto_no_huffman",
+    }
 
-if __name__ == "__main__":
-    OUTPUT_DIR = "/Users/n.laptev/development/gba/katawa/graphics/event"
-    input_directory = "/Users/n.laptev/development/gba/katawa/temp/affine_events"
-    resize_images_in_directory(input_directory, affine_bg=True, unquant_colors=16*8)
-    quit(0)
+    with open(json_path, "w", encoding="utf-8") as json_file:
+        json.dump(metadata, json_file, indent=4)
+
+    print(f"Metadata saved: {json_path}")
+
+def write_background_metadata(background_name):
+    meta_filename = os.path.join(BG_META_HEADERS_DIR, f"{background_name}.h")
+    hashed_id = hashlib.md5(background_name.encode()).hexdigest()[:8].upper()
+    BG_META_STORAGE.append((background_name, hashed_id))
+
+    os.makedirs(BG_META_HEADERS_DIR, exist_ok=True)
+    with open(meta_filename, "w", encoding="utf-8") as meta_file:
+        meta_file.write(f"#ifndef KS_BGMETA_{background_name.upper()}\n")
+        meta_file.write(f"#define KS_BGMETA_{background_name.upper()}\n\n")
+        meta_file.write(f'#include "background_meta.h"\n')
+        meta_file.write(f'#include "bn_regular_bg_items_{background_name}.h"\n')
+        meta_file.write(f'#include "bn_sprite_items_thumb_{background_name}.h"\n')
+        meta_file.write(f'namespace ks::background_metas {{\n')
+        meta_file.write(
+            f'    constexpr inline background_meta {background_name}(\n'
+            f'                     bn::regular_bg_items::{background_name},\n'
+            f'                     bn::sprite_items::thumb_{background_name},\n'
+            f'                     0x{hashed_id});\n\n')
+        meta_file.write(f'}}\n\n')
+        meta_file.write(f'#endif  // KS_BGMETA_{background_name.upper()}\n')
+
+def write_background_metadata_store():
+    metas_filename = os.path.join(HEADERS_DIR, "background_metas.h")
 
 
-    # ### HERE AND AFTER EVENTS (LILLY)
-    # OUTPUT_DIR = "/Users/n.laptev/development/gba/katawa/graphics/event"
-    # input_directory = "/Users/n.laptev/development/ksre/game/event/Lilly_supercg"
-    # resize_images_in_directory(input_directory, quantize_palettes=8)
-    # # # resize_images_in_directory(input_directory, quantize=True, quantize_palettes=14)
-    # # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*14)
-    # # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*8)
+    with open(metas_filename, "w", encoding="utf-8") as f:
+        f.write(f"#ifndef KS_BGMETAS\n")
+        f.write(f"#define KS_BGMETAS\n\n")
 
+        f.write(f'#include "custom_background_metas.h"\n\n')
+        for bg in BG_META_STORAGE:
+            f.write(f'#include "background_metas/{bg[0]}.h"\n')
 
+        f.write(f'namespace ks::background_metas {{\n')
+        f.write(f'    const background_meta* get_by_hash(const unsigned int hash) {{\n')
+        f.write(f'        switch (hash) {{\n')
+        for bg in BG_META_STORAGE:
+            f.write(f'            case 0x{bg[1]}: return &{bg[0]};\n')
+        f.write(f'            default: return get_custom_by_hash(hash);\n')
+        f.write(f'        }}\n')
+        f.write(f'    }}\n\n')
+        f.write(f'}};\n\n')
+        f.write(f'#endif  // KS_BGMETAS\n')
+
+def resize_events():
     ### HERE AND AFTER EVENTS
-    OUTPUT_DIR = "/Users/n.laptev/development/gba/katawa/graphics/event"
+    output_directory = "/Users/n.laptev/development/gba/katawa/graphics/event"
     input_directory = "/Users/n.laptev/development/ksre/game/event"
+
+    image_files = [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     # resize_images_in_directory(input_directory, quantize_palettes=8)
     # # resize_images_in_directory(input_directory, quantize=True, quantize_palettes=14)
     # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*14)
-    resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*8)
+    # TODO: WAS: resize_images(image_files, output_directory, quantize=False, unquant_colors=16 * 8)
+    resize_images(image_files, output_directory, quantize_palettes=8)
+
+    ### HERE AND AFTER EVENTS (LILLY)
+    output_directory = "/Users/n.laptev/development/gba/katawa/graphics/event"
+    input_directory = "/Users/n.laptev/development/ksre/game/event/Lilly_supercg"
+
+    image_files = [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+    resize_images(image_files, output_directory, quantize_palettes=8)
+    # # resize_images_in_directory(input_directory, quantize=True, quantize_palettes=14)
+    # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*14)
+    # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*8)
 
 
-    # ## HERE AND AFTER BACKGROUNDS
-    # OUTPUT_DIR = "/Users/n.laptev/development/gba/katawa/graphics/bgs"
-    # input_directory = "/Users/n.laptev/development/ksre/game/bgs"
-    # resize_images_in_directory(input_directory, quantize_palettes=8)
-    # # resize_images_in_directory(input_directory, quantize=False, unquant_colors=16 * 8)
-    # # resize_images_in_directory(input_directory)
+def resize_backgrounds():
+    ## HERE AND AFTER BACKGROUNDS
+    output_directory = "/Users/n.laptev/development/gba/katawa/graphics/bgs"
+    bgs_directory = "/Users/n.laptev/development/ksre/game/bgs"
+    vfx_directory = "/Users/n.laptev/development/ksre/game/vfx"
 
+    image_files = []
+    image_files += [f"{bgs_directory}/{f}" for f in os.listdir(bgs_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+    image_files += [f"{vfx_directory}/{f}.jpg" for f in BG_INCLUDE_VFX_IMAGES]
 
+    resize_images(image_files, output_directory, quantize_palettes=8)
+    # resize_images_in_directory(input_directory, quantize=False, unquant_colors=16 * 8)
+    # resize_images_in_directory(input_directory)
 
-    # ## HERE AND AFTER TEST MURAL IMAGES
-    # OUTPUT_DIR = "/Users/n.laptev/development/gba/katawa/graphics/bgs"
-    # input_directory = "/Users/n.laptev/development/ksre/game/vfx"
-    # process_image_quantized(
-    #     os.path.join(input_directory, "mural_start.jpg"),
-    #     os.path.join(OUTPUT_DIR, "mural_start.bmp"),
-    #     8
-    # )
-    # create_json_metadata(os.path.join(OUTPUT_DIR, "mural_start.bmp"), True, -1)
-    #
-    # process_image_quantized(
-    #     os.path.join(input_directory, "mural_unfinished.jpg"),
-    #     os.path.join(OUTPUT_DIR, "mural_unfinished.bmp"),
-    #     8
-    # )
-    # create_json_metadata(os.path.join(OUTPUT_DIR, "mural_unfinished.bmp"), True, -1)
+if __name__ == "__main__":
+    # resize_backgrounds()
+    resize_events()
+    # write_background_metadata_store()

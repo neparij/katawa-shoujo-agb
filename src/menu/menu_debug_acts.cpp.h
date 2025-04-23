@@ -6,20 +6,8 @@
 namespace ks {
     class MenuDebugActs final : public MenuBase {
     public:
-        MenuDebugActs() = default;
+        explicit MenuDebugActs(gameState_t &state): MenuBase(state) {}
         ~MenuDebugActs() override {
-        }
-
-        void init() override {
-            MenuBase::init();
-        }
-
-        void update() override {
-            MenuBase::update();
-        }
-
-        void destroy() override {
-            MenuBase::destroy();
         }
     };
 }

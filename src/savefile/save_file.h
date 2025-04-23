@@ -3,6 +3,7 @@
 
 #include <bn_array.h>
 #include <BN_LOG.h>
+#include <bn_sprite_item.h>
 #include <bn_sram.h>
 #include <gba_types.h>
 
@@ -56,6 +57,10 @@ namespace ks {
             script_t script;
             label_t label;
 
+            // This stores current background hash in 0x00000000 - 0xFFFFFFFF range
+            unsigned int thumbnail_hash;
+            // bn::sprite_item& thumbnail_ref;
+
             unsigned short hours_played;
             unsigned char minutes_played;
             unsigned char seconds_played;
@@ -64,6 +69,7 @@ namespace ks {
                 return has_data == other.has_data &&
                        script == other.script &&
                        label == other.label &&
+                       thumbnail_hash == other.thumbnail_hash &&
                        hours_played == other.hours_played &&
                        minutes_played == other.minutes_played &&
                        seconds_played == other.seconds_played;
