@@ -69,6 +69,7 @@ public:
 
     virtual const char* definitions_no_scene() = 0;
     virtual const char* definitions_nothing() = 0;
+    virtual const char* definitions_autosave() = 0;
 
     virtual const char* definitions_hi() = 0;
     virtual const char* definitions_ha() = 0;

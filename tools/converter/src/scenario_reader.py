@@ -341,9 +341,6 @@ class ScenarioReader:
                 event_bg_name = custom_event_bg
                 event = custom_event
                 self.stack.current().add_sequence_item(self.linepack_events, CustomEventItem(event_bg_name, event))
-            elif custom_event_bg is not None:
-                event_bg_name = custom_event_bg
-                self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(event_bg_name))
             else:
                 self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(event_bg_name))
             return
@@ -604,7 +601,7 @@ def rewrite_motion_background(bg_name: str) -> str:
             # .replace("emi_knockeddown_legs", "emi_knockeddown")
             )
 
-def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[str, None] | tuple[None, None]:
+def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     # HISAO CLASS
     if bg_name == "hisao_class_start":
         return "hisao_class", "HisaoClassStartEvent"
@@ -621,7 +618,7 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[str, None] | tuple
     elif bg_name == "emi_knockeddown_legs":
         return "emi_knockeddown_legs", "EmiKnockeddownLegsEvent"
     elif bg_name == "emi_knockeddown":
-        return "emi_knockeddown_largepullout", None
+        return "emi_knockeddown_largepullout", "EmiKnockeddownEvent"
 
     return None, None
 

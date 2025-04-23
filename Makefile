@@ -57,6 +57,7 @@ SOURCES     	:=  ../butano/common/src \
 		    		src/utils \
                     src/utils/gbfs
 INCLUDES    	:=  include \
+					include/background_metas \
 					include/sprite_metas \
 					../libsavgba/include \
 					../butano/common/include \
@@ -65,7 +66,9 @@ DATA        	:=  video
 VIDEO			:=  video
 GRAPHICS    	:=  graphics \
 					graphics/bgs \
+					graphics/bgs/thumbs \
 					graphics/event \
+					graphics/event/thumbs \
 					graphics/event/custom \
 					graphics/characters/shizu \
 					graphics/characters/misha \

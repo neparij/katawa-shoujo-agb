@@ -278,6 +278,7 @@ void ks::saves::log_progress_metadata(SaveSlotMetadata &metadata) {
     BN_LOG("    has_data: ", metadata.has_data);
     BN_LOG("    script: ", metadata.script);
     BN_LOG("    label: ", metadata.label);
+    BN_LOG("    thumbnail_hash: ", metadata.thumbnail_hash);
     BN_LOG("    hours_played: ", metadata.hours_played);
     BN_LOG("    minutes_played: ", metadata.minutes_played);
     BN_LOG("    seconds_played: ", metadata.seconds_played);

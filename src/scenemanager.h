@@ -11,6 +11,7 @@
 #include <bn_affine_bg_ptr.h>
 #include <bn_unique_ptr.h>
 
+#include "background_meta.h"
 #include "character_sprite_meta.h"
 #include "gba_base.h"
 #include "gba_types.h"
@@ -110,18 +111,18 @@ public:
     static void save(unsigned short slot_index);
 
     // Acions
-    // static void set_background(const bn::regular_bg_item& bg);
-    static void set_background(const bn::regular_bg_item& bg,
-                               const int position_x,
-                               const int position_y,
-                               scene_transition_t transition,
-                               const int dissolve_time);
+
+    static void set_background(const background_meta& bg,
+                           const int position_x,
+                           const int position_y,
+                           scene_transition_t transition,
+                           const int dissolve_time);
     static void hide_background(scene_transition_t transition, int dissolve_time);
     static void set_background_position(const int position_x,
                                        const int position_y);
     static void set_background_transition(scene_transition_t transition);
 
-    static void set_event(const bn::regular_bg_item& bg,
+    static void set_event(const background_meta& bg,
                           const CustomEvent& event,
                           scene_transition_t transition,
                           int dissolve_time);

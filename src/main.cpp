@@ -16,9 +16,9 @@
 #include "menu/menu_options.cpp.h"
 #include "menu/menu_saves.cpp.h"
 
-using size_type = int;
+#include "background_metas.h"
 
-constexpr bool SHOW_INTRO = true;
+using size_type = int;
 
 inline void game(const bool is_new_game) {
     ks::SceneManager::fade_reset();
@@ -32,7 +32,7 @@ inline void game(const bool is_new_game) {
     ks::globals::i18n->script_a1_monday()();
     ks::globals::i18n->script_a1_tuesday()();
     ks::globals::i18n->script_a1_wednesday()();
-    ks::globals::i18n->script_a1_thursday()();
+    // ks::globals::i18n->script_a1_thursday()();
     // ks::globals::i18n->script_a1_friday()();
     // ks::globals::i18n->script_a1_saturday()();
     // ks::globals::i18n->script_a1_sunday()();
@@ -119,6 +119,9 @@ inline void game(const bool is_new_game) {
 
 int main() {
     ks::globals::init_engine(ks::globals::colors::WHITE);
+
+    ks::background_metas::get_by_hash(0x8B4D104C);
+
     BN_ASSERT(fs != NULL, "GBFS file not found.\nUse the ROM that ends with .out.gba!");
 
     const bool isNewSave = ks::saves::initialize();
@@ -131,7 +134,7 @@ int main() {
     ks::timer::init();
 
     ks::SceneManager::fade_in(ks::globals::colors::WHITE, 30);
-    if (SHOW_INTRO) {
+    if constexpr (KS_SHOW_4LS_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
         ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);
         ks::SceneManager::show_video(video_4ls_agmv, video_4ls_agmv_size, "video_4ls.gsm", ks::globals::colors::BLACK);

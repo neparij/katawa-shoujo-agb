@@ -44,6 +44,7 @@ class ScenarioWriter:
         self.locale = locale if locale else DEFAULT_LOCALE
 
         self.backgrounds = []
+        self.character_backgrounds = []
         self.events = []
         self.music = []
         self.sprites = []
@@ -85,8 +86,11 @@ class ScenarioWriter:
             # include_header("bn_music_items"),
         ]
 
+        for character_background in self.character_backgrounds:
+            h_code.append(include_header(character_background, "bn_regular_bg_items_"))
+
         for background in self.backgrounds:
-            h_code.append(include_header(background, "bn_regular_bg_items_"))
+            h_code.append(include_header(background, "background_metas/"))
 
         for sprite in self.sprites:
             h_code.append(include_header(sprite, "bn_sprite_items_"))
@@ -327,12 +331,13 @@ class ScenarioWriter:
         # return [f'// scene.add_sequence(ks::AssignmentItem("{assignment.content}"));']
 
     def process_sequence_custom_event(self, group: SequenceGroup, ev: CustomEventItem) -> List[str]:
-        if not ev.background in self.backgrounds:
-            self.backgrounds.append(ev.background)
+        # if not ev.background in self.backgrounds:
+        #     self.backgrounds.append(ev.background)
         if not ev.event in self.events:
             self.events.append(ev.event)
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
+            f'IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
+            # f'IF_NOT_EXIT(ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
         if not bg.background in self.backgrounds:
@@ -351,7 +356,8 @@ class ScenarioWriter:
 
         return [
             # * 60 == 1x speed; * 30 == 2x speed.
-            f'IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
+            f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
+            # f'IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
         # if bg.position == BgShowPosition.DEFAULT:
         #     return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background});']
         # else:
@@ -555,8 +561,8 @@ class ScenarioWriter:
                 character_spr_name = character.to_sprite_name()
                 character_sprite_meta_name = character.to_group_name()
 
-                if not character_bg_name in self.backgrounds:
-                    self.backgrounds.append(character_bg_name)
+                if not character_bg_name in self.character_backgrounds:
+                    self.character_backgrounds.append(character_bg_name)
 
                 if not character_spr_name in self.sprites:
                     self.sprites.append(character_spr_name)

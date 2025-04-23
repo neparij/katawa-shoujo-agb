@@ -124,6 +124,7 @@ public:
 
     const char* definitions_no_scene() {return "Нет сцены";}
     const char* definitions_nothing() {return "Ничего";}
+    const char* definitions_autosave() {return "(авто)";}
 
     const char* definitions_hi() {return "Хисао";}
     const char* definitions_ha() {return "Ханако";}

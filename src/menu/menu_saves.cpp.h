@@ -2,9 +2,11 @@
 #define MENU_SAVES_CPP_H
 
 #include <bn_format.h>
-#include <bn_regular_bg_items_ui_bg_menu.h>
+#include <bn_regular_bg_items_ui_bg_menu_inner.h>
 #include <bn_sprite_items_ui_button_b.h>
+#include <bn_sprite_items_thumb_hosp_room.h>
 
+#include "background_metas.h"
 #include "menu_base.h"
 #include "../ingametimer.h"
 
@@ -13,7 +15,7 @@ namespace ks {
     class MenuSaves final : public MenuBase {
     public:
         explicit MenuSaves(gameState_t &state): MenuBase(state) {
-            main_background = bn::regular_bg_items::ui_bg_menu.create_bg(0, 0);
+            main_background = bn::regular_bg_items::ui_bg_menu_inner.create_bg(0, 0);
 
             total_saves = saves::getUsedSaveSlots();
             saves_from_cursor = total_saves;
@@ -87,6 +89,10 @@ namespace ks {
         }
 
         void draw_slots(const unsigned short from) {
+            constexpr short draw_x_from = 10;
+            constexpr short draw_y_from = -48;
+            constexpr short draw_y_offset = 40;
+
             selection_indexes.clear();
             saveslot_index.clear();
             items_count = 0;
@@ -112,34 +118,33 @@ namespace ks {
                     slot = saves::readSlotMetadata(i - 1);
                 }
 
-                if (is_autosave) {
-                    add_menu_entry(-device::screen_width_half + 22, -40 + 32 * tile_index,
-                                   bn::format<64>("auto: {}", globals::i18n->label(slot.label)),
-                                   selection_index);
-                } else {
-                    add_menu_entry(-device::screen_width_half + 22, -40 + 32 * tile_index,
-                                   bn::format<64>("{}: {}", i, globals::i18n->label(slot.label)),
-                                   selection_index);
-                }
 
-                add_text_entry(-device::screen_width_half + 22, -40 + (32 * tile_index + 12),
+                add_menu_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index,
+                               globals::i18n->label(slot.label),
+                               selection_index);
+
+                add_text_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + (draw_y_offset * tile_index + 12),
                                bn::format<64>(
-                                   "{}: {}:{}:{}",
+                                   "{}: {}:{}:{} {}",
                                    globals::i18n->screens_playtime(),
                                    slot.hours_played,
                                    bn::format<2>(slot.minutes_played < 10 ? "0{}" : "{}", slot.minutes_played),
-                                   bn::format<2>(slot.seconds_played < 10 ? "0{}" : "{}", slot.seconds_played)),
+                                   bn::format<2>(slot.seconds_played < 10 ? "0{}" : "{}", slot.seconds_played),
+                                   is_autosave ? globals::i18n->definitions_autosave() : ""),
                                selection_index);
+
+                const auto thumbnail = background_metas::get_by_hash(slot.thumbnail_hash);
+                if (thumbnail != nullptr) {
+                    progress_icon_sprites->push_back(thumbnail->thumbnail.create_sprite(
+                        -device::screen_width_half + draw_x_from + 24, draw_y_from + 10 + draw_y_offset * tile_index));
+                }
 
                 saveslot_index.push_back(is_autosave ? -1 : i - 1);
                 globals::sound_update();
             }
 
-            static_text_sprites->push_back(
-                bn::sprite_items::ui_button_b.create_sprite(-device::screen_width_half + 30,
-                                                            device::screen_height_half - 22));
-
-            add_menu_entry(-device::screen_width_half + 40, device::screen_height_half - 22,
+            text_generator->set_right_alignment();
+            add_menu_entry(device::screen_width_half - draw_x_from, device::screen_height_half - 14,
                            globals::i18n->menu_back(), 3);
             need_repalette = true;
         }

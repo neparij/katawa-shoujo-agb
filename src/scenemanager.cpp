@@ -220,9 +220,10 @@ void SceneManager::save(unsigned short slot_index) {
 }
 
 
-void SceneManager::set_background(const bn::regular_bg_item& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time) {
+void SceneManager::set_background(const background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time) {
     custom_event.reset();
-    background_visual.bg_item = bg;
+    progress.metadata.thumbnail_hash = bg.hash;
+    background_visual.bg_item = bg.bg;
     background_visual.position_x = position_x;
     background_visual.position_y = position_y;
     background_visual.dissolve_time = dissolve_time;
@@ -266,7 +267,7 @@ void SceneManager::set_background_transition(const scene_transition_t transition
     background_visual.transition = transition;
 }
 
-void SceneManager::set_event(const bn::regular_bg_item &bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
+void SceneManager::set_event(const background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
     set_background(bg, 0, 0, transition, dissolve_time);
     custom_event = event.clone();
 }

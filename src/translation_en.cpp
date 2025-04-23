@@ -127,6 +127,7 @@ public:
 
     const char* definitions_no_scene() {return "No scene";}
     const char* definitions_nothing() {return "Nothing";}
+    const char* definitions_autosave() {return "(auto)";}
 
     const char* definitions_hi() {return "Hisao";}
     const char* definitions_ha() {return "Hanako";}

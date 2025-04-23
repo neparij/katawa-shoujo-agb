@@ -29,7 +29,7 @@ namespace ks {
     class MenuMain final : public MenuBase {
     public:
         explicit MenuMain(gameState_t &state): MenuBase(state) {
-            const bn::string<64> version("v0.2.9+91");
+            const bn::string<64> version(KS_AGB_VERSION);
             main_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
 
             static_text_sprites->clear();
