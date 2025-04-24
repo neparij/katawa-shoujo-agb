@@ -1,74 +1,57 @@
 #include "globals.h"
+
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_memory.h"
 #include "translation_en.cpp"
 #include "translation_ru.cpp"
 // #include "translation_en.cpp"
+#include "bn_sprite_palettes.h"
 #include "bn_sprite_ptr.h"
 #include "gba_systemcalls.h"
 #include "gba_video.h"
-#include "gsmplayer/player_gsm.h"
-#include "gsmplayer/player_8ad.h"
-#include "scenemanager.h"
-#include "variable_16x16_sprite_font.h"
-#include "videoplayer/video_player.h"
-
-#include "bn_bg_palettes.h"
-#include "bn_sprite_palettes.h"
 #include "ingametimer.h"
+#include "scenemanager.h"
 #include "sound_manager.h"
-
-#include "common_variable_8x8_sprite_font.h"
-// #include <variable_16x16_sprite_font.h>
-
-#include "bn_sprite_items_variable_16x16_font_hi_pal.h"
-#include "bn_sprite_items_variable_16x16_font_ha_pal.h"
-#include "bn_sprite_items_variable_16x16_font_emi_pal.h"
-#include "bn_sprite_items_variable_16x16_font_rin_pal.h"
-#include "bn_sprite_items_variable_16x16_font_li_pal.h"
-#include "bn_sprite_items_variable_16x16_font_shi_pal.h"
-#include "bn_sprite_items_variable_16x16_font_mi_pal.h"
-#include "bn_sprite_items_variable_16x16_font_ke_pal.h"
-#include "bn_sprite_items_variable_16x16_font_mu_pal.h"
-#include "bn_sprite_items_variable_16x16_font_nk_pal.h"
-#include "bn_sprite_items_variable_16x16_font_no_pal.h"
-#include "bn_sprite_items_variable_16x16_font_yu_pal.h"
-#include "bn_sprite_items_variable_16x16_font_sa_pal.h"
-#include "bn_sprite_items_variable_16x16_font_aki_pal.h"
-#include "bn_sprite_items_variable_16x16_font_hh_pal.h"
-#include "bn_sprite_items_variable_16x16_font_hx_pal.h"
-#include "bn_sprite_items_variable_16x16_font_emm_pal.h"
-#include "bn_sprite_items_variable_16x16_font_sk_pal.h"
-#include "bn_sprite_items_variable_16x16_font_mk_pal.h"
+#include "variable_16x16_sprite_font.h"
+#include "gsmplayer/player_8ad.h"
+#include "gsmplayer/player_gsm.h"
 
 namespace ks {
     namespace globals {
         bool exit_scenario = false;
-        ks::Translation *i18n; // = new TranslationEn();
-        ks::saves::SaveSettingsData settings = ks::saves::SaveSettingsData();
+        bn::unique_ptr<Translation> i18n;
+        saves::SaveSettingsData settings = saves::SaveSettingsData();
 
         void main_update() {
-            ks::SceneManager::update();
+            if (is_loading) {
+                BN_LOG("[WARN] Main update while loading!");
+            }
+            SceneManager::update();
             bn::core::update();
-            ks::sound_manager::update();
+            sound_manager::update();
         }
 
         void BN_CODE_IWRAM ISR_VBlank() {
-            ks::sound_manager::on_vblank();
-            timer::update();
+            if (!is_loading) {
+                sound_manager::on_vblank();
+                timer::update();
+            }
         }
 
         // Updates the sound only, while waiting for V-Blank.
         // Used on expensive operations to reduce sound-flickering.
         void BN_CODE_IWRAM sound_update() {
+            if (is_loading) {
+                BN_LOG("[WARN] Sound update while loading!");
+            }
             if (REG_VCOUNT == 159) {
                 while (REG_VCOUNT == 159) {
                 }
             } else {
                 VBlankIntrWait();
             }
-            ks::sound_manager::update();
+            sound_manager::update();
         }
 
         void init_engine(const bn::optional<bn::color> &clear_color) {
@@ -115,7 +98,7 @@ namespace ks {
             delete ks::animated_text_sprites;
             delete ks::text_generator;
             delete ks::dialog;
-            delete ks::globals::i18n;
+            i18n.reset();
 
             // bn::memory::log_alloc_ewram_status();
 
@@ -127,9 +110,10 @@ namespace ks {
             settings.language = tl;
 
             if (settings.language == LANG_ENGLISH) {
-                i18n = new(translation_buffer) TranslationEn();
+                // i18n = new(translation_buffer) TranslationEn();
+                i18n = bn::make_unique<TranslationEn>(TranslationEn());
             } else if (settings.language == LANG_RUSSIAN) {
-                i18n = new(translation_buffer) TranslationRu();
+                i18n = bn::make_unique<TranslationRu>(TranslationRu());
             } else {
                 BN_ERROR("Unkown language");
             }

@@ -48,7 +48,6 @@ namespace ks {
                     progress = saves::readSaveSlot(i);
                 }
                 BN_ASSERT(saves::isValid(&progress, i), "Invalid save slot");
-                is_loading = true;
 
                 state = GS_LOAD_GAME;
             }

@@ -221,7 +221,7 @@ namespace ks
             reset_message();
             reset_question();
 
-            if (actor.name() != "") {
+            if (actor.name() && *actor.name() != '\0') {
                 _actor = &actor;  // Store pointer to the character definition
             } else {
                 _actor = nullptr;  // No character
@@ -249,12 +249,12 @@ namespace ks
 
             ks::globals::sound_update();
 
-            if (_actor && _actor->name() != "") {
+            if (_actor != nullptr) {
                 BN_LOG("Actor: ", _actor->name());
                 _text_generator->set_palette_item(_actor->who_color);
                 _text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52, _actor->name(), _title_sprites);
                 _text_generator->set_palette_item(original_palette_item);  // Reset to default palette
-                int title_ends_x = -ks::device::screen_width_half + 8 + _text_generator->width(_actor->name());
+                const int title_ends_x = -ks::device::screen_width_half + 8 + _text_generator->width(_actor->name());
 
                 talkbox_actor_sprites.push_back(bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16, ks::device::screen_height_half - 44));
                 talkbox_actor_sprites.back().set_bg_priority(1);
@@ -331,7 +331,7 @@ namespace ks
                 // // TODO: Use stringview?
                 // _text_generator->generate(0, -56 + i * 20, answers.at(i), _answers_sprites);
                 // _answers_widths.push_back(_text_generator->width(answers.at(i)));
-                int answer_width = _text_generator->width(answers.at(i));
+                const int answer_width = _text_generator->width(answers.at(i));
                 _answers_widths.push_back(_text_generator->width(answers.at(i)));
                 if (answer_width <= _answers_half_width * 2) {
                     _text_generator->generate(-answer_width / 2, -56 + i * 20, answers.at(i), _answers_sprites);
@@ -364,15 +364,15 @@ namespace ks
         }
 
         void setup_answer_camera() {
-            int answer_width = _answers_widths.at(_answer_selected);
+            const int answer_width = _answers_widths.at(_answer_selected);
             if (answer_width <= _answers_half_width * 2) {
                 _answers_camera.reset();
                 _answers_camera_action.reset();
                 return;
             }
 
-            int camera_amplitude = answer_width - _answers_half_width * 2;
-            int camera_duration = camera_amplitude * ks::defaults::answer_camera_duration_multiplier;
+            const int camera_amplitude = answer_width - _answers_half_width * 2;
+            const int camera_duration = camera_amplitude * ks::defaults::answer_camera_duration_multiplier;
             _answers_camera = bn::camera_ptr::create(0,0);
             _answers_camera_action = bn::camera_move_loop_action(_answers_camera.value(), camera_duration, camera_amplitude, 0);
             _answers_camera->set_x(0);
@@ -392,7 +392,7 @@ namespace ks
 
         void set_answer_box_blending() {
             for (int i = 0; i < answerboxes_l.size(); i++) {
-                bool is_selected = i == _answer_selected;
+                const bool is_selected = i == _answer_selected;
                 answerboxes_l.at(i)->set_blending_enabled(!is_selected);
                 answerboxes_c.at(i)->set_blending_enabled(!is_selected);
                 answerboxes_r.at(i)->set_blending_enabled(!is_selected);
@@ -401,7 +401,7 @@ namespace ks
 
         void set_answers_palette() {
             for (int i = 0; i < _answers_sprites.size(); i++) {
-                bool is_selected = _answers_sprites_answer_index.at(i) == _answer_selected;
+                const bool is_selected = _answers_sprites_answer_index.at(i) == _answer_selected;
                 _answers_sprites.at(i).set_palette(is_selected ? beige_selected_palette_item : beige_palette_item);
             }
         }
@@ -414,7 +414,7 @@ namespace ks
                     if (_answers_camera.has_value() && _answer_selected == answer_index) {
                         cam_pos_x = _answers_camera->position().x();
                     }
-                    auto relative_position = bn::abs(char_sprite->position().x() - 4 - cam_pos_x);
+                    const auto relative_position = bn::abs(char_sprite->position().x() - 4 - cam_pos_x);
                     if (relative_position > _answers_half_width) {
                         char_sprite->set_visible(false);
                     } else {
@@ -424,13 +424,13 @@ namespace ks
             }
         }
 
-        int get_answer_index() {
+        int get_answer_index() const {
             return _answer_selected;
         }
 
 
-        void render_message_line(int cursor, bool immediately = false) {
-            const int max_width = ks::device::screen_width - 20;
+        void render_message_line(const int cursor, const bool immediately = false) {
+            constexpr int max_width = ks::device::screen_width - 20;
             const unsigned char space_width = _text_generator->width(" ");
             const bn::string_view message(_remaining_message);
 
@@ -441,9 +441,9 @@ namespace ks
                 reset_message();
             } else {
                 _text_render_timer.restart();
-                bool quoted_start = _actor && _actor->name() != "" && _text_render_prev_line_index == 0;
+                const bool quoted_start = _actor != nullptr && _text_render_prev_line_index == 0;
 
-                bn::string_view finalized_line(message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
+                const bn::string_view finalized_line(message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
                 BN_LOG("Render finalized line ", _text_render_line - 1);
                 BN_LOG(finalized_line);
                 render_text_by_chunks_with_updates<64>(
@@ -477,7 +477,7 @@ namespace ks
             bool quoted_start = false;
             bool quoted_end = false;
 
-            if (_actor && _actor->name() != "" && cursor == 0) {
+            if (_actor != nullptr && cursor == 0) {
                 _word_buffer.append("\"");
                 quoted_start = true;
             }
@@ -497,7 +497,7 @@ namespace ks
 
                 if (is_eol) {
                     _word_buffer.append(part);
-                    if (_actor && _actor->name() != "") {
+                    if (_actor != nullptr) {
                         _word_buffer.append("\"");
                         quoted_end = true;
                     }

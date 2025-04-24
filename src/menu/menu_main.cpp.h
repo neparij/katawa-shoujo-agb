@@ -62,6 +62,7 @@ namespace ks {
         }
 
         void on_update() override {
+            animate_progress_icons();
         }
 
         void on_back() override {
@@ -80,14 +81,20 @@ namespace ks {
                     break;
                 case 3:
                     state = GS_MENU_OPTIONS;
-                break;
+                    break;
                 default:
                     BN_ERROR("Menu option is not implemented");
             }
         }
 
     private:
-        static void draw_progress_icons() {
+        bool icons_appearing = false;
+        char icons_appeared = 0;
+        bn::optional<bn::blending_transparency_alpha_to_action> transparency_action;
+        bn::vector<bn::sprite_move_to_action, 2> move_to_actions;
+        bn::vector<bn::sprite_ptr, 2> progress_icon_sprites_partial; // Used for combined sprites for progress icons
+
+        void draw_progress_icons() {
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_16_tc4_shizune.create_sprite(111, 17));
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_15_tc3_shizune.create_sprite(113, 42));
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_14_tc2_shizune.create_sprite(93, 71));
@@ -108,6 +115,8 @@ namespace ks {
 
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_05_tc4_emi_1.create_sprite(14, 37));
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_05_tc4_emi_2.create_sprite(50, 42));
+            progress_icon_sprites_partial.push_back(progress_icon_sprites->back());
+
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_04_tc3_emi.create_sprite(32, 63));
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_03_tc2_emi.create_sprite(37, 64));
             globals::sound_update();
@@ -116,6 +125,59 @@ namespace ks {
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_01_tc2_hanako.create_sprite(52, 41));
 
             progress_icon_sprites->push_back(bn::sprite_items::ui_icon_00_tc1_hisao.create_sprite(71, 71));
+
+
+            if (selection == 0) {
+                for (auto &sprite: *progress_icon_sprites) {
+                    sprite.set_visible(false);
+                }
+                icons_appearing = true;
+            }
+        }
+
+        void animate_progress_icons() {
+            if (icons_appearing && icons_appeared < progress_icon_sprites->size()) {
+                const int icon_index = progress_icon_sprites->size() - 1 - icons_appeared;
+                auto &icon = progress_icon_sprites->at(icon_index);
+                if (transparency_action.has_value() && move_to_actions.size() > 0) {
+                    if (!transparency_action->done()) {
+                        transparency_action->update();
+                        for (auto &move_to_action: move_to_actions) {
+                            if (!move_to_action.done()) {
+                                move_to_action.update();
+                            }
+                        }
+                    } else {
+                        transparency_action.reset();
+                        move_to_actions.clear();
+                        icons_appeared++;
+                        // for (unsigned char i = progress_icon_sprites->size() - 1; i >= icon_index; --i) {
+                        //     progress_icon_sprites->at(i).set_blending_enabled(false);
+                        // }
+                        for (auto &sprite: *progress_icon_sprites) {
+                            sprite.set_blending_enabled(false);
+                        }
+                    }
+                } else {
+                    if (progress_icon_sprites_partial.size() != 0 && icon == progress_icon_sprites_partial.back()) {
+                        icons_appeared++;
+                        progress_icon_sprites_partial.pop_back();
+                        animate_progress_icons();
+                    } else {
+                        bn::blending::set_transparency_alpha(0.0);
+                        transparency_action = bn::blending_transparency_alpha_to_action(30, 1.0);
+
+                        icon.set_y(icon.y() + 8);
+                        move_to_actions.push_back(bn::sprite_move_to_action(icon,
+                                                                             30,
+                                                                             icon.position().x(),
+                                                                             icon.position().y() - 8));
+                    }
+
+                    icon.set_blending_enabled(true);
+                    icon.set_visible(true);
+                }
+            }
         }
     };
 }
