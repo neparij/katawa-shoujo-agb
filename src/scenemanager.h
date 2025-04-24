@@ -21,12 +21,6 @@
 #include "shaders/vram_dma_shader.h"
 
 
-// #define IF_NOT_EXIT(step)                         \
-// step;                                             \
-// if (ks::globals::exit_scenario) {                 \
-//     return;                                       \
-// }
-
 #define IF_NOT_EXIT(step)                         \
 if (ks::globals::exit_scenario) {                 \
     return;                                       \
@@ -147,8 +141,7 @@ public:
                                const ks::character_sprite_meta& sprite_meta,
                                const int position_x,
                                const int position_y,
-                               const bool position_change,
-                               const bool restoring);
+                               const bool position_change);
     static void set_character_position(const int character_index,
                                        // const ks::character_sprite_meta& sprite_meta,
                                        const int position_x,

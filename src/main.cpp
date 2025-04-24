@@ -207,7 +207,10 @@ int main() {
                 ks::secondary_background.reset();
                 ks::globals::main_update();
 
-                game((state == GS_START_NEW_GAME));
+                if (state == GS_LOAD_GAME) {
+                    ks::is_loading = true;
+                }
+                game(!ks::is_loading);
 
                 state = GS_RESET;
                 break;

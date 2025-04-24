@@ -7,6 +7,8 @@
 #include <bn_memory.h>
 #include <gba_types.h>
 
+#include "../globals.h"
+
 #define INTEGRITY_VERSION 2121210001
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
 
