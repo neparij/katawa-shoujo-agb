@@ -98,6 +98,8 @@ typedef unsigned char scene_transition_t;
 #define SCENE_TRANSITION_CAMERAFLASH ((scene_transition_t)22)
 #define SCENE_TRANSITION_CAMERAFLASHLONG ((scene_transition_t)23)
 #define SCENE_TRANSITION_PASSOUTOP1 ((scene_transition_t)24)
+#define SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG ((scene_transition_t)25)
+#define SCENE_TRANSITION_SHOWDOWN_THUNDER_SHORT ((scene_transition_t)26)
 
 typedef unsigned char script_t;
 #define SCRIPT_A0_ACTNAME  ((script_t)0xFF)

@@ -11,6 +11,9 @@ namespace ks::background_metas {
             case 0xFFFF0002: return &emi_knockeddown_facepullout;
             case 0xFFFF0003: return &emi_knockeddown_largepullout;
             case 0xFFFF0004: return &emi_knockeddown_legs;
+            case 0xFFFF0005: return &lilly_shizu_showdown_slices_lilly;
+            case 0xFFFF0006: return &lilly_shizu_showdown_slices_shizu;
+            case 0xFFFF0007: return &lilly_shizu_showdown_both;
             default: return &event_missing;
         }
     }

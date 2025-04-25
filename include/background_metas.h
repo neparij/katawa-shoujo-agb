@@ -179,7 +179,6 @@
 #include "background_metas/hana_library_gasp.h"
 #include "background_metas/hanako_crayon2.h"
 #include "background_metas/rin_relief_up_large.h"
-#include "background_metas/lilly_shizu_showdown_large.h"
 #include "background_metas/rin_rain_towards.h"
 #include "background_metas/emi_bed_happy.h"
 #include "background_metas/busride.h"
@@ -594,7 +593,6 @@ namespace ks::background_metas {
             case 0xCF7F47FE: return &hana_library_gasp;
             case 0xB41BC914: return &hanako_crayon2;
             case 0xC378B782: return &rin_relief_up_large;
-            case 0x03ABA3D1: return &lilly_shizu_showdown_large;
             case 0xB0964F97: return &rin_rain_towards;
             case 0xA88DD10E: return &emi_bed_happy;
             case 0x8F2AB0B8: return &busride;

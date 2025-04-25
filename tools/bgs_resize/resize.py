@@ -10,7 +10,8 @@ QUANTIZE = True
 IGNORE_IMAGES = [
     "hisao_class",
     "emi_knockeddown_large",
-    "emi_knockeddown"
+    "emi_knockeddown",
+    "lilly_shizu_showdown_full"
 ]
 
 BG_INCLUDE_VFX_IMAGES = [

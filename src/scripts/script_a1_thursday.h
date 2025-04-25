@@ -34,7 +34,6 @@
 #include "background_metas/school_dormext_half.h"
 #include "background_metas/school_dormbathroom.h"
 #include "background_metas/school_scienceroom.h"
-#include "background_metas/lilly_shizu_showdown_large.h"
 #include "background_metas/lilly_shizu_showdown.h"
 #include "background_metas/school_council_ss.h"
 #include "background_metas/school_council_ni.h"
@@ -164,6 +163,9 @@
 #include "rin_basic_close.h"
 #include "rin_relaxed_close.h"
 #include "rin_negative_close.h"
+#include "../events/lilly_shizu_showdown_slices.cpp.h"
+#include "../events/lilly_shizu_showdown_lilly.cpp.h"
+#include "../events/lilly_shizu_showdown_shizu.cpp.h"
 namespace ks {
     class ScriptA1Thursday {
         public:
