@@ -29,6 +29,7 @@
 #include "translation.h"
 #include "video_4ls_agmv.h"
 #include "video_op_1_agmv.h"
+#include "../../butano/butano/src/bn_bgs_manager.h"
 #include "savefile/save_file.h"
 #include "shaders/vram_dma_shader.h"
 #include "utils/lz77.h"
@@ -517,6 +518,24 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         fade_reset();
         return;
     }
+    if (transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG || transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_SHORT) {
+        fade_out(ks::globals::colors::WHITE, 15);
+        if (to.has_value()) {
+            main_background.reset();
+            ks::globals::main_update();
+            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            main_background->set_priority(3);
+            main_background->set_z_order(10);
+            if (custom_event.has_value()) {
+                (*custom_event)->set_background(main_background.value());
+                (*custom_event)->init();
+            }
+            ks::globals::sound_update();
+        }
+        fade_in(ks::globals::colors::WHITE, transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG ? 180 : 90);
+        fade_reset();
+        return;
+    }
     BN_ERROR("Transition not implemented: ", transition);
 }
 
@@ -708,17 +727,15 @@ void SceneManager::update_visuals() {
     ks::globals::main_update();
 
     /// CHANGE BACKGROUNDS (WITH DISSOLVE)
-    BN_LOG("CHANGE BACKGROUNDS (WITH DISSOLVE)");
     if (background_want_change) {
-        BN_LOG("WANT TO CHANGE!");
+        BN_LOG("BACKGROUND WANT TO CHANGE");
         bool background_change_fallback = false;
         if (background_want_dissolve) {
-            BN_LOG("WANT TO DISSOLVE!");
             secondary_background.reset();
             secondary_background = background_visual.bg_item->create_bg_optional(background_visual.position_x, background_visual.position_y);
             if (secondary_background.has_value()) {
                 ks::globals::sound_update();
-                BN_LOG("WILL DISSOLVE!");
+                BN_LOG("WITH DISSOLVE");
                 secondary_background->set_priority(3);
                 secondary_background->set_z_order(9);
 
@@ -745,23 +762,25 @@ void SceneManager::update_visuals() {
 
                 ks::globals::sound_update();
             } else {
-                BN_LOG("!!!!!!!! background_change_fallback !!!!!!!!!");
+                BN_LOG("WITH DISSOLVE - FAILED");
+                BN_LOG("[WARN] background_change_fallback flag was set");
                 background_change_fallback = true;
             }
         }
 
         if (background_want_transition) {
-            BN_LOG("WANT TO TRANSITION!");
+            BN_LOG("PERFORM BACKGROUND TRANSITION");
             perform_transition(background_visual.transition, background_visual.bg_item);
             background_visual.transition = SCENE_TRANSITION_NONE;
         } else if (!background_want_dissolve || background_change_fallback) {
             if (background_change_fallback) {
                 BN_LOG("BG CHANGE FALLBACK!");
+            } else {
+                BN_LOG("CHANGE WITHOUT DISSOLVE");
             }
+
+            // TODO: Fix the background change artifacts (see Lilly vs Shizu showdown event)
             main_background.reset();
-            // if (custom_event.has_value()) {
-            //     custom_event.reset();
-            // }
             main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             main_background->set_priority(3);
             main_background->set_z_order(10);
@@ -777,9 +796,8 @@ void SceneManager::update_visuals() {
     }
 
     /// SHOW BACKGROUNDS (WITH DISSOLVE)
-    BN_LOG("SHOW BACKGROUNDS (WITH DISSOLVE)");
     if (background_want_show) {
-        BN_LOG("Will show BG with dissolve!");
+        BN_LOG("SHOW BACKGROUNDS (WITH DISSOLVE)");
         main_background.reset();
         main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
         main_background->set_priority(3);
@@ -815,6 +833,7 @@ void SceneManager::update_visuals() {
 
     /// STILL HAVE TRANSITIONS? PERFORM IT ANYWAY (example: PASSOUTP1)
     if (background_want_transition && background_visual.transition != SCENE_TRANSITION_NONE) {
+        BN_LOG("STILL HAVE TRANSITIONS. PERFORM IT ANYWAY");
         perform_transition(background_visual.transition);
         background_visual.transition = SCENE_TRANSITION_NONE;
     }
@@ -828,8 +847,8 @@ void SceneManager::update_visuals() {
     ks::globals::main_update();
 
     /// SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND
-    BN_LOG("SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND");
     if (characters_want_show) {
+        BN_LOG("SHOW AND MOVE CHARACTERS (WITH DISSOLVE)");
         bool will_blend = false;
         for (auto &visual : character_visuals) {
             if (!visual.bg_item.has_value()) {
@@ -866,6 +885,7 @@ void SceneManager::update_visuals() {
 
     // TODO: uncomment whe ready.
     if (background_want_move) {
+        BN_LOG("MOVE BACKGROUNDS");
         bg_moves.push_back(bn::regular_bg_move_to_action(*main_background,
                                                          20,
                                                          background_visual.position_x,
@@ -876,6 +896,7 @@ void SceneManager::update_visuals() {
                                    (visual.position_x != visual.background->position().x() ||
                                    visual.position_y != visual.background->position().y());
         if (character_want_move) {
+            BN_LOG("MOVE CHARACTERS");
             bg_moves.push_back(bn::regular_bg_move_to_action(*visual.background, 20, visual.position_x, visual.position_y));
             spr_moves.push_back(bn::sprite_move_to_action(*visual.sprite, 20,
                 visual.position_x + visual.offset_x + visual.sprite_meta->offset_x,
@@ -1320,7 +1341,7 @@ void SceneManager::pause(const int ticks) {
 void SceneManager::fade_in(const bn::color &color, const int steps) {
     bn::bg_palettes::set_fade(color, bn::fixed(1));
     bn::sprite_palettes::set_fade(color, bn::fixed(1));
-    for(int alpha = steps; alpha > 0; --alpha) {
+    for(int alpha = steps; alpha >= 0; --alpha) {
 
         bn::bg_palettes::set_fade(color, bn::fixed(alpha) / steps);
         bn::sprite_palettes::set_fade(color, bn::fixed(alpha) / steps);

@@ -1,5 +1,7 @@
 import hashlib
+import os
 import re
+import tempfile
 from typing import List, cast, Tuple
 
 from src.dto.assignment_item import AssignmentItem
@@ -39,8 +41,16 @@ class ScenarioReader:
         self._hack_latest_sprite_name = None
         self.linepack_events : List[SequenceItem] = []
 
+
     def read(self) -> List[SequenceGroup]:
-        with open(self.scenario_file, 'r', encoding="utf-8") as f:
+        """Reads the scenario file and returns a list of sequence groups."""
+
+        with tempfile.TemporaryFile(mode='w+t', encoding="utf-8") as f:
+            with open(self.scenario_file, 'r', encoding="utf-8") as source_file:
+                content = source_file.read()
+            content = scenario_rewrites(self.scenario_file, content)
+            f.write(content)
+            f.seek(0)
             lines = f.readlines()
 
         line_pack = []
@@ -158,14 +168,6 @@ class ScenarioReader:
 
         _hack_prepend_dialog_nvl_clear = self._hack_nvl_cleared
         self._hack_nvl_cleared = False
-
-        # TODO: REMOVE THIS WORKAROUND:
-        stripped_line = stripped_line.replace("ev showdown_large", "ev lilly_shizu_showdown_large") \
-            .replace("ev showdown_lilly", "ev lilly_shizu_showdown") \
-            .replace("ev showdown_shizu", "ev lilly_shizu_showdown") \
-            .replace("ev showdown", "ev lilly_shizu_showdown")\
-            .replace("show showdown_lilly_slice", "show ev lilly_shizu_showdown_large")\
-            .replace("show showdown_shizu_slice", "show ev lilly_shizu_showdown_large")
 
         # TODO: REMOVE THIS WORKAROUND:
         if stripped_line.startswith("show misha behind shizu at"):
@@ -324,9 +326,6 @@ class ScenarioReader:
             else:
                 position = BgShowPosition.DEFAULT
 
-            # if scene_bg_name.endswith("mural_start"):
-            #     # TODO: add missing backgrounds
-            #     return
             self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(scene_bg_name, position=position))
             return
 
@@ -608,6 +607,59 @@ def rewrite_motion_background(bg_name: str) -> str:
             # .replace("emi_knockeddown_legs", "emi_knockeddown")
             )
 
+def scenario_rewrites(scenario_file, content):
+    scenario_name = os.path.splitext(os.path.basename(scenario_file))[0]
+    if scenario_name == "script-a1-thursday":
+        return content.replace(
+            "        show showdown_lilly_slice:\n"
+            "            xpos 1.0\n"
+            "        show showdown_shizu_slice:\n"
+            "            xanchor 1.0 yalign 1.0\n"
+            "\n"
+            "        play sound sfx_draw\n"
+            "        show showdown_lilly_slice:\n"
+            "            easein 0.2 xalign 0.0 yalign 0.0\n"
+            "\n"
+            "        pause 0.2\n"
+            "\n"
+            "        play sound sfx_draw\n"
+            "        show showdown_shizu_slice:\n"
+            "            easein 0.2 xalign 1.0 yalign 1.0\n"
+            "\n"
+            "        pause 0.2\n",
+            # WITH
+            "        scene ev showdown_slices\n"
+        ).replace(
+            "        scene ev showdown\n"
+            "        with Fade(0.2, 0.0, 3.0, color=\"#FFF\")\n",
+            # WITH
+            "        scene ev lilly_shizu_showdown\n"
+            "        with showdown_thunder_long\n"
+        ).replace(
+            "        scene ev showdown\n"
+            "        with Fade(0.2, 0.0, 1.5, color=\"#FFF\")\n",
+            # WITH
+            "        scene ev lilly_shizu_showdown\n"
+            "        with showdown_thunder_short\n"
+        ).replace(
+            "        show ev showdown_large:\n"
+            "            size (1920, 1080) crop (0, 0, 5760, 3240)\n"
+            "            easeout 0.2 crop (672, 240, 1920, 1080)\n",
+            # WITH
+            "        show ev showdown_lilly\n"
+        ).replace(
+            "        show ev showdown_large:\n"
+            "            ease 0.2 crop (672, 240, 1920, 1080)\n",
+            # WITH
+            "        show ev showdown_lilly\n"
+        ).replace(
+            "        show ev showdown_large:\n"
+            "            ease 0.2 crop (3360, 384, 1920, 1080)\n",
+            # WITH
+            "        show ev showdown_shizu\n"
+        )
+    return content
+
 def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     # HISAO CLASS
     if bg_name == "hisao_class_start":
@@ -626,6 +678,14 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
         return "emi_knockeddown_legs", "EmiKnockeddownLegsEvent"
     elif bg_name == "emi_knockeddown":
         return "emi_knockeddown_largepullout", "EmiKnockeddownEvent"
+
+    # LILLY SHIZU SHOWDOWN
+    if bg_name == "showdown_slices":
+        return "lilly_shizu_showdown_slices_lilly", "LillyShizuShowdownSlicesEvent"
+    elif bg_name == "showdown_lilly":
+        return "lilly_shizu_showdown_both", "LillyShizuShowdownLillyEvent"
+    elif bg_name == "showdown_shizu":
+        return "lilly_shizu_showdown_both", "LillyShizuShowdownShizuEvent"
 
     return None, None
 
