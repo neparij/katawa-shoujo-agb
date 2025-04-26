@@ -79,6 +79,7 @@ GRAPHICS    	:=  graphics \
 					graphics/characters/kenji \
 					graphics/characters/nurse \
 					graphics/characters/yuuko \
+					graphics/characters/yuukoshang \
 					graphics/characters/muto \
 					../butano/common/graphics
 AUDIO       	:=  audio

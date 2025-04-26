@@ -30,6 +30,7 @@ namespace ks {
     public:
         explicit MenuMain(gameState_t &state): MenuBase(state) {
             const bn::string<64> version(KS_AGB_VERSION);
+            secondary_background.reset();
             main_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
 
             static_text_sprites->clear();
@@ -71,6 +72,7 @@ namespace ks {
         void on_select(const int option) override {
             switch (option) {
                 case 0:
+                    fade_out();
                     state = GS_START_NEW_GAME;
                     break;
                 case 1:

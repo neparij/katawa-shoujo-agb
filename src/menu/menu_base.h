@@ -21,8 +21,11 @@ namespace ks {
             selection = menu::get_and_reset_initial_selection();
             selection_indexes.clear();
             need_fadein = bn::bg_palettes::fade_intensity() == 1;
+            text_generator->set_bg_priority(1);
         }
-        virtual ~MenuBase() = default;
+        virtual ~MenuBase() {
+            text_generator->set_bg_priority(3);
+        }
 
         virtual void run() {
             while (state == initial_state) {
@@ -109,6 +112,11 @@ namespace ks {
                 items_count++;
             }
             add_text_entry(x, y, text, index);
+        }
+
+        void fade_out() {
+            ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(30);
+            ks::SceneManager::fade_out(ks::globals::colors::BLACK);
         }
 
     protected:

@@ -13,7 +13,7 @@
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
-#define KS_AGB_VERSION "0.3.0+32"
+#define KS_AGB_VERSION "0.3.1+00"
 #define KS_SHOW_4LS_INTRO true
 
 static const GBFS_FILE* fs = find_first_gbfs_file(nullptr);

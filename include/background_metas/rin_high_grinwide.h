@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_rin_high_grinwide.h"
-#include "bn_sprite_items_thumb_rin_high_grinwide.h"
+#include "bn_regular_bg_items_thumb_rin_high_grinwide.h"
 namespace ks::background_metas {
     constexpr inline background_meta rin_high_grinwide(
                      bn::regular_bg_items::rin_high_grinwide,
-                     bn::sprite_items::thumb_rin_high_grinwide,
+                     bn::regular_bg_items::thumb_rin_high_grinwide,
                      0xAD6C8B17);
 
 }

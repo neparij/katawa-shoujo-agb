@@ -198,9 +198,6 @@ int main() {
                 break;
             case GS_START_NEW_GAME:
             case GS_LOAD_GAME:
-                ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(30);
-                ks::SceneManager::fade_out(ks::globals::colors::BLACK);
-
                 ks::static_text_sprites->clear();
                 ks::progress_icon_sprites->clear();
                 ks::main_background.reset();

@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_city_street2.h"
-#include "bn_sprite_items_thumb_city_street2.h"
+#include "bn_regular_bg_items_thumb_city_street2.h"
 namespace ks::background_metas {
     constexpr inline background_meta city_street2(
                      bn::regular_bg_items::city_street2,
-                     bn::sprite_items::thumb_city_street2,
+                     bn::regular_bg_items::thumb_city_street2,
                      0x37483889);
 
 }

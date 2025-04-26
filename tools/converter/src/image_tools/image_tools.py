@@ -23,13 +23,15 @@ class ImageTools:
                num_color_cluster_passes: int = 256,
                num_tile_cluster_passes: int = 256,
                use_sample_palette: str | None = None,
-               add_boundary_pixels: bool = False):
+               add_boundary_pixels: bool = False,
+               target_height: int = 160,
+               target_size: tuple[int, int] = (256, 256)):
 
         if use_sample_palette:
             sample_palette_image = Image.open(use_sample_palette)
             # ImageTools.TRANSPARENT_COLOR = tuple(sample_palette_image.getpalette()[:3])
 
-        canvas = Image.new("RGB", (256, 256), ImageTools.TRANSPARENT_COLOR)
+        canvas = Image.new("RGB", target_size, ImageTools.TRANSPARENT_COLOR)
 
         print(f"Open: {input_filename}")
         source_image = Image.open(input_filename).convert("RGBA")
@@ -38,7 +40,6 @@ class ImageTools:
         cropped = source_image.crop((0, y_crop + y_offset, source_image.size[0], source_image.size[1] + y_offset))
 
         ratio = cropped.size[0] / cropped.size[1]
-        target_height = 160
         target_width = int(target_height * ratio)
 
         print(f"Resize: {input_filename}")
@@ -142,6 +143,16 @@ class ImageTools:
         colors = 16
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
                           remove_size=remove_size, remove_offset=remove_offset,
+                          num_color_cluster_passes=256, num_tile_cluster_passes=256,
+                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp",
+                          add_boundary_pixels=True)
+
+    @staticmethod
+    def resize_character_thumbnail(input_filename: str, output_filename: str, y_offset=0):
+        palettes = 2
+        colors = 16
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
+                          target_height=32, target_size=(32, 32),
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp",
                           add_boundary_pixels=True)
