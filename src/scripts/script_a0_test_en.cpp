@@ -6,7 +6,6 @@ namespace ks {
             static void a0_actname_scene1() {
                 ks::SceneManager::set_label(LABEL_A0_ACTNAME_SCENE1);
                 if (!ks::in_replay) {
-                    IF_NOT_EXIT(ks::SceneManager::autosave());
                 }
                 IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::op_snowywoods, 0, 0, SCENE_TRANSITION_NONE, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());

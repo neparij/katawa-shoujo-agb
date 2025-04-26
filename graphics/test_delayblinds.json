@@ -1,5 +1,6 @@
 {
     "type": "affine_bg",
     "compression": "auto_no_huffman",
+    "tiles_compression": "none",
     "colors_count": 128
 }

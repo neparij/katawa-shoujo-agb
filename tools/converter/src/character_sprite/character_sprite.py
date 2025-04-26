@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import re
@@ -59,6 +60,12 @@ class CharacterSprite:
                 f"{f'_{self.outfit}' if self.outfit else ''}"
                 f"{'_close' if self.close else ''}")
 
+    def to_thumb_name(self) -> str:
+        return (f"{self.character_name}_thumb"
+                f"{f'_{self.pose}' if self.pose else ''}"
+                f"{f'_{self.outfit}' if self.outfit else ''}"
+                f"{'_close' if self.close else ''}")
+
     def to_group_name(self) -> str:
         return (f"{self.character_name}"
                 f"{f'_{self.pose}' if self.pose else ''}"
@@ -85,6 +92,10 @@ class CharacterRegex:
 
     @staticmethod
     def yuuko() -> str:
+        return r'(?P<name>[^_]+)_(?P<emotion>[^_]+)(_(?P<pose>[^_]+))?$'
+
+    @staticmethod
+    def yuukoshang() -> str:
         return r'(?P<name>[^_]+)_(?P<emotion>[^_]+)(_(?P<pose>[^_]+))?$'
 
     @staticmethod
@@ -143,6 +154,12 @@ class CharacterDisplayableReplacements:
             # return '_'.join(parts[:-2] + [parts[-1], parts[-2]])
 
     @staticmethod
+    def yuukoshang(displayable_name: str) -> str:
+        parts = displayable_name.split('_')
+        if len(parts) > 1:
+            return '_'.join(parts[:-3] + [parts[-3], parts[-2], parts[-1]])
+
+    @staticmethod
     def kenji(displayable_name: str) -> str:
         return (displayable_name
                 .replace("happy", "basic_happy")
@@ -198,6 +215,15 @@ class CharacterSpritesGroup:
                 f"{f'_{self.outfit}' if self.outfit else ''}"
                 f"{'_close' if self.close else ''}")
 
+    def to_thumb_name(self) -> str:
+        return (f"{self.character_name}_thumb"
+                f"{f'_{self.pose}' if self.pose else ''}"
+                f"{f'_{self.outfit}' if self.outfit else ''}"
+                f"{'_close' if self.close else ''}")
+
+    def to_thumb_hash(self) -> str:
+        return hashlib.md5(self.to_thumb_name().encode()).hexdigest()[:4].upper()
+
 
 class CharacterSpritesReader:
     def __init__(self, input_dir: str):
@@ -205,15 +231,16 @@ class CharacterSpritesReader:
         self.character_groups: List[CharacterSpritesGroup] = []
 
     def process_all(self) -> List[CharacterSpritesGroup]:
-        # self.process_shizu()
-        # self.process_misha()
-        # self.process_emi()
-        # self.process_rin()
-        # self.process_lilly()
-        # self.process_hanako()
-        # self.process_kenji()
-        # self.process_nurse()
-        # self.process_yuuko()
+        self.process_shizu()
+        self.process_misha()
+        self.process_emi()
+        self.process_rin()
+        self.process_lilly()
+        self.process_hanako()
+        self.process_kenji()
+        self.process_nurse()
+        self.process_yuuko()
+        self.process_yuukoshang()
         self.process_muto()
         return self.character_groups
 
@@ -364,6 +391,17 @@ class CharacterSpritesReader:
                                 nude_if=lambda filename: CharacterNudeIf.default(filename))
         return self.character_groups
 
+    def process_yuukoshang(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("yuukoshang", "up", None, "smile", (96, 64), base_emotion_size=(64, 32)))
+        self.character_groups.append(
+            CharacterSpritesGroup("yuukoshang", "down", None, "smile", (96, 64), base_emotion_size=(64, 32)))
+
+        self._process_character("yuukoshang",
+                                regex=CharacterRegex.from_filename(CharacterRegex.yuukoshang()),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
     def process_muto(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(
             CharacterSpritesGroup("muto", "basic", None, "normal", (108, 52), base_origin_offset=-48)
@@ -415,15 +453,17 @@ class CharacterSpritesReader:
 
 
 class CharacterSpritesWriter:
-    def __init__(self, sprite_output_dir: str, sprite_headers_output_dir: str):
+    def __init__(self, sprite_output_dir: str, headers_dir: str):
         self.sprite_output_dir = sprite_output_dir
-        self.sprite_headers_dir = sprite_headers_output_dir
+        self.sprite_headers_dir = os.path.join(headers_dir, "sprite_metas")
 
     def write(self, group: CharacterSpritesGroup):
         default_sprite = next((sprite for sprite in group.sprites if sprite.emotion == group.base_emotion),
                               group.sprites[0])
         self.write_character_background(default_sprite, group.base_emotion_size, group.base_emotion_offset,
                                         group.base_origin_offset)
+        self.write_character_thumbnail(default_sprite, group.base_origin_offset)
+
         for sprite in group.sprites:
             self.write_character_sprite(sprite, group)
         group_metadata_name = group.to_group_name()
@@ -445,6 +485,25 @@ class CharacterSpritesWriter:
             "bpp_mode": "bpp_8",
             "colors_count": 128,
             "compression": "auto_no_huffman",  # or auto_no_huffman?
+            "tiles_compression": "none",
+        }
+
+        with open(output_filename, "w", encoding="utf-8") as json_file:
+            json.dump(metadata, json_file, indent=4)
+
+    def write_character_thumbnail(self, character: CharacterSprite, y_offset: int = 0):
+        os.makedirs(self.sprite_output_dir, exist_ok=True)
+        output_filename = os.path.join(self.sprite_output_dir, character.to_thumb_name())
+
+        ImageTools.resize_character_thumbnail(character.original_path, f'{output_filename}.bmp', y_offset)
+        self.write_character_thumbnail_metadata(f'{output_filename}.json')
+
+    def write_character_thumbnail_metadata(self, output_filename):
+        metadata = {
+            "type": "sprite",
+            "bpp_mode": "bpp_8",
+            "colors_count": 128,
+            "compression": "none",
         }
 
         with open(output_filename, "w", encoding="utf-8") as json_file:
@@ -493,6 +552,7 @@ class CharacterSpritesWriter:
             meta_file.write(f"#ifndef KS_SPRITEMETA_{meta_name.upper()}\n")
             meta_file.write(f"#define KS_SPRITEMETA_{meta_name.upper()}\n\n")
             meta_file.write(f'#include "character_sprite_meta.h"\n\n')
+            meta_file.write(f'#include "bn_sprite_items_{group.to_thumb_name()}.h"\n')
             # meta_file.write(f'#include "bn_sprite_item.h"\n\n')
             # meta_file.write(f'#include <bn_vector.h>\n\n')
             # for sprite in group.sprites:
@@ -503,9 +563,11 @@ class CharacterSpritesWriter:
             #             meta_file.write(f'#include "bn_sprite_items_{character_spr_name}_{xx:02X}_{yy:02X}.h"\n')
             meta_file.write(f'namespace ks::sprite_metas {{\n')
             meta_file.write(
-                f'    constexpr inline character_sprite_meta {meta_name}({group.base_emotion_offset[0] + group.base_emotion_size[0] // 2 - 128},\n')
-            meta_file.write(
-                f'                                           {group.base_emotion_offset[1] + group.base_emotion_size[1] // 2 - 128});\n')
+                f'    constexpr inline character_sprite_meta {meta_name}(\n'
+                f'                                           {group.base_emotion_offset[0] + group.base_emotion_size[0] // 2 - 128},\n'
+                f'                                           {group.base_emotion_offset[1] + group.base_emotion_size[1] // 2 - 128},\n'
+                f'                                           bn::sprite_items::{group.to_thumb_name()},\n'
+                f'                                           0x{group.to_thumb_hash()});\n')
             # for sprite in group.sprites:
             #     character_spr_name = f'{group.character_name}_spr_{group.pose}_{sprite.emotion}{f'_{sprite.outfit}' if sprite.outfit else ''}'
             #     # group.base_emotion_size[0]
@@ -520,3 +582,29 @@ class CharacterSpritesWriter:
             #     meta_file.write(f'    }};\n')
             meta_file.write(f'}}\n\n')
             meta_file.write(f'#endif  // KS_SPRITEMETA_{meta_name.upper()}\n')
+
+class CharacterMetaStorageWriter:
+    def __init__(self, headers_dir: str):
+        self.headers_dir = headers_dir
+
+    def write(self, groups: List[CharacterSpritesGroup]):
+        os.makedirs(self.headers_dir, exist_ok=True)
+        metas_filename = os.path.join(self.headers_dir, "character_sprite_metas.h")
+
+        with open(metas_filename, "w", encoding="utf-8") as f:
+            f.write(f"#ifndef KS_CHAR_METAS\n")
+            f.write(f"#define KS_CHAR_METAS\n\n")
+
+            for group in groups:
+                f.write(f'#include "sprite_metas/{group.to_group_name()}.h"\n')
+
+            f.write(f'namespace ks::character_sprite_metas {{\n')
+            f.write(f'    const character_sprite_meta* get_by_hash(const unsigned int hash) {{\n')
+            f.write(f'        switch (hash) {{\n')
+            for group in groups:
+                f.write(f'            case 0x{group.to_thumb_hash()}: return &sprite_metas::{group.to_group_name()};\n')
+            f.write(f'            default: return nullptr;\n')
+            f.write(f'        }}\n')
+            f.write(f'    }}\n\n')
+            f.write(f'}};\n\n')
+            f.write(f'#endif  // KS_CHAR_METAS\n')

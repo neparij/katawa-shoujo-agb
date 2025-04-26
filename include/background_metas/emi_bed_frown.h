@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_emi_bed_frown.h"
-#include "bn_sprite_items_thumb_emi_bed_frown.h"
+#include "bn_regular_bg_items_thumb_emi_bed_frown.h"
 namespace ks::background_metas {
     constexpr inline background_meta emi_bed_frown(
                      bn::regular_bg_items::emi_bed_frown,
-                     bn::sprite_items::thumb_emi_bed_frown,
+                     bn::regular_bg_items::thumb_emi_bed_frown,
                      0x18384747);
 
 }

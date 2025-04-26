@@ -2,11 +2,14 @@
 #define MENU_SAVES_CPP_H
 
 #include <bn_format.h>
-#include <bn_regular_bg_items_ui_bg_menu_inner.h>
+#include <bn_regular_bg_items_ui_bg_menu_saves_front.h>
+#include <bn_sprite_items_ui_bg_menu_saves_back_0.h>
+#include <bn_sprite_items_ui_bg_menu_saves_back_1.h>
+#include <bn_sprite_items_ui_bg_menu_saves_back_2.h>
 #include <bn_sprite_items_ui_button_b.h>
-#include <bn_sprite_items_thumb_hosp_room.h>
 
 #include "background_metas.h"
+#include "character_sprite_metas.h"
 #include "menu_base.h"
 #include "../ingametimer.h"
 
@@ -15,7 +18,11 @@ namespace ks {
     class MenuSaves final : public MenuBase {
     public:
         explicit MenuSaves(gameState_t &state): MenuBase(state) {
-            main_background = bn::regular_bg_items::ui_bg_menu_inner.create_bg(0, 0);
+            main_background.reset();
+            progress_icon_sprites->clear();
+            secondary_background = bn::regular_bg_items::ui_bg_menu_saves_front.create_bg(0, 0);
+            secondary_background->set_priority(1);
+            text_generator->set_bg_priority(1);
 
             total_saves = saves::getUsedSaveSlots();
             saves_from_cursor = total_saves;
@@ -49,6 +56,7 @@ namespace ks {
                 }
                 BN_ASSERT(saves::isValid(&progress, i), "Invalid save slot");
 
+                fade_out();
                 state = GS_LOAD_GAME;
             }
         }
@@ -98,6 +106,16 @@ namespace ks {
 
             static_text_sprites->clear();
             progress_icon_sprites->clear();
+            saveslot_thumbnails.clear();
+            progress_icon_sprites->push_back(bn::sprite_items::ui_bg_menu_saves_back_0.create_sprite(
+                -device::screen_width_half + 32, -device::screen_height_half + 32));
+            progress_icon_sprites->back().set_bg_priority(3);
+            progress_icon_sprites->push_back(bn::sprite_items::ui_bg_menu_saves_back_1.create_sprite(
+                -device::screen_width_half + 32, -device::screen_height_half + 32 + 64));
+            progress_icon_sprites->back().set_bg_priority(3);
+            progress_icon_sprites->push_back(bn::sprite_items::ui_bg_menu_saves_back_2.create_sprite(
+                -device::screen_width_half + 32, -device::screen_height_half + 32 + 128));
+            progress_icon_sprites->back().set_bg_priority(3);
             globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);
@@ -132,10 +150,24 @@ namespace ks {
                                    is_autosave ? globals::i18n->definitions_autosave() : ""),
                                selection_index);
 
-                const auto thumbnail = background_metas::get_by_hash(slot.thumbnail_hash);
-                if (thumbnail != nullptr) {
-                    progress_icon_sprites->push_back(thumbnail->thumbnail.create_sprite(
+                if (const auto thumbnail = background_metas::get_by_hash(slot.thumbnail_hash); thumbnail != nullptr) {
+                    saveslot_thumbnails.push_back(thumbnail->thumbnail.create_bg(
                         -device::screen_width_half + draw_x_from + 24, draw_y_from + 10 + draw_y_offset * tile_index));
+                    saveslot_thumbnails.back().set_priority(2);
+                    for (const auto &[thumbnail_hash, offset_x] : slot.thumbnail_characters) {
+                        if (thumbnail_hash != 0) {
+                            if (const auto character_thumbnail = character_sprite_metas::get_by_hash(thumbnail_hash);
+                                character_thumbnail != nullptr) {
+                                progress_icon_sprites->push_back(
+                                    character_thumbnail->thumbnail.create_sprite(
+                                        -device::screen_width_half + draw_x_from + 24 + offset_x,
+                                        draw_y_from + 10 + draw_y_offset * tile_index
+                                    )
+                                );
+                                progress_icon_sprites->back().set_bg_priority(2);
+                            }
+                        }
+                    }
                 }
 
                 saveslot_index.push_back(is_autosave ? -1 : i - 1);
@@ -150,6 +182,7 @@ namespace ks {
 
     private:
         bn::vector<short, 3> saveslot_index;
+        bn::vector<bn::regular_bg_ptr, 3> saveslot_thumbnails;
         unsigned short total_saves, saves_from_cursor;
     };
 }

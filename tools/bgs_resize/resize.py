@@ -11,7 +11,8 @@ IGNORE_IMAGES = [
     "hisao_class",
     "emi_knockeddown_large",
     "emi_knockeddown",
-    "lilly_shizu_showdown_full"
+    "lilly_shizu_showdown_full",
+    "lilly_shizu_showdown_large"
 ]
 
 BG_INCLUDE_VFX_IMAGES = [
@@ -43,18 +44,18 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
         if os.path.splitext(output_file_name)[0] in IGNORE_IMAGES:
             print(f"Skipping {image_file} as it is in the ignore list.")
             continue
-
-        try:
-            if quantize:
-                process_image_quantized(image_file, output_path, quantize_palettes)
-                create_json_metadata(output_path, quantize, unquant_colors)
-            else:
-                process_image(image_file, output_path, unquant_colors)
-                create_json_metadata(output_path, quantize, unquant_colors)
-
-            write_background_metadata(os.path.splitext(output_file_name)[0])
-        except Exception as e:
-            print(f"Error processing {image_file}: {e}")
+        #
+        # try:
+        #     if quantize:
+        #         process_image_quantized(image_file, output_path, quantize_palettes)
+        #         create_json_metadata(output_path, quantize, unquant_colors)
+        #     else:
+        #         process_image(image_file, output_path, unquant_colors)
+        #         create_json_metadata(output_path, quantize, unquant_colors)
+        #
+        write_background_metadata(os.path.splitext(output_file_name)[0])
+        # except Exception as e:
+        #     print(f"Error processing {image_file}: {e}")
 
 def process_image_quantized(input_path, output_path, quantize_palettes: int):
     canvas = Image.new("RGB", (256, 256), PINK_COLOR)
@@ -160,32 +161,22 @@ def process_image(input_path, output_path, colors : int = 256):
     print(f"Resized and saved: {output_path}")
 
 def process_image_savefile_thumbnail(input_path, output_path):
-    pink_background = Image.new("RGB", (64, 32), PINK_COLOR)
+    background = Image.new("RGB", (256, 256), PINK_COLOR)
     source_image = Image.open(input_path).convert("RGB")
 
     source_resized = ImageOps.fit(source_image, (48, 32), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
-    pink_background.paste(source_resized, (8, 0))
+    background.paste(source_resized, (104, 112))
 
-    palette_image = pink_background.convert("P", palette=Image.Palette.ADAPTIVE, colors=16)
-
-    palette = palette_image.getpalette()
-    palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
-
-    if PINK_COLOR not in palette_colors:
-        raise Exception(f"Pink color {PINK_COLOR} is not in the palette!")
-        # print(f"Warning: Pink color {PINK_COLOR} is not in the palette!")
-        return
-
-    first_color_index = palette_colors.index(PINK_COLOR)
-    remap = list(range(len(palette_colors)))
-    if first_color_index != 0:
-        remap[0], remap[first_color_index] = remap[first_color_index], remap[0]
-
-    img_remapped = palette_image.remap_palette(remap)
-
-    # Save the result as BMP
-    img_remapped.save(output_path, format="BMP")
-    print(f"Resized and saved: {output_path}")
+    converter = Tilequant(
+        background, PINK_COLOR,
+        tile_width=8,
+        tile_height=8,
+    )
+    quantized = converter.convert(num_palettes=4, colors_per_palette=16,
+                                  dithering_mode=DitheringMode.FLOYDSTEINBERG, dithering_level=0.5,
+                                  num_color_cluster_passes=0, num_tile_cluster_passes=0)
+    quantized.save(output_path, format="BMP")
+    print(f"Resized, quantized and saved: {output_path}")
 
 def create_json_metadata(image_path, quantize, unquant_colors: int):
     """Create a JSON metadata file for the image."""
@@ -197,9 +188,11 @@ def create_json_metadata(image_path, quantize, unquant_colors: int):
     if quantize:
         metadata["bpp_mode"] = "bpp_4_manual"
         metadata["compression"] = "auto_no_huffman"
+        metadata["tiles_compression"] = "none"
     else:
-        metadata["compression"] = "auto_no_huffman"
         metadata["colors"] = unquant_colors
+        metadata["compression"] = "auto_no_huffman"
+        metadata["tiles_compression"] = "none"
 
     #  * * `"compression"`: optional field which specifies the compression of the tiles, the colors and the map data:
     #  *   * `"none"`: uncompressed data (this is the default option).
@@ -217,9 +210,9 @@ def create_json_metadata(image_path, quantize, unquant_colors: int):
 def create_thumbnail_json_metadata(image_path):
     json_path = f"{os.path.splitext(image_path)[0]}.json"
     metadata = {
-        "type": "sprite",
-        "bpp_mode": "bpp_4",
-        "colors_count": 16,
+        "type": "regular_bg",
+        "bpp_mode": "bpp_4_manual",
+        "colors_count": 64,
         "compression": "auto_no_huffman",
     }
 
@@ -239,12 +232,12 @@ def write_background_metadata(background_name):
         meta_file.write(f"#define KS_BGMETA_{background_name.upper()}\n\n")
         meta_file.write(f'#include "background_meta.h"\n')
         meta_file.write(f'#include "bn_regular_bg_items_{background_name}.h"\n')
-        meta_file.write(f'#include "bn_sprite_items_thumb_{background_name}.h"\n')
+        meta_file.write(f'#include "bn_regular_bg_items_thumb_{background_name}.h"\n')
         meta_file.write(f'namespace ks::background_metas {{\n')
         meta_file.write(
             f'    constexpr inline background_meta {background_name}(\n'
             f'                     bn::regular_bg_items::{background_name},\n'
-            f'                     bn::sprite_items::thumb_{background_name},\n'
+            f'                     bn::regular_bg_items::thumb_{background_name},\n'
             f'                     0x{hashed_id});\n\n')
         meta_file.write(f'}}\n\n')
         meta_file.write(f'#endif  // KS_BGMETA_{background_name.upper()}\n')
@@ -310,6 +303,6 @@ def resize_backgrounds():
     # resize_images_in_directory(input_directory)
 
 if __name__ == "__main__":
-    # resize_backgrounds()
+    resize_backgrounds()
     resize_events()
-    # write_background_metadata_store()
+    write_background_metadata_store()

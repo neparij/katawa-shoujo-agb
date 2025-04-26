@@ -3,5 +3,6 @@
     "compression": "auto_no_huffman",
     "colors": 192,
     "big": true,
-    "map_compression": "none"
+    "map_compression": "none",
+    "tiles_compression": "none"
 }

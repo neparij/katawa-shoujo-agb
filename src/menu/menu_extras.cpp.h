@@ -43,6 +43,7 @@ namespace ks {
         }
 
         ~MenuExtras() override {
+            secondary_background.reset();
         }
 
         void on_back() override {
@@ -96,6 +97,8 @@ namespace ks {
             } else if (selection == 4) {
                 secondary_background = bn::regular_bg_items::ui_bg_menu_extras_hanako.create_bg(0, 0);
             }
+
+            secondary_background->set_priority(2);
         }
     };
 }

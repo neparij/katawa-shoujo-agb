@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_school_nurseoffice.h"
-#include "bn_sprite_items_thumb_school_nurseoffice.h"
+#include "bn_regular_bg_items_thumb_school_nurseoffice.h"
 namespace ks::background_metas {
     constexpr inline background_meta school_nurseoffice(
                      bn::regular_bg_items::school_nurseoffice,
-                     bn::sprite_items::thumb_school_nurseoffice,
+                     bn::regular_bg_items::thumb_school_nurseoffice,
                      0x3F49AFE5);
 
 }

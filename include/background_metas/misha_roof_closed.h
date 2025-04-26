@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_misha_roof_closed.h"
-#include "bn_sprite_items_thumb_misha_roof_closed.h"
+#include "bn_regular_bg_items_thumb_misha_roof_closed.h"
 namespace ks::background_metas {
     constexpr inline background_meta misha_roof_closed(
                      bn::regular_bg_items::misha_roof_closed,
-                     bn::sprite_items::thumb_misha_roof_closed,
+                     bn::regular_bg_items::thumb_misha_roof_closed,
                      0x34C16FF3);
 
 }

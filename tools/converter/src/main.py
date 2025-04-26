@@ -6,7 +6,7 @@ from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
 from src.translation_reader import TranslationReader
 from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSprite, CharacterSpritesGroup, \
-    CharacterSpritesWriter
+    CharacterSpritesWriter, CharacterMetaStorageWriter
 
 
 def main():
@@ -100,9 +100,12 @@ def main():
         for group in character_sprites_groups:
             print(f"{group_counter}/{len(character_sprites_groups)} - Processing character group: {group}")
             writer = CharacterSpritesWriter(os.path.join(ksagb_path, "graphics", "characters", group.character_name),
-                                            os.path.join(ksagb_path, "include", "sprite_metas"))
+                                            os.path.join(ksagb_path, "include"))
             writer.write(group)
             group_counter += 1
+
+        meta_writer = CharacterMetaStorageWriter(os.path.join(ksagb_path, "include"))
+        meta_writer.write(character_sprites_groups)
         exit(0)
 
 if __name__ == "__main__":

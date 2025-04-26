@@ -30,7 +30,7 @@ from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, Condit
 from src.utils import sanitize_function_name, sanitize_comment_text
 
 DEFAULT_LOCALE = "en"
-PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "muto"]
+PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
 
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup],
@@ -145,7 +145,7 @@ class ScenarioWriter:
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
                 sequences.append(f'if (!ks::in_replay) {{')
-                sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
+                # sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
                 sequences.append(f'}}')
             elif label.is_initial:
                 sequences.append(f'SKIP_IF_LOAD_ANOTHER_SCENE(SCRIPT_{label.name.upper()});')
@@ -340,7 +340,7 @@ class ScenarioWriter:
             # f'IF_NOT_EXIT(ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
-        if not bg.background in self.backgrounds:
+        if not bg.background in self.backgrounds and bg.background != "black":
             self.backgrounds.append(bg.background)
 
         if bg.position == BgShowPosition.BGLEFT:
@@ -354,14 +354,13 @@ class ScenarioWriter:
         else:
             raise TypeError("Unknown BgShowPosition type")
 
-        return [
-            # * 60 == 1x speed; * 30 == 2x speed.
-            f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
-            # f'IF_NOT_EXIT(ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
-        # if bg.position == BgShowPosition.DEFAULT:
-        #     return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background});']
-        # else:
-        #     return [f'ks::SceneManager::set_background(bn::regular_bg_items::{bg.background}, {position[0]}, {position[1]});']
+        if bg.background == "black":
+            return [
+                f'IF_NOT_EXIT(ks::SceneManager::hide_background({bg.transition.value}, {int(bg.dissolve_time * 30)}));',
+                f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));'
+            ]
+        else:
+            return [f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
 
     def process_sequence_condition(self, group: SequenceGroup, condition: ConditionItem) -> List[str]:
         matching_scenario_item = next((item for item in self.scenario if item.name == condition.function_callback),
@@ -467,11 +466,10 @@ class ScenarioWriter:
         # TODO: rework, that's for test purposes only for the moment
         if show.sprite == "black":
             # TODO: show black behind bg
-            return [f'// TODO: Blackout ON.']
+            return [f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));']
         elif show.sprite not in PROCESSED_CHARACTERS:
             return [f'// TODO: Show {show.sprite}']
         else:
-            character_index = self.characters.get(show.sprite)
             if show.position == ShowPosition.TWOLEFT:
                 # position = (-48, 0)
                 position = (int(-0.2 * 240), 0)
@@ -505,9 +503,6 @@ class ScenarioWriter:
 
             result = []
 
-            if character_index is None:
-                character_index = len(self.characters)
-                self.characters[show.sprite] = character_index
             if show.variant:
                 show.variant = show.variant.replace("_ss", "").replace("_ni", "")
                 show.sprite = show.sprite.replace("_ss", "").replace("_ni", "")
@@ -537,6 +532,10 @@ class ScenarioWriter:
                 elif show.sprite == "yuuko":
                     displayable = CharacterDisplayableReplacements.yuuko(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.yuuko(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "yuukoshang":
+                    displayable = CharacterDisplayableReplacements.yuukoshang(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.yuukoshang(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "kenji":
                     print(displayable)
@@ -572,15 +571,15 @@ class ScenarioWriter:
 
                 if show.position == ShowPosition.DEFAULT:
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name}));')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}));')
                 else:
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character({character_index}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, ks::sprite_metas::{character_sprite_meta_name}, {position[0]}, {position[1]}));')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, {position[0]}, {position[1]}));')
                 return result
             # Move if not default position and variant is not provided
             if show.position != ShowPosition.DEFAULT:
                 result.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set_character_position({character_index}, {position[0]}, {position[1]}));')
+                    f'IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_{show.sprite.upper()}, {position[0]}, {position[1]}));')
 
             return result
 
@@ -595,22 +594,19 @@ class ScenarioWriter:
 
     def process_sequence_hide(self, group: SequenceGroup, hide: HideItem) -> List[str]:
         if hide.sprite == "black":
-            return [f'// TODO: Blackout OFF.']
+            return [f'IF_NOT_EXIT(ks::SceneManager::disable_fill());']
         elif hide.sprite not in PROCESSED_CHARACTERS:
             return [f'// TODO: Hide {hide.sprite}']
         else:
-            character_index = self.characters.get(hide.sprite)
-            if character_index is None:
-                raise f'"{hide.sprite}" is not in character index. Attempt to hide not shown character?'
-            return [f'ks::SceneManager::hide_character({character_index});']
+            return [f'ks::SceneManager::hide_character(CHARACTER_{hide.sprite.upper()});']
 
     def process_sequence_bg_transform(self, group: SequenceGroup, bg_transform: BackgroundTransformItem) -> List[str]:
         # TODO: remove deuplicated positions code!!!!!!
         print(bg_transform.position)
         if bg_transform.position == BgShowPosition.BGLEFT:
-            position = (240 * 0.05, 0)
+            position = (8, 0)
         elif bg_transform.position == BgShowPosition.BGRIGHT:
-            position = (-240 * 0.05, 0)
+            position = (-8, 0)
         elif bg_transform.position == BgShowPosition.CENTER:
             position = (0, 0)
         else:
@@ -624,12 +620,9 @@ class ScenarioWriter:
         ]
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
-        character_index = self.characters.get(show_transform.sprite)
         print(show_transform)
-        if character_index is None:
-            raise f'"{show_transform.sprite}" is not in character index. Attempt to transform not shown character?'
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::set_character_position({character_index}, {show_transform.x}, 0));']
+            f'IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_{show_transform.sprite.upper()}, {show_transform.x}, 0));']
 
     def process_sequence_pause(self, group: SequenceGroup, pause: PauseItem) -> List[str]:
         return [f'IF_NOT_EXIT(ks::SceneManager::pause({int(pause.value * 60)}));']

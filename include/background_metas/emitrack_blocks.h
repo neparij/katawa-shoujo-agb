@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_emitrack_blocks.h"
-#include "bn_sprite_items_thumb_emitrack_blocks.h"
+#include "bn_regular_bg_items_thumb_emitrack_blocks.h"
 namespace ks::background_metas {
     constexpr inline background_meta emitrack_blocks(
                      bn::regular_bg_items::emitrack_blocks,
-                     bn::sprite_items::thumb_emitrack_blocks,
+                     bn::regular_bg_items::thumb_emitrack_blocks,
                      0xDF65B386);
 
 }

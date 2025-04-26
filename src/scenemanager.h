@@ -40,6 +40,7 @@ struct background_visuals_ptr
 {
     bn::optional<bn::regular_bg_item> current_bg_item;
     bn::optional<bn::regular_bg_item> bg_item;
+    bn::optional<bn::color> fill_color;
     // bn::regular_bg_ptr* background;
     bn::fixed alpha;
     bool will_show;
@@ -52,7 +53,7 @@ struct background_visuals_ptr
 };
 
 struct character_restoration_data {
-    int index;
+    character_t character;
     bn::regular_bg_item& bg_item;
     bn::sprite_item& sprite_item;
     character_sprite_meta& sprite_meta;
@@ -63,6 +64,7 @@ struct character_restoration_data {
 struct character_visuals_ptr
 {
     int index;
+    character_t character;
     bn::optional<bn::regular_bg_item> current_bg_item;
     bn::optional<bn::sprite_item> current_sprite_item;
     bn::optional<bn::regular_bg_item> bg_item;
@@ -103,6 +105,7 @@ public:
     static void set_line_hash(const unsigned int line_hash);
     static void autosave();
     static void save(unsigned short slot_index);
+    static void prepare_save_metadata();
 
     // Acions
 
@@ -115,6 +118,8 @@ public:
     static void set_background_position(const int position_x,
                                        const int position_y);
     static void set_background_transition(scene_transition_t transition);
+    static void enable_fill(bn::color color);
+    static void disable_fill();
 
     static void set_event(const background_meta& bg,
                           const CustomEvent& event,
@@ -125,31 +130,30 @@ public:
     static void show_dialog(const char* actor_name, int tl_key);
     static void show_dialog_question(bn::vector<ks::answer_ptr, 5> answers);
     static int get_dialog_question_answer();
-    static void show_character(const int character_index,
-                               const bn::regular_bg_item& bg,
-                               const bn::sprite_item& sprite,
-                               const ks::character_sprite_meta& sprite_meta);
-    static void show_character(const int character_index,
-                               const bn::regular_bg_item& bg,
-                               const bn::sprite_item& sprite,
+    static void show_character(const character_t character,
                                const ks::character_sprite_meta& sprite_meta,
+                               const bn::regular_bg_item& bg,
+                               const bn::sprite_item& sprite);
+    static void show_character(const character_t character,
+                               const ks::character_sprite_meta& sprite_meta,
+                               const bn::regular_bg_item& bg,
+                               const bn::sprite_item& sprite,
                                const int position_x,
                                const int position_y);
-    static void show_character(const int character_index,
+    static void show_character(const character_t character,
+                               const ks::character_sprite_meta& sprite_meta,
                                const bn::regular_bg_item& bg,
                                const bn::sprite_item& sprite,
-                               const ks::character_sprite_meta& sprite_meta,
                                const int position_x,
                                const int position_y,
                                const bool position_change);
-    static void set_character_position(const int character_index,
-                                       // const ks::character_sprite_meta& sprite_meta,
+    static void set_character_position(const character_t character,
                                        const int position_x,
                                        const int position_y);
     // static void set_character_window_visibility(bn::regular_bg_ptr bg, bn::fixed target_x, bn::fixed target_y);
     static void set_character_window_visibility(bn::regular_bg_ptr bg);
-    static void hide_character(const int character_index);
-    static void hide_character(const int character_index, const bool need_update);
+    static void hide_character(const character_t character);
+    static void hide_character(const character_t character, const bool need_update, bool remove);
 
     static void perform_transition(scene_transition_t transition, const bn::optional<bn::regular_bg_item>& to);
     static void perform_transition(scene_transition_t transition);
@@ -190,6 +194,7 @@ public:
     constexpr const unsigned int* translation_index() const { return _script_tl_index; }
 
 private:
+    static int get_character_visual_index(character_t character, bool create_if_not_found = true);
     const char* _scenario;
     const char* _locale;
     const unsigned int* _script_tl_index;
@@ -209,12 +214,13 @@ extern ks::DialogBox* dialog;
 extern bn::optional<bn::regular_bg_ptr> main_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
 extern bn::optional<bn::affine_bg_ptr> transition_bg;
+extern bn::optional<bn::color> fill_color;
 // extern bn::optional<void (*)()> event_init;
 // extern bn::optional<void (*)()> event_update;
 // extern bn::optional<void (*)()> event_destroy;
 extern bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
-extern bn::vector<character_visuals_ptr, 8> character_visuals;
-extern bn::vector<character_restoration_data, 8> character_restoration;
+extern bn::vector<character_visuals_ptr, 4> character_visuals;
+extern bn::vector<character_restoration_data, 4> character_restoration;
 extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;

@@ -329,6 +329,10 @@ class ScenarioReader:
             self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(scene_bg_name, position=position))
             return
 
+        elif stripped_line.startswith("scene black"):
+            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem("black"))
+            return
+
         elif stripped_line.startswith("scene ev") or stripped_line.startswith("show ev"):
             parts = stripped_line.split()
             event_bg_name = parts[2].removesuffix(":")

@@ -23,7 +23,7 @@ void flash_switch_bank(int bank);
 
 namespace ks {
     namespace saves {
-        constexpr unsigned short TOTAL_SAVE_SLOTS = 500;
+        constexpr unsigned short TOTAL_SAVE_SLOTS = 400;
         constexpr unsigned char BLOCK_END = 0xFF;
 
         struct alignas(4) SaveIntegrityData {
@@ -52,6 +52,12 @@ namespace ks {
             }
         };
 
+        struct SaveSlotMetadataCharacters {
+            // This stores character thumbnail hash in 0x0000 - 0xFFFF range
+            unsigned short thumbnail_hash;
+            short offset_x;
+        };
+
         struct alignas(4) SaveSlotMetadata {
             bool has_data;
             script_t script;
@@ -59,7 +65,7 @@ namespace ks {
 
             // This stores current background hash in 0x00000000 - 0xFFFFFFFF range
             unsigned int thumbnail_hash;
-            // bn::sprite_item& thumbnail_ref;
+            SaveSlotMetadataCharacters thumbnail_characters[4];
 
             unsigned short hours_played;
             unsigned char minutes_played;

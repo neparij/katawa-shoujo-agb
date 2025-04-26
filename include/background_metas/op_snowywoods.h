@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_op_snowywoods.h"
-#include "bn_sprite_items_thumb_op_snowywoods.h"
+#include "bn_regular_bg_items_thumb_op_snowywoods.h"
 namespace ks::background_metas {
     constexpr inline background_meta op_snowywoods(
                      bn::regular_bg_items::op_snowywoods,
-                     bn::sprite_items::thumb_op_snowywoods,
+                     bn::regular_bg_items::thumb_op_snowywoods,
                      0xF97499F3);
 
 }

@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_shizu_houseext_lights.h"
-#include "bn_sprite_items_thumb_shizu_houseext_lights.h"
+#include "bn_regular_bg_items_thumb_shizu_houseext_lights.h"
 namespace ks::background_metas {
     constexpr inline background_meta shizu_houseext_lights(
                      bn::regular_bg_items::shizu_houseext_lights,
-                     bn::sprite_items::thumb_shizu_houseext_lights,
+                     bn::regular_bg_items::thumb_shizu_houseext_lights,
                      0x1ACD3224);
 
 }

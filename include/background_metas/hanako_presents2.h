@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_hanako_presents2.h"
-#include "bn_sprite_items_thumb_hanako_presents2.h"
+#include "bn_regular_bg_items_thumb_hanako_presents2.h"
 namespace ks::background_metas {
     constexpr inline background_meta hanako_presents2(
                      bn::regular_bg_items::hanako_presents2,
-                     bn::sprite_items::thumb_hanako_presents2,
+                     bn::regular_bg_items::thumb_hanako_presents2,
                      0xF68FAE25);
 
 }

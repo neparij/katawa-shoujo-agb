@@ -3,11 +3,11 @@
 
 #include "background_meta.h"
 #include "bn_regular_bg_items_city_graveyard.h"
-#include "bn_sprite_items_thumb_city_graveyard.h"
+#include "bn_regular_bg_items_thumb_city_graveyard.h"
 namespace ks::background_metas {
     constexpr inline background_meta city_graveyard(
                      bn::regular_bg_items::city_graveyard,
-                     bn::sprite_items::thumb_city_graveyard,
+                     bn::regular_bg_items::thumb_city_graveyard,
                      0xC288CB4C);
 
 }
