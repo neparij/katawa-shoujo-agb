@@ -47,7 +47,8 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 2. **Python 3.12** for tools.
 3. **[Butano](https://github.com/neparij/butano/tree/custom_audio_upgrade)**
    fork with custom audio integrated (uses branch `custom_audio_upgrade`)
-4. ***For CLion IDE users***:
+4. **[libsavgba](https://github.com/laqieer/libsavgba)**
+5. ***For CLion IDE users***:
     - Install `compiledb`
         - macOS:
           ```bash
@@ -84,6 +85,7 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 - **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
 - **[8ad](https://pineight.com/gba/#8ad)** by Damian Yerrick.
 - **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the AGMV video codec.
+- **[libsavgba](https://github.com/laqieer/libsavgba)** by laqieer for Flash saving abilities.
 - **[Katawa Shoujo: Re-Engineered](https://codeberg.org/fhs/katawa-shoujo-re-engineered)** by
   **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katawa Shoujo to the modern Ren'Py
   engine.
