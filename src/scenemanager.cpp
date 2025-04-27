@@ -669,6 +669,7 @@ void SceneManager::update_visuals() {
     }
 
     bool is_scene_visible = !fill_color.has_value();
+    BN_LOG("Is scene visible: ", is_scene_visible);
 
     bool should_change_scene_visibilit = background_visual.fill_color.has_value() != fill_color.has_value();
     bool should_disable_scene = should_change_scene_visibilit && background_visual.fill_color.has_value();
@@ -708,10 +709,16 @@ void SceneManager::update_visuals() {
             visual.will_hide = true;
         }
 
-        // if (visual.background.has_value() && background_want_transition) {
-        //     visual.will_hide = true;
-        //     visual.will_show = visual.current_bg_item.has_value() && should_enable_scene;
-        // }
+        if (visual.background.has_value() && background_want_transition) {
+            visual.will_hide = true;
+            visual.will_show = visual.current_bg_item.has_value() && should_enable_scene;
+        }
+
+        if (!visual.background.has_value() && visual.bg_item.has_value() && should_enable_scene) {
+            BN_LOG("SHOW ANYWAAAY!!!");
+            BN_LOG("Who: ", visual.character);
+            visual.will_show = true;
+        }
 
         characters_want_dissolve = characters_want_dissolve || visual.will_show || visual.will_hide;
         characters_want_show = characters_want_show || visual.will_show;
@@ -1049,7 +1056,7 @@ void SceneManager::update_visuals() {
                 visual.background->set_priority(2);
                 visual.background->set_z_order(10);
                 visual.background->set_blending_enabled(true);
-                visual.background->set_visible(is_scene_visible);
+                visual.background->set_visible(is_scene_visible || should_enable_scene);
                 // visual.background->set_visible(is_scene_visible && !should_disable_scene); // To not display on just loaded scenes
                 ks::globals::sound_update();
 
@@ -1059,7 +1066,7 @@ void SceneManager::update_visuals() {
                 visual.sprite->set_bg_priority(2);
                 visual.sprite->set_z_order(10);
                 visual.sprite->set_blending_enabled(true);
-                visual.sprite->set_visible(is_scene_visible);
+                visual.sprite->set_visible(is_scene_visible || should_enable_scene);
                 // visual.sprite->set_visible(is_scene_visible && !should_disable_scene); // To not display on just loaded scenes
                 ks::globals::sound_update();
 
