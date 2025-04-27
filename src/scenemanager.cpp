@@ -1077,7 +1077,7 @@ void SceneManager::update_visuals() {
                 will_blend = true;
             }
         }
-        if (will_blend && is_scene_visible) {
+        if (will_blend && (is_scene_visible || should_enable_scene)) {
             bn::blending::set_transparency_alpha(bn::fixed(0));
             blend_action = bn::blending_transparency_alpha_to_action(20, 1.0);
         }
