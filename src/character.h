@@ -40,17 +40,20 @@ struct character_definition
     const char* what_prefix = "\"";
     const char* what_suffix = "\"";
     bn::sprite_palette_item who_color = bn::sprite_items::variable_16x16_font.palette_item();
+    const char* log_color = "15";
 
     character_definition with(const char* (*new_name)() = nullptr,
                               const char* new_prefix = nullptr,
                               const char* new_suffix = nullptr,
-                              bn::sprite_palette_item new_who_color = bn::sprite_items::variable_16x16_font.palette_item()) const
+                              bn::sprite_palette_item new_who_color = bn::sprite_items::variable_16x16_font.palette_item(),
+                              const char* new_log_color = nullptr) const
     {
         return character_definition{
                                     new_name ? new_name : name,
                                     new_prefix ? new_prefix : what_prefix,
                                     new_suffix ? new_suffix : what_suffix,
-                                    new_who_color};
+                                    new_who_color,
+                                    new_log_color ? new_log_color : log_color};
     }
 
     character_definition with_name(const char* new_name) const
@@ -62,7 +65,8 @@ struct character_definition
                                     []() { return static_name(dynamic_name); },
                                     what_prefix,
                                     what_suffix,
-                                    who_color};
+                                    who_color,
+                                    log_color};
     }
 };
 
@@ -87,28 +91,28 @@ constexpr character_definition centered = base;
 constexpr character_definition extend = base;
 
 
-const character_definition hi = base.with([]() { return ks::globals::i18n->definitions_hi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_hi_pal.palette_item());
-const character_definition ha = base.with([]() { return ks::globals::i18n->definitions_ha(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_ha_pal.palette_item());
-const character_definition emi = base.with([]() { return ks::globals::i18n->definitions_emi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_emi_pal.palette_item());
-const character_definition rin = base.with([]() { return ks::globals::i18n->definitions_rin(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_rin_pal.palette_item());
-const character_definition li = base.with([]() { return ks::globals::i18n->definitions_li(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_li_pal.palette_item());
-const character_definition shi = base.with([]() { return ks::globals::i18n->definitions_shi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_shi_pal.palette_item());
-const character_definition mi = base.with([]() { return ks::globals::i18n->definitions_mi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mi_pal.palette_item());
-const character_definition ke = base.with([]() { return ks::globals::i18n->definitions_ke(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_ke_pal.palette_item());
+const character_definition hi = base.with([]() { return ks::globals::i18n->definitions_hi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_hi_pal.palette_item(), "108");
+const character_definition ha = base.with([]() { return ks::globals::i18n->definitions_ha(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_ha_pal.palette_item(), "93");
+const character_definition emi = base.with([]() { return ks::globals::i18n->definitions_emi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_emi_pal.palette_item(), "202");
+const character_definition rin = base.with([]() { return ks::globals::i18n->definitions_rin(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_rin_pal.palette_item(), "88");
+const character_definition li = base.with([]() { return ks::globals::i18n->definitions_li(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_li_pal.palette_item(), "228");
+const character_definition shi = base.with([]() { return ks::globals::i18n->definitions_shi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_shi_pal.palette_item(), "81");
+const character_definition mi = base.with([]() { return ks::globals::i18n->definitions_mi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mi_pal.palette_item(), "213");
+const character_definition ke = base.with([]() { return ks::globals::i18n->definitions_ke(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_ke_pal.palette_item(), "172");
 const character_definition mu = base.with([]() { return ks::globals::i18n->definitions_mu(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mu_pal.palette_item());
 const character_definition nk = base.with([]() { return ks::globals::i18n->definitions_nk(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_nk_pal.palette_item());
-const character_definition no = base.with([]() { return ks::globals::i18n->definitions_no(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_no_pal.palette_item());
-const character_definition yu = base.with([]() { return ks::globals::i18n->definitions_yu(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_yu_pal.palette_item());
-const character_definition sa = base.with([]() { return ks::globals::i18n->definitions_sa(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_sa_pal.palette_item());
-const character_definition aki = base.with([]() { return ks::globals::i18n->definitions_aki(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_aki_pal.palette_item());
-const character_definition hh = base.with([]() { return ks::globals::i18n->definitions_hh(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_hh_pal.palette_item());
-const character_definition hx = base.with([]() { return ks::globals::i18n->definitions_hx(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_hx_pal.palette_item());
-const character_definition emm = base.with([]() { return ks::globals::i18n->definitions_emm(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_emm_pal.palette_item());
-const character_definition sk = base.with([]() { return ks::globals::i18n->definitions_sk(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_sk_pal.palette_item());
-const character_definition mk = base.with([]() { return ks::globals::i18n->definitions_mk(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mk_pal.palette_item());
+const character_definition no = base.with([]() { return ks::globals::i18n->definitions_no(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_no_pal.palette_item(), "250");
+const character_definition yu = base.with([]() { return ks::globals::i18n->definitions_yu(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_yu_pal.palette_item(), "28");
+const character_definition sa = base.with([]() { return ks::globals::i18n->definitions_sa(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_sa_pal.palette_item(), "117");
+const character_definition aki = base.with([]() { return ks::globals::i18n->definitions_aki(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_aki_pal.palette_item(), "196");
+const character_definition hh = base.with([]() { return ks::globals::i18n->definitions_hh(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_hh_pal.palette_item(), "75");
+const character_definition hx = base.with([]() { return ks::globals::i18n->definitions_hx(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_hx_pal.palette_item(), "67");
+const character_definition emm = base.with([]() { return ks::globals::i18n->definitions_emm(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_emm_pal.palette_item(), "131");
+const character_definition sk = base.with([]() { return ks::globals::i18n->definitions_sk(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_sk_pal.palette_item(), "25");
+const character_definition mk = base.with([]() { return ks::globals::i18n->definitions_mk(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mk_pal.palette_item(), "130");
 
-const character_definition mi_shi = base.with([]() { return ks::globals::i18n->definitions_mi_shi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mi_pal.palette_item());
-const character_definition mi_not_shi = base.with([]() { return ks::globals::i18n->definitions_mi_not_shi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mi_pal.palette_item());
+const character_definition mi_shi = base.with([]() { return ks::globals::i18n->definitions_mi_shi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mi_pal.palette_item(), "213");
+const character_definition mi_not_shi = base.with([]() { return ks::globals::i18n->definitions_mi_not_shi(); }, nullptr, nullptr, bn::sprite_items::variable_16x16_font_mi_pal.palette_item(), "213");
 
 const character_definition mystery = base.with([]() { return ks::globals::i18n->definitions_mystery(); });
 

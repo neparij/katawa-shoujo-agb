@@ -305,11 +305,6 @@ void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
         return;
     }
 
-    BN_LOG("SH1");
-    // _cached_actor = actor;
-    // _cached_tl_key = tl_key;
-
-    BN_LOG("SH2");
     while (!ks::globals::exit_scenario) {
         // ks::scenario::gbfs_reader::get_tl<1024>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key], message);
         BN_LOG("TextDB pointer in global scope:", (u32)text_db);
@@ -517,7 +512,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
     if (transition == SCENE_TRANSITION_SHUTEYE) {
         transition_fadeout(bn::affine_bg_items::test_eyes, 2,  false);
         // background_visual.bg_item.reset();
-        // main_background.reset();
+        main_background.reset();
         return;
     }
     if (transition == SCENE_TRANSITION_OPENEYE) {
@@ -540,7 +535,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
     if (transition == SCENE_TRANSITION_HANDS_IN) {
         transition_fadeout(bn::affine_bg_items::test_handsdissolve, 16,  false);
         // background_visual.bg_item.reset();
-        // main_background.reset();
+        main_background.reset();
         return;
     }
     if (transition == SCENE_TRANSITION_HANDS_OUT) {
@@ -698,26 +693,37 @@ void SceneManager::update_visuals() {
     bool characters_want_hide = false;
     for (auto &visual : character_visuals) {
         // characters_changed = characters_changed || visual.current_bg_item != visual.bg_item;
-        bool character_want_show = !visual.current_bg_item.has_value() && visual.bg_item.has_value();
+        bool character_want_show = !visual.current_bg_item.has_value() && visual.bg_item.has_value() && is_scene_visible;
         bool character_want_hide = visual.background.has_value() &&
                                    visual.current_bg_item.has_value() && !visual.bg_item.has_value();
 
         visual.will_show = character_want_show;
         visual.will_hide = character_want_hide;
 
+        if (visual.will_show) {
+            BN_LOG("Will show character ", visual.character, ". Reason: ", "character_want_show");
+        }
+        if (visual.will_hide) {
+            BN_LOG("Will hide character ", visual.character, ". Reason: ", "character_want_hide");
+        }
+
         if (visual.background.has_value() && (background_want_change || background_want_hide || background_want_show)) {
             visual.will_hide = true;
+            BN_LOG("Will hide character ", visual.character, ". Reason: ", "visual.background.has_value() && background_want_transition");
         }
 
         if (visual.background.has_value() && background_want_transition) {
             visual.will_hide = true;
-            visual.will_show = visual.current_bg_item.has_value() && should_enable_scene;
+            BN_LOG("Will hide character ", visual.character, ". Reason: ", "visual.background.has_value() && background_want_transition");
+            visual.will_show = visual.current_bg_item.has_value() && (should_enable_scene || (!should_disable_scene && is_scene_visible));
+            if (visual.will_show) {
+                BN_LOG("Will show character ", visual.character, ". Reason: ", "visual.current_bg_item.has_value() && (should_enable_scene || (!should_disable_scene && is_scene_visible))");
+            }
         }
 
         if (!visual.background.has_value() && visual.bg_item.has_value() && should_enable_scene) {
-            BN_LOG("SHOW ANYWAAAY!!!");
-            BN_LOG("Who: ", visual.character);
             visual.will_show = true;
+            BN_LOG("Will show character ", visual.character, ". Reason: ", "!visual.background.has_value() && visual.bg_item.has_value() && should_enable_scene");
         }
 
         characters_want_dissolve = characters_want_dissolve || visual.will_show || visual.will_hide;
@@ -736,7 +742,7 @@ void SceneManager::update_visuals() {
     /// CHANGE CHARACTER POSES
     BN_LOG("CHANGE CHARACTER POSES");
     for (auto &visual : character_visuals) {
-        if (!visual.bg_item.has_value() || !visual.sprite_item.has_value()) {
+        if (!visual.bg_item.has_value() || !visual.sprite_item.has_value() || !is_scene_visible) {
             visual.current_bg_item.reset();
             visual.current_sprite_item.reset();
             continue;
@@ -837,7 +843,9 @@ void SceneManager::update_visuals() {
         }
 
         if (should_disable_scene) {
-            main_background->set_visible(false);
+            if (main_background.has_value()) {
+                main_background->set_visible(false);
+            }
             for (auto& visual : character_visuals) {
                 if (visual.background.has_value()) {
                     visual.background->set_visible(false);
@@ -846,7 +854,6 @@ void SceneManager::update_visuals() {
                     visual.sprite->set_visible(false);
                 }
             }
-            fill_color = background_visual.fill_color;
         }
 
         main_background.reset();
@@ -902,7 +909,9 @@ void SceneManager::update_visuals() {
             BN_LOG("PERFORM BACKGROUND TRANSITION");
             if (should_enable_scene) {
                 BN_LOG(">>>>>>>>>>>> should enable scene!");
-                main_background->set_visible(true);
+                if (main_background.has_value()) {
+                    main_background->set_visible(true);
+                }
                 for (auto& visual : character_visuals) {
                     if (visual.background.has_value()) {
                         visual.background->set_visible(true);
@@ -916,7 +925,9 @@ void SceneManager::update_visuals() {
             perform_transition(background_visual.transition, background_visual.bg_item);
             background_visual.transition = SCENE_TRANSITION_NONE;
             if (should_disable_scene) {
-                main_background->set_visible(false);
+                if (main_background.has_value()) {
+                    main_background->set_visible(false);
+                }
                 for (auto& visual : character_visuals) {
                     if (visual.background.has_value()) {
                         visual.background->set_visible(false);
@@ -925,7 +936,6 @@ void SceneManager::update_visuals() {
                         visual.sprite->set_visible(false);
                     }
                 }
-                fill_color = background_visual.fill_color;
             }
         } else if (!background_want_dissolve || background_change_fallback) {
             if (background_change_fallback) {
@@ -967,7 +977,9 @@ void SceneManager::update_visuals() {
         ks::globals::sound_update();
 
         if (should_enable_scene) {
-            main_background->set_visible(true);
+            if (main_background.has_value()) {
+                main_background->set_visible(true);
+            }
             for (auto& visual : character_visuals) {
                 if (visual.background.has_value()) {
                     visual.background->set_visible(true);
@@ -1006,8 +1018,10 @@ void SceneManager::update_visuals() {
     /// STILL HAVE TRANSITIONS? PERFORM IT ANYWAY (example: PASSOUTP1)
     if (background_want_transition && background_visual.transition != SCENE_TRANSITION_NONE) {
         BN_LOG("STILL HAVE TRANSITIONS. PERFORM IT ANYWAY");
-        if (should_enable_scene && main_background.has_value()) {
-            main_background->set_visible(true);
+        if (should_enable_scene) {
+            if (main_background.has_value()) {
+                main_background->set_visible(false);
+            }
             for (auto& visual : character_visuals) {
                 if (visual.background.has_value()) {
                     visual.background->set_visible(true);
@@ -1016,12 +1030,13 @@ void SceneManager::update_visuals() {
                     visual.sprite->set_visible(true);
                 }
             }
-            fill_color.reset();
         }
         perform_transition(background_visual.transition);
         background_visual.transition = SCENE_TRANSITION_NONE;
-        if (should_disable_scene && main_background.has_value()) {
-            main_background->set_visible(false);
+        if (should_disable_scene) {
+            if (main_background.has_value()) {
+                main_background->set_visible(false);
+            }
             for (auto& visual : character_visuals) {
                 if (visual.background.has_value()) {
                     visual.background->set_visible(false);
@@ -1030,8 +1045,13 @@ void SceneManager::update_visuals() {
                     visual.sprite->set_visible(false);
                 }
             }
-            fill_color = background_visual.fill_color;
         }
+    }
+
+    if (background_visual.fill_color) {
+        fill_color = background_visual.fill_color;
+    } else {
+        fill_color.reset();
     }
 
     /// If we have actually same background but different event - we should initialize it anyway!
