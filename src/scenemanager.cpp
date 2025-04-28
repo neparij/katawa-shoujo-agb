@@ -41,10 +41,9 @@
 
 namespace ks {
 
-// alignas(4) u8* EWRAM_DATA text_db;
-u8 EWRAM_DATA text_db[131072];
-// alignas(4) u8 EWRAM_DATA text_db[65536];
+u8* text_db;
 u32 text_db_size;
+bool text_db_allocated;
 EWRAM_DATA bn::string<1024> message;
 EWRAM_DATA bn::vector<bn::string<128>, 5> answers_messages;
 
@@ -55,9 +54,7 @@ bn::optional<bn::regular_bg_ptr> main_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
 bn::optional<bn::affine_bg_ptr> transition_bg;
 bn::optional<bn::color> fill_color;
-// bn::optional<void (*)()> event_init;
-// bn::optional<void (*)()> event_update;
-// bn::optional<void (*)()> event_destroy;
+
 bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
 bn::vector<character_visuals_ptr, 4> character_visuals;
 bn::vector<character_restoration_data, 4> character_restoration;
@@ -75,12 +72,12 @@ bool in_replay = false;
 bool is_loading = false;
 unsigned char savedata_answer_index = 0;
 
-bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;
-bn::vector<bn::sprite_ptr, 64> static_text_sprites;
-bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
+EWRAM_BSS bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;
+EWRAM_BSS bn::vector<bn::sprite_ptr, 64> static_text_sprites;
+EWRAM_BSS bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 
 void SceneManager::free_resources() {
-
+    BN_LOG("Free resources...");
     background_visual.bg_item.reset();
     main_background.reset();
     secondary_background.reset();
@@ -96,8 +93,11 @@ void SceneManager::free_resources() {
     }
     character_visuals.clear();
 
-    BN_LOG("Free resources...");
-    bn::core::update();
+    if (text_db_allocated) {
+        BN_LOG("Free text database...");
+        bn::memory::ewram_free(text_db);
+        text_db_allocated = false;
+    }
 }
 
 void SceneManager::set(const ks::SceneManager instance) {
@@ -110,49 +110,23 @@ void SceneManager::set(const ks::SceneManager instance) {
     scene.reset();
     BN_LOG("Set SM Instance");
     scene = instance;
-
-    // ks::scenario::gbfs_reader::read_scenario_text_db(scene->scenario(), scene->locale(), text_db);
-
     u32 src_len = 0;
-    u8* compressed_data;
 
     BN_LOG("Read Scene File...");
-    auto filename = bn::string<32>(scene->scenario()).append(".").append(scene->locale()).c_str();
-    compressed_data = (u8*)gbfs_get_obj(fs, filename, &src_len);
+    const auto filename = bn::string<32>(scene->scenario()).append(".").append(scene->locale()).c_str();
+    const u8 *compressed_data = (u8 *) gbfs_get_obj(fs, filename, &src_len);
 
     text_db_size = (compressed_data[1]) | (compressed_data[2] << 8) | (compressed_data[3] << 16);
-    // BN_LOG("Uncompressed size:", text_db_size);
-    // BN_LOG("Compressed data header: ",
-    //        "Byte 0: ", compressed_data[0],
-    //        ", Byte 1: ", compressed_data[1],
-    //        ", Byte 2: ", compressed_data[2],
-    //        ", Byte 3: ", compressed_data[3]);
 
-    // if (text_db) {
-    //     free(text_db);
-    // //     // bn::memory::ewram_free(text_db);
-    // }
+    BN_LOG("EWRAM free: ", bn::memory::available_alloc_ewram());
+    BN_LOG("Allocate ", text_db_size, " bytes for text database...");
+    BN_ASSERT(!text_db_allocated, "Text database already allocated!");
+    text_db = (u8*)bn::memory::ewram_alloc(text_db_size);
+    text_db_allocated = true;
 
-
-    BN_LOG("EWRAM BEFORE ", bn::memory::available_alloc_ewram());
-    BN_LOG("Allocate memory...");
-    BN_LOG("Size: ", text_db_size);
-    // bn::memory::ewram_free(text_db);
-    // text_db = (u8*)bn::memory::ewram_alloc(text_db_size);
-    // text_db = (u8*)aligned_alloc(8, text_db_size);
-    // text_db = (u8*)malloc(text_db_size);
-    // BN_LOG("OK!");
-    // if (!text_db) {
-    //     BN_ERROR("Error: Failed to allocate memory for text_db.");
-    //     return;
-    // }
     BN_LOG("Decompress Scene file...");
     LZ77UnCompWRAM((u32)compressed_data, (u32)text_db);
-    BN_LOG("EWRAM AFTER ", bn::memory::available_alloc_ewram());
-    // BN_LOG("Decoded TextDB:", text_db);
-    // for (u32 i = 0; i < 16; i++) {
-    //     BN_LOG("TextDB byte [", i, "]: ", text_db[i], " Char: ", (char)text_db[i]);
-    // }
+    BN_LOG("EWRAM after allocation: ", bn::memory::available_alloc_ewram());
 
     BN_LOG("Set Window boundaries");
     left_window.set_boundaries(-80,-120,80,0);
@@ -1257,6 +1231,8 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
         return;
     }
 
+    free_resources();
+
     // Free last sound chunks
     ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
     ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
@@ -1546,7 +1522,6 @@ void SceneManager::exit_scenario_from_ingame_menu() {
     }
 
     free_resources();
-    bn::memory::ewram_free(text_db);
 }
 
 void SceneManager::pause(const int ticks) {
@@ -1673,7 +1648,7 @@ void SceneManager::transition_fadeout(const bn::affine_bg_item &transition_item,
     }
 
     bn::memory::ewram_free(shader.tiles_buffer);
-    BN_LOG("EWRAM AFTER FREE", bn::memory::available_alloc_ewram());
+    BN_LOG("EWRAM AFTER FREE: ", bn::memory::available_alloc_ewram());
 
 
     bn::blending::set_fade_alpha(0.0);

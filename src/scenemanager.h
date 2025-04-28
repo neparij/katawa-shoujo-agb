@@ -200,12 +200,9 @@ private:
     const unsigned int* _script_tl_index;
 };
 
-// alignas(4) extern u8* text_db;
-// alignas(4) extern EWRAM_DATA u8* text_db;
-// alignas(4) extern EWRAM_DATA u8 text_db[131072];
-extern EWRAM_DATA u8 text_db[131072];
-// alignas(4) extern EWRAM_DATA u8 text_db[65536];
+extern u8* text_db;
 extern u32 text_db_size;
+extern bool text_db_allocated;
 extern bn::string<1024> message;
 
 extern bn::optional<ks::SceneManager> scene;
