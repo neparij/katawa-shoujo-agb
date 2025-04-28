@@ -1231,13 +1231,6 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
         return;
     }
 
-    free_resources();
-
-    // Free last sound chunks
-    ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
-    ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
-    ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
-    ks::globals::sound_update();
     ks::timer::pause_ingame_timer();
 
     bool is_act_video = true;
@@ -1248,11 +1241,21 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
         is_act_video = false;
     } else if (is_act_video && agmv_file != video_op_1_agmv) {
         clear_color = globals::colors::WHITE;
+        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(120);
+        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_SOUND>(120);
+        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_AMBIENT>(120);
         fade_out(clear_color, 120);
     } else {
         clear_color = clear;
     }
 
+    // Free last sound chunks
+    ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+    ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
+    ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
+    ks::globals::sound_update();
+
+    free_resources();
     ks::globals::release_engine();
     ks::globals::init_engine(clear_color);
 

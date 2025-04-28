@@ -158,7 +158,7 @@ int main() {
     ks::globals::settings = ks::saves::readSettings();
     ks::timer::init();
 
-    ks::SceneManager::fade_in(ks::globals::colors::WHITE, 30);
+    ks::SceneManager::fade_out(ks::globals::colors::BLACK, 30);
     if constexpr (KS_SHOW_4LS_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
         ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);

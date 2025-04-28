@@ -78,10 +78,6 @@ namespace ks {
             if (option == 6) {
                 on_back();
             } else {
-                ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
-                ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
-                ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
-
                 if (option == 0) {
                     SceneManager::show_video(video_op_1_agmv, video_op_1_agmv_size, "video_op_1.gsm",
                                              globals::colors::BLACK);
