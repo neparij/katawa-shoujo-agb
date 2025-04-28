@@ -29,26 +29,10 @@
 #include "bn_sprite_items_ui_talkbox_actor_end.h"
 
 #include <BN_LOG.h>
-#include <bn_size.h>
 #include <bn_sprite_actions.h>
-#include <bn_sprite_tiles_ptr.h>
-#include <gba_video.h>
 
 #include "bn_sprite_items_variable_16x16_font_beige_pal.h"
 #include "bn_sprite_items_variable_16x16_font_beige_selected_pal.h"
-#include "../../butano/butano/hw/include/bn_hw_irq.h"
-
-#include "bn_sprite_items_transition_block_0.h"
-#include "bn_sprite_items_transition_block_1.h"
-#include "bn_sprite_items_transition_block_2.h"
-#include "bn_sprite_items_transition_block_3.h"
-static u32* tile_addr_ptr[2];
-static unsigned char gradients[120];
-static u8* gradients_ptr;
-static u8 gradient_iteration = 0;
-
-// Предварительно вычисленные паттерны для каждой строки
-static u32 pattern_buffer[128];   // Буфер для текущего шаблона (не в IWRAM)
 
 namespace ks
 {
@@ -249,84 +233,6 @@ namespace ks
             talkbox2 = bn::sprite_items::ui_talkbox2.create_sprite(-ks::device::screen_width_half + 32 + 64, ks::device::screen_height_half - 32);
             talkbox3 = bn::sprite_items::ui_talkbox3.create_sprite(-ks::device::screen_width_half + 32 + 128, ks::device::screen_height_half - 32);
             talkbox4 = bn::sprite_items::ui_talkbox4.create_sprite(-ks::device::screen_width_half + 32 + 192, ks::device::screen_height_half - 32);
-
-            // talkbox1 = bn::sprite_items::transition_block_0.create_sprite(-ks::device::screen_width_half + 32, -ks::device::screen_height_half + 32);
-            // talkbox2 = bn::sprite_items::transition_block_1.create_sprite(-ks::device::screen_width_half + 32 + 64, -ks::device::screen_height_half + 32);
-            // talkbox3 = bn::sprite_items::transition_block_2.create_sprite(-ks::device::screen_width_half + 32 + 128, -ks::device::screen_height_half + 32);
-            // talkbox4 = bn::sprite_items::transition_block_3.create_sprite(-ks::device::screen_width_half + 32 + 192, -ks::device::screen_height_half + 32);
-            //
-            // // ЭТАП 1: Создание градиента
-            // // Инициализируем градиент один раз здесь
-            // for (int i = 0; i < 120; i++) {
-            //     gradients[i] = i;
-            // }
-            // gradients_ptr = static_cast<uint8_t *>(gradients);
-            //
-            // // Функция обновления шаблонов на основе текущего значения градиента
-            // auto update_patterns = [&]() {
-            //     const u8 gi = gradient_iteration;
-            //
-            //     for (int y = 0; y < 80; y++) {
-            //         for (int block = 0; block < 2; block++) {
-            //             // Вычисляем шаблоны для всех 8 тайлов
-            //             for (int tile = 0; tile < 8; tile++) {
-            //                 u32 result = 0;
-            //                 const int base = block * 64 + tile * 8;
-            //
-            //                 for (int pixel = 0; pixel < 8; pixel++) {
-            //                     const int index = base + pixel;
-            //                     if (index < 120 && gradients[index] <= gi) {
-            //                         result |= (1 << (pixel * 4));
-            //                     }
-            //                 }
-            //
-            //                 pattern_buffer[block * 64 + tile * 8] = result;
-            //             }
-            //         }
-            //     }
-            // };
-            //
-            // globals::main_update();
-            // tile_addr_ptr[0] = static_cast<uint32_t *>(SPR_VRAM(talkbox1->tiles().id()));
-            // tile_addr_ptr[1] = static_cast<uint32_t *>(SPR_VRAM(talkbox2->tiles().id()));
-            // // tile_addr_ptr[2] = static_cast<uint32_t *>(SPR_VRAM(talkbox3->tiles().id()));
-            // // tile_addr_ptr[3] = static_cast<uint32_t *>(SPR_VRAM(talkbox4->tiles().id()));
-            //
-            // // Инициализируем начальное значение итерации градиента
-            // gradient_iteration = 0;
-            //
-            // // ЭТАП 2: Обновление шаблонов для начального значения градиента
-            // update_patterns();
-            //
-            // bn::hw::irq::enable(bn::hw::irq::id::HBLANK);
-            // bn::hw::irq::set_isr(bn::hw::irq::id::HBLANK, []() BN_CODE_IWRAM {
-            //     const u16 vcount = REG_VCOUNT;
-            //     if (vcount < 160 && vcount % 2 == 0) {
-            //         // Выполняем 4 раза - для каждого блока.
-            //         for (int block = 0; block < 2; block++) {
-            //             tile_addr_ptr[block][0] = pattern_buffer[block * 64 + 0];
-            //             tile_addr_ptr[block][8] = pattern_buffer[block * 64 + 8];
-            //             tile_addr_ptr[block][16] = pattern_buffer[block * 64 + 16];
-            //             tile_addr_ptr[block][24] = pattern_buffer[block * 64 + 24];
-            //             tile_addr_ptr[block][32] = pattern_buffer[block * 64 + 32];
-            //             tile_addr_ptr[block][40] = pattern_buffer[block * 64 + 40];
-            //             tile_addr_ptr[block][48] = pattern_buffer[block * 64 + 48];
-            //             tile_addr_ptr[block][56] = pattern_buffer[block * 64 + 56];
-            //         }
-            //     }
-            // });
-            //
-            // while (true) {
-            //     if (gradient_iteration < 120) {
-            //         gradient_iteration++;
-            //         // ЭТАП 3: Обновление шаблонов при изменении итерации градиента
-            //         update_patterns();
-            //     } else {
-            //         gradient_iteration = 0;
-            //         update_patterns();
-            //     }
-            //     globals::main_update();
-            // }
 
             talkbox1->set_bg_priority(1);
             talkbox2->set_bg_priority(1);
