@@ -80,12 +80,12 @@ namespace ks {
             need_repalette = false;
 
             BN_LOG("Repalette menu");
-            for (int i = 0; i < static_text_sprites->size(); i++) {
+            for (int i = 0; i < static_text_sprites.size(); i++) {
                 const bool is_selected = selection_indexes.at(i) == selection;
                 if (const bool is_action = selection_indexes.at(i) != -1; !is_action) {
-                    static_text_sprites->at(i).set_palette(globals::text_palettes::beige_selected);
+                    static_text_sprites.at(i).set_palette(globals::text_palettes::beige_selected);
                 } else {
-                    static_text_sprites->at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
+                    static_text_sprites.at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
                 }
             }
         }
@@ -99,8 +99,8 @@ namespace ks {
         void add_text_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
             BN_LOG("Add entry: ", text);
             BN_LOG("at position: [", x, ", ", y, "] with index: ", index);
-            text_generator->generate(x, y, text, *static_text_sprites);
-            selection_indexes.resize(static_text_sprites->size(), index);
+            text_generator->generate(x, y, text, static_text_sprites);
+            selection_indexes.resize(static_text_sprites.size(), index);
         }
 
         void add_text_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {

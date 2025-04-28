@@ -67,8 +67,8 @@ namespace ks {
             selection_indexes.clear();
             checkboxes_ptrs.clear();
 
-            static_text_sprites->clear();
-            progress_icon_sprites->clear();
+            static_text_sprites.clear();
+            progress_icon_sprites.clear();
             globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);
@@ -76,24 +76,24 @@ namespace ks {
 
             unsigned char yy = 0;
             constexpr unsigned char y_spacing = 16;
-            static_text_sprites->push_back(
+            static_text_sprites.push_back(
                 bn::sprite_items::ui_button_check_0.create_sprite(-device::screen_width_half + 30, -48 + yy));
-            checkboxes_ptrs.push_back(static_text_sprites->back());
+            checkboxes_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(-device::screen_width_half + 22 + 16, -48 + yy, globals::i18n->menu_options_high_contrast(),
                            0);
             yy += y_spacing;
             globals::sound_update();
 
-            static_text_sprites->push_back(
+            static_text_sprites.push_back(
                 bn::sprite_items::ui_button_check_0.create_sprite(-device::screen_width_half + 30, -48 + yy));
-            checkboxes_ptrs.push_back(static_text_sprites->back());
+            checkboxes_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(-device::screen_width_half + 22 + 16, -48 + yy, globals::i18n->menu_options_hdisabled(), 1);
             yy += y_spacing;
             globals::sound_update();
 
-            static_text_sprites->push_back(
+            static_text_sprites.push_back(
                 bn::sprite_items::ui_button_check_0.create_sprite(-device::screen_width_half + 30, -48 + yy));
-            checkboxes_ptrs.push_back(static_text_sprites->back());
+            checkboxes_ptrs.push_back(static_text_sprites.back());
             auto disturbing_option_arr = globals::i18n->menu_options_disable_disturbing_content();
             BN_LOG("SZ: ", disturbing_option_arr.size());
             for (const char *line: disturbing_option_arr) {

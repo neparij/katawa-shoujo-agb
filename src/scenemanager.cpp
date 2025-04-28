@@ -75,9 +75,9 @@ bool in_replay = false;
 bool is_loading = false;
 unsigned char savedata_answer_index = 0;
 
-bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;
-bn::vector<bn::sprite_ptr, 64>* static_text_sprites;
-bn::vector<bn::sprite_ptr, 128>* animated_text_sprites;
+bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;
+bn::vector<bn::sprite_ptr, 64> static_text_sprites;
+bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 
 void SceneManager::free_resources() {
 
@@ -1373,7 +1373,7 @@ void SceneManager::open_ingame_menu() {
     // TEMP
     unsigned char selected = 0;
     bn::vector<signed char, 64> selection_index;
-    static_text_sprites->clear();
+    static_text_sprites.clear();
     ks::text_generator->set_center_alignment();
     ks::text_generator->set_one_sprite_per_character(false);
     ks::text_generator->generate(0, -ks::device::screen_height_half + 8,
@@ -1383,50 +1383,50 @@ void SceneManager::open_ingame_menu() {
                 progress.metadata.hours_played,
                 bn::format<2>(progress.metadata.minutes_played < 10 ? "0{}" : "{}", progress.metadata.minutes_played),
                 bn::format<2>(progress.metadata.seconds_played < 10 ? "0{}" : "{}", progress.metadata.seconds_played)),
-        *static_text_sprites);
+        static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), -1);
+    selection_index.resize(static_text_sprites.size(), -1);
 
-    ks::text_generator->generate(0, -48, ks::globals::i18n->screens_return(), *static_text_sprites);
+    ks::text_generator->generate(0, -48, ks::globals::i18n->screens_return(), static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), 0);
+    selection_index.resize(static_text_sprites.size(), 0);
 
-    ks::text_generator->generate(0, -32, ks::globals::i18n->screens_history(), *static_text_sprites);
+    ks::text_generator->generate(0, -32, ks::globals::i18n->screens_history(), static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), 1);
+    selection_index.resize(static_text_sprites.size(), 1);
 
-    ks::text_generator->generate(0, -16, ks::globals::i18n->screens_options(), *static_text_sprites);
+    ks::text_generator->generate(0, -16, ks::globals::i18n->screens_options(), static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), 2);
+    selection_index.resize(static_text_sprites.size(), 2);
 
-    ks::text_generator->generate(0, 0, ks::globals::i18n->screens_save_game(), *static_text_sprites);
+    ks::text_generator->generate(0, 0, ks::globals::i18n->screens_save_game(), static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), 3);
+    selection_index.resize(static_text_sprites.size(), 3);
 
-    ks::text_generator->generate(0, 16, ks::globals::i18n->screens_load_game(), *static_text_sprites);
+    ks::text_generator->generate(0, 16, ks::globals::i18n->screens_load_game(), static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), 4);
+    selection_index.resize(static_text_sprites.size(), 4);
 
-    ks::text_generator->generate(0, 32, ks::globals::i18n->screens_main_menu(), *static_text_sprites);
+    ks::text_generator->generate(0, 32, ks::globals::i18n->screens_main_menu(), static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), 5);
+    selection_index.resize(static_text_sprites.size(), 5);
 
     ks::text_generator->set_palette_item(globals::text_palettes::original);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_scene(), ks::globals::i18n->label(progress.metadata.label)), *static_text_sprites);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_track(), ks::globals::i18n->music(ks::sound_manager::current_music)), *static_text_sprites);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_scene(), ks::globals::i18n->label(progress.metadata.label)), static_text_sprites);
+    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_track(), ks::globals::i18n->music(ks::sound_manager::current_music)), static_text_sprites);
     ks::globals::sound_update();
-    selection_index.resize(static_text_sprites->size(), -1);
+    selection_index.resize(static_text_sprites.size(), -1);
 
     bool action_performed = false;
     while (!action_performed) {
         BN_LOG("Calc palettes");
-        for (int i = 0; i < static_text_sprites->size(); i++) {
+        for (int i = 0; i < static_text_sprites.size(); i++) {
             bool is_selected = selection_index.at(i) == selected;
             bool is_action = selection_index.at(i) != -1;
             if (!is_action) {
-                static_text_sprites->at(i).set_palette(globals::text_palettes::original);
+                static_text_sprites.at(i).set_palette(globals::text_palettes::original);
             } else {
-                static_text_sprites->at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
+                static_text_sprites.at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
             }
         }
 
@@ -1485,8 +1485,8 @@ void SceneManager::open_ingame_menu() {
 }
 
 void SceneManager::close_ingame_menu() {
-    static_text_sprites->clear();
-    animated_text_sprites->clear();
+    static_text_sprites.clear();
+    animated_text_sprites.clear();
 
     bn::fixed dots_offset = 160 + 96;
     secondary_background = bn::regular_bg_items::ui_backdrop_dots.create_bg(0, 0);
@@ -1535,8 +1535,8 @@ void SceneManager::exit_scenario_from_ingame_menu() {
         autosave();
     }
 
-    static_text_sprites->clear();
-    animated_text_sprites->clear();
+    static_text_sprites.clear();
+    animated_text_sprites.clear();
     secondary_background.reset();
 
     for(int alpha = 16; alpha <= 32; ++alpha) {

@@ -235,9 +235,9 @@ extern bool in_replay;
 extern bool is_loading;
 extern unsigned char savedata_answer_index;
 
-extern bn::vector<bn::sprite_ptr, 18>* progress_icon_sprites;
-extern bn::vector<bn::sprite_ptr, 64>* static_text_sprites;
-extern bn::vector<bn::sprite_ptr, 128>* animated_text_sprites;
+extern bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;
+extern bn::vector<bn::sprite_ptr, 64> static_text_sprites;
+extern bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 
 } // namespace ks
 

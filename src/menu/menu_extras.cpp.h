@@ -17,8 +17,8 @@ namespace ks {
             main_background = bn::regular_bg_items::ui_bg_menu_extras.create_bg(0, 0);
 
             secondary_background.reset();
-            static_text_sprites->clear();
-            progress_icon_sprites->clear();
+            static_text_sprites.clear();
+            progress_icon_sprites.clear();
             globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);

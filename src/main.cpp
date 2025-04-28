@@ -223,8 +223,8 @@ int main() {
                 break;
             case GS_START_NEW_GAME:
             case GS_LOAD_GAME:
-                ks::static_text_sprites->clear();
-                ks::progress_icon_sprites->clear();
+                ks::static_text_sprites.clear();
+                ks::progress_icon_sprites.clear();
                 ks::main_background.reset();
                 ks::secondary_background.reset();
                 ks::globals::main_update();
@@ -242,7 +242,7 @@ int main() {
                 ks::globals::exit_scenario = false;
                 ks::main_background.reset();
                 ks::secondary_background.reset();
-                ks::progress_icon_sprites->clear();
+                ks::progress_icon_sprites.clear();
                 ks::dialog->reset();
                 ks::globals::main_update();
                 bn::bg_palettes::set_fade_intensity(0);
