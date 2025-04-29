@@ -100,7 +100,7 @@ static const GBFS_FILE* fs;
 static const unsigned char* src = NULL;
 static u32 src_len = 0;
 static u32 src_pos = 0;
-static struct gsm_state decoder;
+static EWRAM_DATA struct gsm_state decoder;
 static s16 out_samples[160];
 static s8 double_buffers[2][BUFFER_SIZE_B] __attribute__((aligned(4)));
 static u32 decode_pos = 160, cur_buffer = 0;

@@ -19,6 +19,7 @@
 
 namespace ks {
     namespace globals {
+        gameState_t state = GS_INIT;
         bool exit_scenario = false;
         bn::unique_ptr<Translation> i18n;
         saves::SaveSettingsData settings = saves::SaveSettingsData();
@@ -80,7 +81,7 @@ namespace ks {
         }
 
         void release_engine() {
-            ks::main_background.reset();
+            ks::primary_background.reset();
             ks::secondary_background.reset();
             ks::transition_bg.reset();
             ks::progress_icon_sprites.clear();

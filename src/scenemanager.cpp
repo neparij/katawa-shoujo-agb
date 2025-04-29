@@ -21,10 +21,10 @@
 #include "bn_regular_bg_items_ui_backdrop_dots.h"
 #include "bn_regular_bg_items_scene_black.h"
 #include "bn_sprite_actions.h"
-#include "bn_sprite_items_ui_ingame_menu_ne.h"
-#include "bn_sprite_items_ui_ingame_menu_nw.h"
-#include "bn_sprite_items_ui_ingame_menu_se.h"
-#include "bn_sprite_items_ui_ingame_menu_sw.h"
+// #include "bn_sprite_items_ui_ingame_menu_ne.h"
+// #include "bn_sprite_items_ui_ingame_menu_nw.h"
+// #include "bn_sprite_items_ui_ingame_menu_se.h"
+// #include "bn_sprite_items_ui_ingame_menu_sw.h"
 #include "bn_sprite_palettes.h"
 #include "globals.h"
 #include "ingametimer.h"
@@ -39,18 +39,21 @@
 #include "utils/scenario_reader.h"
 #include "videoplayer/video_player.h"
 
+#include "menu/menu_ingame_pause.cpp.h"
+#include "menu/menu_saves.cpp.h"
+
 namespace ks {
 
 u8* text_db;
 u32 text_db_size;
 bool text_db_allocated;
-EWRAM_DATA bn::string<1024> message;
-EWRAM_DATA bn::vector<bn::string<128>, 5> answers_messages;
+EWRAM_BSS bn::string<1024> message;
+EWRAM_BSS bn::vector<bn::string<128>, 5> answers_messages;
 
 bn::optional<ks::SceneManager> scene;
 bn::sprite_text_generator* text_generator;
 ks::DialogBox* dialog;
-bn::optional<bn::regular_bg_ptr> main_background;
+bn::optional<bn::regular_bg_ptr> primary_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
 bn::optional<bn::affine_bg_ptr> transition_bg;
 bn::optional<bn::color> fill_color;
@@ -62,14 +65,13 @@ background_visuals_ptr background_visual;
 
 bn::rect_window left_window = bn::rect_window::external();
 bn::rect_window right_window = bn::rect_window::internal();
-bn::array<bn::blending_transparency_attributes, 160> transparency_attributes;
-bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_attributes_hbe;
 
 bn::vector<unsigned char, 5> answers_index_map;
 ks::saves::SaveSlotProgressData progress;
 ks::saves::SaveSlotProgressData savedata_progress;
 bool in_replay = false;
 bool is_loading = false;
+bool is_paused = false;
 unsigned char savedata_answer_index = 0;
 
 EWRAM_BSS bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;
@@ -79,7 +81,7 @@ EWRAM_BSS bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 void SceneManager::free_resources() {
     BN_LOG("Free resources...");
     background_visual.bg_item.reset();
-    main_background.reset();
+    primary_background.reset();
     secondary_background.reset();
     custom_event.reset();
 
@@ -88,8 +90,8 @@ void SceneManager::free_resources() {
         visual.sprite.reset();
         visual.bg_item.reset();
         visual.sprite_item.reset();
-        visual.current_bg_item.reset();
-        visual.current_sprite_item.reset();
+        visual.visible_bg_item.reset();
+        visual.visible_sprite_item.reset();
     }
     character_visuals.clear();
 
@@ -121,7 +123,7 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("EWRAM free: ", bn::memory::available_alloc_ewram());
     BN_LOG("Allocate ", text_db_size, " bytes for text database...");
     BN_ASSERT(!text_db_allocated, "Text database already allocated!");
-    text_db = (u8*)bn::memory::ewram_alloc(text_db_size);
+    text_db = static_cast<u8 *>(bn::memory::ewram_alloc(static_cast<int>(text_db_size)));
     text_db_allocated = true;
 
     BN_LOG("Decompress Scene file...");
@@ -280,22 +282,36 @@ void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
     }
 
     while (!ks::globals::exit_scenario) {
-        // ks::scenario::gbfs_reader::get_tl<1024>(scene->scenario(), scene->locale(), scene->_script_tl_index[tl_key], message);
-        BN_LOG("TextDB pointer in global scope:", (u32)text_db);
-        ks::scenario::gbfs_reader::get_tl<1024>(text_db, text_db_size, scene->_script_tl_index[tl_key], message);
-        ks::globals::sound_update();
-        // ks::globals::main_update();
-        dialog->show(actor, message);
-        while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-            dialog->update();
-            ks::globals::main_update();
+        switch (globals::state) {
+            case GS_GAME:
+                BN_LOG("TextDB pointer in global scope:", (u32)text_db);
+                ks::scenario::gbfs_reader::get_tl<1024>(text_db, text_db_size, scene->_script_tl_index[tl_key], message);
+                ks::globals::sound_update();
+
+                dialog->show(actor, message);
+                while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+                    dialog->update();
+                    ks::globals::main_update();
+                }
+                if (bn::keypad::start_pressed()) {
+                    BN_LOG("DIALOG FINISHED: ", dialog->is_finished());
+                    globals::state = GS_GAME_MENU;
+                    is_paused = true;
+                    update_visuals();
+                }
+                break;
+            case GS_GAME_MENU:
+                // SceneManager::open_ingame_menu();
+                ks::MenuIngamePause().run();
+            break;
+            case GS_GAME_MENU_SAVES:
+                ks::MenuSaves().run();
+                break;
+            default:
+                BN_ERROR("Wrong state: ", ks::globals::state);
         }
-        if (bn::keypad::start_pressed()) {
-            dialog->hide_blend();
-            SceneManager::open_ingame_menu();
-            continue;
-        }
-        break;
+        if (dialog->is_finished())
+            break;
     }
 }
 
@@ -355,7 +371,7 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
             // Pause and re-open menu logic
             dialog->reset_question();
             dialog->hide_blend();
-            SceneManager::open_ingame_menu();
+            // SceneManager::open_ingame_menu();
             redisplay_dialog = true;
             continue;
         }
@@ -486,19 +502,18 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
     if (transition == SCENE_TRANSITION_SHUTEYE) {
         transition_fadeout(bn::affine_bg_items::test_eyes, 2,  false);
         // background_visual.bg_item.reset();
-        main_background.reset();
+        primary_background.reset();
         return;
     }
     if (transition == SCENE_TRANSITION_OPENEYE) {
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
-            main_background.reset();
+            primary_background.reset();
             ks::globals::main_update();
-            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
+            primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            primary_background->set_priority(3);
+            primary_background->set_z_order(10);
             if (custom_event.has_value()) {
-                (*custom_event)->set_background(main_background.value());
                 (*custom_event)->init();
             }
             ks::globals::sound_update();
@@ -509,19 +524,18 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
     if (transition == SCENE_TRANSITION_HANDS_IN) {
         transition_fadeout(bn::affine_bg_items::test_handsdissolve, 16,  false);
         // background_visual.bg_item.reset();
-        main_background.reset();
+        primary_background.reset();
         return;
     }
     if (transition == SCENE_TRANSITION_HANDS_OUT) {
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
-            main_background.reset();
+            primary_background.reset();
             ks::globals::main_update();
-            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
+            primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            primary_background->set_priority(3);
+            primary_background->set_z_order(10);
             if (custom_event.has_value()) {
-                (*custom_event)->set_background(main_background.value());
                 (*custom_event)->init();
             }
             ks::globals::sound_update();
@@ -537,13 +551,12 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         transition_fadeout(bn::affine_bg_items::test_delayblinds, 4, true);
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
-            main_background.reset();
+            primary_background.reset();
             ks::globals::main_update();
-            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
+            primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            primary_background->set_priority(3);
+            primary_background->set_z_order(10);
             if (custom_event.has_value()) {
-                (*custom_event)->set_background(main_background.value());
                 (*custom_event)->init();
             }
             ks::globals::sound_update();
@@ -558,13 +571,12 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         // }
         fade_out(ks::globals::colors::WHITE, 15);
         if (to.has_value()) {
-            main_background.reset();
+            primary_background.reset();
             ks::globals::main_update();
-            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
+            primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            primary_background->set_priority(3);
+            primary_background->set_z_order(10);
             if (custom_event.has_value()) {
-                (*custom_event)->set_background(main_background.value());
                 (*custom_event)->init();
             }
             ks::globals::sound_update();
@@ -576,13 +588,12 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
     if (transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG || transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_SHORT) {
         fade_out(ks::globals::colors::WHITE, 15);
         if (to.has_value()) {
-            main_background.reset();
+            primary_background.reset();
             ks::globals::main_update();
-            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
+            primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            primary_background->set_priority(3);
+            primary_background->set_z_order(10);
             if (custom_event.has_value()) {
-                (*custom_event)->set_background(main_background.value());
                 (*custom_event)->init();
             }
             ks::globals::sound_update();
@@ -614,16 +625,24 @@ void SceneManager::update_transitions() {
 
 void SceneManager::update_visuals() {
     if (is_loading) {
-        fill_color = background_visual.fill_color;
         return;
     }
 
+    BN_LOG("Update visuals process started");
+
+    if (background_visual.fill_color.has_value()) {
+        fill_color = background_visual.fill_color;
+    } else {
+        fill_color.reset();
+    }
+
+
     // TODO: Example of palette changes!!!!
-    // // auto palette = main_background->palette()
-    // if (main_background.has_value()) {
-    //     auto new_pal = bn::bg_palette_ptr::create(background_visual.current_bg_item->palette_item());
+    // // auto palette = primary_background->palette()
+    // if (primary_background.has_value()) {
+    //     auto new_pal = bn::bg_palette_ptr::create(background_visual.visible_bg_item->palette_item());
     //     new_pal.set_fade(globals::colors::RED, 0.5);
-    //     main_background->set_palette(new_pal);
+    //     primary_background->set_palette(new_pal);
     // }
 
     bn::vector<bn::regular_bg_move_to_action, 5> bg_moves;
@@ -632,177 +651,142 @@ void SceneManager::update_visuals() {
     bool in_progress = false;
 
     /// COLLECT INFO
-    BN_LOG("COLLECT INFO");
-    if (!main_background.has_value()) {
-        background_visual.current_bg_item.reset();
+    if (!primary_background.has_value()) {
+        background_visual.visible_bg_item.reset();
     }
 
     bool is_scene_visible = !fill_color.has_value();
     BN_LOG("Is scene visible: ", is_scene_visible);
 
-    bool should_change_scene_visibilit = background_visual.fill_color.has_value() != fill_color.has_value();
-    bool should_disable_scene = should_change_scene_visibilit && background_visual.fill_color.has_value();
-    bool should_enable_scene = should_change_scene_visibilit && !background_visual.fill_color.has_value();
-
-    BN_LOG("SHOULD DISABLE SCENE: ", should_disable_scene);
-    BN_LOG("SHOULD ENABLE SCENE: ", should_enable_scene);
-
-    bool background_want_change = background_visual.current_bg_item.has_value() && background_visual.bg_item.has_value() &&
-                                  background_visual.current_bg_item != background_visual.bg_item;
-    bool background_want_hide = background_visual.current_bg_item.has_value() && !background_visual.bg_item.has_value();
-    bool background_want_show = !background_visual.current_bg_item.has_value() && background_visual.bg_item.has_value();
+    bool background_want_change = background_visual.visible_bg_item.has_value() && background_visual.bg_item.has_value() &&
+                                  background_visual.visible_bg_item != background_visual.bg_item && is_scene_visible;
+    bool background_want_hide = background_visual.visible_bg_item.has_value() && (!background_visual.bg_item.has_value() || !is_scene_visible);
+    bool background_want_show = !background_visual.visible_bg_item.has_value() && background_visual.bg_item.has_value() && is_scene_visible;
     bool background_want_transition = background_visual.transition != SCENE_TRANSITION_NONE;
-    // bool background_want_dissolve = background_visual.dissolve_time != 0 && (background_want_change || background_want_hide || background_want_show) && !background_want_transition && is_scene_visible;
     bool background_want_dissolve = background_visual.dissolve_time != 0 && (background_want_change || background_want_hide || background_want_show) && !background_want_transition;
     bool background_want_move = !background_want_change && !background_want_hide && !background_want_show && !custom_event.has_value() &&
-                                background_visual.current_bg_item.has_value() &&
-                                (background_visual.position_x != main_background->position().x() ||
-                                background_visual.position_y != main_background->position().y());
+                                background_visual.visible_bg_item.has_value() &&
+                                (background_visual.position_x != primary_background->position().x() ||
+                                background_visual.position_y != primary_background->position().y());
     bool custom_event_want_init = custom_event.has_value() && !(*custom_event)->is_initialized();
     BN_LOG("CUSTOM EVENT WANT INIT: ", custom_event_want_init);
 
-    // bool characters_changed = false;
-    bool characters_want_dissolve = false;
     bool characters_want_show = false;
     bool characters_want_hide = false;
     for (auto &visual : character_visuals) {
-        // characters_changed = characters_changed || visual.current_bg_item != visual.bg_item;
-        bool character_want_show = !visual.current_bg_item.has_value() && visual.bg_item.has_value() && is_scene_visible;
-        bool character_want_hide = visual.background.has_value() &&
-                                   visual.current_bg_item.has_value() && !visual.bg_item.has_value();
+        bool character_want_show = !visual.visible_bg_item.has_value() && (visual.bg_item.has_value() && is_scene_visible && !is_paused);
+        bool character_want_hide = visual.visible_bg_item.has_value() && (!visual.bg_item.has_value() || !is_scene_visible || is_paused || background_want_transition);
 
         visual.will_show = character_want_show;
         visual.will_hide = character_want_hide;
 
-        if (visual.will_show) {
-            BN_LOG("Will show character ", visual.character, ". Reason: ", "character_want_show");
-        }
-        if (visual.will_hide) {
-            BN_LOG("Will hide character ", visual.character, ". Reason: ", "character_want_hide");
-        }
+        // if (visual.background.has_value() && (background_want_change || background_want_hide || background_want_show)) {
+        //     visual.will_hide = true;
+        //     BN_LOG("Will hide character ", visual.character, ". Reason: ", "visual.background.has_value() && background_want_transition");
+        // }
+        //
+        // if (visual.background.has_value() && background_want_transition) {
+        //     visual.will_hide = true;
+        //     BN_LOG("Will hide character ", visual.character, ". Reason: ", "visual.background.has_value() && background_want_transition");
+        //     visual.will_show = visual.visible_bg_item.has_value() && (should_enable_scene || (!should_disable_scene && is_scene_visible));
+        //     if (visual.will_show) {
+        //         BN_LOG("Will show character ", visual.character, ". Reason: ", "visual.visible_bg_item.has_value() && (should_enable_scene || (!should_disable_scene && is_scene_visible))");
+        //     }
+        // }
+        //
+        // if (!visual.background.has_value() && visual.bg_item.has_value() && should_enable_scene) {
+        //     visual.will_show = true;
+        //     BN_LOG("Will show character ", visual.character, ". Reason: ", "!visual.background.has_value() && visual.bg_item.has_value() && should_enable_scene");
+        // }
 
-        if (visual.background.has_value() && (background_want_change || background_want_hide || background_want_show)) {
-            visual.will_hide = true;
-            BN_LOG("Will hide character ", visual.character, ". Reason: ", "visual.background.has_value() && background_want_transition");
-        }
-
-        if (visual.background.has_value() && background_want_transition) {
-            visual.will_hide = true;
-            BN_LOG("Will hide character ", visual.character, ". Reason: ", "visual.background.has_value() && background_want_transition");
-            visual.will_show = visual.current_bg_item.has_value() && (should_enable_scene || (!should_disable_scene && is_scene_visible));
-            if (visual.will_show) {
-                BN_LOG("Will show character ", visual.character, ". Reason: ", "visual.current_bg_item.has_value() && (should_enable_scene || (!should_disable_scene && is_scene_visible))");
-            }
-        }
-
-        if (!visual.background.has_value() && visual.bg_item.has_value() && should_enable_scene) {
-            visual.will_show = true;
-            BN_LOG("Will show character ", visual.character, ". Reason: ", "!visual.background.has_value() && visual.bg_item.has_value() && should_enable_scene");
-        }
-
-        characters_want_dissolve = characters_want_dissolve || visual.will_show || visual.will_hide;
         characters_want_show = characters_want_show || visual.will_show;
         characters_want_hide = characters_want_hide || visual.will_hide;
     }
 
     /// HIDE DIALOGS (WITH DISSOLVE)
-    BN_LOG("HIDE DIALOGS (WITH DISSOLVE)");
-    if (background_want_dissolve || characters_want_dissolve || background_want_transition) {
+    if (background_want_dissolve || background_want_transition || characters_want_show || characters_want_hide || is_paused) {
         if (!dialog->is_hidden()) {
+            BN_LOG("Update visuals: Hide dialogbox");
             dialog->hide_blend();
         }
     }
 
     /// CHANGE CHARACTER POSES
-    BN_LOG("CHANGE CHARACTER POSES");
     for (auto &visual : character_visuals) {
-        if (!visual.bg_item.has_value() || !visual.sprite_item.has_value() || !is_scene_visible) {
-            visual.current_bg_item.reset();
-            visual.current_sprite_item.reset();
+        if (!visual.bg_item.has_value() || !visual.sprite_item.has_value()) {
+            // visual.visible_bg_item.reset();
+            // visual.visible_sprite_item.reset();
             continue;
         }
-        if (!visual.will_show && !visual.will_hide) {
+        if (!visual.will_show && !visual.will_hide && is_scene_visible && !is_paused) {
             bn::fixed x = visual.background->position().x();
             bn::fixed y = visual.background->position().y();
 
-            if (visual.bg_item != visual.current_bg_item) {
+            if (visual.bg_item != visual.visible_bg_item) {
+                BN_LOG("Update visuals: Character ", visual.character, " background change");
                 visual.background.reset();
-                visual.background = visual.bg_item->create_bg(0, 0);
+                visual.background = visual.bg_item->create_bg(x, y);
                 visual.background->set_priority(2);
                 visual.background->set_z_order(10);
-                visual.background->set_visible(is_scene_visible);
-                visual.current_bg_item = visual.bg_item;
+                visual.visible_bg_item = visual.bg_item;
 
+                set_character_window_visibility(visual.background.value());
                 ks::globals::sound_update();
             }
 
-            if (visual.sprite_item != visual.current_sprite_item) {
+            if (visual.sprite_item != visual.visible_sprite_item) {
+                BN_LOG("Update visuals: Character ", visual.character, " sprite change");
                 visual.sprite.reset();
-                visual.sprite = visual.sprite_item->create_sprite(0, 0);
+                visual.sprite = visual.sprite_item->create_sprite(
+                    x + visual.offset_x + visual.sprite_meta->offset_x,
+                    y + visual.sprite_meta->offset_y);
                 visual.sprite->set_bg_priority(2);
                 visual.sprite->set_z_order(10);
-                visual.sprite->set_visible(is_scene_visible);
-
-                visual.current_sprite_item = visual.sprite_item;
+                visual.visible_sprite_item = visual.sprite_item;
 
                 ks::globals::sound_update();
-            }
-
-            if (visual.background.has_value()) {
-                visual.background->set_position(x, y);
-                set_character_window_visibility(visual.background.value());
-            }
-            if (visual.sprite.has_value()) {
-                visual.sprite->set_position(x + visual.offset_x + visual.sprite_meta->offset_x,
-                                            y + visual.sprite_meta->offset_y);
             }
         }
     }
 
-
     /// HIDE CHARACTERS (WITH DISSOLVE)
     /// TODO: investigate if we need to move characters when hiding
-    BN_LOG("HIDE CHARACTERS (WITH DISSOLVE)");
     if (characters_want_hide) {
-        BN_LOG("Some characters want to hide!");
-        if (is_scene_visible) {
-            for (auto &visual : character_visuals) {
-                if (!visual.background.has_value()) {
-                    continue;
-                }
-                if (visual.will_hide && visual.sprite.has_value()) {
-                    BN_LOG("WANT TO HIDE: ", visual.index);
-                    visual.background->set_visible(true);
-                    visual.sprite->set_visible(true);
-                    visual.background->set_blending_enabled(true);
-                    visual.sprite->set_blending_enabled(true);
-                    bn::blending::set_transparency_alpha(bn::fixed(1));
-                    blend_action = bn::blending_transparency_alpha_to_action(20, 0.0);
-                }
+        for (auto &visual : character_visuals) {
+            if (!visual.background.has_value() || !visual.sprite.has_value()) {
+                continue;
             }
-            while (!blend_action->done()) {
-                blend_action->update();
-                globals::main_update();
+            if (visual.will_hide && visual.sprite.has_value()) {
+                BN_LOG("Update visuals: Hide character ", visual.character);
+                visual.background->set_visible(true);
+                visual.sprite->set_visible(true);
+                visual.background->set_blending_enabled(true);
+                visual.sprite->set_blending_enabled(true);
+                bn::blending::set_transparency_alpha(bn::fixed(1));
+                blend_action = bn::blending_transparency_alpha_to_action(20, 0.0);
             }
-            blend_action.reset();
         }
+        while (!blend_action->done()) {
+            blend_action->update();
+            globals::main_update();
+        }
+        blend_action.reset();
+
         for (auto &visual : character_visuals) {
             if (visual.will_hide) {
                 visual.background.reset();
                 visual.sprite.reset();
-                visual.current_bg_item.reset();
-                visual.current_sprite_item.reset();
+                visual.visible_bg_item.reset();
+                visual.visible_sprite_item.reset();
             }
         }
     }
 
     /// HIDE BACKGROUNDS (WITH DISSOLVE)
-    BN_LOG("HIDE BACKGROUNDS (WITH DISSOLVE)");
     if (background_want_hide) {
-        BN_LOG("Will hide BG with dissolve!");
         if (background_want_dissolve) {
-            main_background->set_visible(true && is_scene_visible);
-            main_background->set_blending_enabled(true);
+            BN_LOG("Update visuals: Hide background with dissolve");
+            primary_background->set_blending_enabled(true);
             bn::blending::set_transparency_alpha(bn::fixed(1));
             blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 0.0);
             while (!blend_action->done()) {
@@ -812,26 +796,13 @@ void SceneManager::update_visuals() {
         }
 
         if (background_want_transition) {
+            BN_LOG("Update visuals: Hide background with transition ", background_visual.transition);
             perform_transition(background_visual.transition);
             background_visual.transition = SCENE_TRANSITION_NONE;
         }
 
-        if (should_disable_scene) {
-            if (main_background.has_value()) {
-                main_background->set_visible(false);
-            }
-            for (auto& visual : character_visuals) {
-                if (visual.background.has_value()) {
-                    visual.background->set_visible(false);
-                }
-                if (visual.sprite.has_value()) {
-                    visual.sprite->set_visible(false);
-                }
-            }
-        }
-
-        main_background.reset();
-        background_visual.current_bg_item.reset();
+        primary_background.reset();
+        background_visual.visible_bg_item.reset();
         blend_action.reset();
     }
 
@@ -839,18 +810,15 @@ void SceneManager::update_visuals() {
 
     /// CHANGE BACKGROUNDS (WITH DISSOLVE)
     if (background_want_change) {
-        BN_LOG("BACKGROUND WANT TO CHANGE");
         bool background_change_fallback = false;
         if (background_want_dissolve) {
+            BN_LOG("Update visuals: Change background with dissolve");
             secondary_background.reset();
             secondary_background = background_visual.bg_item->create_bg_optional(background_visual.position_x, background_visual.position_y);
             if (secondary_background.has_value()) {
                 ks::globals::sound_update();
-                BN_LOG("WITH DISSOLVE");
                 secondary_background->set_priority(3);
                 secondary_background->set_z_order(9);
-
-                secondary_background->set_visible(true);
                 secondary_background->set_blending_enabled(true);
                 bn::blending::set_transparency_alpha(bn::fixed(0));
                 blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
@@ -859,178 +827,88 @@ void SceneManager::update_visuals() {
                     globals::main_update();
                 }
 
-                main_background.reset();
+                primary_background.reset();
                 secondary_background.reset();
 
-                main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-                main_background->set_priority(3);
-                main_background->set_z_order(10);
+                primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+                primary_background->set_priority(3);
+                primary_background->set_z_order(10);
                 if (custom_event.has_value()) {
-                    (*custom_event)->set_background(main_background.value());
                     (*custom_event)->init();
                 }
                 blend_action.reset();
 
                 ks::globals::sound_update();
             } else {
-                BN_LOG("WITH DISSOLVE - FAILED");
-                BN_LOG("[WARN] background_change_fallback flag was set");
+                BN_LOG("   <<< Unable to create secondary background! Fallback to change without dissolve");
                 background_change_fallback = true;
             }
         }
 
         if (background_want_transition) {
-            BN_LOG("PERFORM BACKGROUND TRANSITION");
-            if (should_enable_scene) {
-                BN_LOG(">>>>>>>>>>>> should enable scene!");
-                if (main_background.has_value()) {
-                    main_background->set_visible(true);
-                }
-                for (auto& visual : character_visuals) {
-                    if (visual.background.has_value()) {
-                        visual.background->set_visible(true);
-                    }
-                    if (visual.sprite.has_value()) {
-                        visual.sprite->set_visible(true);
-                    }
-                }
-                fill_color.reset();
-            }
+            BN_LOG("Update visuals: Change background with transition ", background_visual.transition);
             perform_transition(background_visual.transition, background_visual.bg_item);
             background_visual.transition = SCENE_TRANSITION_NONE;
-            if (should_disable_scene) {
-                if (main_background.has_value()) {
-                    main_background->set_visible(false);
-                }
-                for (auto& visual : character_visuals) {
-                    if (visual.background.has_value()) {
-                        visual.background->set_visible(false);
-                    }
-                    if (visual.sprite.has_value()) {
-                        visual.sprite->set_visible(false);
-                    }
-                }
-            }
         } else if (!background_want_dissolve || background_change_fallback) {
-            if (background_change_fallback) {
-                BN_LOG("BG CHANGE FALLBACK!");
-            } else {
-                BN_LOG("CHANGE WITHOUT DISSOLVE");
-            }
-
-            // TODO: Fix the background change artifacts (see Lilly vs Shizu showdown event)
-            main_background.reset();
-            main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-            main_background->set_priority(3);
-            main_background->set_z_order(10);
-            main_background->set_visible(is_scene_visible);
+            BN_LOG("Update visuals: Change background instantly");
+            primary_background.reset();
+            primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            primary_background->set_priority(3);
+            primary_background->set_z_order(10);
             if (custom_event.has_value()) {
-                (*custom_event)->set_background(main_background.value());
                 (*custom_event)->init();
             }
 
             ks::globals::sound_update();
         }
 
-        background_visual.current_bg_item = background_visual.bg_item;
+        background_visual.visible_bg_item = background_visual.bg_item;
     }
 
     /// SHOW BACKGROUNDS (WITH DISSOLVE)
     if (background_want_show) {
-        BN_LOG("SHOW BACKGROUNDS (WITH DISSOLVE)");
-        main_background.reset();
-        main_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
-        main_background->set_priority(3);
-        main_background->set_z_order(10);
-        // main_background->set_visible(is_scene_visible && !should_disable_scene); // To not display on just loaded scenes
-        main_background->set_visible(is_scene_visible); // To not display on just loaded scenes
+        BN_LOG("Update visuals: Show background");
+        primary_background.reset();
+        primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+        primary_background->set_priority(3);
+        primary_background->set_z_order(10);
         if (custom_event_want_init) {
-            (*custom_event)->set_background(main_background.value());
             (*custom_event)->init();
         }
         ks::globals::sound_update();
 
-        if (should_enable_scene) {
-            if (main_background.has_value()) {
-                main_background->set_visible(true);
-            }
-            for (auto& visual : character_visuals) {
-                if (visual.background.has_value()) {
-                    visual.background->set_visible(true);
-                }
-                if (visual.sprite.has_value()) {
-                    visual.sprite->set_visible(true);
-                }
-            }
-            fill_color.reset();
-        }
-
         if (background_want_transition) {
-            // main_background->set_visible(false);
+            BN_LOG("                with transition ", background_visual.transition);
             perform_transition(background_visual.transition);
             background_visual.transition = SCENE_TRANSITION_NONE;
-            // main_background->set_visible(true);
         }
 
         if (background_want_dissolve) {
-            BN_LOG("WANT DISSOLVE");
-            main_background->set_visible(true);
-            main_background->set_blending_enabled(true);
+            BN_LOG("                with dissolve");
+            primary_background->set_blending_enabled(true);
             bn::blending::set_transparency_alpha(bn::fixed(0));
             blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
             while (!blend_action->done()) {
                 blend_action->update();
                 globals::main_update();
             }
-            main_background->set_blending_enabled(false);
+            primary_background->set_blending_enabled(false);
             blend_action.reset();
         }
 
-        background_visual.current_bg_item = background_visual.bg_item;
+        background_visual.visible_bg_item = background_visual.bg_item;
     }
 
     /// STILL HAVE TRANSITIONS? PERFORM IT ANYWAY (example: PASSOUTP1)
     if (background_want_transition && background_visual.transition != SCENE_TRANSITION_NONE) {
-        BN_LOG("STILL HAVE TRANSITIONS. PERFORM IT ANYWAY");
-        if (should_enable_scene) {
-            if (main_background.has_value()) {
-                main_background->set_visible(false);
-            }
-            for (auto& visual : character_visuals) {
-                if (visual.background.has_value()) {
-                    visual.background->set_visible(true);
-                }
-                if (visual.sprite.has_value()) {
-                    visual.sprite->set_visible(true);
-                }
-            }
-        }
+        BN_LOG("Update visuals: Still have transition ", background_visual.transition);
         perform_transition(background_visual.transition);
         background_visual.transition = SCENE_TRANSITION_NONE;
-        if (should_disable_scene) {
-            if (main_background.has_value()) {
-                main_background->set_visible(false);
-            }
-            for (auto& visual : character_visuals) {
-                if (visual.background.has_value()) {
-                    visual.background->set_visible(false);
-                }
-                if (visual.sprite.has_value()) {
-                    visual.sprite->set_visible(false);
-                }
-            }
-        }
-    }
-
-    if (background_visual.fill_color) {
-        fill_color = background_visual.fill_color;
-    } else {
-        fill_color.reset();
     }
 
     /// If we have actually same background but different event - we should initialize it anyway!
     if (custom_event_want_init && !(*custom_event)->is_initialized()) {
-        (*custom_event)->set_background(main_background.value());
+        BN_LOG("Update visuals: Custom event still want init");
         (*custom_event)->init();
     }
 
@@ -1038,20 +916,17 @@ void SceneManager::update_visuals() {
 
     /// SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND
     if (characters_want_show) {
-        BN_LOG("SHOW AND MOVE CHARACTERS (WITH DISSOLVE)");
         bool will_blend = false;
         for (auto &visual : character_visuals) {
             if (!visual.bg_item.has_value()) {
                 continue;
             }
             if (visual.will_show) {
-                BN_LOG("WILL SHOW: ", visual.index);
+                BN_LOG("Update visuals: Show character ", visual.character);
                 visual.background = visual.bg_item->create_bg(visual.position_x, visual.position_y);
                 visual.background->set_priority(2);
                 visual.background->set_z_order(10);
                 visual.background->set_blending_enabled(true);
-                visual.background->set_visible(is_scene_visible || should_enable_scene);
-                // visual.background->set_visible(is_scene_visible && !should_disable_scene); // To not display on just loaded scenes
                 ks::globals::sound_update();
 
                 visual.sprite = visual.sprite_item->create_sprite(
@@ -1060,27 +935,24 @@ void SceneManager::update_visuals() {
                 visual.sprite->set_bg_priority(2);
                 visual.sprite->set_z_order(10);
                 visual.sprite->set_blending_enabled(true);
-                visual.sprite->set_visible(is_scene_visible || should_enable_scene);
-                // visual.sprite->set_visible(is_scene_visible && !should_disable_scene); // To not display on just loaded scenes
                 ks::globals::sound_update();
 
-                visual.current_bg_item = visual.bg_item;
-                visual.current_sprite_item = visual.sprite_item;
+                visual.visible_bg_item = visual.bg_item;
+                visual.visible_sprite_item = visual.sprite_item;
 
                 set_character_window_visibility(visual.background.value());
                 will_blend = true;
             }
         }
-        if (will_blend && (is_scene_visible || should_enable_scene)) {
+        if (will_blend) {
             bn::blending::set_transparency_alpha(bn::fixed(0));
             blend_action = bn::blending_transparency_alpha_to_action(20, 1.0);
         }
     }
 
-    // TODO: uncomment whe ready.
     if (background_want_move) {
-        BN_LOG("MOVE BACKGROUNDS");
-        bg_moves.push_back(bn::regular_bg_move_to_action(*main_background,
+        BN_LOG("Update visuals: Move background");
+        bg_moves.push_back(bn::regular_bg_move_to_action(*primary_background,
                                                          20,
                                                          background_visual.position_x,
                                                          background_visual.position_y));
@@ -1090,7 +962,7 @@ void SceneManager::update_visuals() {
                                    (visual.position_x != visual.background->position().x() ||
                                    visual.position_y != visual.background->position().y());
         if (character_want_move) {
-            BN_LOG("MOVE CHARACTERS");
+            BN_LOG("Update visuals: Move character ", visual.character);
             bg_moves.push_back(bn::regular_bg_move_to_action(*visual.background, 20, visual.position_x, visual.position_y));
             spr_moves.push_back(bn::sprite_move_to_action(*visual.sprite, 20,
                 visual.position_x + visual.offset_x + visual.sprite_meta->offset_x,
@@ -1279,236 +1151,6 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
     show_video(agmv_file, agmv_size, audio_file, ks::globals::colors::BLACK);
 }
 
-
-void SceneManager::open_ingame_menu() {
-    timer::pause_ingame_timer();
-
-    character_restoration.clear();
-    for (auto& char_visual : character_visuals) {
-        if (char_visual.bg_item.has_value() && char_visual.sprite_item.has_value() && char_visual.background.has_value() && char_visual.sprite.has_value()) {
-            character_restoration.push_back(character_restoration_data(
-                char_visual.character,
-                char_visual.bg_item.value(),
-                char_visual.sprite_item.value(),
-                char_visual.sprite_meta.value(),
-                char_visual.position_x,
-                char_visual.position_y
-            ));
-            hide_character(char_visual.character, true, false);
-        }
-    }
-    update_visuals();
-
-    bn::fixed dots_offset = 0;
-    secondary_background = bn::regular_bg_items::ui_backdrop_dots.create_bg(0, 0);
-    secondary_background->set_blending_enabled(true);
-
-    unsigned char frame_skip = 0;
-    unsigned char frame = 0;
-
-    while (dots_offset < 160 + 96) {
-        if (frame > frame_skip) {
-            frame = 0;
-        }
-
-        if (frame == 0) {
-            dots_offset += 16;
-            secondary_background->set_position(0, -80 + 128 + dots_offset);
-            for(int index = 0, amplitude = 160; index < amplitude; ++index)
-            {
-                // bn::fixed
-                const bn::fixed clamped_alpha = bn::min(bn::max((index + 32 - dots_offset) / (32), bn::fixed(0)), bn::fixed(1));
-                const bn::fixed transparency_alpha = (bn::fixed(1) - clamped_alpha) * DialogBox::transparency_alpha();
-                transparency_attributes[index].set_transparency_alpha(transparency_alpha);
-            }
-        }
-
-        transparency_attributes_hbe = bn::blending_transparency_attributes_hbe_ptr::create(transparency_attributes);
-        ks::globals::main_update();
-        frame++;
-    }
-
-    // delete &dots_tattr;
-    transparency_attributes_hbe.reset();
-
-    secondary_background.reset();
-
-    // Disable the transparency BLENDING!
-    bn::blending::set_transparency_alpha(1);
-
-    // Enable the fade BLENDING!
-    bn::blending::set_fade_alpha(ks::DialogBox::transparency_alpha());
-    main_background->set_blending_enabled(true);
-    ks::globals::main_update();
-
-    // TEMP
-    // secondary_background = bn::regular_bg_items::ui_ingame_menu_background_0.create_bg(0, 0);
-    bn::vector<bn::sprite_ptr, 4> menu_bg_sprites;
-    menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_ne.create_sprite(32, -32));
-    menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_nw.create_sprite(-32, -32));
-    menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_se.create_sprite(32, 32));
-    menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_sw.create_sprite(-32, 32));
-
-    // TEMP
-    unsigned char selected = 0;
-    bn::vector<signed char, 64> selection_index;
-    static_text_sprites.clear();
-    ks::text_generator->set_center_alignment();
-    ks::text_generator->set_one_sprite_per_character(false);
-    ks::text_generator->generate(0, -ks::device::screen_height_half + 8,
-            bn::format<64>(
-                "{}: {}:{}:{}",
-                ks::globals::i18n->screens_playtime(),
-                progress.metadata.hours_played,
-                bn::format<2>(progress.metadata.minutes_played < 10 ? "0{}" : "{}", progress.metadata.minutes_played),
-                bn::format<2>(progress.metadata.seconds_played < 10 ? "0{}" : "{}", progress.metadata.seconds_played)),
-        static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), -1);
-
-    ks::text_generator->generate(0, -48, ks::globals::i18n->screens_return(), static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), 0);
-
-    ks::text_generator->generate(0, -32, ks::globals::i18n->screens_history(), static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), 1);
-
-    ks::text_generator->generate(0, -16, ks::globals::i18n->screens_options(), static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), 2);
-
-    ks::text_generator->generate(0, 0, ks::globals::i18n->screens_save_game(), static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), 3);
-
-    ks::text_generator->generate(0, 16, ks::globals::i18n->screens_load_game(), static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), 4);
-
-    ks::text_generator->generate(0, 32, ks::globals::i18n->screens_main_menu(), static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), 5);
-
-    ks::text_generator->set_palette_item(globals::text_palettes::original);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8 - 12, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_scene(), ks::globals::i18n->label(progress.metadata.label)), static_text_sprites);
-    ks::text_generator->generate(0, ks::device::screen_height_half - 8, bn::format<64>("{}: {}", ks::globals::i18n->screens_current_track(), ks::globals::i18n->music(ks::sound_manager::current_music)), static_text_sprites);
-    ks::globals::sound_update();
-    selection_index.resize(static_text_sprites.size(), -1);
-
-    bool action_performed = false;
-    while (!action_performed) {
-        BN_LOG("Calc palettes");
-        for (int i = 0; i < static_text_sprites.size(); i++) {
-            bool is_selected = selection_index.at(i) == selected;
-            bool is_action = selection_index.at(i) != -1;
-            if (!is_action) {
-                static_text_sprites.at(i).set_palette(globals::text_palettes::original);
-            } else {
-                static_text_sprites.at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
-            }
-        }
-
-        while (true) {
-            ks::globals::main_update();
-            if (bn::keypad::up_pressed() || bn::keypad::down_pressed()) {
-                selected += bn::keypad::down_pressed() ? 1 : -1;
-                selected += 6;
-                selected = selected % 6;
-                break;
-            }
-            if (bn::keypad::start_pressed() || bn::keypad::b_pressed()) {
-                action_performed = true;
-                break;
-            }
-            if (bn::keypad::a_pressed()) {
-                if (selected == 0) {
-                    action_performed = true;
-                }
-                if (selected == 3) {
-                    unsigned short used_saves = ks::saves::getUsedSaveSlots();
-                    if (used_saves < ks::saves::getTotalSaveSlots()) {
-                        BN_LOG("Save game to slot ", used_saves);
-                        save(used_saves);
-                    } else {
-                        BN_LOG("No more slots available");
-                    }
-                }
-                if (selected == 5) {
-                    action_performed = true;
-                    ks::globals::exit_scenario = true;
-                    BN_LOG("EXIT_SCENARIO");
-                }
-                break;
-            }
-        }
-    }
-
-    BN_LOG("Delete menu BG");
-    menu_bg_sprites.clear();
-
-    // backwards processing.
-    bn::blending::set_fade_alpha(0);
-    if (main_background.has_value()) {
-        main_background->set_blending_enabled(false);
-    }
-    ks::text_generator->set_left_alignment();
-
-    if (!globals::exit_scenario) {
-        close_ingame_menu();
-        character_restoration.clear();
-    } else {
-        exit_scenario_from_ingame_menu();
-        character_restoration.clear();
-    }
-}
-
-void SceneManager::close_ingame_menu() {
-    static_text_sprites.clear();
-    animated_text_sprites.clear();
-
-    bn::fixed dots_offset = 160 + 96;
-    secondary_background = bn::regular_bg_items::ui_backdrop_dots.create_bg(0, 0);
-    secondary_background->set_blending_enabled(true);
-
-    // bn::array<bn::blending_transparency_attributes, 160> dots_tattr;
-    // bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_attributes_hbe;
-
-    unsigned char frame_skip = 0;
-    unsigned char frame = 0;
-    while (dots_offset > 0) {
-        if (frame > frame_skip) {
-            frame = 0;
-        }
-
-        if (frame == 0) {
-            dots_offset -= 16;
-            secondary_background->set_position(0, -80 + 128 + dots_offset);
-            for(int index = 0, amplitude = 160; index < amplitude; ++index)
-            {
-                // bn::fixed
-                const bn::fixed clamped_alpha = bn::min(bn::max((index + 32 - dots_offset) / (32), bn::fixed(0)), bn::fixed(1));
-                const bn::fixed transparency_alpha = (bn::fixed(1) - clamped_alpha) * DialogBox::transparency_alpha();
-                transparency_attributes[index].set_transparency_alpha(transparency_alpha);
-            }
-        }
-
-
-        transparency_attributes_hbe = bn::blending_transparency_attributes_hbe_ptr::create_optional(transparency_attributes);
-        // bn::blending_transparency_attributes_hbe_ptr::create(dots_tattr);
-        ks::globals::main_update();
-        frame++;
-    }
-    transparency_attributes_hbe.reset();
-    secondary_background.reset();
-
-    for (auto& character : character_restoration) {
-        show_character(character.character, character.sprite_meta, character.bg_item, character.sprite_item, character.position_x, character.position_y);
-    }
-    timer::resume_ingame_timer();
-    update_visuals();
-}
-
 void SceneManager::exit_scenario_from_ingame_menu() {
     if (!in_replay) {
         autosave();
@@ -1529,6 +1171,9 @@ void SceneManager::exit_scenario_from_ingame_menu() {
 
 void SceneManager::pause(const int ticks) {
     if (is_loading) {
+        return;
+    }
+    if (is_paused) {
         return;
     }
     for(int tick = 0; tick <= ticks; ++tick) {

@@ -6,7 +6,7 @@
 namespace ks {
     class MenuDebugActs final : public MenuBase {
     public:
-        explicit MenuDebugActs(gameState_t &state): MenuBase(state) {}
+        explicit MenuDebugActs() {}
         ~MenuDebugActs() override {
         }
     };

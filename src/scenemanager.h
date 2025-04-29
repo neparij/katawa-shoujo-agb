@@ -38,10 +38,9 @@ namespace ks {
 
 struct background_visuals_ptr
 {
-    bn::optional<bn::regular_bg_item> current_bg_item;
+    bn::optional<bn::regular_bg_item> visible_bg_item;
     bn::optional<bn::regular_bg_item> bg_item;
     bn::optional<bn::color> fill_color;
-    // bn::regular_bg_ptr* background;
     bn::fixed alpha;
     bool will_show;
     bool will_hide;
@@ -65,8 +64,8 @@ struct character_visuals_ptr
 {
     int index;
     character_t character;
-    bn::optional<bn::regular_bg_item> current_bg_item;
-    bn::optional<bn::sprite_item> current_sprite_item;
+    bn::optional<bn::regular_bg_item> visible_bg_item;
+    bn::optional<bn::sprite_item> visible_sprite_item;
     bn::optional<bn::regular_bg_item> bg_item;
     bn::optional<bn::sprite_item> sprite_item;
     bn::optional<ks::character_sprite_meta> sprite_meta;
@@ -173,8 +172,6 @@ public:
     static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file, bn::color clear);
     static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file);
 
-    static void open_ingame_menu();
-    static void close_ingame_menu();
     static void exit_scenario_from_ingame_menu();
 
     static void pause(const int ticks);
@@ -204,17 +201,15 @@ extern u8* text_db;
 extern u32 text_db_size;
 extern bool text_db_allocated;
 extern bn::string<1024> message;
+extern bn::vector<bn::string<128>, 5> answers_messages;
 
 extern bn::optional<ks::SceneManager> scene;
 extern bn::sprite_text_generator* text_generator;
 extern ks::DialogBox* dialog;
-extern bn::optional<bn::regular_bg_ptr> main_background;
+extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
 extern bn::optional<bn::affine_bg_ptr> transition_bg;
 extern bn::optional<bn::color> fill_color;
-// extern bn::optional<void (*)()> event_init;
-// extern bn::optional<void (*)()> event_update;
-// extern bn::optional<void (*)()> event_destroy;
 extern bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
 extern bn::vector<character_visuals_ptr, 4> character_visuals;
 extern bn::vector<character_restoration_data, 4> character_restoration;
@@ -222,14 +217,12 @@ extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;
 
-extern bn::array<bn::blending_transparency_attributes, 160> transparency_attributes;
-extern bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_attributes_hbe;
-
 extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
 extern ks::saves::SaveSlotProgressData savedata_progress;
 extern bool in_replay;
 extern bool is_loading;
+extern bool is_paused;
 extern unsigned char savedata_answer_index;
 
 extern bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;

@@ -4,10 +4,7 @@
 #include <BN_LOG.h>
 #include <bn_regular_bg_actions.h>
 
-#include "bn_regular_bg_items_lilly_shizu_showdown_both.h"
-
 #include "custom_event.h"
-#include "lilly_shizu_showdown.h"
 
 namespace ks {
 
@@ -15,7 +12,7 @@ namespace ks {
     public:
         LillyShizuShowdownShizuEvent() = default;
         ~LillyShizuShowdownShizuEvent() override {
-            _background.reset();
+            // _background.reset();
             _move_action.reset();
         };
 
@@ -29,7 +26,7 @@ namespace ks {
             // SceneManager::set_background_position(-120, -80);
 
             _move_action = bn::regular_bg_move_to_action(
-                _background.value(),
+                primary_background.value(),
                 15,
                 -64,
                 0
@@ -50,7 +47,7 @@ namespace ks {
 
         void destroy() override {
             BN_LOG("LillyShizuShowdownShizuEvent::destroy");
-            _background.reset();
+            // _background.reset();
             _move_action.reset();
             CustomEvent::destroy();
         }

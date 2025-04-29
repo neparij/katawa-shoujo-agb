@@ -1,6 +1,8 @@
 #ifndef MENU_BASE_H
 #define MENU_BASE_H
 
+#include "../globals.h"
+
 namespace ks {
 
     namespace menu {
@@ -17,7 +19,7 @@ namespace ks {
     class MenuBase
     {
     public:
-        MenuBase(gameState_t& state) : state(state), initial_state(state) {
+        explicit MenuBase() : initial_state(globals::state) {
             selection = menu::get_and_reset_initial_selection();
             selection_indexes.clear();
             need_fadein = bn::bg_palettes::fade_intensity() == 1;
@@ -28,7 +30,7 @@ namespace ks {
         }
 
         virtual void run() {
-            while (state == initial_state) {
+            while (globals::state == initial_state) {
                 on_update();
                 if (bn::keypad::b_pressed()) {
                     on_back();
@@ -79,11 +81,13 @@ namespace ks {
         void repalette() {
             need_repalette = false;
 
+            if (static_text_sprites.size() == 0) return;
+
             BN_LOG("Repalette menu");
             for (int i = 0; i < static_text_sprites.size(); i++) {
                 const bool is_selected = selection_indexes.at(i) == selection;
                 if (const bool is_action = selection_indexes.at(i) != -1; !is_action) {
-                    static_text_sprites.at(i).set_palette(globals::text_palettes::beige_selected);
+                    static_text_sprites.at(i).set_palette(text_item_palette);
                 } else {
                     static_text_sprites.at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
                 }
@@ -121,11 +125,11 @@ namespace ks {
 
     protected:
         bn::vector<signed char, 64> selection_indexes;
+        bn::sprite_palette_item text_item_palette = globals::text_palettes::beige_selected;
         int selection = 0;
         int items_count = 0;
         bool need_repalette = true;
         bool need_fadein = false;
-        gameState_t& state;
         gameState_t initial_state;
 
     };

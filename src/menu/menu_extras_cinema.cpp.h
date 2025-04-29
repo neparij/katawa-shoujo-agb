@@ -30,7 +30,7 @@
 namespace ks {
     class MenuExtrasCinema final : public MenuBase {
     public:
-        explicit MenuExtrasCinema(gameState_t &state): MenuBase(state) {
+        explicit MenuExtrasCinema() {
             draw();
             show_selected();
             items_count = 7;
@@ -40,7 +40,7 @@ namespace ks {
         }
 
         void on_back() override {
-            state = GS_MENU_EXTRAS;
+            globals::state = GS_MENU_EXTRAS;
             menu::set_initial_selection(3);
         }
 
@@ -108,7 +108,7 @@ namespace ks {
         }
 
         void draw() {
-            main_background = bn::regular_bg_items::ui_bg_menu_extras_cinema.create_bg(0, 0);
+            primary_background = bn::regular_bg_items::ui_bg_menu_extras_cinema.create_bg(0, 0);
 
             static_text_sprites.clear();
             progress_icon_sprites.clear();

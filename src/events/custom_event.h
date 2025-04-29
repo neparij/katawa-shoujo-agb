@@ -1,6 +1,8 @@
 #ifndef CUSTOM_EVENT_H
 #define CUSTOM_EVENT_H
 
+#include "custom_background_metas.h"
+
 namespace ks
 {
     class CustomEvent
@@ -18,11 +20,7 @@ namespace ks
             BN_ASSERT(is_initialized(), "Custom event is not initialized!");
         }
         virtual void destroy() {
-
-        }
-
-        void set_background(const bn::regular_bg_ptr &bg) {
-            _background = bg;
+            _initialized = false;
         }
 
         bool is_initialized() const {
@@ -30,7 +28,6 @@ namespace ks
         }
 
     protected:
-        bn::optional<bn::regular_bg_ptr> _background;
         bool _initialized = false;
     };
 }

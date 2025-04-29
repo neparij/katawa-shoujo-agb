@@ -11,8 +11,8 @@
 namespace ks {
     class MenuOptions final : public MenuBase {
     public:
-        explicit MenuOptions(gameState_t &state): MenuBase(state) {
-            main_background = bn::regular_bg_items::ui_bg_menu.create_bg(0, 0);
+        explicit MenuOptions() {
+            primary_background = bn::regular_bg_items::ui_bg_menu.create_bg(0, 0);
 
             create();
             update_checkboxes();
@@ -23,7 +23,7 @@ namespace ks {
 
         void on_back() override {
             writeSettings(globals::settings);
-            state = GS_MENU_MAIN;
+            globals::state = GS_MENU_MAIN;
             menu::set_initial_selection(3);
         }
 

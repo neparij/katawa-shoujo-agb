@@ -13,8 +13,8 @@
 namespace ks {
     class MenuExtras final : public MenuBase {
     public:
-        explicit MenuExtras(gameState_t &state): MenuBase(state) {
-            main_background = bn::regular_bg_items::ui_bg_menu_extras.create_bg(0, 0);
+        explicit MenuExtras() {
+            primary_background = bn::regular_bg_items::ui_bg_menu_extras.create_bg(0, 0);
 
             secondary_background.reset();
             static_text_sprites.clear();
@@ -47,14 +47,14 @@ namespace ks {
         }
 
         void on_back() override {
-            state = GS_MENU_MAIN;
+            globals::state = GS_MENU_MAIN;
             menu::set_initial_selection(2);
         }
 
         void on_select(const int option) override {
             switch (option) {
                 case 3:
-                    state = GS_MENU_EXTRAS_CINEMA;
+                    globals::state = GS_MENU_EXTRAS_CINEMA;
                     break;
                 case 4:
                     on_back();

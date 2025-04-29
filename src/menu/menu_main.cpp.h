@@ -28,10 +28,10 @@
 namespace ks {
     class MenuMain final : public MenuBase {
     public:
-        explicit MenuMain(gameState_t &state): MenuBase(state) {
+        explicit MenuMain() {
             const bn::string<64> version(KS_AGB_VERSION);
             secondary_background.reset();
-            main_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
+            primary_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
 
             static_text_sprites.clear();
             progress_icon_sprites.clear();
@@ -73,16 +73,16 @@ namespace ks {
             switch (option) {
                 case 0:
                     fade_out();
-                    state = GS_START_NEW_GAME;
+                    globals::state = GS_START_GAME;
                     break;
                 case 1:
-                    state = GS_MENU_SAVES;
+                    globals::state = GS_MENU_SAVES;
                     break;
                 case 2:
-                    state = GS_MENU_EXTRAS;
+                    globals::state = GS_MENU_EXTRAS;
                     break;
                 case 3:
-                    state = GS_MENU_OPTIONS;
+                    globals::state = GS_MENU_OPTIONS;
                     break;
                 default:
                     BN_ERROR("Menu option is not implemented");

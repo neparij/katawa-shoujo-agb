@@ -21,6 +21,7 @@
 using size_type = int;
 
 inline void game(const bool is_new_game) {
+    ks::globals::state = GS_GAME;
     ks::SceneManager::fade_reset();
 
     if (is_new_game) {
@@ -110,6 +111,7 @@ inline void game(const bool is_new_game) {
             // BAD ENDING
         }
     } else {
+        // ks::SceneManager::fade_out(ks::globals::colors::RED, 240);
         // Show blood red scene with Dissolve 4s
         // KENJI ENDING
     }
@@ -165,7 +167,7 @@ int main() {
         ks::SceneManager::show_video(video_4ls_agmv, video_4ls_agmv_size, "video_4ls.gsm", ks::globals::colors::BLACK);
 
         // Show the 4LS intro video (p2 - native gfx playback)
-        ks::main_background = bn::regular_bg_items::video_end_4ls.create_bg(0, 0);
+        ks::primary_background = bn::regular_bg_items::video_end_4ls.create_bg(0, 0);
 
         // TODO: Should be calculated in msecs for readability instead of ticks
         bn::bg_palettes::set_fade_color(ks::globals::colors::WHITE);
@@ -182,7 +184,7 @@ int main() {
             ks::globals::main_update();
         }
 
-        ks::main_background.reset();
+        ks::primary_background.reset();
         bn::bg_palettes::set_fade_intensity(0);
 
         // Wait 1 second
@@ -191,14 +193,12 @@ int main() {
         }
     }
     ks::globals::sound_update();
-
-    gameState_t state = GS_INIT;
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
 
     while (true) {
-        switch (state) {
+        switch (ks::globals::state) {
             case GS_INIT:
-                state = GS_MENU_MAIN;
+                ks::globals::state = GS_MENU_MAIN;
 
                 bn::bg_palettes::set_fade(ks::globals::colors::BLACK, bn::fixed(1));
                 bn::sprite_palettes::set_fade(ks::globals::colors::BLACK, bn::fixed(1));
@@ -207,40 +207,51 @@ int main() {
                 ks::sound_manager::play(MUSIC_MENUS);
                 break;
             case GS_MENU_MAIN:
-                ks::MenuMain(state).run();
+                ks::MenuMain().run();
                 break;
             case GS_MENU_SAVES:
-                ks::MenuSaves(state).run();
+                ks::MenuSaves().run();
                 break;
             case GS_MENU_EXTRAS:
-                ks::MenuExtras(state).run();
+                ks::MenuExtras().run();
                 break;
             case GS_MENU_OPTIONS:
-                ks::MenuOptions(state).run();
+                ks::MenuOptions().run();
                 break;
             case GS_MENU_EXTRAS_CINEMA:
-                ks::MenuExtrasCinema(state).run();
+                ks::MenuExtrasCinema().run();
                 break;
-            case GS_START_NEW_GAME:
             case GS_LOAD_GAME:
+                ks::timer::reset();
+                ks::SceneManager::free_resources();
+                ks::globals::release_engine();
+                ks::globals::init_engine(ks::globals::colors::BLACK);
+
+                ks::globals::exit_scenario = false;
+                ks::is_loading = true;
+                ks::progress = ks::savedata_progress;
+                ks::globals::state = GS_START_GAME;
+                break;
+            case GS_START_GAME:
                 ks::static_text_sprites.clear();
                 ks::progress_icon_sprites.clear();
-                ks::main_background.reset();
+                ks::primary_background.reset();
                 ks::secondary_background.reset();
                 ks::globals::main_update();
 
-                if (state == GS_LOAD_GAME) {
-                    ks::is_loading = true;
-                }
                 game(!ks::is_loading);
 
-                state = GS_RESET;
+                if (ks::globals::state == GS_LOAD_GAME) {
+                    ks::globals::exit_scenario = false;
+                } else {
+                    ks::globals::state = GS_RESET;
+                }
                 break;
             case GS_RESET:
                 ks::timer::reset();
                 ks::SceneManager::free_resources();
                 ks::globals::exit_scenario = false;
-                ks::main_background.reset();
+                ks::primary_background.reset();
                 ks::secondary_background.reset();
                 ks::progress_icon_sprites.clear();
                 ks::dialog->reset();
@@ -251,10 +262,10 @@ int main() {
                 ks::globals::release_engine();
                 ks::globals::init_engine(ks::globals::colors::BLACK);
 
-                state = GS_INIT;
+                ks::globals::state = GS_INIT;
                 break;
             default:
-                BN_ERROR("Unknown state: ", state);
+                BN_ERROR("Wrong state: ", ks::globals::state);
         }
     }
 }

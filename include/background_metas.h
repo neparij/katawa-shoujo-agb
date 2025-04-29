@@ -415,7 +415,7 @@
 #include "background_metas/tearoom_hisaoe_sigh.h"
 #include "background_metas/tearoom_hisaoe_hunsure.h"
 namespace ks::background_metas {
-    const background_meta* get_by_hash(const unsigned int hash) {
+    inline const background_meta* get_by_hash(const unsigned int hash) {
         switch (hash) {
             case 0x8B4D104C: return &school_stalls1_ss;
             case 0x8BFC8A10: return &school_staircase1;

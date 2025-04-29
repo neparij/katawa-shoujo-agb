@@ -23,6 +23,7 @@ namespace ks {
     // class Translation;
 
     namespace globals {
+        extern gameState_t state;
         extern bool exit_scenario;
         extern bn::unique_ptr<Translation> i18n;
         extern saves::SaveSettingsData settings;

@@ -5,7 +5,6 @@
 #include <bn_regular_bg_actions.h>
 
 #include "custom_event.h"
-#include "hisao_class.h"
 
 namespace ks {
     class HisaoClassMoveEvent final : public CustomEvent {
@@ -13,7 +12,7 @@ namespace ks {
         HisaoClassMoveEvent() = default;
         ~HisaoClassMoveEvent() override {
             _move_action.reset();
-            _background.reset();
+            // _background.reset();
         };
 
         [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
@@ -22,9 +21,9 @@ namespace ks {
 
         void init() override {
             BN_LOG("HisaoClassMoveEvent::init");
-            BN_ASSERT(_background.has_value(), "Event background is not set");
+            BN_ASSERT(primary_background.has_value(), "Event background is not set");
             _move_action = bn::regular_bg_move_to_action(
-                _background.value(),
+                primary_background.value(),
                 2000,
                 -120,
                 0
@@ -41,7 +40,7 @@ namespace ks {
         void destroy() override {
             BN_LOG("HisaoClassMoveEvent::destroy");
             _move_action.reset();
-            _background.reset();
+            // _background.reset();
             CustomEvent::destroy();
         }
 
