@@ -294,7 +294,6 @@ void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
                     ks::globals::main_update();
                 }
                 if (bn::keypad::start_pressed()) {
-                    BN_LOG("DIALOG FINISHED: ", dialog->is_finished());
                     globals::state = GS_GAME_MENU;
                     is_paused = true;
                     update_visuals();
@@ -330,52 +329,56 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
 
     bool redisplay_dialog = false;  // Prevents re-showing dialog unnecessarily
 
-    // TODO: IDEAAA!!!! TO USE 1024 SIZED MESSAGE I CAN USE TWO METHOD CALLS INSIDE WHILE CYCLE.
-    // - FIRST: REDISPLAY
-    // - SECOND: PERFORM QUESTION
-    // Looks like this way compiler shouldn't create bn::string<1024> and bn::vector<bn::string<128>, 5> at the same scope
-    // and should release resources on each method pop from stack
-    // WAAAAAAAAHAA!~
+    while (!ks::globals::exit_scenario) {
+        switch (globals::state) {
+            case GS_GAME:
+                if (redisplay_dialog) {
+                    dialog->restore_from_pause();
+                    while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+                        dialog->update();
+                        globals::main_update();
+                    }
+                }
+                // Phase 2: Display the question dialog
+                answers_index_map.clear();
+                answers_messages.clear();
 
-    while (!globals::exit_scenario) {
-        if (redisplay_dialog) {
-            dialog->restore_from_pause();
-            while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-                dialog->update();
-                globals::main_update();
-            }
+                for (int i = 0; i < answers.size(); i++) {
+                    bn::string<128> answer;
+                    // ks::scenario::gbfs_reader::get_tl<128>(
+                    //     scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i).tl_key], answer);
+                    ks::scenario::gbfs_reader::get_tl<128>(text_db, text_db_size, scene->_script_tl_index[answers.at(i).tl_key], answer);
+                    ks::globals::sound_update();
+                    answers_messages.push_back(answer);
+                    answers_index_map.push_back(answers.at(i).index);
+                }
+
+                dialog->show_question(answers_messages);
+
+                while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+                    dialog->update();
+                    ks::globals::main_update();
+                }
+
+                if (bn::keypad::start_pressed()) {
+                    dialog->reset_question();
+                    redisplay_dialog = true;
+                    globals::state = GS_GAME_MENU;
+                    is_paused = true;
+                    update_visuals();
+                }
+                break;
+            case GS_GAME_MENU:
+                ks::MenuIngamePause().run();
+            break;
+            case GS_GAME_MENU_SAVES:
+                ks::MenuSaves().run();
+            break;
+            default:
+                BN_ERROR("Wrong state: ", ks::globals::state);
         }
-
-        // Phase 2: Display the question dialog
-        answers_index_map.clear();
-        answers_messages.clear();
-
-        for (int i = 0; i < answers.size(); i++) {
-            bn::string<128> answer;
-            // ks::scenario::gbfs_reader::get_tl<128>(
-            //     scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i).tl_key], answer);
-            ks::scenario::gbfs_reader::get_tl<128>(text_db, text_db_size, scene->_script_tl_index[answers.at(i).tl_key], answer);
-            ks::globals::sound_update();
-            answers_messages.push_back(answer);
-            answers_index_map.push_back(answers.at(i).index);
-        }
-
-        dialog->show_question(answers_messages);
-
-        while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-            dialog->update();
-            ks::globals::main_update();
-        }
-
-        if (bn::keypad::start_pressed()) {
-            // Pause and re-open menu logic
-            dialog->reset_question();
-            dialog->hide_blend();
-            // SceneManager::open_ingame_menu();
-            redisplay_dialog = true;
-            continue;
-        }
-        break;
+        if (dialog->is_finished())
+            break;
     }
 }
 
