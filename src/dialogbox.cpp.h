@@ -29,7 +29,6 @@
 #include "bn_sprite_items_ui_talkbox_actor_end.h"
 
 #include <BN_LOG.h>
-#include <bn_size.h>
 #include <bn_sprite_actions.h>
 
 #include "bn_sprite_items_variable_16x16_font_beige_pal.h"
@@ -47,7 +46,7 @@ namespace ks
     class DialogBox
     {
     public:
-        DialogBox(bn::sprite_text_generator* text_generator, bn::vector<bn::sprite_ptr, 64>* finalized_text_sprites, bn::vector<bn::sprite_ptr, 128>* animated_text_sprites)
+        DialogBox(bn::sprite_text_generator* text_generator, bn::vector<bn::sprite_ptr, 64>& finalized_text_sprites, bn::vector<bn::sprite_ptr, 128>& animated_text_sprites)
             : _text_generator(text_generator),
             _finalized_text_sprites(finalized_text_sprites),
             _animated_text_sprites(animated_text_sprites),
@@ -101,16 +100,16 @@ namespace ks
             _is_immediately = false;
             _word_buffer.clear();
 
-            // _animated_text_sprites->clear();
-            // _finalized_text_sprites->clear();
-            for (auto& sprite : *_animated_text_sprites) {
+            // _animated_text_sprites.clear();
+            // _finalized_text_sprites.clear();
+            for (auto& sprite : _animated_text_sprites) {
                 sprite.set_visible(false);
             }
-            for (auto& sprite : *_finalized_text_sprites) {
+            for (auto& sprite : _finalized_text_sprites) {
                 sprite.set_visible(false);
             }
-            _animated_text_sprites->clear();
-            _finalized_text_sprites->clear();
+            _animated_text_sprites.clear();
+            _finalized_text_sprites.clear();
             _answers_sprites.clear();
         }
 
@@ -158,10 +157,10 @@ namespace ks
             for (auto& s : _title_sprites) {
                 s.set_blending_enabled(true);
             }
-            for (auto& s : *_finalized_text_sprites) {
+            for (auto& s : _finalized_text_sprites) {
                 s.set_blending_enabled(true);
             }
-            for (auto& s : *_animated_text_sprites) {
+            for (auto& s : _animated_text_sprites) {
                 s.set_blending_enabled(true);
             }
         }
@@ -170,10 +169,10 @@ namespace ks
             for (auto& s : _title_sprites) {
                 s.set_blending_enabled(false);
             }
-            for (auto& s : *_finalized_text_sprites) {
+            for (auto& s : _finalized_text_sprites) {
                 s.set_blending_enabled(false);
             }
-            for (auto& s : *_animated_text_sprites) {
+            for (auto& s : _animated_text_sprites) {
                 s.set_blending_enabled(false);
             }
         }
@@ -250,7 +249,8 @@ namespace ks
             ks::globals::sound_update();
 
             if (_actor != nullptr) {
-                BN_LOG("Actor: ", _actor->name());
+                // BN_LOG("Actor: ", _actor->name());
+                BN_LOG("[38;5;", _actor->log_color, "m", "[1m", _actor->name(), "[0m");
                 _text_generator->set_palette_item(_actor->who_color);
                 _text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52, _actor->name(), _title_sprites);
                 _text_generator->set_palette_item(original_palette_item);  // Reset to default palette
@@ -444,26 +444,24 @@ namespace ks
                 const bool quoted_start = _actor != nullptr && _text_render_prev_line_index == 0;
 
                 const bn::string_view finalized_line(message.substr(_text_render_prev_line_index, _text_render_prev_line_length));
-                BN_LOG("Render finalized line ", _text_render_line - 1);
-                BN_LOG(finalized_line);
+                // BN_LOG("Render finalized line ", _text_render_line - 1, ": ", finalized_line);
                 render_text_by_chunks_with_updates<64>(
                     0, (_text_render_line - 1) * 12,
                     finalized_line,
-                    *_finalized_text_sprites,
+                    _finalized_text_sprites,
                     quoted_start ? "\"" : "",
                     "",
                     false
                     );
 
-                for (auto& sprite : *_finalized_text_sprites) {
+                for (auto& sprite : _finalized_text_sprites) {
                     if (!sprite.visible()) {
                         sprite.set_visible(true);
                     }
                 }
 
-                if (!_animated_text_sprites->empty()) {
-                    BN_LOG("F: Animated sprites not empty. clear");
-                    _animated_text_sprites->clear();
+                if (!_animated_text_sprites.empty()) {
+                    _animated_text_sprites.clear();
                 }
             }
 
@@ -545,20 +543,20 @@ namespace ks
                 _text_render_prev_line_length--;
             }
 
-            BN_ASSERT(_text_render_prev_line_index + _text_render_prev_line_length <= message.size(), "Finalized line substring out of bounds");
+            // BN_ASSERT(_text_render_prev_line_index + _text_render_prev_line_length <= message.size(), "Finalized line substring out of bounds");
 
             bn::string_view animated_line(message.substr(cursor, _text_render_prev_line_length));
 
-            BN_LOG("Render animated line ");
-            BN_LOG(animated_line);
-            if (!_animated_text_sprites->empty()) {
+            // BN_LOG("Animated: ", animated_line);
+            BN_LOG("  ", animated_line);
+            if (!_animated_text_sprites.empty()) {
                 // BN_LOG("Animated sprites not empty. clear");
-                _animated_text_sprites->clear();
+                _animated_text_sprites.clear();
             }
             render_text_by_chunks_with_updates<128>(
                 0, _text_render_line * 12,
                 animated_line,
-                *_animated_text_sprites,
+                _animated_text_sprites,
                 quoted_start ? "\"" : "",
                 (quoted_end && _text_render_next_line_index == message.size()) ? "\"" : "",
                 true && !immediately
@@ -644,8 +642,8 @@ namespace ks
                     if (!chunk.empty()) {
                         // BN_LOG("Add chunk [", chunk, "]");
                         // BN_LOG("Spirtes used/available: ", bn::sprites_manager.);
-                        // BN_LOG("Static size: ", _finalized_text_sprites->size());
-                        // BN_LOG("Animated size: ", _animated_text_sprites->size());
+                        // BN_LOG("Static size: ", _finalized_text_sprites.size());
+                        // BN_LOG("Animated size: ", _animated_text_sprites.size());
                         _text_generator->generate(
                             -ks::device::screen_width_half + 10 + current_x,
                             ks::device::screen_height_half - 36 + y,
@@ -679,7 +677,7 @@ namespace ks
         }
 
         void hide_animated_sprites() {
-            for (auto& sprite : *_animated_text_sprites) {
+            for (auto& sprite : _animated_text_sprites) {
                 if (sprite.visible()) {
                     sprite.set_visible(false);
                 }
@@ -687,7 +685,7 @@ namespace ks
         }
 
         void show_message_sprites() {
-            for (auto& sprite : *_animated_text_sprites) {
+            for (auto& sprite : _animated_text_sprites) {
                 if (!sprite.visible()) {
                     sprite.set_visible(true);
                 }
@@ -768,10 +766,10 @@ namespace ks
                 if (bn::keypad::a_pressed() || is_skipping()) {
                     write_immediately();
                 } else {
-                    if (_animated_text_sprites->size() > 0 && _text_render_timer.elapsed_ticks() < _animated_text_sprites->size() * ks::defaults::text_render_char_ticks) {
+                    if (_animated_text_sprites.size() > 0 && _text_render_timer.elapsed_ticks() < _animated_text_sprites.size() * ks::defaults::text_render_char_ticks) {
                         // Animating
                         int i = 0;
-                        for (auto& sprite : *_animated_text_sprites) {
+                        for (auto& sprite : _animated_text_sprites) {
                             if (_text_render_timer.elapsed_ticks() >= i * ks::defaults::text_render_char_ticks) {
                                 sprite.set_visible(true);
                             }
@@ -816,8 +814,8 @@ private:
         bool _hidden = true;
 
         bn::sprite_text_generator* _text_generator;
-        bn::vector<bn::sprite_ptr, 64>* _finalized_text_sprites;
-        bn::vector<bn::sprite_ptr, 128>* _animated_text_sprites;
+        bn::vector<bn::sprite_ptr, 64>& _finalized_text_sprites;
+        bn::vector<bn::sprite_ptr, 128>& _animated_text_sprites;
 
         // Answers related stuff
         bn::vector<bn::optional<bn::sprite_ptr>, 5> answerboxes_l;

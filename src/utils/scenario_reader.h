@@ -23,10 +23,8 @@ namespace ks {
 
             template <int MaxSize>
             inline void BN_CODE_IWRAM get_tl(u8* text_db, u32 text_db_size, unsigned int offset, bn::string<MaxSize>& out) {
-                BN_LOG("O1");
                 u32 cursor = offset;
                 out.clear();
-                BN_LOG("O2");
                 for (u32 i = 0; i < text_db_size; i++) {
                     char c = text_db[cursor];
 
@@ -37,7 +35,6 @@ namespace ks {
                     out.push_back(c);
                     cursor++;
                 }
-                BN_LOG("O3");
             }
         }
     }

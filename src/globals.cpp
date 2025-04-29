@@ -19,6 +19,7 @@
 
 namespace ks {
     namespace globals {
+        gameState_t state = GS_INIT;
         bool exit_scenario = false;
         bn::unique_ptr<Translation> i18n;
         saves::SaveSettingsData settings = saves::SaveSettingsData();
@@ -66,14 +67,11 @@ namespace ks {
                 bn::bg_palettes::set_transparent_color(colors::BLACK);
             }
 
-            ks::progress_icon_sprites = new bn::vector<bn::sprite_ptr, 18>();
-            ks::static_text_sprites = new bn::vector<bn::sprite_ptr, 64>();
-            ks::animated_text_sprites = new bn::vector<bn::sprite_ptr, 128>();
+            ks::progress_icon_sprites.clear();
+            ks::static_text_sprites.clear();
+            ks::animated_text_sprites.clear();
             ks::text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
             ks::dialog = new ks::DialogBox(ks::text_generator, ks::static_text_sprites, ks::animated_text_sprites);
-            ks::progress_icon_sprites->clear();
-            ks::static_text_sprites->clear();
-            ks::animated_text_sprites->clear();
 
             ks::globals::accessibility_apply();
         }
@@ -83,9 +81,12 @@ namespace ks {
         }
 
         void release_engine() {
-            ks::main_background.reset();
+            ks::primary_background.reset();
             ks::secondary_background.reset();
             ks::transition_bg.reset();
+            ks::progress_icon_sprites.clear();
+            ks::static_text_sprites.clear();
+            ks::animated_text_sprites.clear();
             // ks::scene.reset();
 
             // delete &ks::text_db;
@@ -93,9 +94,7 @@ namespace ks {
 
             bn::memory::log_alloc_ewram_status();
 
-            delete ks::progress_icon_sprites;
-            delete ks::static_text_sprites;
-            delete ks::animated_text_sprites;
+
             delete ks::text_generator;
             delete ks::dialog;
             i18n.reset();

@@ -59,7 +59,7 @@ public:
     const char* screens_history() {return "History (n/a)";}
     const char* screens_options() {return "Options (n/a)";}
     const char* screens_save_game() {return "Save game (n/a)";}
-    const char* screens_load_game() {return "Load game (n/a)";}
+    const char* screens_load_game() {return "Load game";}
     const char* screens_main_menu() {return "Main menu";}
 
     const char* screens_playtime() {return "Playtime";}

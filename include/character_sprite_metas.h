@@ -74,7 +74,7 @@
 #include "sprite_metas/muto_basic.h"
 #include "sprite_metas/muto_basic_close.h"
 namespace ks::character_sprite_metas {
-    const character_sprite_meta* get_by_hash(const unsigned int hash) {
+    inline const character_sprite_meta* get_by_hash(const unsigned int hash) {
         switch (hash) {
             case 0xD33B: return &sprite_metas::shizu_behind_nak;
             case 0x75CB: return &sprite_metas::shizu_adjust_cas;

@@ -4,14 +4,13 @@
 #include <BN_LOG.h>
 
 #include "custom_event.h"
-#include "hisao_class.h"
 
 namespace ks {
     class HisaoClassEndEvent final : public CustomEvent {
     public:
         HisaoClassEndEvent() = default;
         ~HisaoClassEndEvent() override {
-            _background.reset();
+            // _background.reset();
         };
 
         [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
@@ -20,7 +19,7 @@ namespace ks {
 
         void init() override {
             BN_LOG("HisaoClassEndEvent::init");
-            _background->set_position(-120, 0);
+            primary_background->set_position(-120, 0);
             SceneManager::set_background_position(-120, 0);
             CustomEvent::init();
         }
@@ -31,7 +30,7 @@ namespace ks {
 
         void destroy() override {
             BN_LOG("HisaoClassEndEvent::destroy");
-            _background.reset();
+            // _background.reset();
             CustomEvent::destroy();
         }
     };

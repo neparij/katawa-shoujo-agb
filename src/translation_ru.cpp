@@ -58,7 +58,7 @@ public:
     const char* screens_history() {return "История (н/д)";}
     const char* screens_options() {return "Настройки (н/д)";}
     const char* screens_save_game() {return "Сохранить (н/д)";}
-    const char* screens_load_game() {return "Загрузить (н/д)";}
+    const char* screens_load_game() {return "Загрузить";}
     const char* screens_main_menu() {return "Главное меню";}
 
     const char* screens_playtime() {return "Наиграно";}

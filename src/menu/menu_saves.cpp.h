@@ -17,9 +17,9 @@
 namespace ks {
     class MenuSaves final : public MenuBase {
     public:
-        explicit MenuSaves(gameState_t &state): MenuBase(state) {
-            main_background.reset();
-            progress_icon_sprites->clear();
+        explicit MenuSaves() {
+            primary_background.reset();
+            progress_icon_sprites.clear();
             secondary_background = bn::regular_bg_items::ui_bg_menu_saves_front.create_bg(0, 0);
             secondary_background->set_priority(1);
             text_generator->set_bg_priority(1);
@@ -37,8 +37,13 @@ namespace ks {
         }
 
         void on_back() override {
-            state = GS_MENU_MAIN;
-            menu::set_initial_selection(1);
+            if (globals::state == GS_MENU_SAVES) {
+                globals::state = GS_MENU_MAIN;
+                menu::set_initial_selection(1);
+            } else if (globals::state == GS_GAME_MENU_SAVES) {
+                globals::state = GS_GAME_MENU;
+                menu::set_initial_selection(4);
+            }
         }
 
         void on_select(const int option) override {
@@ -50,14 +55,18 @@ namespace ks {
                 const short i = saveslot_index.at(selection);
                 BN_LOG("Slot: ", i);
                 if (i == -1) {
-                    progress = saves::readAutosave();
+                    savedata_progress = saves::readAutosave();
                 } else {
-                    progress = saves::readSaveSlot(i);
+                    savedata_progress = saves::readSaveSlot(i);
                 }
-                BN_ASSERT(saves::isValid(&progress, i), "Invalid save slot");
+                BN_ASSERT(saves::isValid(&savedata_progress, i), "Invalid save slot");
 
                 fade_out();
-                state = GS_LOAD_GAME;
+                if (globals::state == GS_GAME_MENU_SAVES) {
+                    globals::exit_scenario = true;
+                    is_paused = false;
+                }
+                globals::state = GS_LOAD_GAME;
             }
         }
 
@@ -104,18 +113,18 @@ namespace ks {
             saveslot_index.clear();
             items_count = 0;
 
-            static_text_sprites->clear();
-            progress_icon_sprites->clear();
+            static_text_sprites.clear();
+            progress_icon_sprites.clear();
             saveslot_thumbnails.clear();
-            progress_icon_sprites->push_back(bn::sprite_items::ui_bg_menu_saves_back_0.create_sprite(
+            progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_0.create_sprite(
                 -device::screen_width_half + 32, -device::screen_height_half + 32));
-            progress_icon_sprites->back().set_bg_priority(3);
-            progress_icon_sprites->push_back(bn::sprite_items::ui_bg_menu_saves_back_1.create_sprite(
+            progress_icon_sprites.back().set_bg_priority(3);
+            progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_1.create_sprite(
                 -device::screen_width_half + 32, -device::screen_height_half + 32 + 64));
-            progress_icon_sprites->back().set_bg_priority(3);
-            progress_icon_sprites->push_back(bn::sprite_items::ui_bg_menu_saves_back_2.create_sprite(
+            progress_icon_sprites.back().set_bg_priority(3);
+            progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_2.create_sprite(
                 -device::screen_width_half + 32, -device::screen_height_half + 32 + 128));
-            progress_icon_sprites->back().set_bg_priority(3);
+            progress_icon_sprites.back().set_bg_priority(3);
             globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);
@@ -158,13 +167,13 @@ namespace ks {
                         if (thumbnail_hash != 0) {
                             if (const auto character_thumbnail = character_sprite_metas::get_by_hash(thumbnail_hash);
                                 character_thumbnail != nullptr) {
-                                progress_icon_sprites->push_back(
+                                progress_icon_sprites.push_back(
                                     character_thumbnail->thumbnail.create_sprite(
                                         -device::screen_width_half + draw_x_from + 24 + offset_x,
                                         draw_y_from + 10 + draw_y_offset * tile_index
                                     )
                                 );
-                                progress_icon_sprites->back().set_bg_priority(2);
+                                progress_icon_sprites.back().set_bg_priority(2);
                             }
                         }
                     }

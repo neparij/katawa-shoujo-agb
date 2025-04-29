@@ -13,7 +13,7 @@
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
-#define KS_AGB_VERSION "0.3.1+00"
+#define KS_AGB_VERSION "0.3.1+52"
 #define KS_SHOW_4LS_INTRO true
 
 static const GBFS_FILE* fs = find_first_gbfs_file(nullptr);
@@ -23,6 +23,7 @@ namespace ks {
     // class Translation;
 
     namespace globals {
+        extern gameState_t state;
         extern bool exit_scenario;
         extern bn::unique_ptr<Translation> i18n;
         extern saves::SaveSettingsData settings;

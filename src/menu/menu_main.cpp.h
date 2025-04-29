@@ -28,13 +28,13 @@
 namespace ks {
     class MenuMain final : public MenuBase {
     public:
-        explicit MenuMain(gameState_t &state): MenuBase(state) {
+        explicit MenuMain() {
             const bn::string<64> version(KS_AGB_VERSION);
             secondary_background.reset();
-            main_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
+            primary_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
 
-            static_text_sprites->clear();
-            progress_icon_sprites->clear();
+            static_text_sprites.clear();
+            progress_icon_sprites.clear();
             globals::main_update();
 
             draw_progress_icons();
@@ -73,16 +73,16 @@ namespace ks {
             switch (option) {
                 case 0:
                     fade_out();
-                    state = GS_START_NEW_GAME;
+                    globals::state = GS_START_GAME;
                     break;
                 case 1:
-                    state = GS_MENU_SAVES;
+                    globals::state = GS_MENU_SAVES;
                     break;
                 case 2:
-                    state = GS_MENU_EXTRAS;
+                    globals::state = GS_MENU_EXTRAS;
                     break;
                 case 3:
-                    state = GS_MENU_OPTIONS;
+                    globals::state = GS_MENU_OPTIONS;
                     break;
                 default:
                     BN_ERROR("Menu option is not implemented");
@@ -97,40 +97,40 @@ namespace ks {
         bn::vector<bn::sprite_ptr, 2> progress_icon_sprites_partial; // Used for combined sprites for progress icons
 
         void draw_progress_icons() {
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_16_tc4_shizune.create_sprite(111, 17));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_15_tc3_shizune.create_sprite(113, 42));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_14_tc2_shizune.create_sprite(93, 71));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_16_tc4_shizune.create_sprite(111, 17));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_15_tc3_shizune.create_sprite(113, 42));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_14_tc2_shizune.create_sprite(93, 71));
             globals::sound_update();
 
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_13_tc4_rin.create_sprite(62, -22));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_12_tc3_rin_rin.create_sprite(67, -8));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_11_tc3_rin_hisao.create_sprite(82, 13));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_10_tc2_rin.create_sprite(96, 48));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_13_tc4_rin.create_sprite(62, -22));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_12_tc3_rin_rin.create_sprite(67, -8));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_11_tc3_rin_hisao.create_sprite(82, 13));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_10_tc2_rin.create_sprite(96, 48));
             globals::sound_update();
 
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_09_tc4_lilly.create_sprite(29, -17));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_08_tc3_lilly.create_sprite(63, 8));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_07_tc2_lilly.create_sprite(65, 39));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_09_tc4_lilly.create_sprite(29, -17));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_08_tc3_lilly.create_sprite(63, 8));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_07_tc2_lilly.create_sprite(65, 39));
 
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_06_tc4_hanako.create_sprite(16, 8));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_06_tc4_hanako.create_sprite(16, 8));
             globals::sound_update();
 
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_05_tc4_emi_1.create_sprite(14, 37));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_05_tc4_emi_2.create_sprite(50, 42));
-            progress_icon_sprites_partial.push_back(progress_icon_sprites->back());
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_05_tc4_emi_1.create_sprite(14, 37));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_05_tc4_emi_2.create_sprite(50, 42));
+            progress_icon_sprites_partial.push_back(progress_icon_sprites.back());
 
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_04_tc3_emi.create_sprite(32, 63));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_03_tc2_emi.create_sprite(37, 64));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_04_tc3_emi.create_sprite(32, 63));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_03_tc2_emi.create_sprite(37, 64));
             globals::sound_update();
 
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_02_tc3_hanako.create_sprite(29, 19));
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_01_tc2_hanako.create_sprite(52, 41));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_02_tc3_hanako.create_sprite(29, 19));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_01_tc2_hanako.create_sprite(52, 41));
 
-            progress_icon_sprites->push_back(bn::sprite_items::ui_icon_00_tc1_hisao.create_sprite(71, 71));
+            progress_icon_sprites.push_back(bn::sprite_items::ui_icon_00_tc1_hisao.create_sprite(71, 71));
 
 
             if (selection == 0) {
-                for (auto &sprite: *progress_icon_sprites) {
+                for (auto &sprite: progress_icon_sprites) {
                     sprite.set_visible(false);
                 }
                 icons_appearing = true;
@@ -138,9 +138,9 @@ namespace ks {
         }
 
         void animate_progress_icons() {
-            if (icons_appearing && icons_appeared < progress_icon_sprites->size()) {
-                const int icon_index = progress_icon_sprites->size() - 1 - icons_appeared;
-                auto &icon = progress_icon_sprites->at(icon_index);
+            if (icons_appearing && icons_appeared < progress_icon_sprites.size()) {
+                const int icon_index = progress_icon_sprites.size() - 1 - icons_appeared;
+                auto &icon = progress_icon_sprites.at(icon_index);
                 if (transparency_action.has_value() && move_to_actions.size() > 0) {
                     if (!transparency_action->done()) {
                         transparency_action->update();
@@ -153,10 +153,10 @@ namespace ks {
                         transparency_action.reset();
                         move_to_actions.clear();
                         icons_appeared++;
-                        // for (unsigned char i = progress_icon_sprites->size() - 1; i >= icon_index; --i) {
-                        //     progress_icon_sprites->at(i).set_blending_enabled(false);
+                        // for (unsigned char i = progress_icon_sprites.size() - 1; i >= icon_index; --i) {
+                        //     progress_icon_sprites.at(i).set_blending_enabled(false);
                         // }
-                        for (auto &sprite: *progress_icon_sprites) {
+                        for (auto &sprite: progress_icon_sprites) {
                             sprite.set_blending_enabled(false);
                         }
                     }
