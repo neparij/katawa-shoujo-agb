@@ -1,3 +1,5 @@
+import json
+
 from PIL import Image, ImageDraw, ImageFont
 import math
 
@@ -23,9 +25,7 @@ class TextPaletteData:
                 colors.extend([r, g, b])
                 continue
 
-            # lerp_factor = i / (COLORS_COUNT - 1)
             lerp_factor = (i / (COLORS_COUNT - 1)) + alpha_threshold - (i / (COLORS_COUNT - 1)) * alpha_threshold
-            print(f"Color {i} lerp factor: {lerp_factor}")
 
             r = int(self.background_color[0] + (self.text_color[0] - self.background_color[0]) * lerp_factor)
             g = int(self.background_color[1] + (self.text_color[1] - self.background_color[1]) * lerp_factor)
@@ -33,36 +33,22 @@ class TextPaletteData:
             colors.extend([r, g, b])
         return colors
 
+class FontData:
+    def __init__(self, name: str, font_path: str, char_size: tuple[int, int], font_size: int, stroke_width: float = 0):
+        self.name = name
+        self.font_path = font_path
+        self.char_size = char_size
+        self.font_size = font_size
+        self.stroke_width = stroke_width
+
+    def get_font(self):
+        return ImageFont.truetype(self.font_path, self.font_size)
 
 # Configuration
-FONT_PATH = "/Library/Fonts/playtime.ttf"
-FONT_SIZE = 12
-CHAR_WIDTH = 16
-CHAR_HEIGHT = 16
-CHAR_SPACE_WIDTH = 6
+FONT_PATH = "/Users/n.laptev/development/ksre/game/font/playtime.ttf"
 
 FONT_DEFAULT_PALETTE = "main"
 COLUMNS = 1
-
-# define hi  = Character(_("Hisao"),    who_color="#629276") -> TextPaletteData("hi", (98, 146, 118, 255), (16, 16, 16, 255)),
-# define ha  = Character(_("Hanako"),   who_color="#897CBF") -> TextPaletteData("ha", (137, 124, 191, 255), (16, 16, 16, 255)),
-# define emi = Character(_("Emi"),      who_color="#FF8D7C") -> TextPaletteData("emi", (255, 141, 124, 255), (16, 16, 16, 255)),
-# define rin = Character(_("Rin"),      who_color="#b14343") -> TextPaletteData("rin", (177, 67, 67, 255), (16, 16, 16, 255)),
-# define li  = Character(_("Lilly"),    who_color="#F9EAA0") -> TextPaletteData("li", (249, 234, 160, 255), (16, 16, 16, 255)),
-# define shi = Character(_("Shizune"),  who_color="#72ADEE") -> TextPaletteData("shi", (114, 173, 238, 255), (16, 16, 16, 255)),
-# define mi  = Character(_("Misha"),    who_color="#FF809F") -> TextPaletteData("mi", (255, 128, 159, 255), (16, 16, 16, 255)),
-# define ke  = Character(_("Kenji"),    who_color="#CC7C2A") -> TextPaletteData("ke", (204, 124, 42, 255), (16, 16, 16, 255)),
-# define mu  = Character(_("Mutou"),    who_color="#FFFFFF") -> TextPaletteData("mu", (255, 255, 255, 255), (16, 16, 16, 255)),
-# define nk  = Character(_("Nurse"),    who_color="#FFFFFF") -> TextPaletteData("nk", (255, 255, 255, 255), (16, 16, 16, 255)),
-# define no  = Character(_("Nomiya"),   who_color="#E0E0E0") -> TextPaletteData("no", (224, 224, 224, 255), (16, 16, 16, 255)),
-# define yu  = Character(_("Yuuko"),    who_color="#2c9e31") -> TextPaletteData("yu", (44, 158, 49, 255), (16, 16, 16, 255)),
-# define sa  = Character(_("Sae"),      who_color="#D4D4FF") -> TextPaletteData("sa", (212, 212, 255, 255), (16, 16, 16, 255)),
-# define aki = Character(_("Akira"),    who_color="#eb243b") -> TextPaletteData("aki", (235, 36, 59, 255), (16, 16, 16, 255)),
-# define hh  = Character(_("Hideaki"),  who_color="#6299FF") -> TextPaletteData("hh", (98, 153, 255, 255), (16, 16, 16, 255)),
-# define hx  = Character(_("Jigoro"),   who_color="#99AACC") -> TextPaletteData("hx", (153, 170, 204, 255), (16, 16, 16, 255)),
-# define emm = Character(_("Meiko"),    who_color="#995050") -> TextPaletteData("emm", (153, 80, 80, 255), (16, 16, 16, 255)),
-# define sk  = Character(_("Shopkeep"), who_color="#7187A8") -> TextPaletteData("sk", (113, 135, 168, 255), (16, 16, 16, 255)),
-# define mk  = Character(_("Miki"),     who_color="#AD735E") -> TextPaletteData("mk", (173, 115, 94, 255), (16, 16, 16, 255)),
 
 FONT_PALETTES = [
     TextPaletteData(FONT_DEFAULT_PALETTE, (255, 255, 255, 255), (16, 16, 16, 255)),
@@ -90,6 +76,12 @@ FONT_PALETTES = [
     TextPaletteData("mk", (173, 115, 94, 255), (16, 16, 16, 255)),
 ]
 
+FONTS = [
+    FontData("playtime", FONT_PATH, (16, 16), 12),
+    FontData("playtime_bold", FONT_PATH, (16, 16), 12, 0.2),
+    # FontData("playtime_small_bold", FONT_PATH, (8, 16), 8, 0.15),
+]
+
 PALETTE_BACKGROUND_COLOR = [0, 255, 0]
 ENABLE_ANTIALIASING = True
 COLORS_COUNT = 16
@@ -112,7 +104,6 @@ formatted_output = ', '.join(f'"{char}"' for char in ADDITIONAL)
 print(f"constexpr bn::utf8_character variable_16x16_sprite_font_utf8_characters[] = {{\n    {formatted_output}\n}};")
 
 CHARACTERS = BASIC_LATIN + ''.join(ADDITIONAL)
-CHAR_WIDTHS = [str(CHAR_SPACE_WIDTH) + ",     // Space"]
 
 if ENABLE_ANTIALIASING:
     ImageDraw.fontmode = "L"
@@ -120,26 +111,29 @@ else:
     ImageDraw.fontmode = "1"
 
 
-def get_font_name(palette_name: str) -> str:
-    return f'variable_{CHAR_WIDTH}x{CHAR_HEIGHT}_font{f"_{palette_name}" if palette_name != FONT_DEFAULT_PALETTE else ""}'
+def get_font_name(paldata: TextPaletteData, font_data: FontData) -> str:
+    return f'font_{font_data.name}{f"_{paldata.name}" if paldata.name != FONT_DEFAULT_PALETTE else ""}'
 
+def get_palette_name(paldata: TextPaletteData) -> str:
+    return f'fontpalette_{paldata.name}'
 
-def draw_text(draw, position, text, font, text_color):
+def draw_text(draw, position, text, font, paldata: TextPaletteData, font_data: FontData):
     char_bbox = font.getbbox(text)
+    # char_width = char_bbox[2] - char_bbox[0] + font_data.stroke_width
     char_width = char_bbox[2] - char_bbox[0]
     draw.fontmode = ImageDraw.fontmode
-    draw.text(position, text, font=font, fill=text_color, anchor="lm")
+    draw.text(position, text, font=font, fill=paldata.text_color, anchor="lm", stroke_width=font_data.stroke_width, stroke_fill=paldata.text_color)
 
     if text == "\\":
         text = "Backslash"
-    CHAR_WIDTHS.append(str(min(CHAR_WIDTH, math.ceil(char_width) + 1)) + ",    // " + text)
+    CHAR_WIDTHS.append(str(min(font_data.char_size[0], math.ceil(char_width) + 1)) + ",    // " + text)
 
 
-def generate_sprite_sheet(paldata: TextPaletteData):
+def generate_sprite_sheet(paldata: TextPaletteData, font_data: FontData):
     # Calculate the size of the sprite sheet
     rows = (len(CHARACTERS) + COLUMNS - 1) // COLUMNS
-    sheet_width = COLUMNS * CHAR_WIDTH
-    sheet_height = rows * CHAR_HEIGHT
+    sheet_width = COLUMNS * font_data.char_size[0]
+    sheet_height = rows * font_data.char_size[1]
 
     # sprite_sheet = Image.new("RGBA", (sheet_width, sheet_height), paldata.background_color)
     sprite_sheet = Image.new("P", (sheet_width, sheet_height), paldata.background_color)
@@ -147,13 +141,13 @@ def generate_sprite_sheet(paldata: TextPaletteData):
 
     draw = ImageDraw.Draw(sprite_sheet)
     draw.fontmode = ImageDraw.fontmode
-    font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
+    font = font_data.get_font()
 
     for i, char in enumerate(CHARACTERS):
-        x = (i % COLUMNS) * CHAR_WIDTH
-        y = (i // COLUMNS) * CHAR_HEIGHT
-        text_position = (x, y + CHAR_HEIGHT // 2)
-        draw_text(draw, text_position, char, font, paldata.text_color)
+        x = (i % COLUMNS) * font_data.char_size[0]
+        y = (i // COLUMNS) * font_data.char_size[1]
+        text_position = (x, y + font_data.char_size[1] // 2)
+        draw_text(draw, text_position, char, font, paldata, font_data)
 
     p = sprite_sheet.getpalette()
     palette_colors = [tuple(p[i:i + 3]) for i in range(0, len(p), 3)]
@@ -162,10 +156,10 @@ def generate_sprite_sheet(paldata: TextPaletteData):
         raise f"Background color {paldata.background_color} is not in the original palette at index 0!"
     sprite_sheet.putpalette(PALETTE_BACKGROUND_COLOR + sprite_sheet.getpalette()[3:])
 
-    filename = get_font_name(palette.name) + ".bmp"
+    filename = get_font_name(paldata, font_data) + ".bmp"
     sprite_sheet.save(filename)
-    generate_palettes_sample(paldata)
     print(f"Sprite sheet saved to {filename}")
+    generate_json_metadata(filename, font_data.char_size[1])
 
 
 # Creates 16x16 sprite with palette colors
@@ -177,21 +171,33 @@ def generate_palettes_sample(paldata: TextPaletteData):
         raise f"Background color {paldata.background_color} is not in the original palette at index 0!"
     p[0:3] = PALETTE_BACKGROUND_COLOR
 
-    img = Image.new("P", (CHAR_WIDTH, CHAR_HEIGHT), palette_colors[0])
+    img = Image.new("P", (16, 16), palette_colors[0])
     img.putpalette(p)
 
     # Fills pixels with all palette colors
     for i, color in enumerate(palette_colors):
-        print(f"Color {i}: {color}")
         x = i % 16
         y = i // 16
         img.putpixel((x, y), i)
 
-    img.save(get_font_name(paldata.name) + "_pal.bmp")
-    print(f"Palette sample saved as {get_font_name(paldata.name) + '_pal.bmp'}")
+    palette_filename = f'{get_palette_name(paldata)}.bmp'
+    img.save(palette_filename)
+    print(f"Palette sample saved as {palette_filename}")
+    generate_json_metadata(palette_filename, 16)
 
-def save_widths_info(paldata: TextPaletteData):
-    filename = get_font_name(paldata.name) + ".widths.txt"
+def generate_json_metadata(filename, char_height: int):
+    with open(f'{filename.removesuffix(".bmp")}.json', "w") as file:
+        metadata = {
+            "type": "sprite",
+            "height": char_height,
+            "bpp_mode": "bpp_4",
+            "colors_count": 16,
+            "compression": "none",
+        }
+        file.write(json.dumps(metadata, indent=4))
+
+def save_widths_info(paldata: TextPaletteData, font_data: FontData):
+    filename = get_font_name(paldata, font_data) + ".widths.txt"
     with open(filename, "w") as file:
         file.write("\n".join(map(str, CHAR_WIDTHS)) + "\n")
         print(f"Character widths saved to {filename}")
@@ -199,6 +205,9 @@ def save_widths_info(paldata: TextPaletteData):
 
 if __name__ == "__main__":
     print("Char count: " + str(len(CHARACTERS)))
+    for font in FONTS:
+        CHAR_WIDTHS = [str(font.font_size // 2) + ",     // Space"]
+        generate_sprite_sheet(FONT_PALETTES[0], font)
+        save_widths_info(FONT_PALETTES[0], font)
     for palette in FONT_PALETTES:
-        generate_sprite_sheet(palette)
-        save_widths_info(palette)
+        generate_palettes_sample(palette)

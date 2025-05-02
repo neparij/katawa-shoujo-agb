@@ -31,9 +31,6 @@
 #include <BN_LOG.h>
 #include <bn_sprite_actions.h>
 
-#include "bn_sprite_items_variable_16x16_font_beige_pal.h"
-#include "bn_sprite_items_variable_16x16_font_beige_selected_pal.h"
-
 namespace ks
 {
     enum class DialogState {
@@ -46,13 +43,11 @@ namespace ks
     class DialogBox
     {
     public:
-        DialogBox(bn::sprite_text_generator* text_generator, bn::vector<bn::sprite_ptr, 64>& finalized_text_sprites, bn::vector<bn::sprite_ptr, 128>& animated_text_sprites)
+        DialogBox(bn::sprite_text_generator& text_generator, bn::sprite_text_generator& text_generator_bold, bn::vector<bn::sprite_ptr, 64>& finalized_text_sprites, bn::vector<bn::sprite_ptr, 128>& animated_text_sprites)
             : _text_generator(text_generator),
+            _text_generator_bold(text_generator_bold),
             _finalized_text_sprites(finalized_text_sprites),
-            _animated_text_sprites(animated_text_sprites),
-            original_palette_item(_text_generator->palette_item()),
-            beige_palette_item(bn::sprite_items::variable_16x16_font_beige_pal.palette_item()),
-            beige_selected_palette_item(bn::sprite_items::variable_16x16_font_beige_selected_pal.palette_item())
+            _animated_text_sprites(animated_text_sprites)
         {
             reset_title();
             reset_message();
@@ -239,22 +234,21 @@ namespace ks
             talkbox3->set_bg_priority(1);
             talkbox4->set_bg_priority(1);
 
-            _text_generator->set_one_sprite_per_character(false);
-            _text_generator->set_left_alignment();
-            _text_generator->set_palette_item(original_palette_item);
 
-            _text_generator->set_bg_priority(1);
-            _text_generator->set_z_order(-10);
+            _text_generator.set_one_sprite_per_character(false);
+            _text_generator.set_left_alignment();
+            _text_generator.set_palette_item(globals::text_palettes::original);
 
             ks::globals::sound_update();
 
             if (_actor != nullptr) {
                 // BN_LOG("Actor: ", _actor->name());
                 BN_LOG("[38;5;", _actor->log_color, "m", "[1m", _actor->name(), "[0m");
-                _text_generator->set_palette_item(_actor->who_color);
-                _text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52, _actor->name(), _title_sprites);
-                _text_generator->set_palette_item(original_palette_item);  // Reset to default palette
-                const int title_ends_x = -ks::device::screen_width_half + 8 + _text_generator->width(_actor->name());
+                _text_generator_bold.set_left_alignment();
+                _text_generator_bold.set_palette_item(_actor->who_color);
+                _text_generator_bold.generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52, _actor->name(), _title_sprites);
+                _text_generator_bold.set_palette_item(globals::text_palettes::original);  // Reset to default palette
+                const int title_ends_x = -ks::device::screen_width_half + 8 + _text_generator_bold.width(_actor->name());
 
                 talkbox_actor_sprites.push_back(bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16, ks::device::screen_height_half - 44));
                 talkbox_actor_sprites.back().set_bg_priority(1);
@@ -305,11 +299,11 @@ namespace ks
             // BN_LOG("Pointer (A) address: ", ks::gfx::animated_text_tiles);
 
             reset_question();
-            _text_generator->set_one_sprite_per_character(true);
-            _text_generator->set_z_order(-50);
-            // _text_generator->set_center_alignment();
-            _text_generator->set_left_alignment();
-            // _text_generator->set_palette_item(beige_palette_item);
+            _text_generator.set_one_sprite_per_character(true);
+            _text_generator.set_z_order(-50);
+            // _text_generator.set_center_alignment();
+            _text_generator.set_left_alignment();
+            // _text_generator.set_palette_item(beige_palette_item);
 
             unsigned short last_answer_sprite_index = 0;
             for (int i = 0; i < answers.size(); i++) {
@@ -329,14 +323,14 @@ namespace ks
                 answerboxes_c.push_back(box_c);
                 answerboxes_r.push_back(box_r);
                 // // TODO: Use stringview?
-                // _text_generator->generate(0, -56 + i * 20, answers.at(i), _answers_sprites);
-                // _answers_widths.push_back(_text_generator->width(answers.at(i)));
-                const int answer_width = _text_generator->width(answers.at(i));
-                _answers_widths.push_back(_text_generator->width(answers.at(i)));
+                // _text_generator.generate(0, -56 + i * 20, answers.at(i), _answers_sprites);
+                // _answers_widths.push_back(_text_generator.width(answers.at(i)));
+                const int answer_width = _text_generator.width(answers.at(i));
+                _answers_widths.push_back(_text_generator.width(answers.at(i)));
                 if (answer_width <= _answers_half_width * 2) {
-                    _text_generator->generate(-answer_width / 2, -56 + i * 20, answers.at(i), _answers_sprites);
+                    _text_generator.generate(-answer_width / 2, -56 + i * 20, answers.at(i), _answers_sprites);
                 } else {
-                    _text_generator->generate(-_answers_half_width, -56 + i * 20, answers.at(i), _answers_sprites);
+                    _text_generator.generate(-_answers_half_width, -56 + i * 20, answers.at(i), _answers_sprites);
                 }
                 ks::globals::sound_update();
                 for (int spr_num = last_answer_sprite_index; spr_num < _answers_sprites.size(); spr_num++) {
@@ -402,7 +396,7 @@ namespace ks
         void set_answers_palette() {
             for (int i = 0; i < _answers_sprites.size(); i++) {
                 const bool is_selected = _answers_sprites_answer_index.at(i) == _answer_selected;
-                _answers_sprites.at(i).set_palette(is_selected ? beige_selected_palette_item : beige_palette_item);
+                _answers_sprites.at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
             }
         }
 
@@ -431,10 +425,10 @@ namespace ks
 
         void render_message_line(const int cursor, const bool immediately = false) {
             constexpr int max_width = ks::device::screen_width - 20;
-            const unsigned char space_width = _text_generator->width(" ");
+            const unsigned char space_width = _text_generator.width(" ");
             const bn::string_view message(_remaining_message);
 
-            _text_generator->set_palette_item(original_palette_item);
+            _text_generator.set_palette_item(globals::text_palettes::original);
 
             if (_text_render_line == 0) {
                 // Delete all text sprites on the first line of each page.
@@ -502,7 +496,7 @@ namespace ks
                 }
 
                 if (is_eol || is_space || is_newline) {
-                    word_width = _text_generator->width(_word_buffer);
+                    word_width = _text_generator.width(_word_buffer);
 
                     if (cursor_x + word_width < max_width) {
                         _word_buffer.clear();
@@ -521,7 +515,7 @@ namespace ks
                         line_end = true;
                     }
                 } else {
-                    word_width = _text_generator->width(_word_buffer + part);
+                    word_width = _text_generator.width(_word_buffer + part);
                     if (word_width >= max_width) {
                             // 🚨 FUCK YOU KENJI for your "Aaaaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhhhhhggggggggggghhhhhhhh……"
                             _text_render_next_line_index = cursor_i;
@@ -577,7 +571,7 @@ namespace ks
             unsigned char chunk_size = 8
             ) {
             // Set text generator settings
-            _text_generator->set_one_sprite_per_character(one_sprite_per_character);
+            _text_generator.set_one_sprite_per_character(one_sprite_per_character);
 
             // Start rendering position
             unsigned char current_x = x;
@@ -587,18 +581,18 @@ namespace ks
 
             // Render prefix if provided
             if (!prefix.empty()) {
-                _text_generator->generate(
+                _text_generator.generate(
                     -ks::device::screen_width_half + 10 + current_x,
                     ks::device::screen_height_half - 36 + y,
                     prefix,
                     sprite_vector
                     );
-                current_x += _text_generator->width(prefix);
+                current_x += _text_generator.width(prefix);
             }
 
             // Render text in chunks
             if (DRAW_PACKED_SPRITES_IN_ONE_CHUNK && !one_sprite_per_character) {
-                _text_generator->generate(
+                _text_generator.generate(
                     -ks::device::screen_width_half + 10 + current_x,
                     ks::device::screen_height_half - 36 + y,
                     buffer,
@@ -608,7 +602,7 @@ namespace ks
                 ks::globals::sound_update();
 
                 // Update horizontal position
-                current_x += _text_generator->width(buffer);
+                current_x += _text_generator.width(buffer);
             } else {
                 int index = 0;
                 while (index < buffer.size()) {
@@ -644,7 +638,7 @@ namespace ks
                         // BN_LOG("Spirtes used/available: ", bn::sprites_manager.);
                         // BN_LOG("Static size: ", _finalized_text_sprites.size());
                         // BN_LOG("Animated size: ", _animated_text_sprites.size());
-                        _text_generator->generate(
+                        _text_generator.generate(
                             -ks::device::screen_width_half + 10 + current_x,
                             ks::device::screen_height_half - 36 + y,
                             chunk,
@@ -652,7 +646,7 @@ namespace ks
                             );
 
                         // Update horizontal position
-                        current_x += _text_generator->width(chunk);
+                        current_x += _text_generator.width(chunk);
                     }
 
                     ks::globals::sound_update();
@@ -665,13 +659,13 @@ namespace ks
 
             // Render suffix if provided
             if (!suffix.empty()) {
-                _text_generator->generate(
+                _text_generator.generate(
                     -ks::device::screen_width_half + 10 + current_x,
                     ks::device::screen_height_half - 36 + y,
                     suffix,
                     sprite_vector
                     );
-                current_x += _text_generator->width(prefix);
+                current_x += _text_generator.width(prefix);
                 sprite_vector.back().set_visible(false);
             }
         }
@@ -813,7 +807,8 @@ private:
 
         bool _hidden = true;
 
-        bn::sprite_text_generator* _text_generator;
+        bn::sprite_text_generator& _text_generator;
+        bn::sprite_text_generator& _text_generator_bold;
         bn::vector<bn::sprite_ptr, 64>& _finalized_text_sprites;
         bn::vector<bn::sprite_ptr, 128>& _animated_text_sprites;
 
@@ -844,11 +839,6 @@ private:
         bn::string<64> _word_buffer; // May be resize form verylongphraseswithoutspaces
 
         const character_definition* _actor = nullptr;  // Store pointer to character definition
-
-        // Palettes
-        bn::sprite_palette_item original_palette_item;
-        bn::sprite_palette_item beige_palette_item;
-        bn::sprite_palette_item beige_selected_palette_item;
     };
 
 }

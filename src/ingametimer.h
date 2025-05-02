@@ -24,10 +24,10 @@ namespace ks {
         extern void reset();
 
         // Resets ingame timer and sets it to 0
-        extern void reset_ingame_timer();
+        extern void reset_ingame_timer(bool reset_values = true);
 
         // Resets and starts ingame timer
-        extern void start_ingame_timer();
+        extern void start_ingame_timer(bool reset_values = true);
 
         // Resumes ingame timer
         extern void resume_ingame_timer();

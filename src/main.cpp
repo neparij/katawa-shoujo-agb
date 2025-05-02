@@ -22,12 +22,14 @@ using size_type = int;
 
 inline void game(const bool is_new_game) {
     ks::globals::state = GS_GAME;
+    ks::in_game = true;
+    ks::is_paused = false;
     ks::SceneManager::fade_reset();
 
     if (is_new_game) {
         ks::timer::start_ingame_timer();
     } else {
-        ks::timer::resume_ingame_timer();
+        ks::timer::start_ingame_timer(false);
     }
 
     ks::globals::i18n->script_a1_monday()();
@@ -115,6 +117,8 @@ inline void game(const bool is_new_game) {
         // Show blood red scene with Dissolve 4s
         // KENJI ENDING
     }
+
+    ks::in_game = false;
 
     // credits
 }

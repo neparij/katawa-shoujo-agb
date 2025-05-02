@@ -4,5 +4,8 @@ out/
 tiled/
 venv/
 venv-3.12/
-variable_16x16_*.bmp
-variable_16x16_*.widths.txt
+font_*.bmp
+font_*.json
+fontpalette_*.bmp
+fontpalette_*.json
+font_*.widths.txt

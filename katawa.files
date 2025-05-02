@@ -1,5 +1,5 @@
 include/fixed_32x64_sprite_font.h
-include/variable_16x16_sprite_font.h
+include/fonts_info.h
 src/assignmentitem.cpp.h
 src/backgrounditem.cpp.h
 src/character.h

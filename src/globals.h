@@ -3,8 +3,9 @@
 
 #include <bn_color.h>
 #include <bn_optional.h>
-#include <bn_sprite_items_variable_16x16_font.h>
-#include <bn_sprite_items_variable_16x16_font_hi_pal.h>
+#include <bn_sprite_items_fontpalette_main.h>
+#include <bn_sprite_items_fontpalette_beige.h>
+#include <bn_sprite_items_fontpalette_beige_selected.h>
 #include <bn_sprite_palette_item.h>
 #include <bn_unique_ptr.h>
 
@@ -13,7 +14,7 @@
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
-#define KS_AGB_VERSION "0.3.1+52"
+#define KS_AGB_VERSION "0.3.1+87"
 #define KS_SHOW_4LS_INTRO true
 
 static const GBFS_FILE* fs = find_first_gbfs_file(nullptr);
@@ -46,9 +47,9 @@ namespace ks {
         }
 
         namespace text_palettes {
-            const bn::sprite_palette_item original = bn::sprite_items::variable_16x16_font.palette_item();
-            extern const bn::sprite_palette_item beige;
-            extern const bn::sprite_palette_item beige_selected;
+            const bn::sprite_palette_item original = bn::sprite_items::fontpalette_main.palette_item();
+            const bn::sprite_palette_item beige = bn::sprite_items::fontpalette_beige.palette_item();
+            const bn::sprite_palette_item beige_selected = bn::sprite_items::fontpalette_beige_selected.palette_item();
         }
     }
 }

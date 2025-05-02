@@ -13,6 +13,7 @@ namespace ks {
         explicit MenuIngamePause() {
             BN_LOG("Create MenuIngamePause");
 
+            ks::timer::pause_ingame_timer();
             secondary_background.reset();
             static_text_sprites.clear();
             animated_text_sprites.clear();
@@ -22,6 +23,8 @@ namespace ks {
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_center_alignment();
             text_item_palette = globals::text_palettes::original;
+
+
 
             bn::blending::set_fade_alpha(0.0);
             bn::blending::set_transparency_alpha(1.0);
@@ -46,10 +49,10 @@ namespace ks {
                 primary_background->set_blending_enabled(true);
             }
 
-            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_ne.create_sprite(32, -32));
-            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_nw.create_sprite(-32, -32));
-            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_se.create_sprite(32, 32));
-            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_sw.create_sprite(-32, 32));
+            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_ne.create_sprite(32, -44));
+            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_nw.create_sprite(-32, -44));
+            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_se.create_sprite(32, 20));
+            menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_sw.create_sprite(-32, 20));
 
             add_text_entry(0, -ks::device::screen_height_half + 8,
                            bn::format<64>(
@@ -61,12 +64,11 @@ namespace ks {
                                bn::format<2>(progress.metadata.seconds_played < 10 ? "0{}" : "{}",
                                              progress.metadata.seconds_played)));
 
-            add_menu_entry(0, -48, ks::globals::i18n->screens_return(), 0);
-            add_menu_entry(0, -32, ks::globals::i18n->screens_history(), 1);
-            add_menu_entry(0, -16, ks::globals::i18n->screens_options(), 2);
-            add_menu_entry(0, 0, ks::globals::i18n->screens_save_game(), 3);
-            add_menu_entry(0, 16, ks::globals::i18n->screens_load_game(), 4);
-            add_menu_entry(0, 32, ks::globals::i18n->screens_main_menu(), 5);
+            add_menu_entry(0, 38 - (15 * 4), ks::globals::i18n->screens_return(), 0);
+            add_menu_entry(0, 38 - (15 * 3), ks::globals::i18n->screens_history(), 1);
+            add_menu_entry(0, 38 - (15 * 2), ks::globals::i18n->screens_options(), 2);
+            add_menu_entry(0, 38 - (15 * 1), ks::globals::i18n->screens_saves_menu(), 3);
+            add_menu_entry(0, 38, ks::globals::i18n->screens_main_menu(), 4);
 
             add_text_entry(0, ks::device::screen_height_half - 8 - 12,
                            bn::format<64>("{}: {}",
@@ -91,9 +93,11 @@ namespace ks {
                 primary_background->set_blending_enabled(false);
             }
             show_dots_animation(false);
+
             ks::globals::state = GS_GAME;
             is_paused = false;
             ks::SceneManager::update_visuals();
+            timer::resume_ingame_timer();
         }
 
         void on_update() override {
@@ -107,17 +111,17 @@ namespace ks {
                 case 0:
                     on_back();
                     break;
+                // case 3:
+                //     slot_idx = saves::getUsedSaveSlots();
+                //     if (slot_idx < saves::getTotalSaveSlots()) {
+                //         BN_LOG("Save game to slot ", slot_idx);
+                //         SceneManager::save(slot_idx);
+                //     } else {
+                //         BN_ERROR("No more slots available");
+                //         break;
+                //     }
+                //     break;
                 case 3:
-                    slot_idx = saves::getUsedSaveSlots();
-                    if (slot_idx < saves::getTotalSaveSlots()) {
-                        BN_LOG("Save game to slot ", slot_idx);
-                        SceneManager::save(slot_idx);
-                    } else {
-                        BN_ERROR("No more slots available");
-                        break;
-                    }
-                    break;
-                case 4:
                     primary_background.reset();
                     secondary_background.reset();
                     static_text_sprites.clear();
@@ -130,7 +134,7 @@ namespace ks {
                     menu_bg_sprites.clear();
                     globals::state = GS_GAME_MENU_SAVES;
                     break;
-                case 5:
+                case 4:
                     globals::exit_scenario = true;
                     if (!in_replay) {
                         SceneManager::autosave();

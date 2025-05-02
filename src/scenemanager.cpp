@@ -51,7 +51,8 @@ EWRAM_BSS bn::string<1024> message;
 EWRAM_BSS bn::vector<bn::string<128>, 5> answers_messages;
 
 bn::optional<ks::SceneManager> scene;
-bn::sprite_text_generator* text_generator;
+bn::optional<bn::sprite_text_generator> text_generator;
+bn::optional<bn::sprite_text_generator> text_generator_bold;
 ks::DialogBox* dialog;
 bn::optional<bn::regular_bg_ptr> primary_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
@@ -69,6 +70,7 @@ bn::rect_window right_window = bn::rect_window::internal();
 bn::vector<unsigned char, 5> answers_index_map;
 ks::saves::SaveSlotProgressData progress;
 ks::saves::SaveSlotProgressData savedata_progress;
+bool in_game = false;
 bool in_replay = false;
 bool is_loading = false;
 bool is_paused = false;
@@ -302,7 +304,7 @@ void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
             case GS_GAME_MENU:
                 // SceneManager::open_ingame_menu();
                 ks::MenuIngamePause().run();
-            break;
+                break;
             case GS_GAME_MENU_SAVES:
                 ks::MenuSaves().run();
                 break;
@@ -660,6 +662,7 @@ void SceneManager::update_visuals() {
 
     bool is_scene_visible = !fill_color.has_value();
     BN_LOG("Is scene visible: ", is_scene_visible);
+    BN_LOG("Is paused: ", is_paused);
 
     bool background_want_change = background_visual.visible_bg_item.has_value() && background_visual.bg_item.has_value() &&
                                   background_visual.visible_bg_item != background_visual.bg_item && is_scene_visible;

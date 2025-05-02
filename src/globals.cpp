@@ -13,7 +13,7 @@
 #include "ingametimer.h"
 #include "scenemanager.h"
 #include "sound_manager.h"
-#include "variable_16x16_sprite_font.h"
+#include "fonts_info.h"
 #include "gsmplayer/player_8ad.h"
 #include "gsmplayer/player_gsm.h"
 
@@ -70,8 +70,14 @@ namespace ks {
             ks::progress_icon_sprites.clear();
             ks::static_text_sprites.clear();
             ks::animated_text_sprites.clear();
-            ks::text_generator = new bn::sprite_text_generator(variable_16x16_sprite_font);
-            ks::dialog = new ks::DialogBox(ks::text_generator, ks::static_text_sprites, ks::animated_text_sprites);
+            ks::text_generator = bn::sprite_text_generator(font_playtime_sprite_font);
+            ks::text_generator_bold = bn::sprite_text_generator(font_playtime_bold_sprite_font);
+            text_generator->set_bg_priority(1);
+            text_generator->set_z_order(-10);
+            text_generator_bold->set_bg_priority(1);
+            text_generator_bold->set_z_order(-10);
+
+            ks::dialog = new ks::DialogBox(ks::text_generator.value(), ks::text_generator_bold.value(), ks::static_text_sprites, ks::animated_text_sprites);
 
             ks::globals::accessibility_apply();
         }
@@ -84,6 +90,9 @@ namespace ks {
             ks::primary_background.reset();
             ks::secondary_background.reset();
             ks::transition_bg.reset();
+            ks::text_generator.reset();
+            ks::text_generator_bold.reset();
+
             ks::progress_icon_sprites.clear();
             ks::static_text_sprites.clear();
             ks::animated_text_sprites.clear();
@@ -94,8 +103,6 @@ namespace ks {
 
             bn::memory::log_alloc_ewram_status();
 
-
-            delete ks::text_generator;
             delete ks::dialog;
             i18n.reset();
 
@@ -127,12 +134,6 @@ namespace ks {
             constexpr bn::color BLACK = bn::color(0, 0, 0);
             constexpr bn::color WHITE = bn::color(31, 31, 31);
             constexpr bn::color RED = bn::color(31, 0, 0);
-        }
-
-        namespace text_palettes {
-            // constexpr bn::sprite_palette_item original = bn::sprite_items::variable_16x16_font.palette_item();
-            constexpr bn::sprite_palette_item beige = bn::sprite_items::variable_16x16_font_beige_pal.palette_item();
-            constexpr bn::sprite_palette_item beige_selected = bn::sprite_items::variable_16x16_font_beige_selected_pal.palette_item();
         }
     }
 }

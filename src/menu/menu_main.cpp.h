@@ -40,9 +40,6 @@ namespace ks {
             draw_progress_icons();
             globals::main_update();
 
-            text_generator->set_one_sprite_per_character(false);
-            text_generator->set_left_alignment();
-
             add_text_entry(-device::screen_width_half + 4, device::screen_height_half - 6, version);
 
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 3),

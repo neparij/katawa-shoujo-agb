@@ -6,11 +6,16 @@
 namespace ks {
 
     namespace menu {
-        static int _initial_selection = 0;
+        constexpr unsigned char NAVIGATION_COOLDOWN = 15;
+        constexpr unsigned char NAVIGATION_COOLDOWN_FIRST = 30;
+        inline int _initial_selection = 0;
+        inline int _navigation_timer = 0;
         static void set_initial_selection(const int selection) {
+            BN_LOG("Set initial select to: ", selection);
             _initial_selection = selection;
         }
         static int get_and_reset_initial_selection() {
+            BN_LOG("Get initial selection (", _initial_selection, ") and reset it");
             const int selection = _initial_selection;
             _initial_selection = 0;
             return selection;
@@ -23,24 +28,42 @@ namespace ks {
             selection = menu::get_and_reset_initial_selection();
             selection_indexes.clear();
             need_fadein = bn::bg_palettes::fade_intensity() == 1;
+            text_generator->set_one_sprite_per_character(false);
+            text_generator->set_left_alignment();
+            text_generator_bold->set_one_sprite_per_character(false);
+            text_generator_bold->set_left_alignment();
             text_generator->set_bg_priority(1);
+            text_generator_bold->set_bg_priority(1);
         }
         virtual ~MenuBase() {
-            text_generator->set_bg_priority(3);
+            // text_generator->set_bg_priority(3);
+            // text_generator_bold->set_bg_priority(3);
+
+            text_generator->set_bg_priority(1);
+            text_generator_bold->set_bg_priority(1);
         }
 
         virtual void run() {
-            while (globals::state == initial_state) {
-                on_update();
+            while (globals::state == initial_state && !break_run_loop) {
+                update();
                 if (bn::keypad::b_pressed()) {
                     on_back();
                 }
                 else if (bn::keypad::a_pressed()) {
                     on_select(selection);
                 }
-                else if (bn::keypad::up_pressed() || bn::keypad::down_pressed() || bn::keypad::left_pressed() || bn::keypad::right_pressed()) {
-                    on_navigate(bn::keypad::up_pressed(), bn::keypad::down_pressed(), bn::keypad::left_pressed(), bn::keypad::right_pressed());
+                else if (menu::_navigation_timer == 0 && (bn::keypad::up_held() || bn::keypad::down_held() || bn::keypad::left_held() || bn::keypad::right_held())) {
+                    if (bn::keypad::any_pressed()) {
+                        menu::_navigation_timer = menu::NAVIGATION_COOLDOWN_FIRST;
+                    } else {
+                        menu::_navigation_timer = menu::NAVIGATION_COOLDOWN;
+                    }
+                    on_navigate(bn::keypad::up_held(), bn::keypad::down_held(), bn::keypad::left_held(), bn::keypad::right_held());
                 }
+                if (bn::keypad::any_released()) {
+                    menu::_navigation_timer = 0;
+                }
+
                 if (need_repalette) {
                     repalette();
                 }
@@ -49,6 +72,13 @@ namespace ks {
                 }
                 globals::main_update();
             }
+        }
+
+        void update() {
+            if (menu::_navigation_timer > 0) {
+                menu::_navigation_timer--;
+            }
+            on_update();
         }
 
         virtual void on_navigate(const bool up, const bool down, const bool left, const bool right) {
@@ -73,6 +103,14 @@ namespace ks {
 
         }
 
+        virtual void on_repalette() {
+
+        }
+
+        void restart() {
+            break_run_loop = true;
+        }
+
         void set_selection(const int select) {
             selection = select;
             need_repalette = true;
@@ -92,6 +130,8 @@ namespace ks {
                     static_text_sprites.at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
                 }
             }
+
+            on_repalette();
         }
 
         void fadein() {
@@ -107,8 +147,19 @@ namespace ks {
             selection_indexes.resize(static_text_sprites.size(), index);
         }
 
+        void add_text_entry_bold(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
+            BN_LOG("Add entry: ", text);
+            BN_LOG("at position: [", x, ", ", y, "] with index: ", index);
+            text_generator_bold->generate(x, y, text, static_text_sprites);
+            selection_indexes.resize(static_text_sprites.size(), index);
+        }
+
         void add_text_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
             add_text_entry(x, y, text, -1);
+        }
+
+        void add_text_entry_bold(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
+            add_text_entry_bold(x, y, text, -1);
         }
 
         void add_menu_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
@@ -118,9 +169,18 @@ namespace ks {
             add_text_entry(x, y, text, index);
         }
 
+        void add_menu_entry_bold(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
+            if (selection_indexes.empty() || index != selection_indexes.back()) {
+                items_count++;
+            }
+            add_text_entry_bold(x, y, text, index);
+        }
+
         void fade_out() {
             ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(30);
-            ks::SceneManager::fade_out(ks::globals::colors::BLACK);
+            ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_SOUND>(30);
+            ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_AMBIENT>(30);
+            ks::SceneManager::fade_out(ks::globals::colors::BLACK, 30);
         }
 
     protected:
@@ -130,6 +190,7 @@ namespace ks {
         int items_count = 0;
         bool need_repalette = true;
         bool need_fadein = false;
+        bool break_run_loop = false;
         gameState_t initial_state;
 
     };

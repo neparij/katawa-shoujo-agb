@@ -7,11 +7,14 @@
 #include <bn_sprite_items_ui_bg_menu_saves_back_1.h>
 #include <bn_sprite_items_ui_bg_menu_saves_back_2.h>
 #include <bn_sprite_items_ui_button_b.h>
+#include <bn_sprite_items_ui_new_save.h>
+#include <bn_sprite_items_ui_new_save_selected.h>
 
 #include "background_metas.h"
 #include "character_sprite_metas.h"
 #include "menu_base.h"
 #include "../ingametimer.h"
+#include "../scenemanager.h"
 
 
 namespace ks {
@@ -24,9 +27,10 @@ namespace ks {
             secondary_background->set_priority(1);
             text_generator->set_bg_priority(1);
 
+            text_item_palette = globals::text_palettes::beige;
             total_saves = saves::getUsedSaveSlots();
             saves_from_cursor = total_saves;
-            if (saves::readAutosaveMetadata().has_data) {
+            if (saves::readAutosaveMetadata().has_data || in_game) {
                 saves_from_cursor++;
             }
 
@@ -37,6 +41,7 @@ namespace ks {
         }
 
         void on_back() override {
+            BN_LOG("on back, state = ", globals::state);
             if (globals::state == GS_MENU_SAVES) {
                 globals::state = GS_MENU_MAIN;
                 menu::set_initial_selection(1);
@@ -50,23 +55,33 @@ namespace ks {
             if (option == 3) {
                 on_back();
             } else {
-                timer::start_ingame_timer();
-
-                const short i = saveslot_index.at(selection);
-                BN_LOG("Slot: ", i);
-                if (i == -1) {
-                    savedata_progress = saves::readAutosave();
+                const short slot_index = saveslot_index.at(selection);
+                if (slot_index == -1 && in_game) {
+                    const unsigned short new_slot_index = saves::getUsedSaveSlots();
+                    if (new_slot_index < saves::getTotalSaveSlots()) {
+                        BN_LOG("Save game to slot ", new_slot_index);
+                        SceneManager::save(new_slot_index);
+                        restart();
+                    } else {
+                        BN_ERROR("No more slots available");
+                    }
                 } else {
-                    savedata_progress = saves::readSaveSlot(i);
-                }
-                BN_ASSERT(saves::isValid(&savedata_progress, i), "Invalid save slot");
+                    if (slot_index == -1) {
+                        savedata_progress = saves::readAutosave();
+                    } else {
+                        savedata_progress = saves::readSaveSlot(slot_index);
+                    }
+                    BN_ASSERT(saves::isValid(&savedata_progress, slot_index), "Invalid save slot");
 
-                fade_out();
-                if (globals::state == GS_GAME_MENU_SAVES) {
-                    globals::exit_scenario = true;
-                    is_paused = false;
+                    fade_out();
+                    sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+                    sound_manager::stop<SOUND_CHANNEL_SOUND>();
+                    sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
+                    if (globals::state == GS_GAME_MENU_SAVES) {
+                        globals::exit_scenario = true;
+                    }
+                    globals::state = GS_LOAD_GAME;
                 }
-                globals::state = GS_LOAD_GAME;
             }
         }
 
@@ -104,6 +119,18 @@ namespace ks {
             need_repalette = true;
         }
 
+        void on_repalette() override {
+            if (new_save_thumbnals.size() == 2) {
+                if (selection == 0) {
+                    new_save_thumbnals.at(0).set_visible(false);
+                    new_save_thumbnals.at(1).set_visible(true);
+                } else {
+                    new_save_thumbnals.at(0).set_visible(true);
+                    new_save_thumbnals.at(1).set_visible(false);
+                }
+            }
+        }
+
         void draw_slots(const unsigned short from) {
             constexpr short draw_x_from = 10;
             constexpr short draw_y_from = -48;
@@ -116,6 +143,7 @@ namespace ks {
             static_text_sprites.clear();
             progress_icon_sprites.clear();
             saveslot_thumbnails.clear();
+            new_save_thumbnals.clear();
             progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_0.create_sprite(
                 -device::screen_width_half + 32, -device::screen_height_half + 32));
             progress_icon_sprites.back().set_bg_priority(3);
@@ -135,31 +163,44 @@ namespace ks {
 
             const unsigned short to = bn::max(0, from - 3);
 
+            add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + 14,
+                    globals::i18n->menu_saves(), -1);
+
             for (unsigned short i = from; i > to; i--, tile_index++, selection_index += 1) {
-                const bool is_autosave = i == total_saves + 1;
+                const bool additional_slot = i == total_saves + 1;
                 saves::SaveSlotMetadata slot;
-                if (is_autosave) {
+                if (additional_slot && !in_game) {
                     slot = saves::readAutosaveMetadata();
+                } else if (additional_slot && in_game) {
+                    slot = progress.metadata;
+                    slot.has_data = false;
                 } else {
                     slot = saves::readSlotMetadata(i - 1);
                 }
 
-
-                add_menu_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index,
+                if (slot.has_data) {
+                    add_menu_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index,
                                globals::i18n->label(slot.label),
                                selection_index);
 
-                add_text_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + (draw_y_offset * tile_index + 12),
-                               bn::format<64>(
-                                   "{}: {}:{}:{} {}",
-                                   globals::i18n->screens_playtime(),
-                                   slot.hours_played,
-                                   bn::format<2>(slot.minutes_played < 10 ? "0{}" : "{}", slot.minutes_played),
-                                   bn::format<2>(slot.seconds_played < 10 ? "0{}" : "{}", slot.seconds_played),
-                                   is_autosave ? globals::i18n->definitions_autosave() : ""),
-                               selection_index);
+                    add_text_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + (draw_y_offset * tile_index + 12),
+                                   bn::format<64>(
+                                       "{}: {}:{}:{} {}",
+                                       globals::i18n->screens_playtime(),
+                                       slot.hours_played,
+                                       bn::format<2>(slot.minutes_played < 10 ? "0{}" : "{}", slot.minutes_played),
+                                       bn::format<2>(slot.seconds_played < 10 ? "0{}" : "{}", slot.seconds_played),
+                                       additional_slot ? globals::i18n->definitions_autosave() : ""),
+                                   selection_index);
+                } else {
+                    add_menu_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index + 10,
+                                                   globals::i18n->textbutton_save(),
+                                                   selection_index);
+                }
 
-                if (const auto thumbnail = background_metas::get_by_hash(slot.thumbnail_hash); thumbnail != nullptr) {
+                const auto thumbnail = background_metas::get_by_hash(slot.thumbnail_hash);
+                if (thumbnail != nullptr && slot.has_data) {
+                    // This is a regular save/autosave
                     saveslot_thumbnails.push_back(thumbnail->thumbnail.create_bg(
                         -device::screen_width_half + draw_x_from + 24, draw_y_from + 10 + draw_y_offset * tile_index));
                     saveslot_thumbnails.back().set_priority(2);
@@ -177,9 +218,18 @@ namespace ks {
                             }
                         }
                     }
+                } else if (!slot.has_data && tile_index == 0) {
+                    // This is a "new save" thumbnail placeholder
+                    new_save_thumbnals.push_back(bn::sprite_items::ui_new_save.create_sprite(
+                            -device::screen_width_half + draw_x_from + 24, draw_y_from + 10));
+                    new_save_thumbnals.push_back(bn::sprite_items::ui_new_save_selected.create_sprite(
+                            -device::screen_width_half + draw_x_from + 24, draw_y_from + 10));
+                    for (auto& sprite : new_save_thumbnals) {
+                        sprite.set_visible(false);
+                    }
                 }
 
-                saveslot_index.push_back(is_autosave ? -1 : i - 1);
+                saveslot_index.push_back(additional_slot ? -1 : i - 1);
                 globals::sound_update();
             }
 
@@ -192,6 +242,7 @@ namespace ks {
     private:
         bn::vector<short, 3> saveslot_index;
         bn::vector<bn::regular_bg_ptr, 3> saveslot_thumbnails;
+        bn::vector<bn::sprite_ptr, 2> new_save_thumbnals;
         unsigned short total_saves, saves_from_cursor;
     };
 }

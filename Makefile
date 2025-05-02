@@ -65,6 +65,7 @@ INCLUDES    	:=  include \
 DATA        	:=  video
 VIDEO			:=  video
 GRAPHICS    	:=  graphics \
+					graphics/fonts \
 					graphics/bgs \
 					graphics/bgs/thumbs \
 					graphics/event \

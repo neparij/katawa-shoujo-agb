@@ -56,9 +56,10 @@ public:
     virtual const char* screens_return() = 0;
     virtual const char* screens_history() = 0;
     virtual const char* screens_options() = 0;
-    virtual const char* screens_save_game() = 0;
-    virtual const char* screens_load_game() = 0;
+    virtual const char* screens_saves_menu() = 0;
     virtual const char* screens_main_menu() = 0;
+
+    virtual const char* textbutton_save() = 0;
 
     virtual const char* screens_playtime() = 0;
     virtual const char* screens_current_scene() = 0;

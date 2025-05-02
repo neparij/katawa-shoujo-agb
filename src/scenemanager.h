@@ -204,7 +204,8 @@ extern bn::string<1024> message;
 extern bn::vector<bn::string<128>, 5> answers_messages;
 
 extern bn::optional<ks::SceneManager> scene;
-extern bn::sprite_text_generator* text_generator;
+extern bn::optional<bn::sprite_text_generator> text_generator;
+extern bn::optional<bn::sprite_text_generator> text_generator_bold;
 extern ks::DialogBox* dialog;
 extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
@@ -220,6 +221,7 @@ extern bn::rect_window right_window;
 extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
 extern ks::saves::SaveSlotProgressData savedata_progress;
+extern bool in_game;
 extern bool in_replay;
 extern bool is_loading;
 extern bool is_paused;

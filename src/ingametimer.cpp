@@ -32,7 +32,7 @@ namespace ks {
         }
 
 
-        void reset_ingame_timer() {
+        void reset_ingame_timer(const bool reset_values) {
             BN_LOG("Reset ingame timer");
             state = TIMER_STATE_NONE;
             if (_internal_timer.has_value()) {
@@ -40,14 +40,16 @@ namespace ks {
             }
             _internal_timer = bn::timer();
 
-            ks::progress.metadata.hours_played = 0;
-            ks::progress.metadata.minutes_played = 0;
-            ks::progress.metadata.seconds_played = 0;
+            if (reset_values) {
+                ks::progress.metadata.hours_played = 0;
+                ks::progress.metadata.minutes_played = 0;
+                ks::progress.metadata.seconds_played = 0;
+            }
             state = TIMER_STATE_READY;
         }
 
-        void start_ingame_timer() {
-            reset_ingame_timer();
+        void start_ingame_timer(const bool reset_values) {
+            reset_ingame_timer(reset_values);
             BN_ASSERT(_internal_timer.has_value(), "Timer not initialized");
             _internal_timer->restart();
             state = TIMER_STATE_COUNTING;
@@ -56,6 +58,7 @@ namespace ks {
 
         void resume_ingame_timer() {
             BN_ASSERT(state != TIMER_STATE_NONE, "Timer state not initialized");
+            BN_LOG("Try to resume timer. State = ", state);
             if (state == TIMER_STATE_PAUSED) {
                 BN_LOG("Resume ingame timer");
                 BN_ASSERT(_internal_timer.has_value(), "Timer not initialized");

@@ -4,6 +4,7 @@
 #include <bn_bgs_mosaic_actions.h>
 #include <bn_bg_palette_actions.h>
 #include <bn_bg_palette_ptr.h>
+#include <bn_format.h>
 #include <bn_regular_bg_items_ui_bg_menu_extras_cinema.h>
 #include <bn_regular_bg_items_ui_test_paldraw_b.h>
 #include <bn_sprite_items_ui_tn_op_1.h>
@@ -33,6 +34,7 @@ namespace ks {
         explicit MenuExtrasCinema() {
             draw();
             show_selected();
+            text_item_palette = globals::text_palettes::beige;
             items_count = 7;
         }
 
@@ -116,21 +118,28 @@ namespace ks {
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_center_alignment();
+
+            text_generator_bold->set_one_sprite_per_character(false);
+            text_generator_bold->set_left_alignment();
+
+            add_text_entry_bold(-device::screen_width_half + 14, -device::screen_height_half + 14,
+                    bn::format<64>("{} > {}", globals::i18n->menu_extras(), globals::i18n->menu_extras_cinema()), -1);
+
             add_menu_entry(globals::i18n->menu_extras_return_xoffset() + 90,
                            device::screen_height_half - 14, globals::i18n->menu_back(), 6);
 
             progress_icon_sprites.push_back(
-                bn::sprite_items::ui_tn_op_1_bw.create_sprite(-76 + (0 * 76), -35));
+                bn::sprite_items::ui_tn_op_1_bw.create_sprite(-76 + (0 * 76), -32));
             progress_icon_sprites.push_back(
-                bn::sprite_items::ui_tn_tc_act2_emi_bw.create_sprite(-76 + (1 * 76), -35));
+                bn::sprite_items::ui_tn_tc_act2_emi_bw.create_sprite(-76 + (1 * 76), -32));
             progress_icon_sprites.push_back(
-                bn::sprite_items::ui_tn_tc_act2_hanako_bw.create_sprite(-76 + (2 * 76), -35));
+                bn::sprite_items::ui_tn_tc_act2_hanako_bw.create_sprite(-76 + (2 * 76), -32));
             progress_icon_sprites.push_back(
-                bn::sprite_items::ui_tn_tc_act2_lilly_bw.create_sprite(-76 + (0 * 76), -35 + 64));
+                bn::sprite_items::ui_tn_tc_act2_lilly_bw.create_sprite(-76 + (0 * 76), -32 + 64));
             progress_icon_sprites.push_back(
-                bn::sprite_items::ui_tn_tc_act2_rin_bw.create_sprite(-76 + (1 * 76), -35 + 64));
+                bn::sprite_items::ui_tn_tc_act2_rin_bw.create_sprite(-76 + (1 * 76), -32 + 64));
             progress_icon_sprites.push_back(
-                bn::sprite_items::ui_tn_tc_act2_shizu_bw.create_sprite(-76 + (2 * 76), -35 + 64));
+                bn::sprite_items::ui_tn_tc_act2_shizu_bw.create_sprite(-76 + (2 * 76), -32 + 64));
         }
 
         void show_selected() const {
@@ -140,7 +149,7 @@ namespace ks {
 
             if (selection < 6) {
                 const int x = -76 + (selection % 3) * 76;
-                const int y = (selection < 3) ? -35 : -35 + 64;
+                const int y = (selection < 3) ? -32 : -32 + 64;
                 switch (selection) {
                     case 0:
                         progress_icon_sprites.push_back(
