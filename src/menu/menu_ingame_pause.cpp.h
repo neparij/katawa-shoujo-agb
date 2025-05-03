@@ -22,6 +22,8 @@ namespace ks {
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_center_alignment();
+            text_generator_small->set_one_sprite_per_character(false);
+            text_generator_small->set_center_alignment();
             text_item_palette = globals::text_palettes::original;
 
 
@@ -70,12 +72,12 @@ namespace ks {
             add_menu_entry(0, 38 - (15 * 1), ks::globals::i18n->screens_saves_menu(), 3);
             add_menu_entry(0, 38, ks::globals::i18n->screens_main_menu(), 4);
 
-            add_text_entry(0, ks::device::screen_height_half - 8 - 12,
+            add_text_entry_small(0, ks::device::screen_height_half - 8 - 12,
                            bn::format<64>("{}: {}",
                                           ks::globals::i18n->screens_current_scene(),
                                           ks::globals::i18n->label(progress.metadata.label)));
 
-            add_text_entry(0, ks::device::screen_height_half - 8,
+            add_text_entry_small(0, ks::device::screen_height_half - 8,
                            bn::format<64>("{}: {}",
                                           ks::globals::i18n->screens_current_track(),
                                           ks::globals::i18n->music(ks::sound_manager::current_music)));

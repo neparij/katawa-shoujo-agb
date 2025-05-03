@@ -8,7 +8,7 @@
 #include "ingametimer.h"
 #include "scenemanager.h"
 #include "sound_manager.h"
-#include "translation_en.cpp"
+#include "translations/en.cpp"
 #include "video_4ls_agmv.h"
 #include "menu/menu_extras.cpp.h"
 #include "menu/menu_extras_cinema.cpp.h"

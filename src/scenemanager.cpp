@@ -29,7 +29,7 @@
 #include "globals.h"
 #include "ingametimer.h"
 #include "sound_manager.h"
-#include "translation.h"
+#include "translations/translation.h"
 #include "video_4ls_agmv.h"
 #include "video_op_1_agmv.h"
 #include "../../butano/butano/src/bn_bgs_manager.h"
@@ -53,6 +53,7 @@ EWRAM_BSS bn::vector<bn::string<128>, 5> answers_messages;
 bn::optional<ks::SceneManager> scene;
 bn::optional<bn::sprite_text_generator> text_generator;
 bn::optional<bn::sprite_text_generator> text_generator_bold;
+bn::optional<bn::sprite_text_generator> text_generator_small;
 ks::DialogBox* dialog;
 bn::optional<bn::regular_bg_ptr> primary_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;

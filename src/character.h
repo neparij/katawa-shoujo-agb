@@ -23,7 +23,7 @@
 #include <bn_sprite_items_fontpalette_mk.h>
 
 #include "globals.h"
-#include "translation.h"
+#include "translations/translation.h"
 #include <bn_sprite_palette_item.h>
 
 namespace ks {

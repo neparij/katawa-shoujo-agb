@@ -206,6 +206,7 @@ extern bn::vector<bn::string<128>, 5> answers_messages;
 extern bn::optional<ks::SceneManager> scene;
 extern bn::optional<bn::sprite_text_generator> text_generator;
 extern bn::optional<bn::sprite_text_generator> text_generator_bold;
+extern bn::optional<bn::sprite_text_generator> text_generator_small;
 extern ks::DialogBox* dialog;
 extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;

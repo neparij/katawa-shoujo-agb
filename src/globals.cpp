@@ -3,9 +3,8 @@
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_memory.h"
-#include "translation_en.cpp"
-#include "translation_ru.cpp"
-// #include "translation_en.cpp"
+#include "translations/en.cpp"
+#include "translations/ru.cpp"
 #include "bn_sprite_palettes.h"
 #include "bn_sprite_ptr.h"
 #include "gba_systemcalls.h"
@@ -72,10 +71,13 @@ namespace ks {
             ks::animated_text_sprites.clear();
             ks::text_generator = bn::sprite_text_generator(font_playtime_sprite_font);
             ks::text_generator_bold = bn::sprite_text_generator(font_playtime_bold_sprite_font);
+            ks::text_generator_small = bn::sprite_text_generator(font_playtime_small_sprite_font);
             text_generator->set_bg_priority(1);
             text_generator->set_z_order(-10);
             text_generator_bold->set_bg_priority(1);
             text_generator_bold->set_z_order(-10);
+            text_generator_small->set_bg_priority(1);
+            text_generator_small->set_z_order(-10);
 
             ks::dialog = new ks::DialogBox(ks::text_generator.value(), ks::text_generator_bold.value(), ks::static_text_sprites, ks::animated_text_sprites);
 
@@ -92,6 +94,7 @@ namespace ks {
             ks::transition_bg.reset();
             ks::text_generator.reset();
             ks::text_generator_bold.reset();
+            ks::text_generator_small.reset();
 
             ks::progress_icon_sprites.clear();
             ks::static_text_sprites.clear();

@@ -179,11 +179,11 @@ namespace ks {
                 }
 
                 if (slot.has_data) {
-                    add_menu_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index,
+                    add_menu_entry_small(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index,
                                globals::i18n->label(slot.label),
                                selection_index);
 
-                    add_text_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + (draw_y_offset * tile_index + 12),
+                    add_menu_entry_small(-device::screen_width_half + draw_x_from + 52, draw_y_from + (draw_y_offset * tile_index + 12),
                                    bn::format<64>(
                                        "{}: {}:{}:{} {}",
                                        globals::i18n->screens_playtime(),

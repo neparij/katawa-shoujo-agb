@@ -44,18 +44,18 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
         if os.path.splitext(output_file_name)[0] in IGNORE_IMAGES:
             print(f"Skipping {image_file} as it is in the ignore list.")
             continue
-        #
-        # try:
-        #     if quantize:
-        #         process_image_quantized(image_file, output_path, quantize_palettes)
-        #         create_json_metadata(output_path, quantize, unquant_colors)
-        #     else:
-        #         process_image(image_file, output_path, unquant_colors)
-        #         create_json_metadata(output_path, quantize, unquant_colors)
-        #
-        write_background_metadata(os.path.splitext(output_file_name)[0])
-        # except Exception as e:
-        #     print(f"Error processing {image_file}: {e}")
+
+        try:
+            if quantize:
+                process_image_quantized(image_file, output_path, quantize_palettes)
+                create_json_metadata(output_path, quantize, unquant_colors)
+            else:
+                process_image(image_file, output_path, unquant_colors)
+                create_json_metadata(output_path, quantize, unquant_colors)
+
+            write_background_metadata(os.path.splitext(output_file_name)[0])
+        except Exception as e:
+            print(f"Error processing {image_file}: {e}")
 
 def process_image_quantized(input_path, output_path, quantize_palettes: int):
     canvas = Image.new("RGB", (256, 256), PINK_COLOR)

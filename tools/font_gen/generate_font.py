@@ -3,6 +3,7 @@ import json
 from PIL import Image, ImageDraw, ImageFont
 import math
 
+from PIL.Image import Resampling
 from PIL.ImageFile import ImageFile
 
 
@@ -15,7 +16,7 @@ class TextPaletteData:
     # Generates palette data (each color is 3 elements), first (1) is background color, last (16) is text color. It should be lerp'ed values
     def get_palette(self) -> [int]:
         colors = []
-        alpha_threshold = 0.1
+        alpha_threshold = 0.2
 
         for i in range(COLORS_COUNT):
             if i == 0:
@@ -34,7 +35,7 @@ class TextPaletteData:
         return colors
 
 class FontData:
-    def __init__(self, name: str, font_path: str, char_size: tuple[int, int], font_size: int, stroke_width: float = 0):
+    def __init__(self, name: str, font_path: str, char_size: tuple[int, int], font_size: float, stroke_width: float = 0):
         self.name = name
         self.font_path = font_path
         self.char_size = char_size
@@ -42,13 +43,12 @@ class FontData:
         self.stroke_width = stroke_width
 
     def get_font(self):
-        return ImageFont.truetype(self.font_path, self.font_size)
+        return ImageFont.truetype(self.font_path, self.font_size * 10)
 
 # Configuration
 FONT_PATH = "/Users/n.laptev/development/ksre/game/font/playtime.ttf"
 
 FONT_DEFAULT_PALETTE = "main"
-COLUMNS = 1
 
 FONT_PALETTES = [
     TextPaletteData(FONT_DEFAULT_PALETTE, (255, 255, 255, 255), (16, 16, 16, 255)),
@@ -77,8 +77,9 @@ FONT_PALETTES = [
 ]
 
 FONTS = [
-    FontData("playtime", FONT_PATH, (16, 16), 12),
-    FontData("playtime_bold", FONT_PATH, (16, 16), 12, 0.2),
+    FontData("playtime", FONT_PATH, (16, 16), 13),
+    FontData("playtime_bold", FONT_PATH, (16, 16), 13, 0.3),
+    FontData("playtime_small", FONT_PATH, (16, 16), 11),
     # FontData("playtime_small_bold", FONT_PATH, (8, 16), 8, 0.15),
 ]
 
@@ -122,42 +123,45 @@ def draw_text(draw, position, text, font, paldata: TextPaletteData, font_data: F
     # char_width = char_bbox[2] - char_bbox[0] + font_data.stroke_width
     char_width = char_bbox[2] - char_bbox[0]
     draw.fontmode = ImageDraw.fontmode
-    draw.text(position, text, font=font, fill=paldata.text_color, anchor="lm", stroke_width=font_data.stroke_width, stroke_fill=paldata.text_color)
+    draw.text(position, text, font=font, fill=paldata.text_color, anchor="lm", stroke_width=font_data.stroke_width * 10, stroke_fill=paldata.text_color)
 
     if text == "\\":
         text = "Backslash"
-    CHAR_WIDTHS.append(str(min(font_data.char_size[0], math.ceil(char_width) + 1)) + ",    // " + text)
+    CHAR_WIDTHS.append(str(min(font_data.char_size[0], round(char_width / 10) + 0)) + ",    // " + text)
 
 
 def generate_sprite_sheet(paldata: TextPaletteData, font_data: FontData):
-    # Calculate the size of the sprite sheet
-    rows = (len(CHARACTERS) + COLUMNS - 1) // COLUMNS
-    sheet_width = COLUMNS * font_data.char_size[0]
-    sheet_height = rows * font_data.char_size[1]
+    sheet_width = font_data.char_size[0]
+    sheet_height = len(CHARACTERS) * font_data.char_size[1]
 
-    # sprite_sheet = Image.new("RGBA", (sheet_width, sheet_height), paldata.background_color)
-    sprite_sheet = Image.new("P", (sheet_width, sheet_height), paldata.background_color)
-    sprite_sheet.putpalette(paldata.get_palette())
+    sprite_sheet_multiplied = Image.new("RGB", (sheet_width * 10, sheet_height * 10), paldata.background_color)
 
-    draw = ImageDraw.Draw(sprite_sheet)
+    draw = ImageDraw.Draw(sprite_sheet_multiplied)
     draw.fontmode = ImageDraw.fontmode
     font = font_data.get_font()
 
     for i, char in enumerate(CHARACTERS):
-        x = (i % COLUMNS) * font_data.char_size[0]
-        y = (i // COLUMNS) * font_data.char_size[1]
-        text_position = (x, y + font_data.char_size[1] // 2)
+        x = 0
+        y = i * font_data.char_size[1] * 10
+        text_position = (x, y + (font_data.char_size[1] // 2) * 10)
         draw_text(draw, text_position, char, font, paldata, font_data)
 
-    p = sprite_sheet.getpalette()
+    filename = get_font_name(paldata, font_data) + ".bmp"
+
+    sprite_sheet_divided = sprite_sheet_multiplied.resize((sheet_width, sheet_height), resample=Resampling.LANCZOS)
+
+    sample_palette = Image.new("P", (1, 1), paldata.background_color)
+    sample_palette.putpalette(paldata.get_palette())
+    sprite_sheet_paletted = sprite_sheet_divided.quantize(colors=16, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.RASTERIZE, palette=sample_palette)
+
+    p = sprite_sheet_paletted.getpalette()
     palette_colors = [tuple(p[i:i + 3]) for i in range(0, len(p), 3)]
     first_color_index = palette_colors.index(paldata.background_color[0:3])
     if first_color_index != 0:
         raise f"Background color {paldata.background_color} is not in the original palette at index 0!"
-    sprite_sheet.putpalette(PALETTE_BACKGROUND_COLOR + sprite_sheet.getpalette()[3:])
+    sprite_sheet_paletted.putpalette(PALETTE_BACKGROUND_COLOR + sprite_sheet_paletted.getpalette()[3:])
 
-    filename = get_font_name(paldata, font_data) + ".bmp"
-    sprite_sheet.save(filename)
+    sprite_sheet_paletted.save(filename)
     print(f"Sprite sheet saved to {filename}")
     generate_json_metadata(filename, font_data.char_size[1])
 
@@ -206,7 +210,7 @@ def save_widths_info(paldata: TextPaletteData, font_data: FontData):
 if __name__ == "__main__":
     print("Char count: " + str(len(CHARACTERS)))
     for font in FONTS:
-        CHAR_WIDTHS = [str(font.font_size // 2) + ",     // Space"]
+        CHAR_WIDTHS = [str(int(font.font_size // 3)) + ",     // Space"]
         generate_sprite_sheet(FONT_PALETTES[0], font)
         save_widths_info(FONT_PALETTES[0], font)
     for palette in FONT_PALETTES:

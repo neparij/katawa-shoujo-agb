@@ -40,7 +40,7 @@ namespace ks {
             draw_progress_icons();
             globals::main_update();
 
-            add_text_entry(-device::screen_width_half + 4, device::screen_height_half - 6, version);
+            add_text_entry_small(-device::screen_width_half + 4, device::screen_height_half - 6, version);
 
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 3),
                            globals::i18n->menu_start(), 0);

@@ -2,6 +2,8 @@ import argparse
 import os
 from typing import List
 
+from src.definitions_reader import DefinitionsReader
+from src.definitions_writer import DefinitionsWriter
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
 from src.translation_reader import TranslationReader
@@ -50,6 +52,23 @@ def main():
         "--character",
         required=False,
         help="Character sprites directory name (i.e. \"rinpan\")",
+    )
+
+    definitions_parser = subparsers.add_parser("definitions", help="Definitions converter")
+    definitions_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to KS:RE sources"
+    )
+    definitions_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources"
+    )
+    definitions_parser.add_argument(
+        "--translation",
+        required=False,
+        help="Translation key (de, es, fr, ru, zh_hans)"
     )
 
     args = parser.parse_args()
@@ -107,6 +126,35 @@ def main():
         meta_writer = CharacterMetaStorageWriter(os.path.join(ksagb_path, "include"))
         meta_writer.write(character_sprites_groups)
         exit(0)
+
+    if args.command == "definitions":
+        ksre_path = args.source
+        ksagb_path = args.outdir
+        locale = args.translation
+
+        rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, "definitions.rpy") if locale else None
+
+        tl = None
+        if rpy_translation_file:
+            print(f"Processing translation file: {rpy_translation_file}")
+            reader = TranslationReader(locale, rpy_translation_file)
+            tl = reader.read()
+
+        definitions_reader = DefinitionsReader(os.path.join(ksre_path, "game", "definitions.rpy"), tl)
+        definitions_writer = DefinitionsWriter(
+            os.path.join(ksagb_path, "include"),
+            os.path.join(ksagb_path, "src")
+        )
+
+        replays_ast = definitions_reader.extract_replays_block()
+        routes = definitions_reader.parse_routes_structure(replays_ast)
+        definitions_writer.write_scripts_definitions(routes)
+        definitions_writer.write_labels_definitions(routes)
+        if locale:
+            definitions_writer.write_labels_translations(routes, locale)
+        else:
+            definitions_writer.write_labels_translations(routes, "en")
+
 
 if __name__ == "__main__":
     main()

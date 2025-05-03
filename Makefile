@@ -54,9 +54,11 @@ SOURCES     	:=  ../butano/common/src \
                     src/savefile \
                     src/scripts \
                     src/shaders \
+                    src/translations \
 		    		src/utils \
                     src/utils/gbfs
 INCLUDES    	:=  include \
+					include/definitions \
 					include/background_metas \
 					include/sprite_metas \
 					../libsavgba/include \

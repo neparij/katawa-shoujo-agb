@@ -30,10 +30,13 @@ namespace ks {
             need_fadein = bn::bg_palettes::fade_intensity() == 1;
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_left_alignment();
+            text_generator->set_bg_priority(1);
             text_generator_bold->set_one_sprite_per_character(false);
             text_generator_bold->set_left_alignment();
-            text_generator->set_bg_priority(1);
             text_generator_bold->set_bg_priority(1);
+            text_generator_small->set_one_sprite_per_character(false);
+            text_generator_small->set_left_alignment();
+            text_generator_small->set_bg_priority(1);
         }
         virtual ~MenuBase() {
             // text_generator->set_bg_priority(3);
@@ -41,6 +44,7 @@ namespace ks {
 
             text_generator->set_bg_priority(1);
             text_generator_bold->set_bg_priority(1);
+            text_generator_small->set_bg_priority(1);
         }
 
         virtual void run() {
@@ -154,12 +158,23 @@ namespace ks {
             selection_indexes.resize(static_text_sprites.size(), index);
         }
 
+        void add_text_entry_small(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
+            BN_LOG("Add entry: ", text);
+            BN_LOG("at position: [", x, ", ", y, "] with index: ", index);
+            text_generator_small->generate(x, y, text, static_text_sprites);
+            selection_indexes.resize(static_text_sprites.size(), index);
+        }
+
         void add_text_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
             add_text_entry(x, y, text, -1);
         }
 
         void add_text_entry_bold(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
             add_text_entry_bold(x, y, text, -1);
+        }
+
+        void add_text_entry_small(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
+            add_text_entry_small(x, y, text, -1);
         }
 
         void add_menu_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
@@ -174,6 +189,13 @@ namespace ks {
                 items_count++;
             }
             add_text_entry_bold(x, y, text, index);
+        }
+
+        void add_menu_entry_small(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
+            if (selection_indexes.empty() || index != selection_indexes.back()) {
+                items_count++;
+            }
+            add_text_entry_small(x, y, text, index);
         }
 
         void fade_out() {

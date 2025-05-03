@@ -10,11 +10,11 @@
 #include <bn_unique_ptr.h>
 
 #include "definitions.h"
-#include "translation.h"
+#include "translations/translation.h"
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
-#define KS_AGB_VERSION "0.3.1+87"
+#define KS_AGB_VERSION "0.3.1+98"
 #define KS_SHOW_4LS_INTRO true
 
 static const GBFS_FILE* fs = find_first_gbfs_file(nullptr);
