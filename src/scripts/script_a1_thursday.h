@@ -1,6 +1,7 @@
 #ifndef KS_SCRIPT_A1_THURSDAY
 #define KS_SCRIPT_A1_THURSDAY
 
+#define SCENE_INLINE static inline __attribute__((always_inline))
 #include "../scenemanager.h"
 #include "../character.h"
 #include "bn_regular_bg_items_emi_bg_basic_gym.h"
@@ -171,48 +172,48 @@ namespace ks {
         public:
             virtual ~ScriptA1Thursday() = default;
             // Labels
-            static void a1_thursday_the_running_girl();
-            static void a1_thursday_soap();
-            static void a1_thursday_cold_war();
-            static void a1_thursday_proof_of_competency();
-            static void a1_thursday_event_horizon();
-            static void a1_thursday_above_and_beyond();
-            static void a1_thursday_paint_by_numbers();
-            static void a1_thursday_things_you_can_do();
+            SCENE_INLINE void a1_thursday_the_running_girl();
+            SCENE_INLINE void a1_thursday_soap();
+            SCENE_INLINE void a1_thursday_cold_war();
+            SCENE_INLINE void a1_thursday_proof_of_competency();
+            SCENE_INLINE void a1_thursday_event_horizon();
+            SCENE_INLINE void a1_thursday_above_and_beyond();
+            SCENE_INLINE void a1_thursday_paint_by_numbers();
+            SCENE_INLINE void a1_thursday_things_you_can_do();
             static void a1_thursday();
-            static void a1c8o1();
-            static void a1c8o2();
+            SCENE_INLINE void a1c8o1();
+            SCENE_INLINE void a1c8o2();
             // Choice functions
-            static void a1_thursday_cold_war__menu_question_0();
-            static void a1_thursday_cold_war__menu_question_0_dont_drag_me_into_this_ive_done_my_part();
-            static void a1_thursday_cold_war__menu_question_0_hey_come_on_cut_me_and_lilly_some_slack();
+            SCENE_INLINE void a1_thursday_cold_war__menu_question_0();
+            SCENE_INLINE void a1_thursday_cold_war__menu_question_0_dont_drag_me_into_this_ive_done_my_part();
+            SCENE_INLINE void a1_thursday_cold_war__menu_question_0_hey_come_on_cut_me_and_lilly_some_slack();
             // Conditions
-            static void a1_thursday_the_running_girl__condition_0_0();
-            static void a1_thursday_the_running_girl__condition_0_1();
-            static void a1_thursday_the_running_girl__condition_1_0();
-            static void a1_thursday_the_running_girl__condition_2_0();
-            static void a1_thursday_the_running_girl__condition_2_1();
-            static void a1_thursday_the_running_girl__condition_3_0();
-            static void a1_thursday_the_running_girl__condition_3_1();
-            static void a1_thursday_the_running_girl__condition_4_0();
-            static void a1_thursday_soap__condition_0_0();
-            static void a1_thursday_cold_war__condition_0__condition_0_0();
-            static void a1_thursday_cold_war__condition_0__condition_0_1();
-            static void a1_thursday_cold_war__condition_0_0();
-            static void a1_thursday_cold_war__condition_1_0();
-            static void a1_thursday_proof_of_competency__condition_0_0();
-            static void a1_thursday_proof_of_competency__condition_1_0();
-            static void a1_thursday__condition_0_0();
-            static void a1_thursday_event_horizon__condition_0_0();
-            static void a1_thursday__condition_1_0();
-            static void a1_thursday_above_and_beyond__condition_0_0();
-            static void a1_thursday__condition_2_0();
-            static void a1_thursday_paint_by_numbers__condition_0_0();
-            static void a1_thursday__condition_3_0();
-            static void a1_thursday_things_you_can_do__condition_0_0();
-            static void a1_thursday__condition_4_0();
-            static void a1_thursday__condition_5_0();
-            static void a1_thursday__condition_5_1();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_0_0();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_0_1();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_1_0();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_2_0();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_2_1();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_3_0();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_3_1();
+            SCENE_INLINE void a1_thursday_the_running_girl__condition_4_0();
+            SCENE_INLINE void a1_thursday_soap__condition_0_0();
+            SCENE_INLINE void a1_thursday_cold_war__condition_0__condition_0_0();
+            SCENE_INLINE void a1_thursday_cold_war__condition_0__condition_0_1();
+            SCENE_INLINE void a1_thursday_cold_war__condition_0_0();
+            SCENE_INLINE void a1_thursday_cold_war__condition_1_0();
+            SCENE_INLINE void a1_thursday_proof_of_competency__condition_0_0();
+            SCENE_INLINE void a1_thursday_proof_of_competency__condition_1_0();
+            SCENE_INLINE void a1_thursday__condition_0_0();
+            SCENE_INLINE void a1_thursday_event_horizon__condition_0_0();
+            SCENE_INLINE void a1_thursday__condition_1_0();
+            SCENE_INLINE void a1_thursday_above_and_beyond__condition_0_0();
+            SCENE_INLINE void a1_thursday__condition_2_0();
+            SCENE_INLINE void a1_thursday_paint_by_numbers__condition_0_0();
+            SCENE_INLINE void a1_thursday__condition_3_0();
+            SCENE_INLINE void a1_thursday_things_you_can_do__condition_0_0();
+            SCENE_INLINE void a1_thursday__condition_4_0();
+            SCENE_INLINE void a1_thursday__condition_5_0();
+            SCENE_INLINE void a1_thursday__condition_5_1();
     };
 }
 

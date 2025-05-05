@@ -107,6 +107,10 @@ typedef unsigned char scene_transition_t;
 #define SCENE_TRANSITION_PASSOUTOP1 ((scene_transition_t)24)
 #define SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG ((scene_transition_t)25)
 #define SCENE_TRANSITION_SHOWDOWN_THUNDER_SHORT ((scene_transition_t)26)
+#define SCENE_TRANSITION_DOTWIPE_UP ((scene_transition_t)27)
+#define SCENE_TRANSITION_DOTWIPE_DOWN ((scene_transition_t)28)
+#define SCENE_TRANSITION_CLOCKWIPE_IN ((scene_transition_t)29)
+#define SCENE_TRANSITION_CLOCKWIPE_OUT ((scene_transition_t)30)
 
 typedef unsigned char character_t;
 #define CHARACTER_NONE ((character_t)0)

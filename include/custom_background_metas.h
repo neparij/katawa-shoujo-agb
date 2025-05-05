@@ -1,6 +1,9 @@
 #ifndef CUSTOM_BACKGROUND_METAS_H
 #define CUSTOM_BACKGROUND_METAS_H
 
+#include <bn_regular_bg_items_kslogo_heart.h>
+#include <bn_regular_bg_items_kslogo_words.h>
+
 #include "event_missing.h"
 #include "bn_regular_bg_items_hisao_class.h"
 #include "bn_regular_bg_items_thumb_hisao_class.h"
@@ -53,6 +56,16 @@ namespace ks::background_metas {
         bn::regular_bg_items::lilly_shizu_showdown_both,
         bn::regular_bg_items::thumb_lilly_shizu_showdown,
         0xFFFF0007);
+
+    constexpr inline background_meta kslogo_heart(
+        bn::regular_bg_items::kslogo_heart,
+        bn::regular_bg_items::thumb_event_missing,
+        0xFFFFFF00);
+
+    constexpr inline background_meta kslogo_words(
+        bn::regular_bg_items::kslogo_words,
+        bn::regular_bg_items::thumb_event_missing,
+        0xFFFFFF01);
 
     inline const background_meta *get_custom_by_hash(const unsigned int hash) {
         switch (hash) {

@@ -1,6 +1,7 @@
 #ifndef KS_SCRIPT_A1_MONDAY
 #define KS_SCRIPT_A1_MONDAY
 
+#define SCENE_INLINE static inline __attribute__((always_inline))
 #include "../scenemanager.h"
 #include "../character.h"
 #include "bn_regular_bg_items_muto_bg_basic.h"
@@ -87,37 +88,37 @@ namespace ks {
         public:
             virtual ~ScriptA1Monday() = default;
             // Labels
-            static void a1_monday_out_cold();
-            static void a1_monday_bundle_of_hisao();
-            static void a1_monday_gateway_effect();
-            static void a1_monday_enter_stage_left();
-            static void a1_monday_in_the_nursery();
-            static void a1_monday_nobodys_room();
+            SCENE_INLINE void a1_monday_out_cold();
+            SCENE_INLINE void a1_monday_bundle_of_hisao();
+            SCENE_INLINE void a1_monday_gateway_effect();
+            SCENE_INLINE void a1_monday_enter_stage_left();
+            SCENE_INLINE void a1_monday_in_the_nursery();
+            SCENE_INLINE void a1_monday_nobodys_room();
             static void a1_monday();
-            static void a1c1o1();
-            static void a1c1o2();
-            static void a1c2o1();
-            static void a1c2o2();
-            static void a1c2o3();
+            SCENE_INLINE void a1c1o1();
+            SCENE_INLINE void a1c1o2();
+            SCENE_INLINE void a1c2o1();
+            SCENE_INLINE void a1c2o2();
+            SCENE_INLINE void a1c2o3();
             // Choice functions
-            static void a1_monday_gateway_effect__menu_question_0();
-            static void a1_monday_gateway_effect__menu_question_0_why();
-            static void a1_monday_gateway_effect__menu_question_0_yeah_of_course();
-            static void a1_monday_in_the_nursery__menu_question_0();
-            static void a1_monday_in_the_nursery__menu_question_0_ask_about_the_library();
-            static void a1_monday_in_the_nursery__menu_question_0_ask_about_shizunes_deafness();
-            static void a1_monday_in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know();
+            SCENE_INLINE void a1_monday_gateway_effect__menu_question_0();
+            SCENE_INLINE void a1_monday_gateway_effect__menu_question_0_why();
+            SCENE_INLINE void a1_monday_gateway_effect__menu_question_0_yeah_of_course();
+            SCENE_INLINE void a1_monday_in_the_nursery__menu_question_0();
+            SCENE_INLINE void a1_monday_in_the_nursery__menu_question_0_ask_about_the_library();
+            SCENE_INLINE void a1_monday_in_the_nursery__menu_question_0_ask_about_shizunes_deafness();
+            SCENE_INLINE void a1_monday_in_the_nursery__menu_question_0_i_think_i_got_everything_i_need_to_know();
             // Conditions
-            static void a1_monday_out_cold__condition_0_0();
-            static void a1_monday_bundle_of_hisao__condition_0_0();
-            static void a1_monday_gateway_effect__condition_0_0();
-            static void a1_monday_enter_stage_left__condition_0_0();
-            static void a1_monday_enter_stage_left__condition_0_1();
-            static void a1_monday_enter_stage_left__condition_1_0();
-            static void a1_monday_enter_stage_left__condition_1_1();
-            static void a1_monday_enter_stage_left__condition_2_0();
-            static void a1_monday_in_the_nursery__condition_0_0();
-            static void a1_monday_nobodys_room__condition_0_0();
+            SCENE_INLINE void a1_monday_out_cold__condition_0_0();
+            SCENE_INLINE void a1_monday_bundle_of_hisao__condition_0_0();
+            SCENE_INLINE void a1_monday_gateway_effect__condition_0_0();
+            SCENE_INLINE void a1_monday_enter_stage_left__condition_0_0();
+            SCENE_INLINE void a1_monday_enter_stage_left__condition_0_1();
+            SCENE_INLINE void a1_monday_enter_stage_left__condition_1_0();
+            SCENE_INLINE void a1_monday_enter_stage_left__condition_1_1();
+            SCENE_INLINE void a1_monday_enter_stage_left__condition_2_0();
+            SCENE_INLINE void a1_monday_in_the_nursery__condition_0_0();
+            SCENE_INLINE void a1_monday_nobodys_room__condition_0_0();
     };
 }
 

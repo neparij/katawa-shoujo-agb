@@ -79,6 +79,8 @@ class ScenarioWriter:
     def write_header(self):
         define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
         h_code = [
+            # Define the INLINE modifier:
+            '#define SCENE_INLINE static inline __attribute__((always_inline))',
             # Include common stuff
             include_header("../scenemanager"),
             include_header("../character"),
@@ -110,19 +112,22 @@ class ScenarioWriter:
 
         function_declarations.append(comment("Labels"))
         for label in self.get_labels():
-            function_declarations.append(f"static {label_signature(label)};")
+            if label.is_initial:
+                function_declarations.append(f"static {label_signature(label)};")
+            else:
+                function_declarations.append(f"SCENE_INLINE {label_signature(label)};")
 
         function_declarations.append(comment("Choice functions"))
         for menu in self.get_menus():
-            function_declarations.append(f"static {menu_signature(menu)};")
+            function_declarations.append(f"SCENE_INLINE {menu_signature(menu)};")
             for answer in menu.conditions:
-                function_declarations.append(f"static {answer_signature(menu, answer)};")
+                function_declarations.append(f"SCENE_INLINE {answer_signature(menu, answer)};")
 
         function_declarations.append(comment("Conditions"))
         for condition in self.get_conditions():
             cnum = 0
             for variant in condition.conditions:
-                function_declarations.append(f"static {condition_signature(condition, cnum)};")
+                function_declarations.append(f"SCENE_INLINE {condition_signature(condition, cnum)};")
                 cnum += 1
 
         public_functions = as_public("\n".join(function_declarations))
@@ -165,7 +170,11 @@ class ScenarioWriter:
             #         "    scene.update();",
             #         "}"
             #     ])
-            functions.append(f"static {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
+            if label.is_initial:
+                functions.append(f"static {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
+            else:
+                functions.append(f"SCENE_INLINE {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
+            # functions.append(f"static {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
 
         for menu in self.get_menus():
             sequences = []
@@ -206,13 +215,13 @@ class ScenarioWriter:
 
             sequences.extend(" else ".join(answer_callbacks).split("\n"))
 
-            functions.append(f"static {menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
+            functions.append(f"SCENE_INLINE {menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
 
             for answer in menu.conditions:
                 sequences = []
                 for seq in answer.sequence:
                     sequences.extend(self.process_sequence(menu, seq))
-                functions.append(f"static {answer_signature(menu, answer)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"SCENE_INLINE {answer_signature(menu, answer)} {{\n{indented_l(sequences)}\n}}")
 
         for condition in self.get_conditions():
             cnum = 0
@@ -222,7 +231,7 @@ class ScenarioWriter:
                     sequence_code = self.process_sequence(condition, seq)
                     if sequence_code:
                         sequences.extend(sequence_code)
-                functions.append(f"static {condition_signature(condition, cnum)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"SCENE_INLINE {condition_signature(condition, cnum)} {{\n{indented_l(sequences)}\n}}")
                 cnum += 1
 
         functions = as_public("\n".join(functions))
@@ -621,6 +630,8 @@ class ScenarioWriter:
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         print(show_transform)
+        if show_transform.sprite not in PROCESSED_CHARACTERS:
+            return [f'// TODO: Show transform {show_transform.sprite} {show_transform.x}, 0']
         return [
             f'IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_{show_transform.sprite.upper()}, {show_transform.x}, 0));']
 

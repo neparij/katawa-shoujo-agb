@@ -1,6 +1,7 @@
 #ifndef KS_SCRIPT_A1_WEDNESDAY
 #define KS_SCRIPT_A1_WEDNESDAY
 
+#define SCENE_INLINE static inline __attribute__((always_inline))
 #include "../scenemanager.h"
 #include "../character.h"
 #include "bn_regular_bg_items_shizu_bg_behind.h"
@@ -180,46 +181,46 @@ namespace ks {
         public:
             virtual ~ScriptA1Wednesday() = default;
             // Labels
-            static void a1_wednesday_lunch_evolution_theory();
-            static void a1_wednesday_short_sharp_shock();
-            static void a1_wednesday_meet_cute();
-            static void a1_wednesday_detour_ahead();
-            static void a1_wednesday_sip_p1();
-            static void a1_wednesday_it_builds_character();
-            static void a1_wednesday_a_private_lunch();
-            static void a1_wednesday_waylay();
-            static void a1_wednesday_the_other_green();
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory();
+            SCENE_INLINE void a1_wednesday_short_sharp_shock();
+            SCENE_INLINE void a1_wednesday_meet_cute();
+            SCENE_INLINE void a1_wednesday_detour_ahead();
+            SCENE_INLINE void a1_wednesday_sip_p1();
+            SCENE_INLINE void a1_wednesday_it_builds_character();
+            SCENE_INLINE void a1_wednesday_a_private_lunch();
+            SCENE_INLINE void a1_wednesday_waylay();
+            SCENE_INLINE void a1_wednesday_the_other_green();
             static void a1_wednesday();
-            static void separate_of_sss_and_mc();
-            static void a1c6o1();
-            static void a1c6o2();
-            static void a1c6o3();
-            static void a1c7o1();
-            static void a1c7o2();
+            SCENE_INLINE void separate_of_sss_and_mc();
+            SCENE_INLINE void a1c6o1();
+            SCENE_INLINE void a1c6o2();
+            SCENE_INLINE void a1c6o3();
+            SCENE_INLINE void a1c7o1();
+            SCENE_INLINE void a1c7o2();
             // Choice functions
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0();
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0_read_my_book();
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0_go_talk_with_hanako();
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision();
-            static void a1_wednesday_waylay__menu_question_0();
-            static void a1_wednesday_waylay__menu_question_0_yes();
-            static void a1_wednesday_waylay__menu_question_0_maybe();
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0();
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0_read_my_book();
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0_go_talk_with_hanako();
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision();
+            SCENE_INLINE void a1_wednesday_waylay__menu_question_0();
+            SCENE_INLINE void a1_wednesday_waylay__menu_question_0_yes();
+            SCENE_INLINE void a1_wednesday_waylay__menu_question_0_maybe();
             // Conditions
-            static void a1_wednesday_short_sharp_shock__condition_0_0();
-            static void a1_wednesday_short_sharp_shock__condition_0_1();
-            static void a1_wednesday_short_sharp_shock__condition_1_0();
-            static void a1_wednesday_meet_cute__condition_0_0();
-            static void a1_wednesday__condition_0_0();
-            static void a1_wednesday__condition_0_1();
-            static void a1_wednesday_detour_ahead__condition_0_0();
-            static void a1_wednesday_sip_p1__condition_0_0();
-            static void a1_wednesday__condition_1_0();
-            static void a1_wednesday__condition_1_1();
-            static void a1_wednesday_it_builds_character__condition_0_0();
-            static void a1_wednesday__condition_2_0();
-            static void a1_wednesday_a_private_lunch__condition_0_0();
-            static void a1_wednesday_waylay__condition_0_0();
-            static void a1_wednesday_the_other_green__condition_0_0();
+            SCENE_INLINE void a1_wednesday_short_sharp_shock__condition_0_0();
+            SCENE_INLINE void a1_wednesday_short_sharp_shock__condition_0_1();
+            SCENE_INLINE void a1_wednesday_short_sharp_shock__condition_1_0();
+            SCENE_INLINE void a1_wednesday_meet_cute__condition_0_0();
+            SCENE_INLINE void a1_wednesday__condition_0_0();
+            SCENE_INLINE void a1_wednesday__condition_0_1();
+            SCENE_INLINE void a1_wednesday_detour_ahead__condition_0_0();
+            SCENE_INLINE void a1_wednesday_sip_p1__condition_0_0();
+            SCENE_INLINE void a1_wednesday__condition_1_0();
+            SCENE_INLINE void a1_wednesday__condition_1_1();
+            SCENE_INLINE void a1_wednesday_it_builds_character__condition_0_0();
+            SCENE_INLINE void a1_wednesday__condition_2_0();
+            SCENE_INLINE void a1_wednesday_a_private_lunch__condition_0_0();
+            SCENE_INLINE void a1_wednesday_waylay__condition_0_0();
+            SCENE_INLINE void a1_wednesday_the_other_green__condition_0_0();
     };
 }
 

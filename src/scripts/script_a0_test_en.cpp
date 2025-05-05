@@ -3,7 +3,7 @@
 namespace ks {
     class ScriptA0TestEn : public ScriptA0Test {
         public:
-            static void a0_actname_scene1() {
+            SCENE_INLINE void a0_actname_scene1() {
                 ks::SceneManager::set_label(LABEL_A0_ACTNAME_SCENE1);
                 if (!ks::in_replay) {
                 }
@@ -43,20 +43,20 @@ namespace ks {
             
                 IF_NOT_EXIT(a0_actname_scene1());
             }
-            static void a0e1() {
+            SCENE_INLINE void a0e1() {
                 ks::SceneManager::set_line_hash(0x93E1BF7F);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("a0e1", 8));
                 ks::SceneManager::set_line_hash(0xC5A5C4C9);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("a0e1", 9));
                 return;
             }
-            static void a0_actname_scene1__condition_0_0() {
+            SCENE_INLINE void a0_actname_scene1__condition_0_0() {
                 ks::SceneManager::set_line_hash(0x8DD85CF3);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1-c1", 10));
                 ks::SceneManager::set_line_hash(0x06C8B385);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1-c1", 11));
             }
-            static void a0_actname_scene1__condition_0_1() {
+            SCENE_INLINE void a0_actname_scene1__condition_0_1() {
                 ks::SceneManager::set_line_hash(0x6CC9BAEA);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog("ao-s1-c1", 12));
                 ks::SceneManager::set_line_hash(0x55C98B34);

@@ -3,7 +3,7 @@
 namespace ks {
     class ScriptA1WednesdayRu : public ScriptA1Wednesday {
         public:
-            static void a1_wednesday_lunch_evolution_theory() {
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_LUNCH_EVOLUTION_THEORY);
                 if (!ks::in_replay) {
                 }
@@ -78,7 +78,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_HANAKO, ks::sprite_metas::hanako_emb, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_downtimid, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_HANAKO, 80, 0));
-                IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_SHIZU, -11, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_SHIZU, -12, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_MISHA, -90, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -182,7 +182,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 53));
                 ScriptA1WednesdayRu::a1_wednesday_lunch_evolution_theory__menu_question_0();
             }
-            static void a1_wednesday_short_sharp_shock() {
+            SCENE_INLINE void a1_wednesday_short_sharp_shock() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_SHORT_SHARP_SHOCK);
                 if (!ks::in_replay) {
                 }
@@ -203,7 +203,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(0, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_EMI, 80, 0));
-                IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_SHIZU, -11, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_SHIZU, -12, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_MISHA, -80, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x5BF2FCCB);
@@ -316,7 +316,7 @@ namespace ks {
                 
             
             }
-            static void a1_wednesday_meet_cute() {
+            SCENE_INLINE void a1_wednesday_meet_cute() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_MEET_CUTE);
                 if (!ks::in_replay) {
                 }
@@ -431,7 +431,7 @@ namespace ks {
                 
             
             }
-            static void a1_wednesday_detour_ahead() {
+            SCENE_INLINE void a1_wednesday_detour_ahead() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_DETOUR_AHEAD);
                 if (!ks::in_replay) {
                 }
@@ -1143,7 +1143,7 @@ namespace ks {
                 
             
             }
-            static void a1_wednesday_sip_p1() {
+            SCENE_INLINE void a1_wednesday_sip_p1() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_SIP_P1);
                 if (!ks::in_replay) {
                 }
@@ -1166,7 +1166,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 276));
                 ks::SceneManager::set_line_hash(0xE051C3E1);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 277));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::tearoom_everyone_noon, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::tearoom_everyone_noon, 0, 0, SCENE_TRANSITION_NONE, 30));
                 // TODO: Show tearoom_hisaoe
                 // TODO: Show tearoom_lillye
                 // TODO: Show tearoom_hanae
@@ -1328,7 +1328,7 @@ namespace ks {
                 
             
             }
-            static void a1_wednesday_it_builds_character() {
+            SCENE_INLINE void a1_wednesday_it_builds_character() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_IT_BUILDS_CHARACTER);
                 if (!ks::in_replay) {
                 }
@@ -1577,7 +1577,7 @@ namespace ks {
                 
             
             }
-            static void a1_wednesday_a_private_lunch() {
+            SCENE_INLINE void a1_wednesday_a_private_lunch() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_A_PRIVATE_LUNCH);
                 if (!ks::in_replay) {
                 }
@@ -1916,7 +1916,7 @@ namespace ks {
                 
             
             }
-            static void a1_wednesday_waylay() {
+            SCENE_INLINE void a1_wednesday_waylay() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_WAYLAY);
                 if (!ks::in_replay) {
                 }
@@ -1999,6 +1999,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::sprite_metas::rin_relaxed, bn::regular_bg_items::rin_bg_relaxed, bn::sprite_items::rin_spr_relaxed_sleepy, 184, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_frown));
+                IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_SHIZU, 12, 0));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_RIN, 80, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x184ED65B);
@@ -2274,6 +2275,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::sprite_metas::rin_basic, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent));
+                IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_RIN, 72, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x92F6B248);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 630));
@@ -2319,7 +2321,7 @@ namespace ks {
                 
             
             }
-            static void a1_wednesday_the_other_green() {
+            SCENE_INLINE void a1_wednesday_the_other_green() {
                 ks::SceneManager::set_label(LABEL_A1_WEDNESDAY_THE_OTHER_GREEN);
                 if (!ks::in_replay) {
                 }
@@ -2594,6 +2596,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_wednesday", "ru", script_a1_wednesday_ru_intl)));
             
+                IF_NOT_EXIT(ks::SceneManager::timeskip());
                 IF_NOT_EXIT(a1_wednesday_lunch_evolution_theory());
                 if (!ks::progress.talk_with_hanako) {
                     ScriptA1WednesdayRu::a1_wednesday__condition_0_0();
@@ -2620,7 +2623,7 @@ namespace ks {
                 IF_NOT_EXIT(a1_wednesday_waylay());
                 IF_NOT_EXIT(a1_wednesday_the_other_green());
             }
-            static void separate_of_sss_and_mc() {
+            SCENE_INLINE void separate_of_sss_and_mc() {
                 IF_NOT_EXIT(ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT));
                 IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_impact.8ad", SOUND_CHANNEL_SOUND));
                 IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 6));
@@ -2733,7 +2736,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi_, 762));
                 return;
             }
-            static void a1c6o1() {
+            SCENE_INLINE void a1c6o1() {
                 IF_NOT_EXIT(ks::SceneManager::music_stop(360));
                 ks::SceneManager::set_line_hash(0x11F20E6C);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 763));
@@ -2760,7 +2763,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::music_stop(120));
                 return;
             }
-            static void a1c6o2() {
+            SCENE_INLINE void a1c6o2() {
                 ks::SceneManager::set_line_hash(0xD7159497);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 773));
                 IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_HANAKO, 0, 0));
@@ -2962,7 +2965,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::music_stop(60));
                 return;
             }
-            static void a1c6o3() {
+            SCENE_INLINE void a1c6o3() {
                 ks::SceneManager::hide_character(CHARACTER_HANAKO);
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign, bn::regular_bg_items::misha_bg_sign, bn::sprite_items::misha_spr_sign_smile, -48, 0));
@@ -3011,12 +3014,12 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 850));
                 return;
             }
-            static void a1c7o1() {
+            SCENE_INLINE void a1c7o1() {
                 ks::SceneManager::set_line_hash(0xC8B04C86);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 851));
                 return;
             }
-            static void a1c7o2() {
+            SCENE_INLINE void a1c7o2() {
                 ks::SceneManager::set_line_hash(0x8F6AA22F);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 852));
                 ks::SceneManager::set_line_hash(0x88BAFCC2);
@@ -3035,7 +3038,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 859));
                 return;
             }
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0() {
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0() {
                 bn::vector<ks::answer_ptr, 5> answers;
                 answers.push_back(ks::answer_ptr{0, 860});
                 if (ks::progress.attraction_hanako > 1 || ks::in_replay) answers.push_back({1, 861});
@@ -3050,18 +3053,18 @@ namespace ks {
                     ScriptA1WednesdayRu::a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision();
                 }
             }
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0_read_my_book() {
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0_read_my_book() {
                 IF_NOT_EXIT(ScriptA1WednesdayRu::a1c6o1());
             }
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0_go_talk_with_hanako() {
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0_go_talk_with_hanako() {
                 ks::progress.talk_with_hanako = true;
                 IF_NOT_EXIT(ScriptA1WednesdayRu::a1c6o2());
             }
-            static void a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision() {
+            SCENE_INLINE void a1_wednesday_lunch_evolution_theory__menu_question_0_wait_for_shizune_and_misha_to_come_to_a_decision() {
                 ks::progress.wait_for_shizu = true;
                 IF_NOT_EXIT(ScriptA1WednesdayRu::a1c6o3());
             }
-            static void a1_wednesday_waylay__menu_question_0() {
+            SCENE_INLINE void a1_wednesday_waylay__menu_question_0() {
                 ks::SceneManager::set_line_hash(0xDD901B30);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::nk, 863));
                 bn::vector<ks::answer_ptr, 5> answers;
@@ -3075,15 +3078,15 @@ namespace ks {
                     ScriptA1WednesdayRu::a1_wednesday_waylay__menu_question_0_maybe();
                 }
             }
-            static void a1_wednesday_waylay__menu_question_0_yes() {
+            SCENE_INLINE void a1_wednesday_waylay__menu_question_0_yes() {
                 ks::progress.promised = true;
                 IF_NOT_EXIT(ScriptA1WednesdayRu::a1c7o1());
             }
-            static void a1_wednesday_waylay__menu_question_0_maybe() {
+            SCENE_INLINE void a1_wednesday_waylay__menu_question_0_maybe() {
                 ks::progress.promised = false;
                 IF_NOT_EXIT(ScriptA1WednesdayRu::a1c7o2());
             }
-            static void a1_wednesday_short_sharp_shock__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_short_sharp_shock__condition_0_0() {
                 // renpy.music.play(music_normal, fadein=3.0, if_changed=True); TODO: unknown assignment
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_adjust, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_happy));
                 ks::SceneManager::set_line_hash(0xC3450254);
@@ -3163,7 +3166,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x58B710FB);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 888));
             }
-            static void a1_wednesday_short_sharp_shock__condition_0_1() {
+            SCENE_INLINE void a1_wednesday_short_sharp_shock__condition_0_1() {
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2));
                 ks::SceneManager::set_line_hash(0x3F825AB3);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
@@ -3198,43 +3201,43 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0xE13CA2EC);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 896));
             }
-            static void a1_wednesday_short_sharp_shock__condition_1_0() {
+            SCENE_INLINE void a1_wednesday_short_sharp_shock__condition_1_0() {
                 return;
             }
-            static void a1_wednesday_meet_cute__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_meet_cute__condition_0_0() {
                 return;
             }
-            static void a1_wednesday__condition_0_0() {
+            SCENE_INLINE void a1_wednesday__condition_0_0() {
                 IF_NOT_EXIT(a1_wednesday_short_sharp_shock());
             }
-            static void a1_wednesday__condition_0_1() {
+            SCENE_INLINE void a1_wednesday__condition_0_1() {
                 IF_NOT_EXIT(a1_wednesday_meet_cute());
             }
-            static void a1_wednesday_detour_ahead__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_detour_ahead__condition_0_0() {
                 return;
             }
-            static void a1_wednesday_sip_p1__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_sip_p1__condition_0_0() {
                 return;
             }
-            static void a1_wednesday__condition_1_0() {
+            SCENE_INLINE void a1_wednesday__condition_1_0() {
                 IF_NOT_EXIT(a1_wednesday_detour_ahead());
             }
-            static void a1_wednesday__condition_1_1() {
+            SCENE_INLINE void a1_wednesday__condition_1_1() {
                 IF_NOT_EXIT(a1_wednesday_sip_p1());
             }
-            static void a1_wednesday_it_builds_character__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_it_builds_character__condition_0_0() {
                 return;
             }
-            static void a1_wednesday__condition_2_0() {
+            SCENE_INLINE void a1_wednesday__condition_2_0() {
                 IF_NOT_EXIT(a1_wednesday_it_builds_character());
             }
-            static void a1_wednesday_a_private_lunch__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_a_private_lunch__condition_0_0() {
                 return;
             }
-            static void a1_wednesday_waylay__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_waylay__condition_0_0() {
                 return;
             }
-            static void a1_wednesday_the_other_green__condition_0_0() {
+            SCENE_INLINE void a1_wednesday_the_other_green__condition_0_0() {
                 return;
             }
     };

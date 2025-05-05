@@ -1,6 +1,7 @@
 #ifndef KS_SCRIPT_A1_TUESDAY
 #define KS_SCRIPT_A1_TUESDAY
 
+#define SCENE_INLINE static inline __attribute__((always_inline))
 #include "../scenemanager.h"
 #include "../character.h"
 #include "bn_regular_bg_items_shizu_bg_behind.h"
@@ -117,37 +118,37 @@ namespace ks {
         public:
             virtual ~ScriptA1Tuesday() = default;
             // Labels
-            static void a1_tuesday_smalltalk();
-            static void a1_tuesday_risk_vs_reward();
-            static void a1_tuesday_pseudo_tea_cosy();
-            static void a1_tuesday_shared_library();
-            static void a1_tuesday_bizarre_and_surreal();
+            SCENE_INLINE void a1_tuesday_smalltalk();
+            SCENE_INLINE void a1_tuesday_risk_vs_reward();
+            SCENE_INLINE void a1_tuesday_pseudo_tea_cosy();
+            SCENE_INLINE void a1_tuesday_shared_library();
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal();
             static void a1_tuesday();
-            static void a1c3o1();
-            static void a1c3o2();
-            static void a1c4o1();
-            static void a1c4o2();
-            static void a1c5o1();
-            static void a1c5o2();
+            SCENE_INLINE void a1c3o1();
+            SCENE_INLINE void a1c3o2();
+            SCENE_INLINE void a1c4o1();
+            SCENE_INLINE void a1c4o2();
+            SCENE_INLINE void a1c5o1();
+            SCENE_INLINE void a1c5o2();
             // Choice functions
-            static void a1_tuesday_risk_vs_reward__menu_question_0();
-            static void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively();
-            static void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here();
-            static void a1_tuesday_shared_library__menu_question_0();
-            static void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class();
-            static void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you();
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0();
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute();
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute();
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__menu_question_0();
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively();
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here();
+            SCENE_INLINE void a1_tuesday_shared_library__menu_question_0();
+            SCENE_INLINE void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class();
+            SCENE_INLINE void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you();
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__menu_question_0();
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute();
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute();
             // Conditions
-            static void a1_tuesday_smalltalk__condition_0_0();
-            static void a1_tuesday_risk_vs_reward__condition_0_0();
-            static void a1_tuesday_pseudo_tea_cosy__condition_0_0();
-            static void a1_tuesday_shared_library__condition_0_0();
-            static void a1_tuesday_shared_library__condition_0_1();
-            static void a1_tuesday_shared_library__condition_1_0();
-            static void a1_tuesday_bizarre_and_surreal__condition_0_0();
-            static void a1c4o1__condition_0_0();
+            SCENE_INLINE void a1_tuesday_smalltalk__condition_0_0();
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__condition_0_0();
+            SCENE_INLINE void a1_tuesday_pseudo_tea_cosy__condition_0_0();
+            SCENE_INLINE void a1_tuesday_shared_library__condition_0_0();
+            SCENE_INLINE void a1_tuesday_shared_library__condition_0_1();
+            SCENE_INLINE void a1_tuesday_shared_library__condition_1_0();
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__condition_0_0();
+            SCENE_INLINE void a1c4o1__condition_0_0();
     };
 }
 

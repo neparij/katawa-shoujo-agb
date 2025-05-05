@@ -26,7 +26,7 @@ from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
-from src.utils import sanitize_function_name, get_xalign_position
+from src.utils import sanitize_function_name, get_xalign_position, get_x_position
 
 
 class ScenarioReader:
@@ -302,10 +302,11 @@ class ScenarioReader:
             return
 
         elif stripped_line.startswith("call "):
-            skip = False
-            if "act_op(" in stripped_line or "call screen " in stripped_line or "call timeskip" in stripped_line:
-                skip = True
-            if not skip:
+            if "act_op(" in stripped_line or "call screen " in stripped_line:
+                pass
+            elif "call timeskip" in stripped_line:
+                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem("ks::SceneManager::timeskip", True))
+            else:
                 # Inline calls in menu blocks
                 function_name = stripped_line.split("call ", 1)[1].strip()
                 if function_name == "a1c4o1":
@@ -478,6 +479,14 @@ class ScenarioReader:
             value = float(stripped_line.split("xalign ")[1].split()[0])
             self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_xalign_position(value)))
 
+        elif "xpos " in stripped_line:
+            print("Show transform sequence (xpos)")
+            xpos_value = float(stripped_line.split("xpos ")[1].split()[0])
+            xanchor_value = 0.5
+            if "xanchor " in stripped_line:
+                xanchor_value = float(stripped_line.split("xanchor ")[1].split()[0])
+            self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_x_position(xpos_value, anchor=xanchor_value)))
+
         elif stripped_line.startswith("nvl "):
             parts = stripped_line.split()
             action_name = parts[1]
@@ -513,6 +522,7 @@ class ScenarioReader:
                         sequence = cast(CustomEventItem, sequence)
                         sequence.dissolve_time = dissolve_time
             if (stripped_line.startswith("with dissolve")
+                    or stripped_line.startswith("with fade")
                     or stripped_line.startswith("with locationchange")
                     or stripped_line.startswith("with charachangealways")
                     or stripped_line.startswith("with charachangeev")

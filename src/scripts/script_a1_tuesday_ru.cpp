@@ -3,7 +3,7 @@
 namespace ks {
     class ScriptA1TuesdayRu : public ScriptA1Tuesday {
         public:
-            static void a1_tuesday_smalltalk() {
+            SCENE_INLINE void a1_tuesday_smalltalk() {
                 ks::SceneManager::set_label(LABEL_A1_TUESDAY_SMALLTALK);
                 if (!ks::in_replay) {
                 }
@@ -648,7 +648,7 @@ namespace ks {
                 
             
             }
-            static void a1_tuesday_risk_vs_reward() {
+            SCENE_INLINE void a1_tuesday_risk_vs_reward() {
                 ks::SceneManager::set_label(LABEL_A1_TUESDAY_RISK_VS_REWARD);
                 if (!ks::in_replay) {
                 }
@@ -887,7 +887,7 @@ namespace ks {
                 
             
             }
-            static void a1_tuesday_pseudo_tea_cosy() {
+            SCENE_INLINE void a1_tuesday_pseudo_tea_cosy() {
                 ks::SceneManager::set_label(LABEL_A1_TUESDAY_PSEUDO_TEA_COSY);
                 if (!ks::in_replay) {
                 }
@@ -995,7 +995,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 273));
                 ks::SceneManager::set_line_hash(0x215F070F);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 274));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_miyagi, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_miyagi, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x8CE2057C);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 275));
@@ -1031,7 +1031,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 288));
                 ks::SceneManager::set_line_hash(0x35841259);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 289));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::tearoom_lillyhisao_noon, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::tearoom_lillyhisao_noon, 0, 0, SCENE_TRANSITION_NONE, 30));
                 // TODO: Show tearoom_hisao
                 // TODO: Show tearoom_lilly
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -1197,7 +1197,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 342));
                 ks::SceneManager::set_line_hash(0x95830267);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 343));
-                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_miyagi_ss, 0, 0, SCENE_TRANSITION_NONE, 0));
+                IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_miyagi_ss, 0, 0, SCENE_TRANSITION_NONE, 30));
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_LILLY, ks::sprite_metas::lilly_cane, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_smile, 0, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x5D0A7C8C);
@@ -1381,7 +1381,7 @@ namespace ks {
                 
             
             }
-            static void a1_tuesday_shared_library() {
+            SCENE_INLINE void a1_tuesday_shared_library() {
                 ks::SceneManager::set_label(LABEL_A1_TUESDAY_SHARED_LIBRARY);
                 if (!ks::in_replay) {
                 }
@@ -1566,7 +1566,7 @@ namespace ks {
                 
             
             }
-            static void a1_tuesday_bizarre_and_surreal() {
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal() {
                 ks::SceneManager::set_label(LABEL_A1_TUESDAY_BIZARRE_AND_SURREAL);
                 if (!ks::in_replay) {
                 }
@@ -1818,6 +1818,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x3FCB20FA);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::ke, 559));
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::sprite_metas::kenji_basic, bn::regular_bg_items::kenji_bg_basic, bn::sprite_items::kenji_spr_basic_tsun));
+                IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_KENJI, -24, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 IF_NOT_EXIT(ks::SceneManager::pause(30));
                 ks::SceneManager::hide_character(CHARACTER_KENJI);
@@ -1864,13 +1865,14 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_tuesday", "ru", script_a1_tuesday_ru_intl)));
             
+                IF_NOT_EXIT(ks::SceneManager::timeskip());
                 IF_NOT_EXIT(a1_tuesday_smalltalk());
                 IF_NOT_EXIT(a1_tuesday_risk_vs_reward());
                 IF_NOT_EXIT(a1_tuesday_pseudo_tea_cosy());
                 IF_NOT_EXIT(a1_tuesday_shared_library());
                 IF_NOT_EXIT(a1_tuesday_bizarre_and_surreal());
             }
-            static void a1c3o1() {
+            SCENE_INLINE void a1c3o1() {
                 ks::SceneManager::set_line_hash(0xF156679D);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 572));
                 ks::SceneManager::set_line_hash(0x53E6D6B1);
@@ -1979,7 +1981,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 600));
                 return;
             }
-            static void a1c3o2() {
+            SCENE_INLINE void a1c3o2() {
                 ks::SceneManager::set_line_hash(0x1B973A09);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 601));
                 ks::SceneManager::set_line_hash(0xA450E4FF);
@@ -2094,7 +2096,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 627));
                 return;
             }
-            static void a1c4o1() {
+            SCENE_INLINE void a1c4o1() {
                 ks::SceneManager::set_line_hash(0x49B7E8AF);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 628));
                 ks::SceneManager::set_line_hash(0x58FA3A9B);
@@ -2172,7 +2174,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 653));
                 return;
             }
-            static void a1c4o2() {
+            SCENE_INLINE void a1c4o2() {
                 ks::SceneManager::set_line_hash(0x52F1DEE3);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 654));
                 ks::SceneManager::set_line_hash(0x5335FF94);
@@ -2254,21 +2256,21 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 677));
                 return;
             }
-            static void a1c5o1() {
+            SCENE_INLINE void a1c5o1() {
                 ks::SceneManager::set_line_hash(0x7289C679);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 678));
                 ks::SceneManager::set_line_hash(0xC8D511AD);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::ke, 679));
                 return;
             }
-            static void a1c5o2() {
+            SCENE_INLINE void a1c5o2() {
                 ks::SceneManager::set_line_hash(0x37B14E28);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 680));
                 ks::SceneManager::set_line_hash(0xE49163DB);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::ke, 119));
                 return;
             }
-            static void a1_tuesday_risk_vs_reward__menu_question_0() {
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__menu_question_0() {
                 ks::SceneManager::set_line_hash(0xF53B6E31);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 681));
                 bn::vector<ks::answer_ptr, 5> answers;
@@ -2282,14 +2284,14 @@ namespace ks {
                     ScriptA1TuesdayRu::a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here();
                 }
             }
-            static void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively() {
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__menu_question_0_she_has_a_point_attack_aggressively() {
                 ks::progress.attraction_sc += 1;
                 IF_NOT_EXIT(ScriptA1TuesdayRu::a1c3o1());
             }
-            static void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here() {
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__menu_question_0_its_a_trap_its_smarter_to_play_defensively_here() {
                 IF_NOT_EXIT(ScriptA1TuesdayRu::a1c3o2());
             }
-            static void a1_tuesday_shared_library__menu_question_0() {
+            SCENE_INLINE void a1_tuesday_shared_library__menu_question_0() {
                 bn::vector<ks::answer_ptr, 5> answers;
                 answers.push_back(ks::answer_ptr{0, 684});
                 answers.push_back(ks::answer_ptr{1, 654});
@@ -2301,15 +2303,15 @@ namespace ks {
                     ScriptA1TuesdayRu::a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you();
                 }
             }
-            static void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class() {
+            SCENE_INLINE void a1_tuesday_shared_library__menu_question_0_hi_im_new_here_hisao_nakai_were_in_the_same_class() {
                 ks::progress.im_new_here = true;
                 IF_NOT_EXIT(ScriptA1TuesdayRu::a1c4o1());
             }
-            static void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you() {
+            SCENE_INLINE void a1_tuesday_shared_library__menu_question_0_im_sorry_i_didnt_mean_to_startle_you() {
                 ks::progress.attraction_hanako += 1;
                 IF_NOT_EXIT(ScriptA1TuesdayRu::a1c4o2());
             }
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0() {
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__menu_question_0() {
                 bn::vector<ks::answer_ptr, 5> answers;
                 answers.push_back(ks::answer_ptr{0, 685});
                 answers.push_back(ks::answer_ptr{1, 686});
@@ -2321,23 +2323,23 @@ namespace ks {
                     ScriptA1TuesdayRu::a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute();
                 }
             }
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute() {
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__menu_question_0_she_was_cute() {
                 ks::progress.attraction_hanako += 1;
                 IF_NOT_EXIT(ScriptA1TuesdayRu::a1c5o1());
             }
-            static void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute() {
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__menu_question_0_she_wasnt_cute() {
                 IF_NOT_EXIT(ScriptA1TuesdayRu::a1c5o2());
             }
-            static void a1_tuesday_smalltalk__condition_0_0() {
+            SCENE_INLINE void a1_tuesday_smalltalk__condition_0_0() {
                 return;
             }
-            static void a1_tuesday_risk_vs_reward__condition_0_0() {
+            SCENE_INLINE void a1_tuesday_risk_vs_reward__condition_0_0() {
                 return;
             }
-            static void a1_tuesday_pseudo_tea_cosy__condition_0_0() {
+            SCENE_INLINE void a1_tuesday_pseudo_tea_cosy__condition_0_0() {
                 return;
             }
-            static void a1_tuesday_shared_library__condition_0_0() {
+            SCENE_INLINE void a1_tuesday_shared_library__condition_0_0() {
                 ks::SceneManager::set_line_hash(0xA5136BB1);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 687));
                 IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_YUUKO, ks::sprite_metas::yuuko_up, bn::regular_bg_items::yuuko_bg_up, bn::sprite_items::yuuko_spr_up_worried));
@@ -2361,7 +2363,7 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x06DF62A2);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 696));
             }
-            static void a1_tuesday_shared_library__condition_0_1() {
+            SCENE_INLINE void a1_tuesday_shared_library__condition_0_1() {
                 ks::SceneManager::set_line_hash(0xC2BA2E8C);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 697));
                 ks::SceneManager::set_line_hash(0xE3C5A81F);
@@ -2380,13 +2382,13 @@ namespace ks {
                 ks::SceneManager::set_line_hash(0x91B34A97);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 695));
             }
-            static void a1_tuesday_shared_library__condition_1_0() {
+            SCENE_INLINE void a1_tuesday_shared_library__condition_1_0() {
                 return;
             }
-            static void a1_tuesday_bizarre_and_surreal__condition_0_0() {
+            SCENE_INLINE void a1_tuesday_bizarre_and_surreal__condition_0_0() {
                 return;
             }
-            static void a1c4o1__condition_0_0() {
+            SCENE_INLINE void a1c4o1__condition_0_0() {
                 ks::SceneManager::set_line_hash(0xC42B6DD3);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 702));
                 ks::SceneManager::set_line_hash(0x1867D8B1);

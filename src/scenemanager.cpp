@@ -1,10 +1,14 @@
 #include "scenemanager.h"
 
+#include <bn_regular_bg_items_kslogo_heart.h>
+#include <bn_regular_bg_items_kslogo_words.h>
 #include <bn_affine_bg_actions.h>
 #include <bn_affine_bg_items_test_delayblinds.h>
 #include <bn_affine_bg_items_test_eyes.h>
 #include <bn_affine_bg_items_test_flashback.h>
 #include <bn_affine_bg_items_test_handsdissolve.h>
+#include <bn_affine_bg_items_test_dots_col.h>
+#include <bn_affine_bg_items_test_clockwipe.h>
 #include <bn_affine_bg_tiles_ptr.h>
 #include <bn_bg_palette_ptr.h>
 #include <BN_LOG.h>
@@ -225,9 +229,13 @@ void SceneManager::set_background(const background_meta& bg, const int position_
     background_visual.dissolve_time = dissolve_time;
     set_background_transition(transition);
 
-    for (const auto& visual : character_visuals) {
-        if (visual.character != CHARACTER_NONE) {
-            hide_character(visual.character, false, true);
+
+    if (dissolve_time != 0 || transition != SCENE_TRANSITION_NONE) {
+        // TODO: Check that we need to hide characters only on dissolves!
+        for (const auto& visual : character_visuals) {
+            if (visual.character != CHARACTER_NONE) {
+                hide_character(visual.character, false, true);
+            }
         }
     }
 }
@@ -276,6 +284,11 @@ void SceneManager::disable_fill() {
 
 void SceneManager::set_event(const background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
     set_background(bg, 0, 0, transition, dissolve_time);
+    for (const auto& visual : character_visuals) {
+        if (visual.character != CHARACTER_NONE) {
+            hide_character(visual.character, false, true);
+        }
+    }
     custom_event = event.clone();
 }
 
@@ -401,7 +414,7 @@ void SceneManager::show_character(const character_t character,
                                   const int position_x,
                                   const int position_y,
                                   const bool position_change) {
-    BN_LOG("Show character: ", character, " X: ", position_x, " Y: ", position_y);
+    BN_LOG("Show character: ", character, " X: ", position_x, " Y: ", position_y);;
     const auto character_index = get_character_visual_index(character, true);
 
     character_visuals.at(character_index).index = character_index;
@@ -467,6 +480,12 @@ void SceneManager::set_character_window_visibility(bn::regular_bg_ptr bg)
         // if (target_x < 0) {
             is_right = false;
         // }
+    }
+
+    // Too offscreen
+    if (x_pos < -ks::device::screen_width_half - 64 || x_pos > ks::device::screen_width_half + 64) {
+        is_left = false;
+        is_right = false;
     }
 
     bg.set_visible_in_window(is_left, left_window);
@@ -607,6 +626,23 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         fade_in(ks::globals::colors::WHITE, transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG ? 180 : 90);
         fade_reset();
         return;
+    }
+    if (transition == SCENE_TRANSITION_CLOCKWIPE_IN) {
+        BN_ASSERT(!to.has_value(), "Clockwipe transition MUST have a value");
+        primary_background.reset();
+        ks::globals::main_update();
+        primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+        primary_background->set_priority(3);
+        primary_background->set_z_order(10);
+        ks::globals::sound_update();
+        transition_fadein(bn::affine_bg_items::test_clockwipe, 2, false);
+        return;
+    }
+    if (transition == SCENE_TRANSITION_CLOCKWIPE_OUT) {
+        transition_fadeout(bn::affine_bg_items::test_clockwipe, 2, true);
+        primary_background.reset();
+        return;
+
     }
     BN_ERROR("Transition not implemented: ", transition);
 }
@@ -957,6 +993,7 @@ void SceneManager::update_visuals() {
         }
     }
 
+    ks::globals::main_update();
     if (background_want_move) {
         BN_LOG("Update visuals: Move background");
         bg_moves.push_back(bn::regular_bg_move_to_action(*primary_background,
@@ -969,7 +1006,9 @@ void SceneManager::update_visuals() {
                                    (visual.position_x != visual.background->position().x() ||
                                    visual.position_y != visual.background->position().y());
         if (character_want_move) {
-            BN_LOG("Update visuals: Move character ", visual.character);
+            BN_LOG("Update visuals: Move character ", visual.character,
+                " from ", visual.background->position().x(), ", ", visual.background->position().y(),
+                " to ", visual.position_x, ", ", visual.position_y);
             bg_moves.push_back(bn::regular_bg_move_to_action(*visual.background, 20, visual.position_x, visual.position_y));
             spr_moves.push_back(bn::sprite_move_to_action(*visual.sprite, 20,
                 visual.position_x + visual.offset_x + visual.sprite_meta->offset_x,
@@ -1013,6 +1052,7 @@ void SceneManager::update_visuals() {
             visual.sprite->set_blending_enabled(false);
         }
     }
+    blend_action.reset();
 
     /// discard: SHOW DIALOGS (WITH DISSOLVE)
 }
@@ -1186,6 +1226,36 @@ void SceneManager::pause(const int ticks) {
     for(int tick = 0; tick <= ticks; ++tick) {
         ks::globals::main_update();
     }
+}
+
+void SceneManager::timeskip() {
+    if (is_loading) {
+        return;
+    }
+
+    music_stop(120);
+    sfx_stop(SOUND_CHANNEL_SOUND, 120);
+    sfx_stop(SOUND_CHANNEL_AMBIENT, 120);
+    pause(120);
+
+    music_play(MUSIC_TIMESKIP);
+
+    set_background(background_metas::kslogo_heart, 0, 0, SCENE_TRANSITION_CLOCKWIPE_IN, 0);
+    // set_background_transition(SCENE_TRANSITION_CLOCKWIPE);
+    update_visuals();
+
+    set_background(background_metas::kslogo_words, 0, 0, SCENE_TRANSITION_NONE, 108);
+    // set_background_transition(SCENE_TRANSITION_CLOCKWIPE);
+    update_visuals();
+
+    pause(120);
+
+    music_stop(120);
+
+    hide_background(SCENE_TRANSITION_CLOCKWIPE_OUT, 0);
+    update_visuals();
+
+    pause(112);
 }
 
 void SceneManager::fade_in(const bn::color &color, const int steps) {

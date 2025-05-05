@@ -176,6 +176,8 @@ public:
 
     static void pause(const int ticks);
 
+    static void timeskip();
+
     static void fade_in(const bn::color &color, const int steps);
     static void fade_out(const bn::color &color, const int steps);
     static void fade_in(const bn::color &color);

@@ -26,12 +26,14 @@ namespace ks {
             text_generator_small->set_center_alignment();
             text_item_palette = globals::text_palettes::original;
 
-
-
             bn::blending::set_fade_alpha(0.0);
+            bn::blending::set_intensity_alpha(0.0);
             bn::blending::set_transparency_alpha(1.0);
             if (selection == 0) {
                 show_dots_animation(true);
+                // bn::blending::set_transparency_alpha(DialogBox::transparency_alpha());
+                // SceneManager::transition_fadeout(bn::affine_bg_items::test_dots_col, 16, true);
+                // bn::blending::set_transparency_alpha(1.0);
             } else {
                 if (background_visual.visible_bg_item.has_value()) {
                     primary_background = background_visual.bg_item->create_bg(
@@ -95,6 +97,9 @@ namespace ks {
                 primary_background->set_blending_enabled(false);
             }
             show_dots_animation(false);
+            // bn::blending::set_transparency_alpha(DialogBox::transparency_alpha());
+            // SceneManager::transition_fadein(bn::affine_bg_items::test_dots_col, 16, true);
+            // bn::blending::set_transparency_alpha(1.0);
 
             ks::globals::state = GS_GAME;
             is_paused = false;
@@ -155,9 +160,15 @@ namespace ks {
             }
         }
 
-        void show_dots_animation(bool forward) {
+        void show_dots_animation(const bool forward) {
             secondary_background = bn::regular_bg_items::ui_backdrop_dots.create_bg(0, 0);
+            secondary_background->set_priority(3);
+            secondary_background->set_z_order(9);
             secondary_background->set_blending_enabled(true);
+
+            // Transparency attributes should be created only after the all
+            // backgrounds with its priority values are created (!important)
+            bn::array<bn::blending_transparency_attributes, 160> transparency_attributes;
 
             while (forward ? dots_offset < 160 + 96 : dots_offset > 0) {
                 dots_offset += forward ? 16 : -16;
@@ -183,7 +194,6 @@ namespace ks {
 
     private:
         bn::fixed dots_offset = 0;
-        bn::array<bn::blending_transparency_attributes, 160> transparency_attributes;
         bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_attributes_hbe;
         bn::vector<bn::sprite_ptr, 4> menu_bg_sprites;
 
