@@ -56,8 +56,9 @@ namespace ks {
 
         void init_engine(const bn::optional<bn::color> &clear_color) {
             bn::core::init(clear_color, bn::string_view(), ks::globals::ISR_VBlank);
-            // BN_LOG("PLA", player_sfx_isPlaying());
             ks::sound_manager::init();
+            // BN_LOG("PLA", player_sfx_isPlaying());
+
             set_language(settings.language);
 
             if (clear_color.has_value()) {
@@ -111,8 +112,8 @@ namespace ks {
 
             // bn::memory::log_alloc_ewram_status();
 
-            playerGSM_unload();
-            player8AD_unload();
+            // playerGSM_unload();
+            // player8AD_unload();
         }
 
         void set_language(language_t tl) {

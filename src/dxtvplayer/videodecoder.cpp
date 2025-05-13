@@ -20,10 +20,11 @@ namespace Video
 {
 
     IWRAM_FUNC auto decode(uint32_t *scratchPad, uint32_t scratchPadSize, const Info &info, const Frame &frame) -> const uint32_t * {
-        return decode(scratchPad, scratchPadSize, info, frame, [] {});
+        decode(scratchPad, scratchPadSize, info, frame, 0);
+        return decode(scratchPad, scratchPadSize, info, frame, 1);
     }
 
-    IWRAM_FUNC auto decode(uint32_t *scratchPad, uint32_t scratchPadSize, const Info &info, const Frame &frame, void (*onDecodePass)()) -> const uint32_t *
+    IWRAM_FUNC auto decode(uint32_t *scratchPad, uint32_t scratchPadSize, const Info &info, const Frame &frame, const uint8_t part) -> const uint32_t *
     {
         static_assert(sizeof(ChunkHeader) % 4 == 0);
         // get pointer to start of data chunk. audio data is stored first
@@ -55,7 +56,7 @@ namespace Video
                 dstInVRAM ? RLUnCompVram(currentSrc, currentDst) : RLUnCompWram(currentSrc, currentDst);
                 break;
             case Image::ProcessingType::CompressDXTV:
-                DXTV::UnCompWrite16bit<160>(currentSrc, currentDst, (const uint32_t *)VRAM, info.width, info.height, onDecodePass);
+                DXTV::UnCompWrite16bit<160>(currentSrc, currentDst, (const uint32_t *)VRAM, info.width, info.height, part);
 //                DXTV::UnCompWrite16bit<240>(currentSrc, currentDst, (const uint32_t *)VRAM, info.width, info.height);
                 break;
             default:

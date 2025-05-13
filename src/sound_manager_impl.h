@@ -55,6 +55,7 @@ namespace ks::sound_manager {
     static channel_base* get_channel(sound_channel_t channel_name) {
         switch (channel_name) {
             case SOUND_CHANNEL_MUSIC:
+            case SOUND_CHANNEL_VIDEO:
                 BN_ASSERT(&channel_music, "Music channel not initialized");
                 return &channel_music;
             case SOUND_CHANNEL_SOUND:
@@ -83,6 +84,11 @@ namespace ks::sound_manager {
             playerGSM_set_volume(1.0);
             playerGSM_play(name);
             playerGSM_set_loop(ch->loop);
+        } else if (Channel == SOUND_CHANNEL_VIDEO) {
+            BN_LOG("PLAYING VIDEO, NO LOOP!");
+            playerGSM_set_volume(1.0);
+            playerGSM_play(name);
+            playerGSM_set_loop(false);
         } else if (Channel == SOUND_CHANNEL_SOUND) {
             // player8AD_set_volume(1.0, 0);
             player8AD_play(name, 0);

@@ -1182,14 +1182,14 @@ void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const 
         pause(60);
     }
 
-    ks::globals::release_engine();
+    // ks::globals::release_engine();
     // fade_reset();
     videoplayer_init(dxtv_file, dxtv_size, audio_file, clear_color.red(), clear_color.green(), clear_color.blue());
-    playerGSM_init();
+    // playerGSM_init();
     videoplayer_play();
 
     BN_LOG("Cleaning up video player");
-    // ks::globals::release_engine();
+    ks::globals::release_engine();
     videoplayer_clean();
 
     BN_LOG("Cleaning done!");

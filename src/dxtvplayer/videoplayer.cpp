@@ -87,25 +87,6 @@ namespace Video
         return m_playing && m_videoFrame.index < static_cast<int32_t>(m_videoInfo.nrOfFrames - 1);
     }
 
-    // static inline void IWRAM_FUNC AGMV_Memcpy(u8* dest, u8* src, u32 n){
-    //     while(n >= 4){
-    //         *(dest++) = *(src++);
-    //         *(dest++) = *(src++);
-    //         *(dest++) = *(src++);
-    //         *(dest++) = *(src++);
-    //         n -= 4;
-    //     }
-    //     while(n--){
-    //         *(dest++) = *(src++);
-    //     }
-    // }
-
-    static inline void IWRAM_FUNC MemCopy32(u32* dest, u32* src, u32 n){
-        while(n--){
-            *(dest++) = *(src++);
-        }
-    }
-
     IWRAM_FUNC auto decodeAndBlitFrame(uint32_t *dst) -> void {
         return decodeAndBlitFrame(dst, []{});
     }
@@ -113,29 +94,27 @@ namespace Video
 
     IWRAM_FUNC auto decodeAndBlitFrame(uint32_t *dst, void (*updateCallback)()) -> void
     {
-        updateCallback();
         if (m_playing)
         {
             if (m_framesDecoded < 1)
             {
-
                 ++m_framesDecoded;
-                // read next frame from data
                 m_videoFrame = GetNextFrame(m_videoInfo, m_videoFrame);
-                // uncompress frame
-                m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, updateCallback);
+
+                for (uint8_t part = 0; part < 4; part++) {
+                    updateCallback();
+                    m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, part);
+                    VBlankIntrWait();
+                }
             } else {
+                updateCallback();
                 if (m_framesRequested > 0)
                 {
                     --m_framesRequested;
                     if (m_framesDecoded > 0)
                     {
-                        // VBlankIntrWait();
-                        // we're waiting for a frame and have one. blit it!
                         m_framesDecoded = 0;
                         Memory::memcpy32(dst, m_decodedFrame, m_decodedFrameSize / 4);
-                        // MemCopy32(dst, (u32*)m_decodedFrame, m_decodedFrameSize / 4);
-                        // updateCallback();
                     }
                     if (m_framesRequested > 0)
                     {
@@ -144,7 +123,6 @@ namespace Video
                 }
                 VBlankIntrWait();
             }
-            // VBlankIntrWait();
         }
     }
 
