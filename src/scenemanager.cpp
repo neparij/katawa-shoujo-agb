@@ -1176,28 +1176,24 @@ void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const 
 
     free_resources();
     ks::globals::release_engine();
-    ks::globals::init_engine(clear_color);
+    // ks::globals::init_engine(clear_color);
 
+    bn::core::init(clear_color, bn::string_view(), ks::globals::ISR_VBlank);
+    REG_TM0CNT_H |= TIMER_START;
+    REG_TM1CNT_H |= TIMER_START;
+
+    videoplayer_init(dxtv_file, dxtv_size, audio_file, clear_color.red(), clear_color.green(), clear_color.blue());
     if (is_act_video) {
         pause(60);
     }
-
-    // ks::globals::release_engine();
-    // fade_reset();
-    videoplayer_init(dxtv_file, dxtv_size, audio_file, clear_color.red(), clear_color.green(), clear_color.blue());
-    // playerGSM_init();
     videoplayer_play();
 
-    BN_LOG("Cleaning up video player");
-    ks::globals::release_engine();
-    videoplayer_clean();
-
-    BN_LOG("Cleaning done!");
-
     // Re-init Butano Core
+    // ks::globals::release_engine();
     ks::globals::init_engine();
     BN_LOG("Init engine done!");
 
+    // TODO: Check the ingame timer after engine restoration.
     ks::timer::resume_ingame_timer();
 }
 

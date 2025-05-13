@@ -1,5 +1,7 @@
 #include "globals.h"
 
+#include <gba_timers.h>
+
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_memory.h"
@@ -56,8 +58,11 @@ namespace ks {
 
         void init_engine(const bn::optional<bn::color> &clear_color) {
             bn::core::init(clear_color, bn::string_view(), ks::globals::ISR_VBlank);
-            ks::sound_manager::init();
-            // BN_LOG("PLA", player_sfx_isPlaying());
+
+            // Restore timers after re-initialization.
+            // Caution: sound_manager should be initialized before this.
+            REG_TM0CNT_H |= TIMER_START;
+            REG_TM1CNT_H |= TIMER_START;
 
             set_language(settings.language);
 
@@ -109,11 +114,6 @@ namespace ks {
 
             delete ks::dialog;
             i18n.reset();
-
-            // bn::memory::log_alloc_ewram_status();
-
-            // playerGSM_unload();
-            // player8AD_unload();
         }
 
         void set_language(language_t tl) {

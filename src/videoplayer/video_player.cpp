@@ -40,8 +40,10 @@ VP_INLINE void clear_screen(volatile u16* buffer, u16 color)
 void videoplayer_init(const uint8_t* dxtv_file, size_t agmv_size, const char* audio_file,
                 unsigned char r_clear, unsigned char g_clear, unsigned char b_clear)
 {
-
     // Clear both buffers
+    clear_screen((u16*)VRAM_F, RGB5(r_clear, g_clear, b_clear));
+    clear_screen((u16*)VRAM_B, RGB5(g_clear, g_clear, b_clear));
+
     // Set video mode and buffers
     REG_DISPCNT = MODE_5 | BG2_ENABLE;
     REG_BG2CNT = 0x1C0B; // 0b0001110000001011
@@ -51,8 +53,6 @@ void videoplayer_init(const uint8_t* dxtv_file, size_t agmv_size, const char* au
     REG_BG2Y = 0;
 
     reset_video_state();
-    clear_screen((u16*)VRAM_F, RGB5(r_clear, g_clear, b_clear));
-    clear_screen((u16*)VRAM_B, RGB5(g_clear, g_clear, b_clear));
 
     Video::init((uint32_t*)dxtv_file, (u32*)VRAM_B, VRAM_B - VRAM_F);
     g_audio_file = audio_file;
@@ -81,6 +81,7 @@ void videoplayer_play()
             ks::sound_manager::play<SOUND_CHANNEL_VIDEO>(g_audio_file);
             sound_started = true;
         }
-    } ;
+    }
+    inframe_updates();
     Video::stop();
 }
