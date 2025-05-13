@@ -20,11 +20,11 @@
 #include <bn_sprite_items_ui_tn_tc_act2_shizu.h>
 #include <bn_sprite_items_ui_tn_tc_act2_shizu_bw.h>
 #include <video_op_1_agmv.h>
-#include <video_tc_act2_emi_agmv.h>
-#include <video_tc_act2_hanako_agmv.h>
-#include <video_tc_act2_lilly_agmv.h>
-#include <video_tc_act2_rin_agmv.h>
-#include <video_tc_act2_shizune_agmv.h>
+#include <dxtv_tc_act2_emi_bin.h>
+#include <dxtv_tc_act2_hanako_bin.h>
+#include <dxtv_tc_act2_lilly_bin.h>
+#include <dxtv_tc_act2_rin_bin.h>
+#include <dxtv_tc_act2_shizune_bin.h>
 
 #include "menu_base.h"
 
@@ -84,19 +84,19 @@ namespace ks {
                     SceneManager::show_video(video_op_1_agmv, video_op_1_agmv_size, "video_op_1.gsm",
                                              globals::colors::BLACK);
                 } else if (option == 1) {
-                    SceneManager::show_video(video_tc_act2_emi_agmv, video_tc_act2_emi_agmv_size,
+                    SceneManager::show_video(dxtv_tc_act2_emi_bin, dxtv_tc_act2_emi_bin_size,
                                              "video_tc_act2_emi.gsm", globals::colors::WHITE);
                 } else if (option == 2) {
-                    SceneManager::show_video(video_tc_act2_hanako_agmv, video_tc_act2_hanako_agmv_size,
+                    SceneManager::show_video(dxtv_tc_act2_hanako_bin, dxtv_tc_act2_hanako_bin_size,
                                              "video_tc_act2_hanako.gsm", globals::colors::WHITE);
                 } else if (option == 3) {
-                    SceneManager::show_video(video_tc_act2_lilly_agmv, video_tc_act2_lilly_agmv_size,
+                    SceneManager::show_video(dxtv_tc_act2_lilly_bin, dxtv_tc_act2_lilly_bin_size,
                                              "video_tc_act2_lilly.gsm", globals::colors::WHITE);
                 } else if (option == 4) {
-                    SceneManager::show_video(video_tc_act2_rin_agmv, video_tc_act2_rin_agmv_size,
+                    SceneManager::show_video(dxtv_tc_act2_rin_bin, dxtv_tc_act2_rin_bin_size,
                                              "video_tc_act2_rin.gsm", globals::colors::WHITE);
                 } else if (option == 5) {
-                    SceneManager::show_video(video_tc_act2_shizune_agmv, video_tc_act2_shizune_agmv_size,
+                    SceneManager::show_video(dxtv_tc_act2_shizune_bin, dxtv_tc_act2_shizune_bin_size,
                                              "video_tc_act2_shizune.gsm", globals::colors::WHITE);
                 }
 

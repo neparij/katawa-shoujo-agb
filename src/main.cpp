@@ -9,7 +9,7 @@
 #include "scenemanager.h"
 #include "sound_manager.h"
 #include "translations/en.cpp"
-#include "video_4ls_agmv.h"
+#include "dxtv_4ls_bin.h"
 #include "menu/menu_extras.cpp.h"
 #include "menu/menu_extras_cinema.cpp.h"
 #include "menu/menu_main.cpp.h"
@@ -168,7 +168,7 @@ int main() {
     if constexpr (KS_SHOW_4LS_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
         ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);
-        ks::SceneManager::show_video(video_4ls_agmv, video_4ls_agmv_size, "video_4ls.gsm", ks::globals::colors::BLACK);
+        ks::SceneManager::show_video(dxtv_4ls_bin, dxtv_4ls_bin_size, "video_4ls.gsm", ks::globals::colors::BLACK);
 
         // Show the 4LS intro video (p2 - native gfx playback)
         ks::primary_background = bn::regular_bg_items::video_end_4ls.create_bg(0, 0);
