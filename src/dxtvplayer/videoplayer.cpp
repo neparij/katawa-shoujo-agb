@@ -131,21 +131,23 @@ namespace Video
 
                 m_videoFrame = GetNextFrame(m_videoInfo, m_videoFrame);
 
+#ifdef DEBUG_PLAYER
+                ++m_nrOfFramesDecoded;
+                auto startTime = Time::now();
+                for (uint8_t part = 0; part < 4; part++) {
+                    m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, part);
+                }
+                auto duration = Time::now() * 1000 - startTime * 1000;
+                m_accFrameDecodeMs += duration;
+                m_maxFrameDecodeMs = m_maxFrameDecodeMs < duration ? duration : m_maxFrameDecodeMs;
+#else
                 for (uint8_t part = 0; part < 4; part++) {
                     updateCallback();
-                    ++m_framesDecoded;
-#ifdef DEBUG_PLAYER
-                    auto startTime = Time::now();
-#endif
                     m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, part);
-#ifdef DEBUG_PLAYER
-                    auto duration = Time::now() * 1000 - startTime * 1000;
-                    m_accFrameDecodeMs += duration;
-                    m_maxFrameDecodeMs = m_maxFrameDecodeMs < duration ? duration : m_maxFrameDecodeMs;
-                    ++m_nrOfFramesDecoded;
-#endif
                     VBlankIntrWait();
                 }
+#endif
+                ++m_framesDecoded;
             } else {
                 updateCallback();
                 if (m_framesRequested > 0)
