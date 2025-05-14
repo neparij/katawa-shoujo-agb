@@ -14,6 +14,13 @@
 
 #include "../sound_manager.h"
 
+// #define DEBUG_PLAYER
+
+#ifdef DEBUG_PLAYER
+#include "debug/time.h"
+#include "debug/output.h"
+#endif
+
 namespace Video
 {
 
@@ -25,6 +32,15 @@ namespace Video
     IWRAM_DATA const uint32_t *m_decodedFrame = nullptr;
     IWRAM_DATA uint32_t m_decodedFrameSize = 0;
     IWRAM_DATA int32_t m_framesDecoded = 0;
+
+#ifdef DEBUG_PLAYER
+    IWRAM_DATA int32_t m_accFrameDecodeMs = 0;
+    IWRAM_DATA int32_t m_maxFrameDecodeMs = 0;
+    IWRAM_DATA int32_t m_nrOfFramesDecoded = 0;
+    IWRAM_DATA int32_t m_accFrameBlitMs = 0;
+    IWRAM_DATA int32_t m_maxFrameBlitMs = 0;
+    IWRAM_DATA int32_t m_nrOfFramesBlit = 0;
+#endif
 
     IWRAM_DATA volatile int32_t m_framesRequested = 0;
     IWRAM_FUNC auto frameRequest() -> void
@@ -60,6 +76,15 @@ namespace Video
             m_playing = true;
             m_framesDecoded = 0;
             m_framesRequested = 1;
+#ifdef DEBUG_PLAYER
+            m_accFrameDecodeMs = 0;
+            m_maxFrameDecodeMs = 0;
+            m_nrOfFramesDecoded = 0;
+            m_accFrameBlitMs = 0;
+            m_maxFrameBlitMs = 0;
+            m_nrOfFramesBlit = 0;
+            Time::start();
+#endif
 
             // set up timer to increase with frame interval
             irqSet(irqMASKS::IRQ_TIMER2, frameRequest);
@@ -79,6 +104,11 @@ namespace Video
             irqDisable(irqMASKS::IRQ_TIMER2);
             m_playing = false;
             m_framesRequested = 0;
+#ifdef DEBUG_PLAYER
+            Debug::printf("Avg. decode: %f ms (max. %f ms)", m_accFrameDecodeMs / m_nrOfFramesDecoded, m_maxFrameDecodeMs);
+            Debug::printf("Avg. blit: %f ms (max. %f ms)", m_accFrameBlitMs / m_nrOfFramesBlit, m_maxFrameBlitMs);
+            Time::stop();
+#endif
         }
     }
 
@@ -98,12 +128,22 @@ namespace Video
         {
             if (m_framesDecoded < 1)
             {
-                ++m_framesDecoded;
+
                 m_videoFrame = GetNextFrame(m_videoInfo, m_videoFrame);
 
                 for (uint8_t part = 0; part < 4; part++) {
                     updateCallback();
+                    ++m_framesDecoded;
+#ifdef DEBUG_PLAYER
+                    auto startTime = Time::now();
+#endif
                     m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, part);
+#ifdef DEBUG_PLAYER
+                    auto duration = Time::now() * 1000 - startTime * 1000;
+                    m_accFrameDecodeMs += duration;
+                    m_maxFrameDecodeMs = m_maxFrameDecodeMs < duration ? duration : m_maxFrameDecodeMs;
+                    ++m_nrOfFramesDecoded;
+#endif
                     VBlankIntrWait();
                 }
             } else {
@@ -113,8 +153,17 @@ namespace Video
                     --m_framesRequested;
                     if (m_framesDecoded > 0)
                     {
+#ifdef DEBUG_PLAYER
+                        auto startTime = Time::now();
+#endif
                         m_framesDecoded = 0;
                         Memory::memcpy32(dst, m_decodedFrame, m_decodedFrameSize / 4);
+#ifdef DEBUG_PLAYER
+                        auto duration = Time::now() * 1000 - startTime * 1000;
+                        m_accFrameBlitMs += duration;
+                        m_maxFrameBlitMs = m_maxFrameBlitMs < duration ? duration : m_maxFrameBlitMs;
+                        ++m_nrOfFramesBlit;
+#endif
                     }
                     if (m_framesRequested > 0)
                     {

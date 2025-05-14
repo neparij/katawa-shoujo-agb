@@ -46,6 +46,7 @@ SOURCES     	:=  ../butano/common/src \
 					../libsavgba/src \
 		    		src \
                     src/dxtvplayer \
+                    src/dxtvplayer/debug \
                     src/events \
                     src/gsmplayer \
                     src/gsmplayer/core \

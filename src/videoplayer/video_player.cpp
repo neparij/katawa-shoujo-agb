@@ -73,12 +73,17 @@ void inframe_updates() {
 void videoplayer_play()
 {
     bool sound_started = false;
+    unsigned char sound_delay = 30;
     Video::play();
     while (Video::hasMoreFrames()) {
         Video::decodeAndBlitFrame((uint32_t *)VRAM_F, inframe_updates);
         if (!sound_started) {
-            ks::sound_manager::play<SOUND_CHANNEL_VIDEO>(g_audio_file);
-            sound_started = true;
+            if (sound_delay > 0) {
+                sound_delay--;
+            } else {
+                ks::sound_manager::play<SOUND_CHANNEL_VIDEO>(g_audio_file);
+                sound_started = true;
+            }
         }
     }
     inframe_updates();
