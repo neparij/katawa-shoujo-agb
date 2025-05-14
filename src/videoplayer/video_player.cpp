@@ -1,5 +1,4 @@
 #include "video_player.h"
-#include "../amgvplayer/agmv_gba.h"
 #include "../gsmplayer/player_8ad.h"
 #include "../gsmplayer/player_gsm.h"
 #include "../globals.h"

@@ -34,8 +34,8 @@
 #include "ingametimer.h"
 #include "sound_manager.h"
 #include "translations/translation.h"
-#include "dxtv_4ls_bin.h"
-#include "dxtv_op_1_bin.h"
+#include <video_4ls_dxtv.h>
+#include <video_op_1_dxtv.h>
 #include "../../butano/butano/src/bn_bgs_manager.h"
 #include "savefile/save_file.h"
 #include "shaders/vram_dma_shader.h"
@@ -1155,10 +1155,10 @@ void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const 
     bool is_act_video = true;
 
     bn::color clear_color;
-    if (dxtv_file == dxtv_4ls_bin) {
+    if (dxtv_file == video_4ls_dxtv) {
         clear_color = globals::colors::BLACK;
         is_act_video = false;
-    } else if (is_act_video && dxtv_file != dxtv_op_1_bin) {
+    } else if (is_act_video && dxtv_file != video_op_1_dxtv) {
         clear_color = globals::colors::WHITE;
         ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(120);
         ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_SOUND>(120);
