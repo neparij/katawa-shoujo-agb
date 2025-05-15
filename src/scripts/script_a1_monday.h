@@ -81,8 +81,8 @@
 #include "../events/hisao_class_start.cpp.h"
 #include "../events/hisao_class_move.cpp.h"
 #include "../events/hisao_class_end.cpp.h"
-#include "video_op_1_agmv.h"
-#include "video_tc_act1_agmv.h"
+#include "video_op_1_dxtv.h"
+#include "video_tc_act1_dxtv.h"
 namespace ks {
     class ScriptA1Monday {
         public:

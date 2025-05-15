@@ -45,7 +45,8 @@ PYTHON      	:=  python3
 SOURCES     	:=  ../butano/common/src \
 					../libsavgba/src \
 		    		src \
-                    src/amgvplayer \
+                    src/dxtvplayer \
+                    src/dxtvplayer/debug \
                     src/events \
                     src/gsmplayer \
                     src/gsmplayer/core \
@@ -67,6 +68,7 @@ INCLUDES    	:=  include \
 DATA        	:=  video
 VIDEO			:=  video
 GRAPHICS    	:=  graphics \
+					graphics/common_palettes \
 					graphics/fonts \
 					graphics/bgs \
 					graphics/bgs/thumbs \
@@ -108,13 +110,11 @@ ifndef LIBBUTANOABS
 endif
 
 VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
-# export OFILES_BIN := $(addsuffix .o,$(VIDEOBINFILES))
-# export OFILES_SOURCES := $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .bin extension
+# This rule links in binary data with the .dxtv extension
 #---------------------------------------------------------------------------------
-%.agmv.o %_agmv.h :	%.agmv
+%.dxtv.o %_dxtv.h :	%.dxtv
 #---------------------------------------------------------------------------------
 		@echo $(notdir $<)
 		@$(bin2o)

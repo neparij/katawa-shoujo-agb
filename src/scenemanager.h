@@ -169,8 +169,8 @@ public:
     static void sfx_stop(const sound_channel_t channel);
     static void sfx_stop(const sound_channel_t channel, const int fade);
 
-    static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file, bn::color clear);
-    static void show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file);
+    static void show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear);
+    static void show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file);
 
     static void exit_scenario_from_ingame_menu();
 

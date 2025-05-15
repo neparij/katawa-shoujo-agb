@@ -13,7 +13,7 @@
 #define KEY_DOWN_NOW(key)  (~(REG_KEYINPUT) & key)
 
 // Function prototypes
-void videoplayer_init(const uint8_t* agmv_file,
+void videoplayer_init(const uint8_t* dxtv_file,
                 size_t agmv_size,
                 const char* audio_file,
                 unsigned char r_clear,
@@ -21,6 +21,5 @@ void videoplayer_init(const uint8_t* agmv_file,
                 unsigned char b_clear);
 void videoplayer_play();
 void videoplayer_clean();
-bool videoplayer_is_playing();
 
 #endif // VIDEO_PLAYER_H
