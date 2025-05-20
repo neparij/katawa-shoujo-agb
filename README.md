@@ -84,11 +84,17 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 - **[afska](https://github.com/afska)** for GSM Player integration for Butano
 - **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
 - **[8ad](https://pineight.com/gba/#8ad)** by Damian Yerrick.
-- **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the AGMV video codec.
+- **[GBA-image-tools](https://github.com/HorstBaerbel/GBA-image-tools)** by HorstBaerbel for the DXTV video codec.
 - **[libsavgba](https://github.com/laqieer/libsavgba)** by laqieer for Flash saving abilities.
 - **[Katawa Shoujo: Re-Engineered](https://codeberg.org/fhs/katawa-shoujo-re-engineered)** by
   **[Fleeting Heartbeat Studios](https://www.fhs.sh/)** for the great adaptation Katawa Shoujo to the modern Ren'Py
   engine.
+
+## Special Thanks
+
+Some tools and projects may no longer be part of the current build, but they played a meaningful role in earlier stages of development. Their ideas, inspiration, and technical foundations helped shape this project, and for that, I'm truly grateful:
+
+- **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the AGMV video codec.
 
 ---
 

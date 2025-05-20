@@ -34,8 +34,8 @@
 #include "ingametimer.h"
 #include "sound_manager.h"
 #include "translations/translation.h"
-#include "video_4ls_agmv.h"
-#include "video_op_1_agmv.h"
+#include <video_4ls_dxtv.h>
+#include <video_op_1_dxtv.h>
 #include "../../butano/butano/src/bn_bgs_manager.h"
 #include "savefile/save_file.h"
 #include "shaders/vram_dma_shader.h"
@@ -1145,7 +1145,7 @@ void SceneManager::sfx_stop(const sound_channel_t channel, const int fade) {
     }
 }
 
-void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file, bn::color clear) {
+void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear) {
     if (is_loading) {
         return;
     }
@@ -1155,10 +1155,10 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
     bool is_act_video = true;
 
     bn::color clear_color;
-    if (agmv_file == video_4ls_agmv) {
+    if (dxtv_file == video_4ls_dxtv) {
         clear_color = globals::colors::BLACK;
         is_act_video = false;
-    } else if (is_act_video && agmv_file != video_op_1_agmv) {
+    } else if (is_act_video && dxtv_file != video_op_1_dxtv) {
         clear_color = globals::colors::WHITE;
         ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(120);
         ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_SOUND>(120);
@@ -1176,26 +1176,29 @@ void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const 
 
     free_resources();
     ks::globals::release_engine();
-    ks::globals::init_engine(clear_color);
+    // ks::globals::init_engine(clear_color);
 
+    bn::core::init(clear_color, bn::string_view(), ks::globals::ISR_VBlank);
+    REG_TM0CNT_H |= TIMER_START;
+    REG_TM1CNT_H |= TIMER_START;
+
+    videoplayer_init(dxtv_file, dxtv_size, audio_file, clear_color.red(), clear_color.green(), clear_color.blue());
     if (is_act_video) {
         pause(60);
     }
-
-    // fade_reset();
-    videoplayer_init(agmv_file, agmv_size, audio_file, clear_color.red(), clear_color.green(), clear_color.blue());
     videoplayer_play();
-    videoplayer_clean();
 
     // Re-init Butano Core
-    ks::globals::release_engine();
+    // ks::globals::release_engine();
     ks::globals::init_engine();
+    BN_LOG("Init engine done!");
 
+    // TODO: Check the ingame timer after engine restoration.
     ks::timer::resume_ingame_timer();
 }
 
-void SceneManager::show_video(const uint8_t* agmv_file, size_t agmv_size, const char* audio_file) {
-    show_video(agmv_file, agmv_size, audio_file, ks::globals::colors::BLACK);
+void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file) {
+    show_video(dxtv_file, dxtv_size, audio_file, ks::globals::colors::BLACK);
 }
 
 void SceneManager::exit_scenario_from_ingame_menu() {

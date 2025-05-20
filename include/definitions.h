@@ -36,7 +36,7 @@ typedef unsigned char sound_channel_t;
 #define SOUND_CHANNEL_MUSIC ((sound_channel_t)0)
 #define SOUND_CHANNEL_SOUND ((sound_channel_t)1)
 #define SOUND_CHANNEL_AMBIENT ((sound_channel_t)2)
-#define SOUND_CHANNEL_VIDEO ((sound_channel_t)0)
+#define SOUND_CHANNEL_VIDEO ((sound_channel_t)3)
 
 typedef unsigned char music_t;
 #define MUSIC_NONE ((music_t)0)

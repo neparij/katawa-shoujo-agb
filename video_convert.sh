@@ -5,15 +5,16 @@ INPUT_DIR="./#original"
 KSRE_PATH="/Users/n.laptev/development/ksre"
 
 # Define an array of input and output filenames
+# TODO: Check the filter options later
 FILES=(
-  "4ls::4.25:540"
-  "op_1:::608" # either 540 itself (half of fullhd), was 160 and 180
-  "tc_act1:::608" 
-  "tc_act2_emi:::608" 
-  "tc_act2_hanako:::608"
-  "tc_act2_lilly:::608"
-  "tc_act2_rin:::608"
-  "tc_act2_shizune:::608"
+  "4ls|1920|1080||4.3|eq=contrast=1.2:brightness=0.05:saturation=1.25|12"
+  "op_1|1440|960|||eq=contrast=1.4:brightness=-0.05:saturation=1.2|8"
+  "tc_act1|1440|960|||eq=contrast=1.0|10"
+  "tc_act2_emi|1440|960|||eq=contrast=1.4:brightness=-0.05:saturation=1.2|10"
+  "tc_act2_hanako|1440|960|||eq=contrast=1.1:saturation=1.2|10"
+  "tc_act2_lilly|1440|960|||eq=contrast=1.4:brightness=-0.05:saturation=1.2|10"
+  "tc_act2_rin|1440|960|||eq=contrast=1.4:brightness=-0.05:saturation=1.2|10"
+  "tc_act2_shizune|1440|960|||eq=contrast=1.4:brightness=-0.05:saturation=1.2|10"
 )
 
 get_gain_peak() {
@@ -27,33 +28,37 @@ get_gain_peak() {
 
 # Loop through the files and process them
 for VID_INFO in "${FILES[@]}"; do
-  IFS=":" read -r VIDEO_NAME VIDEO_FROM VIDEO_TO VIDEO_SCALE_Y <<< "$VID_INFO"
+  IFS="|" read -r VIDEO_NAME CROP_X CROP_Y VIDEO_FROM VIDEO_TO FILTER TARGET_FPS <<< "$VID_INFO"
 
-  rm -f /tmp/ksre_conv/video/frames/*.bmp
-  rm -f /tmp/ksre_conv/video/audio.wav
-  rm -f /tmp/ksre_conv/video/agmvcmd.agvs
+#  TODO: Add --interactive flag
+#  if [ $VIDEO_TO ]; then
+#    ffplay $KSRE_PATH/game/video/$VIDEO_NAME.mkv -t $VIDEO_TO -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER},fps=${TARGET_FPS}"
+#  else
+#    ffplay $KSRE_PATH/game/video/$VIDEO_NAME.mkv -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER},fps=${TARGET_FPS}"
+#  fi
 
-  mkdir -p /tmp/ksre_conv/video
-  mkdir /tmp/ksre_conv/video/frames
-
-  GAIN_PEAK=$(get_gain_peak $KSRE_PATH/game/video/$VIDEO_NAME.mkv)
-
-  if [ $VIDEO_TO ]; then
-    ffmpeg -y -i $KSRE_PATH/game/video/$VIDEO_NAME.mkv -t $VIDEO_TO -r 15 -vf scale=-1:$VIDEO_SCALE_Y,crop=810:540 /tmp/ksre_conv/video/frames/frame_%d.bmp
-  else
-    ffmpeg -y -i $KSRE_PATH/game/video/$VIDEO_NAME.mkv -r 15 -vf scale=-1:$VIDEO_SCALE_Y,crop=810:540 /tmp/ksre_conv/video/frames/frame_%d.bmp
+  # If user inputs "Y" or "y", proceed with the conversion
+  read -p "Do you want to convert the video to dxtv format? (Y/N): " choice
+  if [[ "$choice" != "Y" && "$choice" != "y" ]]; then
+    echo "Skipping conversion for $VIDEO_NAME."
+    continue
   fi
 
-  ffmpeg -y -i $KSRE_PATH/game/video/$VIDEO_NAME.mkv -af volume=$GAIN_PEAK -vn -ar 13379 -ac 1 -c:a pcm_u8 /tmp/ksre_conv/video/audio.wav
-  # wav28ad /tmp/ksre_conv/video/audio.wav gbfs_files/video_$VIDEO_NAME.8ad
-  sox --show-progress --replay-gain track --norm "/tmp/ksre_conv/video/audio.wav" -r 13379 -t s16 -c 1 - | sox -t s16 -r 8000 -c 1 - "gbfs_files/video_$VIDEO_NAME.gsm"
+  mkdir -p /tmp/ksre_conv/video
+#  TODO: Decide with gain levels
+#  GAIN_PEAK=$(get_gain_peak $KSRE_PATH/game/video/$VIDEO_NAME.mkv)
+  GAIN_PEAK="3.0"
 
-  FRAMES_COUNT=`find /tmp/ksre_conv/video/frames -maxdepth 1 -name "frame_*.bmp" -print | wc -l | xargs`
-  # AGMV_OPT_GBA_I   = 0x6,  /* 512   COLORS, BITSTREAM V1, HEAVY PDIFS, REDUCED RES */
-  # AGMV_OPT_GBA_II  = 0x7,  /* 256   COLORS, BITSTREAM V2, HEAVY PDIFS, REDUCED RES */
-  # AGMV_OPT_GBA_III = 0x8,  /* 512   COLORS, BITSTREAM V2, LIGHT PDIFS, REDUCED RES */
-  # AGMV_OPT_GBA_IV  = 0x9,  /* 32768 COLORS, BITSTREAM V1, HEAVY PDIFS, REDUCED RES*/
-  echo "\$video ENC video/video_$VIDEO_NAME.agmv /tmp/ksre_conv/video/frames frame_ BMP 1 $FRAMES_COUNT 810 540 15 OPT_GBA_I MID_Q NONE" > /tmp/ksre_conv/video/agmvcmd.agvs
-  echo "FRAMES_COUNT = [$FRAMES_COUNT]"
-  agmvcli /tmp/ksre_conv/video/agmvcmd.agvs
+  if [ $VIDEO_TO ]; then
+    ffmpeg -y -i ${KSRE_PATH}/game/video/${VIDEO_NAME}.mkv -t $VIDEO_TO -r ${TARGET_FPS} -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER}" /tmp/ksre_conv/video/${VIDEO_NAME}.mp4
+  else
+    ffmpeg -y -i ${KSRE_PATH}/game/video/${VIDEO_NAME}.mkv -r ${TARGET_FPS} -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER}" /tmp/ksre_conv/video/${VIDEO_NAME}.mp4
+  fi
+
+  ffmpeg -y -i $KSRE_PATH/game/video/$VIDEO_NAME.mkv -af volume=$GAIN_PEAK -vn -ar 13379 -ac 1 -c:a pcm_u8 /tmp/ksre_conv/video/${VIDEO_NAME}.wav
+  sox --show-progress --replay-gain track --norm "/tmp/ksre_conv/video/${VIDEO_NAME}.wav" -r 13379 -t s16 -c 1 - | sox -t s16 -r 8000 -c 1 - "gbfs_files/video_${VIDEO_NAME}.gsm"
+
+# TODO: use vid2h from PATH (Currently it need to be compiled by yourself and placed in the same directory)
+  ./vid2h --truecolor=RGB888 --outformat=BGR555 --dxtv=95 /tmp/ksre_conv/video/${VIDEO_NAME}.mp4 video/video_${VIDEO_NAME}
+  mv video/video_${VIDEO_NAME}.bin video/video_${VIDEO_NAME}.dxtv
 done

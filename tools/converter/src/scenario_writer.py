@@ -104,7 +104,7 @@ class ScenarioWriter:
             h_code.append(include_header(f"{to_snake_case(event).removesuffix("_event")}.cpp", "../events/"))
 
         for video in self.videos:
-            h_code.append(include_header(video, "video_", "_agmv"))
+            h_code.append(include_header(video, "video_", "_dxtv"))
 
         function_declarations = [
             f'virtual ~{self.get_interface_name()}() = default;',
@@ -646,7 +646,7 @@ class ScenarioWriter:
             self.videos.append(show_video.video)
         return [
         #     # f'ks::SceneManager::free_resources();',
-            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_agmv, video_{show_video.video}_agmv_size, "video_{show_video.video}.gsm"));\n'
+            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.gsm"));\n'
             f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n'
         ]
 
