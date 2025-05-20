@@ -1,6 +1,7 @@
 #include "videoplayer.h"
 
 #include <BN_LOG.h>
+#include <gba_dma.h>
 
 #include "base.h"
 #include "videodecoder.h"
@@ -11,6 +12,7 @@
 #include <gba_interrupt.h>
 #include <gba_systemcalls.h>
 #include <gba_timers.h>
+#include <gba_video.h>
 
 #include "../sound_manager.h"
 
@@ -131,22 +133,20 @@ namespace Video
 
                 m_videoFrame = GetNextFrame(m_videoInfo, m_videoFrame);
 
-#ifdef DEBUG_PLAYER
-                ++m_nrOfFramesDecoded;
-                auto startTime = Time::now();
-                for (uint8_t part = 0; part < 4; part++) {
-                    m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, part);
-                }
-                auto duration = Time::now() * 1000 - startTime * 1000;
-                m_accFrameDecodeMs += duration;
-                m_maxFrameDecodeMs = m_maxFrameDecodeMs < duration ? duration : m_maxFrameDecodeMs;
-#else
                 for (uint8_t part = 0; part < 4; part++) {
                     updateCallback();
+#ifdef DEBUG_PLAYER
+                    auto startTime = Time::now();
+#endif
                     m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, part);
+#ifdef DEBUG_PLAYER
+                    auto duration = Time::now() * 1000 - startTime * 1000;
+                    m_accFrameDecodeMs += duration;
+                    m_maxFrameDecodeMs = m_maxFrameDecodeMs < duration ? duration : m_maxFrameDecodeMs;
+                    ++m_nrOfFramesDecoded;
+#endif
                     VBlankIntrWait();
                 }
-#endif
                 ++m_framesDecoded;
             } else {
                 updateCallback();
@@ -159,7 +159,11 @@ namespace Video
                         auto startTime = Time::now();
 #endif
                         m_framesDecoded = 0;
+                        // TODO: check with the ULC audioplayback later. It's "clicking" with GSM.
+                        VBlankIntrWait();
                         Memory::memcpy32(dst, m_decodedFrame, m_decodedFrameSize / 4);
+                        __asm volatile("nop");
+                        __asm volatile("nop");
 #ifdef DEBUG_PLAYER
                         auto duration = Time::now() * 1000 - startTime * 1000;
                         m_accFrameBlitMs += duration;
@@ -171,8 +175,9 @@ namespace Video
                     {
                         m_framesRequested = 0;
                     }
+                } else {
+                    VBlankIntrWait();
                 }
-                VBlankIntrWait();
             }
         }
     }

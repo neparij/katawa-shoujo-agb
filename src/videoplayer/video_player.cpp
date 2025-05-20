@@ -1,6 +1,5 @@
 #include "video_player.h"
 #include "../gsmplayer/player_8ad.h"
-#include "../gsmplayer/player_gsm.h"
 #include "../globals.h"
 #include <gba_interrupt.h>
 
@@ -11,14 +10,11 @@
 #define VP_INLINE static inline __attribute__((always_inline))
 #define VP_IWRAM __attribute__((section(".iwram")))
 
-// BN_DATA_EWRAM_BSS uint32_t ScratchPad[160 * 128 / 2 + 15000 / 4 + 1];
-// BN_DATA_EWRAM_BSS uint32_t ScratchPad[160 * 128 / 2 + 15000 / 4 + 1];
-// uint32_t* alignas(4) ScratchPad;
-
 static const char* g_audio_file;
 VP_INLINE void reset_video_state()
 {
-    REG_DISPCNT |= SHOW_BACKBUFFER;
+    // Show the front buffer only while the processing is done in the back buffer.
+    REG_DISPCNT &= ~SHOW_BACKBUFFER;
 }
 
 VP_INLINE void VP_IWRAM update()
