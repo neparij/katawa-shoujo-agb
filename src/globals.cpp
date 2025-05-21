@@ -15,8 +15,6 @@
 #include "scenemanager.h"
 #include "sound_manager.h"
 #include "fonts_info.h"
-#include "gsmplayer/player_8ad.h"
-#include "gsmplayer/player_gsm.h"
 
 namespace ks {
     namespace globals {

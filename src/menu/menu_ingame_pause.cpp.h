@@ -6,6 +6,7 @@
 #include "bn_sprite_items_ui_ingame_menu_nw.h"
 #include "bn_sprite_items_ui_ingame_menu_se.h"
 #include "bn_sprite_items_ui_ingame_menu_sw.h"
+#include "../sound/sound_mixer.h"
 
 namespace ks {
     class MenuIngamePause final : public MenuBase {
@@ -142,15 +143,25 @@ namespace ks {
                     globals::state = GS_GAME_MENU_SAVES;
                     break;
                 case 4:
+                    // ks::sound_manager::fadeout_stop_all();
+                    // globals::exit_scenario = true;
+                    // if (!in_replay) {
+                    //     SceneManager::autosave();
+                    // }
+                    //
+                    // for(int alpha = 16; alpha <= 32; ++alpha) {
+                    //     bn::bg_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
+                    //     bn::sprite_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
+                    //     ks::globals::main_update();
+                    // }
+                    fade_out();
+                    sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+                    sound_manager::stop<SOUND_CHANNEL_SOUND>();
+                    sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
+                    sound_mixer::mute();
                     globals::exit_scenario = true;
                     if (!in_replay) {
                         SceneManager::autosave();
-                    }
-
-                    for(int alpha = 16; alpha <= 32; ++alpha) {
-                        bn::bg_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
-                        bn::sprite_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
-                        ks::globals::main_update();
                     }
                     globals::state = GS_RESET;
                     break;

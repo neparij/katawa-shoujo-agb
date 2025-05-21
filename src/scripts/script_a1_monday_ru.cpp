@@ -1479,12 +1479,12 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "ru", script_a1_monday_ru_intl)));
             
                 IF_NOT_EXIT(a1_monday_out_cold());
-                IF_NOT_EXIT(ks::SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.ulc"));
             IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "ru", script_a1_monday_ru_intl)));
             
                 IF_NOT_EXIT(ks::SceneManager::pause(60));
                 IF_NOT_EXIT(a1_monday_bundle_of_hisao());
-                IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act1_dxtv, video_tc_act1_dxtv_size, "video_tc_act1.gsm"));
+                IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act1_dxtv, video_tc_act1_dxtv_size, "video_tc_act1.ulc"));
             IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday", "ru", script_a1_monday_ru_intl)));
             
                 IF_NOT_EXIT(a1_monday_gateway_effect());

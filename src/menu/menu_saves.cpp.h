@@ -15,6 +15,7 @@
 #include "menu_base.h"
 #include "../ingametimer.h"
 #include "../scenemanager.h"
+#include "../sound/sound_mixer.h"
 
 
 namespace ks {
@@ -77,6 +78,7 @@ namespace ks {
                     sound_manager::stop<SOUND_CHANNEL_MUSIC>();
                     sound_manager::stop<SOUND_CHANNEL_SOUND>();
                     sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
+                    sound_mixer::mute();
                     if (globals::state == GS_GAME_MENU_SAVES) {
                         globals::exit_scenario = true;
                     }

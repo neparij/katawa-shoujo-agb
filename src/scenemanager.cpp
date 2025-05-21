@@ -45,6 +45,7 @@
 
 #include "menu/menu_ingame_pause.cpp.h"
 #include "menu/menu_saves.cpp.h"
+#include "sound/sound_mixer.h"
 
 namespace ks {
 
@@ -165,6 +166,8 @@ void SceneManager::set_line_hash(const unsigned int line_hash) {
         if (savedata_progress.reproduction.line_hash == line_hash || savedata_progress.reproduction.line_hash == 0) {
             is_loading = false;
             ks::sound_manager::restore_after_loading();
+            sound_manager::update();
+            sound_mixer::unmute();
             update_visuals();
         }
     }
@@ -1059,18 +1062,6 @@ void SceneManager::update_visuals() {
 
 void SceneManager::music_play(const music_t music) {
     music_play(music, 0);
-    //
-    // player_setVolume(0);
-    // ks::gsm_volume_to_action action = ks::gsm_volume_to_action(60, 1);
-    // while (!action.done()) {
-    //     action.update();
-    //     ks::globals::main_update();
-    // }
-    // action = ks::gsm_volume_to_action(120, 0);
-    // while (!action.done()) {
-    //     action.update();
-    //     ks::globals::main_update();
-    // }
 }
 
 void SceneManager::music_play(const music_t music, const int fade) {
@@ -1173,6 +1164,7 @@ void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const 
     ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
     ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
     ks::globals::sound_update();
+    sound_mixer::mute();
 
     free_resources();
     ks::globals::release_engine();

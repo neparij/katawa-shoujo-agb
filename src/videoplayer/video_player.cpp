@@ -1,16 +1,17 @@
 #include "video_player.h"
-#include "../gsmplayer/player_8ad.h"
 #include "../globals.h"
 #include <gba_interrupt.h>
 
 #include "bn_memory.h"
 #include "../sound_manager.h"
 #include "../dxtvplayer/videoplayer.h"
+#include "../sound/sound_mixer.h"
 
 #define VP_INLINE static inline __attribute__((always_inline))
 #define VP_IWRAM __attribute__((section(".iwram")))
 
 static const char* g_audio_file;
+static bool sound_started = false;
 VP_INLINE void reset_video_state()
 {
     // Show the front buffer only while the processing is done in the back buffer.
@@ -68,7 +69,7 @@ void inframe_updates() {
 
 void videoplayer_play()
 {
-    bool sound_started = false;
+    sound_started = false;
     unsigned char sound_delay = 30;
     Video::play();
     while (Video::hasMoreFrames()) {
@@ -78,6 +79,7 @@ void videoplayer_play()
                 sound_delay--;
             } else {
                 ks::sound_manager::play<SOUND_CHANNEL_VIDEO>(g_audio_file);
+                sound_mixer::unmute();
                 sound_started = true;
             }
         }

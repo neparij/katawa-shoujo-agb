@@ -31,13 +31,13 @@ for VID_INFO in "${FILES[@]}"; do
   IFS="|" read -r VIDEO_NAME CROP_X CROP_Y VIDEO_FROM VIDEO_TO FILTER TARGET_FPS <<< "$VID_INFO"
 
 #  TODO: Add --interactive flag
-#  if [ $VIDEO_TO ]; then
-#    ffplay $KSRE_PATH/game/video/$VIDEO_NAME.mkv -t $VIDEO_TO -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER},fps=${TARGET_FPS}"
-#  else
-#    ffplay $KSRE_PATH/game/video/$VIDEO_NAME.mkv -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER},fps=${TARGET_FPS}"
-#  fi
+  if [ $VIDEO_TO ]; then
+    ffplay $KSRE_PATH/game/video/$VIDEO_NAME.mkv -t $VIDEO_TO -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER},fps=${TARGET_FPS}"
+  else
+    ffplay $KSRE_PATH/game/video/$VIDEO_NAME.mkv -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER},fps=${TARGET_FPS}"
+  fi
 
-  # If user inputs "Y" or "y", proceed with the conversion
+   If user inputs "Y" or "y", proceed with the conversion
   read -p "Do you want to convert the video to dxtv format? (Y/N): " choice
   if [[ "$choice" != "Y" && "$choice" != "y" ]]; then
     echo "Skipping conversion for $VIDEO_NAME."
@@ -47,7 +47,7 @@ for VID_INFO in "${FILES[@]}"; do
   mkdir -p /tmp/ksre_conv/video
 #  TODO: Decide with gain levels
 #  GAIN_PEAK=$(get_gain_peak $KSRE_PATH/game/video/$VIDEO_NAME.mkv)
-  GAIN_PEAK="3.0"
+  GAIN_PEAK="2.5"
 
   if [ $VIDEO_TO ]; then
     ffmpeg -y -i ${KSRE_PATH}/game/video/${VIDEO_NAME}.mkv -t $VIDEO_TO -r ${TARGET_FPS} -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER}" /tmp/ksre_conv/video/${VIDEO_NAME}.mp4
@@ -55,8 +55,8 @@ for VID_INFO in "${FILES[@]}"; do
     ffmpeg -y -i ${KSRE_PATH}/game/video/${VIDEO_NAME}.mkv -r ${TARGET_FPS} -vf "crop=${CROP_X}:${CROP_Y}:(in_w-${CROP_X})/2:(in_h-${CROP_Y})/2,scale=160:128,${FILTER}" /tmp/ksre_conv/video/${VIDEO_NAME}.mp4
   fi
 
-  ffmpeg -y -i $KSRE_PATH/game/video/$VIDEO_NAME.mkv -af volume=$GAIN_PEAK -vn -ar 13379 -ac 1 -c:a pcm_u8 /tmp/ksre_conv/video/${VIDEO_NAME}.wav
-  sox --show-progress --replay-gain track --norm "/tmp/ksre_conv/video/${VIDEO_NAME}.wav" -r 13379 -t s16 -c 1 - | sox -t s16 -r 8000 -c 1 - "gbfs_files/video_${VIDEO_NAME}.gsm"
+  ffmpeg -y -i $KSRE_PATH/game/video/$VIDEO_NAME.mkv -af volume=$GAIN_PEAK -vn -ar 13379 -ac 1 -sample_fmt s16 -acodec pcm_s16le /tmp/ksre_conv/video/${VIDEO_NAME}.wav
+  ./ulcencodetool "/tmp/ksre_conv/video/${VIDEO_NAME}.wav" "gbfs_files/video_${VIDEO_NAME}.ulc" -75 -blocksize:256
 
 # TODO: use vid2h from PATH (Currently it need to be compiled by yourself and placed in the same directory)
   ./vid2h --truecolor=RGB888 --outformat=BGR555 --dxtv=95 /tmp/ksre_conv/video/${VIDEO_NAME}.mp4 video/video_${VIDEO_NAME}

@@ -169,7 +169,7 @@ int main() {
     if constexpr (KS_SHOW_4LS_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
         ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);
-        ks::SceneManager::show_video(video_4ls_dxtv, video_4ls_dxtv_size, "video_4ls.gsm", ks::globals::colors::BLACK);
+        ks::SceneManager::show_video(video_4ls_dxtv, video_4ls_dxtv_size, "video_4ls.ulc", ks::globals::colors::BLACK);
 
         // Show the 4LS intro video (p2 - native gfx playback)
         ks::primary_background = bn::regular_bg_items::video_end_4ls.create_bg(0, 0);
@@ -210,6 +210,7 @@ int main() {
 
                 ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
                 ks::sound_manager::play(MUSIC_MENUS);
+                sound_mixer::unmute();
                 break;
             case GS_MENU_MAIN:
                 ks::MenuMain().run();
