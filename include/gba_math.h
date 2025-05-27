@@ -12,7 +12,7 @@ typedef struct { FIXED x, y, z; } VECTOR;
 #define MAX(a, b)  ((a) > (b) ? (a) : (b))
 #define MIN(a, b)  ((a) < (b) ? (a) : (b))
 
-#define CLAMP(x, min, max)     ((x) >= (max) ? ((max)-1) : ((x) < (min) ? (min) : (x)))
+#define CLAMP(x, min, max)     ((x) > (max) ? (max) : ((x) < (min) ? (min) : (x)))
 #define IN_RANGE(x, min, max)  ((uint32_t)((x) - (min)) < (uint32_t)((max) - (min)))
 #define REFLECT(x, min, max)   ((x) >= (max) ? 2 * ((max) - 1) - (x) : ((x) < (min) ? 2 * (min) - (x) : (x)))
 #define WRAP(x, min, max)      ((x) >= (max) ? (x) + (min) - (max) : ((x) < (min) ? (x) + (max) - (min) : (x)))

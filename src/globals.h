@@ -14,7 +14,7 @@
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
-#define KS_AGB_VERSION "0.4.0+17"
+#define KS_AGB_VERSION "0.4.0+23"
 #define KS_SHOW_4LS_INTRO true
 
 namespace ks::globals {

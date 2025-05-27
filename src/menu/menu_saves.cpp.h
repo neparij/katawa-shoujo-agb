@@ -3,6 +3,7 @@
 
 #include <bn_format.h>
 #include <bn_regular_bg_items_ui_bg_menu_saves_front.h>
+#include <bn_sprite_items_ui_bar_vertical_thumb.h>
 #include <bn_sprite_items_ui_bg_menu_saves_back_0.h>
 #include <bn_sprite_items_ui_bg_menu_saves_back_1.h>
 #include <bn_sprite_items_ui_bg_menu_saves_back_2.h>
@@ -32,17 +33,35 @@ namespace ks {
             secondary_background->set_priority(1);
             text_generator->set_bg_priority(1);
 
+            background_cover_sprites.clear();
+            background_cover_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_0.create_sprite(
+                -device::screen_width_half + 32, -device::screen_height_half + 32));
+            background_cover_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_1.create_sprite(
+                -device::screen_width_half + 32, -device::screen_height_half + 32 + 64));
+            background_cover_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_2.create_sprite(
+                -device::screen_width_half + 32, -device::screen_height_half + 32 + 128));
+            for (auto& sprite : background_cover_sprites) {
+                sprite.set_bg_priority(3);
+            }
+
+            scroll_thumb_sprite = bn::sprite_items::ui_bar_vertical_thumb.create_sprite(-256, -256);
+            scroll_thumb_sprite->set_bg_priority(0);
+
             text_item_palette = globals::text_palettes::beige;
             total_saves = saves::getUsedSaveSlots();
             saves_from_cursor = total_saves;
             if (saves::readAutosaveMetadata().has_data || in_game) {
                 saves_from_cursor++;
+                additional_slots = 1;
             }
 
             draw_slots(saves_from_cursor);
+            move_scroll_thumb();
         }
 
         ~MenuSaves() override {
+            scroll_thumb_sprite.reset();
+            background_cover_sprites.clear();
         }
 
         void on_back() override {
@@ -123,6 +142,7 @@ namespace ks {
 
             selection = bn::min(3, bn::max(0, selection));
             need_repalette = true;
+            move_scroll_thumb();
         }
 
         void on_repalette() override {
@@ -150,16 +170,6 @@ namespace ks {
             progress_icon_sprites.clear();
             saveslot_thumbnails.clear();
             new_save_thumbnals.clear();
-            progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_0.create_sprite(
-                -device::screen_width_half + 32, -device::screen_height_half + 32));
-            progress_icon_sprites.back().set_bg_priority(3);
-            progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_1.create_sprite(
-                -device::screen_width_half + 32, -device::screen_height_half + 32 + 64));
-            progress_icon_sprites.back().set_bg_priority(3);
-            progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_2.create_sprite(
-                -device::screen_width_half + 32, -device::screen_height_half + 32 + 128));
-            progress_icon_sprites.back().set_bg_priority(3);
-            // globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_left_alignment();
@@ -226,6 +236,9 @@ namespace ks {
                     }
                 } else if (!slot.has_data && tile_index == 0) {
                     // This is a "new save" thumbnail placeholder
+                    repalette();
+                    globals::main_update();
+
                     new_save_thumbnals.push_back(bn::sprite_items::ui_new_save.create_sprite(
                             -device::screen_width_half + draw_x_from + 24, draw_y_from + 10));
                     new_save_thumbnals.push_back(bn::sprite_items::ui_new_save_selected.create_sprite(
@@ -244,10 +257,23 @@ namespace ks {
             need_repalette = true;
         }
 
+        void move_scroll_thumb() {
+            const auto total = total_saves + additional_slots;
+            const auto current = total - saves_from_cursor + CLAMP(selection, 0, 2);
+            const bn::fixed position = bn::fixed(current) / MAX((total - 1), 1);
+
+            if (scroll_thumb_sprite.has_value()) {
+                scroll_thumb_sprite->set_position(104, -45 + position * 94);
+            }
+        }
+
     private:
         bn::vector<short, 3> saveslot_index;
         bn::vector<bn::regular_bg_ptr, 3> saveslot_thumbnails;
         bn::vector<bn::sprite_ptr, 2> new_save_thumbnals;
+        bn::optional<bn::sprite_ptr> scroll_thumb_sprite;
+        bn::vector<bn::sprite_ptr, 3> background_cover_sprites;
+        unsigned char additional_slots = 0;
         unsigned short total_saves, saves_from_cursor;
     };
 }

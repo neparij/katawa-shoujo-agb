@@ -3,6 +3,10 @@
 
 #include <bn_format.h>
 #include <bn_regular_bg_items_ui_bg_menu_inner.h>
+#include <bn_regular_bg_items_ui_bg_menu_inner_scrollable.h>
+#include <bn_sprite_items_ui_bar_vertical_thumb.h>
+
+#include "gba_math.h"
 #include "menu_base.h"
 #include "../scenemanager.h"
 #include "../sound/sound_mixer.h"
@@ -12,17 +16,20 @@ namespace ks {
     class MenuExtrasJukebox final : public MenuBase {
     public:
         explicit MenuExtrasJukebox() {
-            primary_background = bn::regular_bg_items::ui_bg_menu_inner.create_bg(0, 0);
+            primary_background = bn::regular_bg_items::ui_bg_menu_inner_scrollable.create_bg(0, 0);
 
             static_text_sprites.clear();
             animated_text_sprites.clear();
             progress_icon_sprites.clear();
             globals::main_update();
 
+            scroll_thumb_sprite = bn::sprite_items::ui_bar_vertical_thumb.create_sprite(-256, -256);
+
             text_item_palette = globals::text_palettes::beige;
             total_tracks = 38;
             tracks_from_cursor = 1;
             draw(tracks_from_cursor);
+            move_scroll_thumb();
 
             // for (int i = 0; i < 39; i++) {
             //     const auto& track = globals::i18n->music(i);
@@ -33,6 +40,7 @@ namespace ks {
         }
 
         ~MenuExtrasJukebox() override {
+            scroll_thumb_sprite.reset();
         }
 
         void on_back() override {
@@ -59,11 +67,11 @@ namespace ks {
             text_generator_bold->set_one_sprite_per_character(false);
             text_generator_bold->set_left_alignment();
 
-            add_text_entry_bold(-device::screen_width_half + 14, -device::screen_height_half + 14,
+            add_text_entry_bold(-device::screen_width_half + 10, -device::screen_height_half + 14,
                                 bn::format<64>("{} > {}", globals::i18n->menu_extras(),
                                                globals::i18n->menu_extras_jukebox()), -1);
 
-            add_text_entry_small(-device::screen_width_half + 14, -device::screen_height_half + 14 +16,
+            add_text_entry_small(-device::screen_width_half + 10, -device::screen_height_half + 14 +16,
                     bn::format<64>("{}: {}", globals::i18n->screens_now_playing(), globals::i18n->music(sound_manager::current_music))
                 );
 
@@ -109,10 +117,21 @@ namespace ks {
                 }
             }
             need_repalette = true;
+            move_scroll_thumb();
+        }
+
+        void move_scroll_thumb() {
+            const auto current = tracks_from_cursor - 1 + CLAMP(selection, 0, 5);
+            const bn::fixed position = bn::fixed(current) / MAX((total_tracks - 1), 1);
+
+            if (scroll_thumb_sprite.has_value()) {
+                scroll_thumb_sprite->set_position(104, -45 + position * 94);
+            }
         }
 
     private:
         unsigned short total_tracks, tracks_from_cursor;
+        bn::optional<bn::sprite_ptr> scroll_thumb_sprite;
     };
 }
 
