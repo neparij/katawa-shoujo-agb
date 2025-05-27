@@ -18,17 +18,17 @@ convert_sfx() {
 
     if (( $(echo "$crossfade_duration > 0" | bc -l) )); then
       ffmpeg -y -ss "$start_time" -t "$duration" -i "$input_path" -filter_complex \
-        "[0]atrim=0:$duration,asetpts=PTS-STARTPTS[first]; \
+        "[0]volume=2.5,atrim=0:$duration,asetpts=PTS-STARTPTS[first]; \
          [first]asplit[pre][post]; \
          [pre]atrim=0:$fade_start,asetpts=PTS-STARTPTS[main]; \
          [post]atrim=start=$fade_start,asetpts=PTS-STARTPTS[tail]; \
          [main][tail]acrossfade=d=$crossfade_duration:c1=tri:c2=tri[out]" \
         -map "[out]" -ac 1 -ar 11468 -sample_fmt s16 "$wav_name"
     else
-      ffmpeg -y -ss "$start_time" -t "$duration" -i "$input_path" -ac 1 -ar 11468 -sample_fmt s16 "$wav_name"
+      ffmpeg -y -ss "$start_time" -t "$duration" -i "$input_path" -af "volume=2.5" -ac 1 -ar 11468 -sample_fmt s16 "$wav_name"
     fi
   else
-    ffmpeg -y -i "$input_path" -ac 1 -ar 11468 -sample_fmt s16 "$wav_name"
+    ffmpeg -y -i "$input_path" -af "volume=2.5" -ac 1 -ar 11468 -sample_fmt s16 "$wav_name"
   fi
 
   wav28ad "$wav_name" "gbfs_files/$output_name"

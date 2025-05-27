@@ -6,6 +6,8 @@
 #include "bn_sprite_items_ui_ingame_menu_nw.h"
 #include "bn_sprite_items_ui_ingame_menu_se.h"
 #include "bn_sprite_items_ui_ingame_menu_sw.h"
+#include "gba_math.h"
+#include "../sound/sound_mixer.h"
 
 namespace ks {
     class MenuIngamePause final : public MenuBase {
@@ -142,15 +144,25 @@ namespace ks {
                     globals::state = GS_GAME_MENU_SAVES;
                     break;
                 case 4:
+                    // ks::sound_manager::fadeout_stop_all();
+                    // globals::exit_scenario = true;
+                    // if (!in_replay) {
+                    //     SceneManager::autosave();
+                    // }
+                    //
+                    // for(int alpha = 16; alpha <= 32; ++alpha) {
+                    //     bn::bg_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
+                    //     bn::sprite_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
+                    //     ks::globals::main_update();
+                    // }
+                    fade_out();
+                    sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+                    sound_manager::stop<SOUND_CHANNEL_SOUND>();
+                    sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
+                    // sound_mixer::mute();
                     globals::exit_scenario = true;
                     if (!in_replay) {
                         SceneManager::autosave();
-                    }
-
-                    for(int alpha = 16; alpha <= 32; ++alpha) {
-                        bn::bg_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
-                        bn::sprite_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
-                        ks::globals::main_update();
                     }
                     globals::state = GS_RESET;
                     break;
@@ -165,36 +177,19 @@ namespace ks {
             secondary_background->set_priority(3);
             secondary_background->set_z_order(9);
             secondary_background->set_blending_enabled(true);
-
-            // Transparency attributes should be created only after the all
-            // backgrounds with its priority values are created (!important)
-            bn::array<bn::blending_transparency_attributes, 160> transparency_attributes;
-
-            while (forward ? dots_offset < 160 + 96 : dots_offset > 0) {
+            bn::blending::set_transparency_alpha(DialogBox::transparency_alpha());
+            while (forward ? dots_offset < 320 : dots_offset > 0) {
                 dots_offset += forward ? 16 : -16;
-                secondary_background->set_position(0, -80 + 128 + dots_offset);
-                for (int index = 0, amplitude = 160; index < amplitude; ++index) {
-                    // bn::fixed
-                    const bn::fixed clamped_alpha = bn::min(bn::max((index + 32 - dots_offset) / (32), bn::fixed(0)),
-                                                            bn::fixed(1));
-                    const bn::fixed transparency_alpha =
-                            (bn::fixed(1) - clamped_alpha) * DialogBox::transparency_alpha();
-                    transparency_attributes[index].set_transparency_alpha(transparency_alpha);
-                }
-
-                transparency_attributes_hbe = bn::blending_transparency_attributes_hbe_ptr::create(
-                    transparency_attributes);
+                secondary_background->set_position(0, 336 + dots_offset);
                 globals::main_update();
             }
 
-            transparency_attributes_hbe.reset();
             secondary_background.reset();
             bn::blending::set_transparency_alpha(1);
         }
 
     private:
         bn::fixed dots_offset = 0;
-        bn::optional<bn::blending_transparency_attributes_hbe_ptr> transparency_attributes_hbe;
         bn::vector<bn::sprite_ptr, 4> menu_bg_sprites;
 
         // TODO: remove when save menu will be done:

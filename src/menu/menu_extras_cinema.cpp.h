@@ -81,23 +81,23 @@ namespace ks {
                 on_back();
             } else {
                 if (option == 0) {
-                    SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.gsm",
+                    SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.ulc",
                                              globals::colors::BLACK);
                 } else if (option == 1) {
                     SceneManager::show_video(video_tc_act2_emi_dxtv, video_tc_act2_emi_dxtv_size,
-                                             "video_tc_act2_emi.gsm", globals::colors::WHITE);
+                                             "video_tc_act2_emi.ulc", globals::colors::WHITE);
                 } else if (option == 2) {
                     SceneManager::show_video(video_tc_act2_hanako_dxtv, video_tc_act2_hanako_dxtv_size,
-                                             "video_tc_act2_hanako.gsm", globals::colors::WHITE);
+                                             "video_tc_act2_hanako.ulc", globals::colors::WHITE);
                 } else if (option == 3) {
                     SceneManager::show_video(video_tc_act2_lilly_dxtv, video_tc_act2_lilly_dxtv_size,
-                                             "video_tc_act2_lilly.gsm", globals::colors::WHITE);
+                                             "video_tc_act2_lilly.ulc", globals::colors::WHITE);
                 } else if (option == 4) {
                     SceneManager::show_video(video_tc_act2_rin_dxtv, video_tc_act2_rin_dxtv_size,
-                                             "video_tc_act2_rin.gsm", globals::colors::WHITE);
+                                             "video_tc_act2_rin.ulc", globals::colors::WHITE);
                 } else if (option == 5) {
                     SceneManager::show_video(video_tc_act2_shizune_dxtv, video_tc_act2_shizune_dxtv_size,
-                                             "video_tc_act2_shizune.gsm", globals::colors::WHITE);
+                                             "video_tc_act2_shizune.ulc", globals::colors::WHITE);
                 }
 
                 // TODO: see src/temp/test_videopal_draw.cpp.h

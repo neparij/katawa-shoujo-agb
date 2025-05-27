@@ -66,6 +66,7 @@ public:
     const char* screens_playtime() override {return "Наиграно";}
     const char* screens_current_scene() override {return "Сцена";}
     const char* screens_current_track() override {return "Композиция";}
+    const char* screens_now_playing() override {return "Сейчас играет";}
 
     const char* label(const label_t label) override {
         if (const char* tl = get_label_ru_translation(label); tl != nullptr) {

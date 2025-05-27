@@ -4,6 +4,7 @@
 #include "bn_regular_bg_items_video_end_4ls.h"
 #include "bn_sprite_palettes.h"
 #include "bn_sram.h"
+#include "gba_video.h"
 #include "globals.h"
 #include "ingametimer.h"
 #include "scenemanager.h"
@@ -12,6 +13,7 @@
 #include "video_4ls_dxtv.h"
 #include "menu/menu_extras.cpp.h"
 #include "menu/menu_extras_cinema.cpp.h"
+#include "menu/menu_extras_jukebox.cpp.h"
 #include "menu/menu_main.cpp.h"
 #include "menu/menu_options.cpp.h"
 #include "menu/menu_saves.cpp.h"
@@ -124,8 +126,13 @@ inline void game(const bool is_new_game) {
 }
 
 int main() {
-    ks::sound_manager::init();
-    ks::globals::init_engine(ks::globals::colors::WHITE);
+    while(REG_VCOUNT != 160)
+    {
+    }
+
+    while(REG_VCOUNT != 161)
+    {
+    }
 
     BN_LOG("");
     BN_LOG("[38;5;223m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[33;0m");
@@ -153,11 +160,13 @@ int main() {
     BN_LOG("[38;5;223m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⣿⣶⣭⣾⠿⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[33;0m");
     BN_LOG("");
 
+    ks::globals::init_engine(ks::globals::colors::WHITE);
+    sound_mixer::init();
+    bn::core::update();
+    sound_mixer::mute();
+    ks::globals::init_filesystem();
 
-    BN_ASSERT(fs != NULL, "GBFS file not found.\nUse the ROM that ends with .out.gba!");
-
-    const bool isNewSave = ks::saves::initialize();
-    if (isNewSave) {
+    if (ks::saves::initialize()) {
         const bool isNewSaveAgain = ks::saves::initialize();
         BN_ASSERT(!isNewSaveAgain, "Failed to initialize saves.");
     }
@@ -169,7 +178,7 @@ int main() {
     if constexpr (KS_SHOW_4LS_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
         ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);
-        ks::SceneManager::show_video(video_4ls_dxtv, video_4ls_dxtv_size, "video_4ls.gsm", ks::globals::colors::BLACK);
+        ks::SceneManager::show_video(video_4ls_dxtv, video_4ls_dxtv_size, "video_4ls.ulc", ks::globals::colors::BLACK);
 
         // Show the 4LS intro video (p2 - native gfx playback)
         ks::primary_background = bn::regular_bg_items::video_end_4ls.create_bg(0, 0);
@@ -197,7 +206,6 @@ int main() {
             ks::globals::main_update();
         }
     }
-    ks::globals::sound_update();
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
 
     while (true) {
@@ -210,6 +218,7 @@ int main() {
 
                 ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
                 ks::sound_manager::play(MUSIC_MENUS);
+                sound_mixer::unmute();
                 break;
             case GS_MENU_MAIN:
                 ks::MenuMain().run();
@@ -222,6 +231,9 @@ int main() {
                 break;
             case GS_MENU_OPTIONS:
                 ks::MenuOptions().run();
+                break;
+            case GS_MENU_EXTRAS_JUKEBOX:
+                ks::MenuExtrasJukebox().run();
                 break;
             case GS_MENU_EXTRAS_CINEMA:
                 ks::MenuExtrasCinema().run();
@@ -242,7 +254,7 @@ int main() {
                 ks::progress_icon_sprites.clear();
                 ks::primary_background.reset();
                 ks::secondary_background.reset();
-                ks::globals::main_update();
+                // ks::globals::main_update();
 
                 game(!ks::is_loading);
 

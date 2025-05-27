@@ -1,16 +1,19 @@
 #include "video_player.h"
-#include "../gsmplayer/player_8ad.h"
 #include "../globals.h"
 #include <gba_interrupt.h>
 
 #include "bn_memory.h"
 #include "../sound_manager.h"
 #include "../dxtvplayer/videoplayer.h"
+#include "../sound/sound_mixer.h"
 
 #define VP_INLINE static inline __attribute__((always_inline))
 #define VP_IWRAM __attribute__((section(".iwram")))
 
+#define KEY_PRESSED(key) (~(REG_KEYINPUT) & key)
+
 static const char* g_audio_file;
+static bool sound_started = false;
 VP_INLINE void reset_video_state()
 {
     // Show the front buffer only while the processing is done in the back buffer.
@@ -53,12 +56,13 @@ void videoplayer_init(const uint8_t* dxtv_file, size_t agmv_size, const char* au
     g_audio_file = audio_file;
 
     irqInit();
-    irqEnable(IRQ_VBLANK);
-    irqSet(IRQ_VBLANK, ks::globals::ISR_VBlank);
+    irqSet(IRQ_TIMER1, sound_mixer::update);
+    irqEnable(IRQ_TIMER1);
 }
 
 void videoplayer_clean()
 {
+    irqDisable(IRQ_TIMER1);
     irqDisable(IRQ_TIMER2);
 }
 
@@ -68,18 +72,19 @@ void inframe_updates() {
 
 void videoplayer_play()
 {
-    bool sound_started = false;
-    unsigned char sound_delay = 30;
+    sound_started = false;
     Video::play();
     while (Video::hasMoreFrames()) {
+        if (KEY_PRESSED(KEY_START)) {
+            BN_LOG("Stop video immediately: Start was pressed");
+            ks::sound_manager::stop<SOUND_CHANNEL_VIDEO>();
+            break;
+        }
         Video::decodeAndBlitFrame((uint32_t *)VRAM_F, inframe_updates);
         if (!sound_started) {
-            if (sound_delay > 0) {
-                sound_delay--;
-            } else {
-                ks::sound_manager::play<SOUND_CHANNEL_VIDEO>(g_audio_file);
-                sound_started = true;
-            }
+            ks::sound_manager::play<SOUND_CHANNEL_VIDEO>(g_audio_file);
+            sound_mixer::unmute();
+            sound_started = true;
         }
     }
     inframe_updates();

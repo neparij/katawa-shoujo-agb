@@ -48,8 +48,8 @@ SOURCES     	:=  ../butano/common/src \
                     src/dxtvplayer \
                     src/dxtvplayer/debug \
                     src/events \
-                    src/gsmplayer \
-                    src/gsmplayer/core \
+                    src/sound \
+                    src/sound/libulc \
                     src/videoplayer \
                     src/menu \
                     src/savefile \

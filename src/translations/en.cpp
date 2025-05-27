@@ -67,6 +67,7 @@ public:
     const char* screens_playtime() override {return "Playtime";}
     const char* screens_current_scene() override {return "Scene";}
     const char* screens_current_track() override {return "Track";}
+    const char* screens_now_playing() override {return "Now playing";}
 
     const char* label(const label_t label) override {
         if (const char* tl = get_label_en_translation(label); tl != nullptr) {
