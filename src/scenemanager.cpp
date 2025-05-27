@@ -36,7 +36,10 @@
 #include "translations/translation.h"
 #include <video_4ls_dxtv.h>
 #include <video_op_1_dxtv.h>
+
+#include "../../butano/butano/hw/include/bn_hw_irq.h"
 #include "../../butano/butano/src/bn_bgs_manager.h"
+#include "../../butano/butano/src/bn_display_manager.h"
 #include "savefile/save_file.h"
 #include "shaders/vram_dma_shader.h"
 #include "utils/lz77.h"
@@ -124,7 +127,7 @@ void SceneManager::set(const ks::SceneManager instance) {
 
     BN_LOG("Read Scene File...");
     const auto filename = bn::string<32>(scene->scenario()).append(".").append(scene->locale()).c_str();
-    const u8 *compressed_data = (u8 *) gbfs_get_obj(fs, filename, &src_len);
+    const u8 *compressed_data = (u8 *) gbfs_get_obj(globals::filesystem, filename, &src_len);
 
     text_db_size = (compressed_data[1]) | (compressed_data[2] << 8) | (compressed_data[3] << 16);
 
@@ -166,7 +169,6 @@ void SceneManager::set_line_hash(const unsigned int line_hash) {
         if (savedata_progress.reproduction.line_hash == line_hash || savedata_progress.reproduction.line_hash == 0) {
             is_loading = false;
             ks::sound_manager::restore_after_loading();
-            sound_manager::update();
             sound_mixer::unmute();
             update_visuals();
         }
@@ -305,7 +307,6 @@ void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
             case GS_GAME:
                 BN_LOG("TextDB pointer in global scope:", (u32)text_db);
                 ks::scenario::gbfs_reader::get_tl<1024>(text_db, text_db_size, scene->_script_tl_index[tl_key], message);
-                ks::globals::sound_update();
 
                 dialog->show(actor, message);
                 while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
@@ -367,7 +368,6 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
                     // ks::scenario::gbfs_reader::get_tl<128>(
                     //     scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i).tl_key], answer);
                     ks::scenario::gbfs_reader::get_tl<128>(text_db, text_db_size, scene->_script_tl_index[answers.at(i).tl_key], answer);
-                    ks::globals::sound_update();
                     answers_messages.push_back(answer);
                     answers_index_map.push_back(answers.at(i).index);
                 }
@@ -518,7 +518,6 @@ void SceneManager::hide_character(const character_t character) {
 }
 
 void SceneManager::perform_transition(const scene_transition_t transition, const bn::optional<bn::regular_bg_item>& to) {
-    globals::sound_update();
     bn::blending::set_transparency_alpha(1.0);
     // while (!bn::keypad::start_pressed()) {
     //     bn::core::update();
@@ -544,7 +543,6 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             if (custom_event.has_value()) {
                 (*custom_event)->init();
             }
-            ks::globals::sound_update();
         }
         transition_fadein(bn::affine_bg_items::test_eyes, 2,  false);
         return;
@@ -566,7 +564,6 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             if (custom_event.has_value()) {
                 (*custom_event)->init();
             }
-            ks::globals::sound_update();
         }
         transition_fadein(bn::affine_bg_items::test_handsdissolve, 8,  false);
         return;
@@ -587,7 +584,6 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             if (custom_event.has_value()) {
                 (*custom_event)->init();
             }
-            ks::globals::sound_update();
         }
         transition_fadein(bn::affine_bg_items::test_delayblinds, 4, false);
         return;
@@ -607,7 +603,6 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             if (custom_event.has_value()) {
                 (*custom_event)->init();
             }
-            ks::globals::sound_update();
         }
         fade_in(ks::globals::colors::WHITE, 45);
         fade_reset();
@@ -624,7 +619,6 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             if (custom_event.has_value()) {
                 (*custom_event)->init();
             }
-            ks::globals::sound_update();
         }
         fade_in(ks::globals::colors::WHITE, transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG ? 180 : 90);
         fade_reset();
@@ -637,7 +631,6 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         primary_background = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
         primary_background->set_priority(3);
         primary_background->set_z_order(10);
-        ks::globals::sound_update();
         transition_fadein(bn::affine_bg_items::test_clockwipe, 2, false);
         return;
     }
@@ -777,7 +770,6 @@ void SceneManager::update_visuals() {
                 visual.visible_bg_item = visual.bg_item;
 
                 set_character_window_visibility(visual.background.value());
-                ks::globals::sound_update();
             }
 
             if (visual.sprite_item != visual.visible_sprite_item) {
@@ -789,8 +781,6 @@ void SceneManager::update_visuals() {
                 visual.sprite->set_bg_priority(2);
                 visual.sprite->set_z_order(10);
                 visual.visible_sprite_item = visual.sprite_item;
-
-                ks::globals::sound_update();
             }
         }
     }
@@ -862,7 +852,6 @@ void SceneManager::update_visuals() {
             secondary_background.reset();
             secondary_background = background_visual.bg_item->create_bg_optional(background_visual.position_x, background_visual.position_y);
             if (secondary_background.has_value()) {
-                ks::globals::sound_update();
                 secondary_background->set_priority(3);
                 secondary_background->set_z_order(9);
                 secondary_background->set_blending_enabled(true);
@@ -883,8 +872,6 @@ void SceneManager::update_visuals() {
                     (*custom_event)->init();
                 }
                 blend_action.reset();
-
-                ks::globals::sound_update();
             } else {
                 BN_LOG("   <<< Unable to create secondary background! Fallback to change without dissolve");
                 background_change_fallback = true;
@@ -904,8 +891,6 @@ void SceneManager::update_visuals() {
             if (custom_event.has_value()) {
                 (*custom_event)->init();
             }
-
-            ks::globals::sound_update();
         }
 
         background_visual.visible_bg_item = background_visual.bg_item;
@@ -921,7 +906,6 @@ void SceneManager::update_visuals() {
         if (custom_event_want_init) {
             (*custom_event)->init();
         }
-        ks::globals::sound_update();
 
         if (background_want_transition) {
             BN_LOG("                with transition ", background_visual.transition);
@@ -973,7 +957,6 @@ void SceneManager::update_visuals() {
                 visual.background->set_priority(2);
                 visual.background->set_z_order(10);
                 visual.background->set_blending_enabled(true);
-                ks::globals::sound_update();
 
                 visual.sprite = visual.sprite_item->create_sprite(
                     visual.position_x + visual.offset_x + visual.sprite_meta->offset_x,
@@ -981,7 +964,6 @@ void SceneManager::update_visuals() {
                 visual.sprite->set_bg_priority(2);
                 visual.sprite->set_z_order(10);
                 visual.sprite->set_blending_enabled(true);
-                ks::globals::sound_update();
 
                 visual.visible_bg_item = visual.bg_item;
                 visual.visible_sprite_item = visual.sprite_item;
@@ -1159,20 +1141,16 @@ void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const 
         clear_color = clear;
     }
 
+    sound_mixer::mute();
+
     // Free last sound chunks
     ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
     ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
     ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
-    ks::globals::sound_update();
-    sound_mixer::mute();
 
     free_resources();
     ks::globals::release_engine();
-    // ks::globals::init_engine(clear_color);
-
-    bn::core::init(clear_color, bn::string_view(), ks::globals::ISR_VBlank);
-    REG_TM0CNT_H |= TIMER_START;
-    REG_TM1CNT_H |= TIMER_START;
+    bn::core::update();
 
     videoplayer_init(dxtv_file, dxtv_size, audio_file, clear_color.red(), clear_color.green(), clear_color.blue());
     if (is_act_video) {
@@ -1183,6 +1161,7 @@ void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const 
     // Re-init Butano Core
     // ks::globals::release_engine();
     ks::globals::init_engine();
+    // sound_mixer::unmute();
     BN_LOG("Init engine done!");
 
     // TODO: Check the ingame timer after engine restoration.

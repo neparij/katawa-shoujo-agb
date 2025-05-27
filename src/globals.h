@@ -14,43 +14,42 @@
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
-#define KS_AGB_VERSION "0.4.0+01"
+#define KS_AGB_VERSION "0.4.0+17"
 #define KS_SHOW_4LS_INTRO true
 
-static const GBFS_FILE* fs = find_first_gbfs_file(nullptr);
+namespace ks::globals {
+    inline gameState_t state = GS_INIT;
+    inline bool exit_scenario = false;
+    inline bn::unique_ptr<Translation> i18n;
+    inline auto settings = saves::SaveSettingsData();
+    inline const GBFS_FILE *filesystem = nullptr;
 
-namespace ks {
-    // Forward declaration
-    // class Translation;
+    extern void init_filesystem();
 
-    namespace globals {
-        extern gameState_t state;
-        extern bool exit_scenario;
-        extern bn::unique_ptr<Translation> i18n;
-        extern saves::SaveSettingsData settings;
+    extern void init_engine(const bn::optional<bn::color> &clear_color);
 
-        extern void init_engine(const bn::optional<bn::color> &clear_color);
-        extern void init_engine();
-        extern void release_engine();
-        extern void set_language(language_t tl);
+    extern void init_engine();
 
-        extern void main_update();
-        extern void ISR_VBlank();
-        extern void sound_update();
+    extern void release_engine();
 
-        extern void accessibility_apply();
+    extern void set_language(language_t tl);
 
-        namespace colors {
-            extern const bn::color BLACK;
-            extern const bn::color WHITE;
-            extern const bn::color RED;
-        }
+    extern void main_update();
 
-        namespace text_palettes {
-            const bn::sprite_palette_item original = bn::sprite_items::fontpalette_main.palette_item();
-            const bn::sprite_palette_item beige = bn::sprite_items::fontpalette_beige.palette_item();
-            const bn::sprite_palette_item beige_selected = bn::sprite_items::fontpalette_beige_selected.palette_item();
-        }
+    extern void ISR_VBlank();
+
+    extern void accessibility_apply();
+
+    namespace colors {
+        inline constexpr auto BLACK = bn::color(0, 0, 0);
+        inline constexpr auto WHITE = bn::color(31, 31, 31);
+        inline constexpr auto RED = bn::color(31, 0, 0);
+    }
+
+    namespace text_palettes {
+        const bn::sprite_palette_item original = bn::sprite_items::fontpalette_main.palette_item();
+        const bn::sprite_palette_item beige = bn::sprite_items::fontpalette_beige.palette_item();
+        const bn::sprite_palette_item beige_selected = bn::sprite_items::fontpalette_beige_selected.palette_item();
     }
 }
 

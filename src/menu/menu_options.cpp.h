@@ -82,14 +82,12 @@ namespace ks {
             add_menu_entry(-device::screen_width_half + 22 + 16, -48 + yy, globals::i18n->menu_options_high_contrast(),
                            0);
             yy += y_spacing;
-            globals::sound_update();
 
             static_text_sprites.push_back(
                 bn::sprite_items::ui_button_check_0.create_sprite(-device::screen_width_half + 30, -48 + yy));
             checkboxes_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(-device::screen_width_half + 22 + 16, -48 + yy, globals::i18n->menu_options_hdisabled(), 1);
             yy += y_spacing;
-            globals::sound_update();
 
             static_text_sprites.push_back(
                 bn::sprite_items::ui_button_check_0.create_sprite(-device::screen_width_half + 30, -48 + yy));
@@ -105,18 +103,15 @@ namespace ks {
                     break;
                 }
             }
-            globals::sound_update();
 
             add_menu_entry(-device::screen_width_half + 22, -48 + yy,
                            bn::format<64>("{}: {}", globals::i18n->menu_options_language(),
                                           globals::i18n->language()),
                            3);
             yy += y_spacing;
-            globals::sound_update();
 
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22,
                            globals::i18n->menu_back(), 4);
-            globals::sound_update();
         }
 
         void update_checkboxes() {

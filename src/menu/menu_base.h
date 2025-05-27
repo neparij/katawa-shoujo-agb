@@ -6,7 +6,7 @@
 namespace ks {
 
     namespace menu {
-        constexpr unsigned char NAVIGATION_COOLDOWN = 15;
+        constexpr unsigned char NAVIGATION_COOLDOWN = 10;
         constexpr unsigned char NAVIGATION_COOLDOWN_FIRST = 30;
         inline int _initial_selection = 0;
         inline int _navigation_timer = 0;

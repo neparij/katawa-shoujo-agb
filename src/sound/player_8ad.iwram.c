@@ -142,7 +142,7 @@ void player8AD_update() {
 }
 
 s8* player8AD_get_buffer(const u8 ch) {
-    return channels[ch].out_buffer;
+    return channels[ch].src != NULL ? channels[ch].out_buffer : NULL;
 }
 
 INLINE int ima9_rescale(int step, unsigned int code) {

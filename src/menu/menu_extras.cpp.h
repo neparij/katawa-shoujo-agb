@@ -53,6 +53,9 @@ namespace ks {
 
         void on_select(const int option) override {
             switch (option) {
+                case 0:
+                    globals::state = GS_MENU_EXTRAS_JUKEBOX;
+                    break;
                 case 3:
                     globals::state = GS_MENU_EXTRAS_CINEMA;
                     break;

@@ -646,7 +646,7 @@ class ScenarioWriter:
             self.videos.append(show_video.video)
         return [
         #     # f'ks::SceneManager::free_resources();',
-            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.gsm"));\n'
+            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.ulc"));\n'
             f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n'
         ]
 

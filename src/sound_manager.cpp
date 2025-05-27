@@ -11,7 +11,6 @@ namespace ks::sound_manager {
     channel<SOUND_CHANNEL_AMBIENT> channel_ambient = channel<SOUND_CHANNEL_AMBIENT>(1.0, 1.0, true);
 
     void init() {
-        sound_mixer::init();
     }
 
     void update() {
@@ -50,10 +49,9 @@ namespace ks::sound_manager {
                 channel_ambient.volume_to.reset();
             }
         }
-
-        sound_mixer::update();
     }
 
+    // TODO: Remove this. Make an update_sounds() analogue to update_visuals()
     void restore_after_loading() {
         if (!channel_music.loop && playerULC_is_playing()) {
             playerULC_stop();
@@ -68,6 +66,6 @@ namespace ks::sound_manager {
 
 
     BN_CODE_IWRAM void on_vblank() {
-        sound_mixer::on_vblank();
+        // sound_mixer::on_vblank();
     }
 }

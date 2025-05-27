@@ -64,6 +64,7 @@ public:
     virtual const char* screens_playtime() = 0;
     virtual const char* screens_current_scene() = 0;
     virtual const char* screens_current_track() = 0;
+    virtual const char* screens_now_playing() = 0;
 
     // virtual char* script(script_t script) = 0;
     virtual const char* label(label_t label) = 0;

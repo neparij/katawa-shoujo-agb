@@ -46,14 +46,11 @@ namespace ks {
                            globals::i18n->menu_start(), 0);
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 2),
                            globals::i18n->menu_saves(), 1);
-            globals::sound_update();
-
 
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 1),
                            globals::i18n->menu_extras(), 2);
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 0),
                            globals::i18n->menu_options(), 3);
-            globals::sound_update();
         }
 
         ~MenuMain() override {
@@ -97,20 +94,17 @@ namespace ks {
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_16_tc4_shizune.create_sprite(111, 17));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_15_tc3_shizune.create_sprite(113, 42));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_14_tc2_shizune.create_sprite(93, 71));
-            globals::sound_update();
 
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_13_tc4_rin.create_sprite(62, -22));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_12_tc3_rin_rin.create_sprite(67, -8));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_11_tc3_rin_hisao.create_sprite(82, 13));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_10_tc2_rin.create_sprite(96, 48));
-            globals::sound_update();
 
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_09_tc4_lilly.create_sprite(29, -17));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_08_tc3_lilly.create_sprite(63, 8));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_07_tc2_lilly.create_sprite(65, 39));
 
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_06_tc4_hanako.create_sprite(16, 8));
-            globals::sound_update();
 
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_05_tc4_emi_1.create_sprite(14, 37));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_05_tc4_emi_2.create_sprite(50, 42));
@@ -118,7 +112,6 @@ namespace ks {
 
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_04_tc3_emi.create_sprite(32, 63));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_03_tc2_emi.create_sprite(37, 64));
-            globals::sound_update();
 
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_02_tc3_hanako.create_sprite(29, 19));
             progress_icon_sprites.push_back(bn::sprite_items::ui_icon_01_tc2_hanako.create_sprite(52, 41));

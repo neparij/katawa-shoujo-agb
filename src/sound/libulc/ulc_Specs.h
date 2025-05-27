@@ -34,7 +34,7 @@
   faster than the LUT method and uses ~8kB less ROM, but
   is slightly less accurate.
 !*/
-#define ULC_USE_QUADRATURE_OSC 0
+#define ULC_USE_QUADRATURE_OSC 1
 
 /*!
   This controls the bitdepth of the audio, excluding the

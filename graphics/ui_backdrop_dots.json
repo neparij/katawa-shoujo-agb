@@ -1,6 +1,8 @@
 {
     "type": "regular_bg",
-    "height": 256,
+    "height": 512,
+    "big": true,
     "bpp_mode": "bpp_4_manual",
-    "compression": "auto_no_huffman"
+    "map_compression": "none",
+    "tiles_compression": "none"
 }

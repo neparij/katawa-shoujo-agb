@@ -22,6 +22,10 @@ namespace ks {
     class MenuSaves final : public MenuBase {
     public:
         explicit MenuSaves() {
+            static_text_sprites.clear();
+            progress_icon_sprites.clear();
+            globals::main_update();
+
             primary_background.reset();
             progress_icon_sprites.clear();
             secondary_background = bn::regular_bg_items::ui_bg_menu_saves_front.create_bg(0, 0);
@@ -155,7 +159,7 @@ namespace ks {
             progress_icon_sprites.push_back(bn::sprite_items::ui_bg_menu_saves_back_2.create_sprite(
                 -device::screen_width_half + 32, -device::screen_height_half + 32 + 128));
             progress_icon_sprites.back().set_bg_priority(3);
-            globals::main_update();
+            // globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_left_alignment();
@@ -232,7 +236,6 @@ namespace ks {
                 }
 
                 saveslot_index.push_back(additional_slot ? -1 : i - 1);
-                globals::sound_update();
             }
 
             text_generator->set_right_alignment();

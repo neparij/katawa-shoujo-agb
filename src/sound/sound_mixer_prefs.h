@@ -23,20 +23,12 @@
  * 2926     96      5733.84
 */
 
-// Output buffers is set to 18157 Hz
+// Output buffers is set to 13379 Hz
 #define SOUND_ENGINE_BUFFER_SIZE 224 // Sound output buffer size
 #define SOUND_ENGINE_PERIOD_SIZE 1254 // Sound output timers period size
 
-// Output buffers is set to 13379 Hz
-// #define SOUND_ENGINE_BUFFER_SIZE 224 // Sound output buffer size
-// #define SOUND_ENGINE_PERIOD_SIZE 1254 // Sound output timers period size
-
-#define SOUND_ENGINE_MIX_ON_VBLANK false
-
-// #define SOUND_ENGINE_ULC_BS 256 // ULC block size: This should be permanent for all ULC files
-// #define SOUND_ENGINE_8AD_BS 192 // 8AD block size: This should be permanent for all 8AD files
-
-#define SOUND_ENGINE_STEREO (ULC_STEREO_SUPPORT)
+#define SOUND_ENGINE_SAMPLE_RATE 13379
+#define SOUND_ENGINE_TM0_RESTART (0x10000 - (16777216 / SOUND_ENGINE_SAMPLE_RATE))
 
 #define FIFO_ADDR_A 0x040000A0
 #define FIFO_ADDR_B 0x040000A4

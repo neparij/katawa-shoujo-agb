@@ -239,8 +239,6 @@ namespace ks
             _text_generator.set_left_alignment();
             _text_generator.set_palette_item(globals::text_palettes::original);
 
-            ks::globals::sound_update();
-
             if (_actor != nullptr) {
                 // BN_LOG("Actor: ", _actor->name());
                 BN_LOG("[38;5;", _actor->log_color, "m", "[1m", _actor->name(), "[0m");
@@ -332,7 +330,7 @@ namespace ks
                 } else {
                     _text_generator.generate(-_answers_half_width, -56 + i * 20, answers.at(i), _answers_sprites);
                 }
-                ks::globals::sound_update();
+
                 for (int spr_num = last_answer_sprite_index; spr_num < _answers_sprites.size(); spr_num++) {
                     _answers_sprites_answer_index.push_back(i);
                     last_answer_sprite_index = spr_num + 1;
@@ -527,8 +525,6 @@ namespace ks
                 }
             }
 
-            ks::globals::sound_update();
-
             _text_render_prev_line_index = cursor;
             _text_render_prev_line_length = _text_render_next_line_index - _text_render_prev_line_index;
 
@@ -599,8 +595,6 @@ namespace ks
                     sprite_vector
                     );
 
-                ks::globals::sound_update();
-
                 // Update horizontal position
                 current_x += _text_generator.width(buffer);
             } else {
@@ -648,8 +642,6 @@ namespace ks
                         // Update horizontal position
                         current_x += _text_generator.width(chunk);
                     }
-
-                    ks::globals::sound_update();
                 }
             }
 

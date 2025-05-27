@@ -66,6 +66,7 @@ namespace ks::sound_manager {
                 BN_ASSERT(&channel_ambient, "Ambient channel not initialized");
                 return &channel_ambient;
             default:
+                BN_ERROR("Invalid channel name");
                 return nullptr;
         }
     }
@@ -83,19 +84,23 @@ namespace ks::sound_manager {
 
         if (Channel == SOUND_CHANNEL_MUSIC) {
             // playerULC_set_volume(1.0);
+            channel_music.channel_volume = 1.0;
             playerULC_play(name);
             playerULC_set_loop(ch->loop);
         } else if (Channel == SOUND_CHANNEL_VIDEO) {
             BN_LOG("PLAYING VIDEO, NO LOOP!");
             // playerULC_set_volume(1.0);
+            channel_music.channel_volume = 1.0;
             playerULC_play(name);
             playerULC_set_loop(false);
         } else if (Channel == SOUND_CHANNEL_SOUND) {
             // player8AD_set_volume(1.0, 0);
+            channel_sound.channel_volume = 1.0;
             player8AD_play(name, 0);
             player8AD_set_loop(ch->loop, 0);
         } else if (Channel == SOUND_CHANNEL_AMBIENT) {
             // player8AD_set_volume(1.0, 1);
+            channel_ambient.channel_volume = 1.0;
             player8AD_play(name, 1);
             player8AD_set_loop(ch->loop, 1);
         }
@@ -117,6 +122,10 @@ namespace ks::sound_manager {
             }
             if (auto& action = get_volume_to_action<SOUND_CHANNEL_MUSIC>(); action.has_value()) {
                 action.reset();
+            }
+        } else if (Channel == SOUND_CHANNEL_VIDEO) {
+            if (playerULC_is_playing()) {
+                playerULC_stop();
             }
         } else if (Channel == SOUND_CHANNEL_SOUND) {
             if (player8AD_is_playing(0)) {

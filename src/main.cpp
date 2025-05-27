@@ -4,6 +4,7 @@
 #include "bn_regular_bg_items_video_end_4ls.h"
 #include "bn_sprite_palettes.h"
 #include "bn_sram.h"
+#include "gba_video.h"
 #include "globals.h"
 #include "ingametimer.h"
 #include "scenemanager.h"
@@ -12,6 +13,7 @@
 #include "video_4ls_dxtv.h"
 #include "menu/menu_extras.cpp.h"
 #include "menu/menu_extras_cinema.cpp.h"
+#include "menu/menu_extras_jukebox.cpp.h"
 #include "menu/menu_main.cpp.h"
 #include "menu/menu_options.cpp.h"
 #include "menu/menu_saves.cpp.h"
@@ -124,8 +126,13 @@ inline void game(const bool is_new_game) {
 }
 
 int main() {
-    ks::sound_manager::init();
-    ks::globals::init_engine(ks::globals::colors::WHITE);
+    while(REG_VCOUNT != 160)
+    {
+    }
+
+    while(REG_VCOUNT != 161)
+    {
+    }
 
     BN_LOG("");
     BN_LOG("[38;5;223m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[33;0m");
@@ -153,11 +160,13 @@ int main() {
     BN_LOG("[38;5;223m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⣿⣶⣭⣾⠿⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[33;0m");
     BN_LOG("");
 
+    ks::globals::init_engine(ks::globals::colors::WHITE);
+    sound_mixer::init();
+    bn::core::update();
+    sound_mixer::mute();
+    ks::globals::init_filesystem();
 
-    BN_ASSERT(fs != NULL, "GBFS file not found.\nUse the ROM that ends with .out.gba!");
-
-    const bool isNewSave = ks::saves::initialize();
-    if (isNewSave) {
+    if (ks::saves::initialize()) {
         const bool isNewSaveAgain = ks::saves::initialize();
         BN_ASSERT(!isNewSaveAgain, "Failed to initialize saves.");
     }
@@ -197,7 +206,6 @@ int main() {
             ks::globals::main_update();
         }
     }
-    ks::globals::sound_update();
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
 
     while (true) {
@@ -224,6 +232,9 @@ int main() {
             case GS_MENU_OPTIONS:
                 ks::MenuOptions().run();
                 break;
+            case GS_MENU_EXTRAS_JUKEBOX:
+                ks::MenuExtrasJukebox().run();
+                break;
             case GS_MENU_EXTRAS_CINEMA:
                 ks::MenuExtrasCinema().run();
                 break;
@@ -243,7 +254,7 @@ int main() {
                 ks::progress_icon_sprites.clear();
                 ks::primary_background.reset();
                 ks::secondary_background.reset();
-                ks::globals::main_update();
+                // ks::globals::main_update();
 
                 game(!ks::is_loading);
 

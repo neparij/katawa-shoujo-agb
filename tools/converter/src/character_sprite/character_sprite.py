@@ -486,6 +486,7 @@ class CharacterSpritesWriter:
             "colors_count": 128,
             "compression": "auto_no_huffman",  # or auto_no_huffman?
             "tiles_compression": "none",
+            "palette_item": "pal_char_bg"
         }
 
         with open(output_filename, "w", encoding="utf-8") as json_file:
@@ -504,6 +505,7 @@ class CharacterSpritesWriter:
             "bpp_mode": "bpp_8",
             "colors_count": 128,
             "compression": "none",
+            "palette_item": "pal_char_bg"
         }
 
         with open(output_filename, "w", encoding="utf-8") as json_file:
@@ -539,7 +541,7 @@ class CharacterSpritesWriter:
             # "colors_count": 16,
             "bpp_mode": "bpp_8",
             "colors_count": 128,
-            "compression": "auto_no_huffman",
+            "compression": "auto_no_huffman"
         }
 
         with open(json_filename, "w", encoding="utf-8") as json_file:
