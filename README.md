@@ -81,8 +81,7 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 
 - **[Four Leaf Studios](https://www.katawa-shoujo.com)** for creating *Katawa Shoujo*.
 - **[Butano Framework](https://github.com/GValiente/butano)** by GValiente for the GBA development framework.
-- **[afska](https://github.com/afska)** for GSM Player integration for Butano
-- **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
+- **[ulc-codec](https://github.com/Aikku93/ulc-codec)** by Aikku93 for the Ultra-low-complexity MDCT Audio Codec.
 - **[8ad](https://pineight.com/gba/#8ad)** by Damian Yerrick.
 - **[GBA-image-tools](https://github.com/HorstBaerbel/GBA-image-tools)** by HorstBaerbel for the DXTV video codec.
 - **[libsavgba](https://github.com/laqieer/libsavgba)** by laqieer for Flash saving abilities.
@@ -94,7 +93,9 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 
 Some tools and projects may no longer be part of the current build, but they played a meaningful role in earlier stages of development. Their ideas, inspiration, and technical foundations helped shape this project, and for that, I'm truly grateful:
 
+- **[afska](https://github.com/afska)** for the GSM Player Butano integration and supporting the development process.
 - **[libagmv](https://github.com/RyandracusCodesGames/libagmv)** by RyandracusCodesGames for the AGMV video codec.
+- **[GSM Player](https://github.com/pinobatch/gsmplayer-gba)** by Damian Yerrick for the GBA audio player.
 
 ---
 
