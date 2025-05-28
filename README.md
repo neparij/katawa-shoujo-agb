@@ -32,6 +32,7 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 - **The entire OST** carefully adapted for the GBA.
 - **Video Cutscenes** fits alongside the game.
 - **Tools** for converting assets and scripts.
+- **Huge bitmaps** to display backgrounds with more than 1024 tiles (used for events).
 
 ---
 
@@ -74,6 +75,16 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 3. **Create a branch** for your feature.
 4. **Test** your changes on emulators and hardware.
 5. Submit a pull request.
+
+---
+
+## Huge backgrounds
+
+This is WIP part of engine.
+```shell
+# We need to convert image using 12bit maps, no tile flipping is allowed.
+grit ../../event_hanako_scars.bmp -pe192 -mRt -gB8 -mLf -mB16:p4i12 -o event_hanako_scars_huge
+```
 
 ---
 
