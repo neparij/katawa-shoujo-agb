@@ -57,7 +57,8 @@ SOURCES     	:=  ../butano/common/src \
                     src/shaders \
                     src/translations \
 		    		src/utils \
-                    src/utils/gbfs
+                    src/utils/gbfs \
+                    src/huge
 INCLUDES    	:=  include \
 					include/definitions \
 					include/background_metas \

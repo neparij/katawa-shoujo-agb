@@ -83,7 +83,12 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 This is WIP part of engine.
 ```shell
 # We need to convert image using 12bit maps, no tile flipping is allowed.
-grit ../../event_hanako_scars.bmp -pe192 -mRt -gB8 -mLf -mB16:p4i12 -o event_hanako_scars_huge
+
+# 8bpp example:
+grit ../../event_hanako_scars.bmp -pe192 -pzr -mRt -gB8 -mLf -mB16:p4i12 -o event_hanako_scars_huge
+
+# 4bpp example:
+grit ../../event_hanako_scars_4bpp.bmp -pe192 -pzr -mRtp -gB4 -mLf -mB16:p4i12 -o event_hanako_scars_4bpp_huge
 ```
 
 ---
