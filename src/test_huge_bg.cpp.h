@@ -28,7 +28,7 @@ inline int floor_div(const int a, const int b) {
     return a >= 0 ? a / b : (a - b + 1) / b;
 }
 
-#define USE_8BPP true
+#define USE_8BPP false
 
 void test_huge_bg_cpp()
 {
@@ -71,20 +71,46 @@ void test_huge_bg_cpp()
 
     int bg_x = 48;
     int bg_y = 352;
+    bg->set_top_left_position(-bg_x, -bg_y);
     bool initialized = false;
+
+    bn::optional move_to_action = bn::regular_bg_top_left_move_to_action(bg.value(), 1800, -216, 0);
 
     while (true)
     {
-        if (bn::keypad::left_held() || bn::keypad::right_held()) {
-            bg_x += (bn::keypad::left_held() ? -1 : 1);
-            BN_LOG("New BG X: ", bg_x);
-        }
-        if (bn::keypad::up_held() || bn::keypad::down_held()) {
-            bg_y += (bn::keypad::up_held() ? -1 : 1);
-            BN_LOG("New BG Y: ", bg_y);
+        if (move_to_action.has_value()) {
+            if (!move_to_action->done()) {
+                move_to_action->update();
+                // move_to_action.value().reset();
+            } else {
+                // move_to_action.reset();
+            }
         }
 
-        bg->set_top_left_position(0 - bg_x, 0 - bg_y);
+        if (bn::keypad::a_pressed()) {
+            move_to_action.value().reset();
+        }
+
+        if (bn::keypad::b_pressed()) {
+            bg.reset();
+            ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+            move_to_action.reset();
+            break;
+        }
+
+        bg_x = -bg->top_left_position().x().integer();
+        bg_y = -bg->top_left_position().y().integer();
+
+        // if (bn::keypad::left_held() || bn::keypad::right_held()) {
+        //     bg_x += (bn::keypad::left_held() ? -1 : 1);
+        //     BN_LOG("New BG X: ", bg_x);
+        // }
+        // if (bn::keypad::up_held() || bn::keypad::down_held()) {
+        //     bg_y += (bn::keypad::up_held() ? -1 : 1);
+        //     BN_LOG("New BG Y: ", bg_y);
+        // }
+        //
+        // bg->set_top_left_position(0 - bg_x, 0 - bg_y);
 
         if (initialized) {
             ks::globals::main_update();
