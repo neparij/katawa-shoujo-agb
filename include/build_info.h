@@ -1,0 +1,12 @@
+#ifndef KS_BUILD_INFO_H
+#define KS_BUILD_INFO_H
+
+#define KS_BUILD_VERSION ""
+#define KS_BUILD_COMMIT ""
+#define KS_BUILD_STRING (KS_BUILD_VERSION "+" KS_BUILD_COMMIT)
+#define KS_BUILD_DATE ""
+#define KS_BUILD_HOST_OS ""
+#define KS_BUILD_HOST_ENV ""
+#define KS_BUILD_COMPILER ""
+
+#endif //KS_BUILD_INFO_H

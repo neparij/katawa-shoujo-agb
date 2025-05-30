@@ -1,6 +1,8 @@
 #ifndef MENU_MAIN_CPP_H
 #define MENU_MAIN_CPP_H
 
+#include "build_info.h"
+
 #include <bn_regular_bg_items_ui_bg_menu_main.h>
 
 #include "bn_sprite_items_ui_icon_00_tc1_hisao.h"
@@ -29,7 +31,7 @@ namespace ks {
     class MenuMain final : public MenuBase {
     public:
         explicit MenuMain() {
-            const bn::string<64> version(KS_AGB_VERSION);
+            const bn::string<64> version(KS_BUILD_STRING);
             secondary_background.reset();
             primary_background = bn::regular_bg_items::ui_bg_menu_main.create_bg(0, 0);
 
@@ -161,9 +163,9 @@ namespace ks {
 
                         icon.set_y(icon.y() + 8);
                         move_to_actions.push_back(bn::sprite_move_to_action(icon,
-                                                                             30,
-                                                                             icon.position().x(),
-                                                                             icon.position().y() - 8));
+                                                                            30,
+                                                                            icon.position().x(),
+                                                                            icon.position().y() - 8));
                     }
 
                     icon.set_blending_enabled(true);

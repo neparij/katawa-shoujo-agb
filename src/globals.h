@@ -9,12 +9,12 @@
 #include <bn_sprite_palette_item.h>
 #include <bn_unique_ptr.h>
 
+#include "konami_code.h"
 #include "definitions.h"
 #include "translations/translation.h"
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
-#define KS_AGB_VERSION "0.4.0+23"
 #define KS_SHOW_4LS_INTRO true
 
 namespace ks::globals {

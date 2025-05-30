@@ -102,7 +102,8 @@ USERLIBS    	:=  -lmm -lgba
 DEFAULTLIBS 	:=  false
 STACKTRACE		:=
 USERBUILD   	:=  
-EXTTOOL     	:= @$(PYTHON) -B tools/ks_assets_tool.py --grit="$(GRIT)" --graphics="$(HUGE_GRAPHICS)" --build=$(BUILD)
+EXTTOOL     	:= @$(PYTHON) -B tools/build_info.py --compiler=$(CXX); \
+				   $(PYTHON) -B tools/ks_assets_tool.py --grit="$(GRIT)" --graphics="$(HUGE_GRAPHICS)" --build=$(BUILD)
 
 #---------------------------------------------------------------------------------------------------------------------
 # Export absolute butano path:

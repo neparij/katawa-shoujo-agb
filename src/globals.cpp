@@ -32,6 +32,7 @@ namespace ks::globals {
         SceneManager::update();
         bn::core::update();
         sound_manager::update();
+        update_konami_code();
     }
 
     void BN_CODE_IWRAM ISR_VBlank() {
