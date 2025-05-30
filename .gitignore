@@ -14,3 +14,6 @@ site/
 *.ss*
 katawa.creator.user
 compile_commands.json
+
+# Ignore build info as it is generated on the build
+include/build_info.h
