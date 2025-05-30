@@ -19,7 +19,7 @@
 #include "menu/menu_saves.cpp.h"
 
 #include "background_metas.h"
-#include "test_huge_bg.cpp.h"
+#include "temp/test_huge_bg.cpp.h"
 
 using size_type = int;
 
@@ -181,8 +181,7 @@ int main() {
     ks::timer::init();
 
     ks::SceneManager::fade_out(ks::globals::colors::BLACK, 30);
-    sound_mixer::unmute();
-    test_huge_bg_cpp();
+
     if constexpr (KS_SHOW_4LS_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
         ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);
