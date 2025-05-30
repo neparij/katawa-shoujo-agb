@@ -10,6 +10,7 @@
 #include "scenemanager.h"
 #include "sound_manager.h"
 #include "fonts_info.h"
+#include "ks_huge_bgs_manager.h"
 #include "sound/sound_mixer.h"
 
 namespace ks::globals {
@@ -27,6 +28,7 @@ namespace ks::globals {
         if (is_loading) {
             BN_LOG("[WARN] Main update while loading!");
         }
+        huge_bgs_manager::update();
         SceneManager::update();
         bn::core::update();
         sound_manager::update();

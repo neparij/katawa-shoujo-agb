@@ -32,6 +32,7 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 - **The entire OST** carefully adapted for the GBA.
 - **Video Cutscenes** fits alongside the game.
 - **Tools** for converting assets and scripts.
+- **Huge bitmaps** to display backgrounds with more than 1024 tiles (used for events).
 
 ---
 

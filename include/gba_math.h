@@ -49,6 +49,10 @@ static inline int wrap(int x, int min_val, int max_val) {
     return x;
 }
 
+static inline int floor_div(const int a, const int b) {
+    return a >= 0 ? a / b : (a - b + 1) / b;
+}
+
 // --- Fixed point ---
 #define FIX_SHIFT   8
 #define FIX_SCALE   (1 << FIX_SHIFT)

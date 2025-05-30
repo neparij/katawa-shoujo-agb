@@ -42,6 +42,7 @@ TARGET      	:=  $(notdir $(CURDIR))
 BUILD       	:=  build
 LIBBUTANO   	:=  ../butano/butano
 PYTHON      	:=  python3
+GRIT      		:=  grit
 SOURCES     	:=  ../butano/common/src \
 					../libsavgba/src \
 		    		src \
@@ -87,6 +88,7 @@ GRAPHICS    	:=  graphics \
 					graphics/characters/yuukoshang \
 					graphics/characters/muto \
 					../butano/common/graphics
+HUGE_GRAPHICS   :=  graphics/huge
 AUDIO       	:=  audio
 DMGAUDIO    	:=  dmg_audio
 ROMTITLE    	:=  KATAWASHOUJO
@@ -100,7 +102,7 @@ USERLIBS    	:=  -lmm -lgba
 DEFAULTLIBS 	:=  false
 STACKTRACE		:=
 USERBUILD   	:=  
-EXTTOOL     	:=
+EXTTOOL     	:= @$(PYTHON) -B tools/ks_assets_tool.py --grit="$(GRIT)" --graphics="$(HUGE_GRAPHICS)" --build=$(BUILD)
 
 #---------------------------------------------------------------------------------------------------------------------
 # Export absolute butano path:
@@ -126,6 +128,10 @@ VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
 include $(LIBBUTANOABS)/butano.mak
 # export OFILES := $(OFILES_BIN) $(OFILES)
 # export OFILES := $(OFILES_BIN) $(OFILES)
+
+HUGEGRAPHICSFILES	:=	$(foreach dir,	$(HUGE_GRAPHICS),	$(notdir $(wildcard $(dir)/*.bmp)))
+export OFILES_HUGEGRAPHICS	:=  $(HUGEGRAPHICSFILES:.bmp=_bn_gfx.o)
+export OFILES           :=  $(OFILES) $(OFILES_HUGEGRAPHICS)
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
