@@ -4,6 +4,9 @@
 #include "../scripts/script_a1_tuesday_ru.cpp"
 #include "../scripts/script_a1_wednesday_ru.cpp"
 #include "../scripts/script_a1_thursday_ru.cpp"
+#include "../scripts/script_a1_friday_ru.cpp"
+#include "../scripts/script_a1_saturday_ru.cpp"
+#include "../scripts/script_a1_sunday_ru.cpp"
 
 namespace ks {
 class TranslationRu final : public Translation {
@@ -17,6 +20,9 @@ public:
     void (*script_a1_tuesday())() override { return &ScriptA1TuesdayRu::a1_tuesday; }
     void (*script_a1_wednesday())() override { return &ScriptA1WednesdayRu::a1_wednesday; }
     void (*script_a1_thursday())() override { return &ScriptA1ThursdayRu::a1_thursday; }
+    void (*script_a1_friday())() override { return &ScriptA1FridayRu::a1_friday; }
+    void (*script_a1_saturday())() override { return &ScriptA1SaturdayRu::a1_saturday; }
+    void (*script_a1_sunday())() override { return &ScriptA1SundayRu::a1_sunday; }
 
     const char* menu_author() override {return "порт от NeParij";}
     const char* menu_play_a0_test_scene() override {return "Тестовая сцена";}
@@ -24,6 +30,9 @@ public:
     const char* menu_play_a1_tuesday() override {return "Акт 1. Вторник";}
     const char* menu_play_a1_wednesday() override {return "Акт 1. Среда";}
     const char* menu_play_a1_thursday() override {return "Акт 1. Четверг (beta)";}
+    const char* menu_play_a1_friday() override {return "Акт 1. Пятница (beta)";}
+    const char* menu_play_a1_saturday() override {return "Акт 1. Суббота (beta)";}
+    const char* menu_play_a1_sunday() override {return "Акт 1. Воскресенье (beta)";}
     const char* menu_play_all() override {return "Играть все доступные";}
     const char* menu_video_test() override {return "Тест видео";}
 

@@ -12,8 +12,16 @@ site/
 *.elf
 *.sav
 *.ss*
+*.bk
 katawa.creator.user
 compile_commands.json
 
 # Ignore build info as it is generated on the build
 include/build_info.h
+
+# Temporarily ignore intermediate files
+intermediate/
+
+# Ignore custom compiled tools for a while
+vid2h
+ulcencodetool

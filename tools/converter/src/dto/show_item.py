@@ -23,12 +23,13 @@ class ShowItem(SequenceItem):
     def some_method(self):
         pass
 
-    def __init__(self, sprite: str, variant: str|None, event: ShowEvent, position: ShowPosition):
+    def __init__(self, sprite: str, variant: str|None, event: ShowEvent, position: ShowPosition, palette_variant: str):
         super().__init__(SequenceType.SHOW)
         self.sprite = sprite
         self.variant = variant
         self.event = event
         self.position = position
+        self.palette_variant = palette_variant
 
     def __str__(self):
-        return f"ShowItem(sprite={self.sprite}, variant={self.variant}, event={self.event}, position={self.position})"
+        return f"ShowItem(sprite={self.sprite}, variant={self.variant}, event={self.event}, position={self.position}, palette_variant={self.palette_variant})"

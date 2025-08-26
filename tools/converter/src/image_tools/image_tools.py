@@ -25,7 +25,8 @@ class ImageTools:
                use_sample_palette: str | None = None,
                add_boundary_pixels: bool = False,
                target_height: int = 160,
-               target_size: tuple[int, int] = (256, 256)):
+               target_size: tuple[int, int] = (256, 256),
+               tint: tuple[int, int, int] | None = None):
 
         if use_sample_palette:
             sample_palette_image = Image.open(use_sample_palette)
@@ -46,16 +47,21 @@ class ImageTools:
         # source_resized = cropped.resize((target_width, target_height), Image.Resampling.LANCZOS)
         source_resized = cropped.resize((target_width, target_height), Image.Resampling.HAMMING)
 
+        source_tinted = source_resized
+        if tint is not None:
+            print(f"Tint: {input_filename} to {tint}")
+            source_tinted = ImageOps.colorize(source_resized.convert("L"), [0,0,0], tint).convert("RGBA")
+
         print(f"Threshold alpha: {input_filename}")
         alpha = source_resized.split()[3]
         alpha = alpha.point(lambda p: 255 if p > 127 else 0)
-        source_resized.putalpha(alpha)
+        source_tinted.putalpha(alpha)
 
         print(f"Put on canvas: {input_filename}")
-        canvas.paste(source_resized,
-                     (int((canvas.size[0] - source_resized.size[0]) / 2),
-                      int((canvas.size[1] - source_resized.size[1]) / 2)),
-                     mask=source_resized.split()[3])
+        canvas.paste(source_tinted,
+                     (int((canvas.size[0] - source_tinted.size[0]) / 2),
+                      int((canvas.size[1] - source_tinted.size[1]) / 2)),
+                     mask=source_tinted.split()[3])
 
         if sprite_size and sprite_offset:
             print(f"Crop Sprite to {sprite_size}")
@@ -95,6 +101,7 @@ class ImageTools:
             paletted_image = paletted_image.quantize(palette=sample_palette_image, method=Image.Quantize.LIBIMAGEQUANT, dither=Image.Dither.NONE)
             # paletted_image = paletted_image.quantize(palette=sample_palette_image, method=Image.Quantize.LIBIMAGEQUANT, dither=Image.Dither.FLOYDSTEINBERG)
             paletted_image.save(output_filename, format="BMP")
+            print(f"Resized, Converted with sample palette and saved: {output_filename}")
         # else:
         #     print(f"Convert to {colors} colors palette.")
         #     palette_image = canvas.convert("P", palette=Image.Palette.ADAPTIVE, colors=colors, dither=Image.Dither.FLOYDSTEINBERG if dithering > 0 else Image.Dither.NONE)
@@ -138,32 +145,33 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors)
 
     @staticmethod
-    def resize_character_background(input_filename: str, output_filename: str, remove_size: tuple[int, int], remove_offset: tuple[int, int], y_offset = 0):
+    def resize_character_background(input_filename: str, output_filename: str, remove_size: tuple[int, int], remove_offset: tuple[int, int], y_offset = 0, tint: tuple[int, int, int] | None = None):
         palettes = 2
         colors = 16
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
                           remove_size=remove_size, remove_offset=remove_offset,
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp",
-                          add_boundary_pixels=True)
+                          add_boundary_pixels=True, tint=tint)
 
     @staticmethod
-    def resize_character_thumbnail(input_filename: str, output_filename: str, y_offset=0):
+    def resize_character_thumbnail(input_filename: str, output_filename: str, y_offset=0, tint: tuple[int, int, int] | None = None):
         palettes = 2
         colors = 16
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
                           target_height=32, target_size=(32, 32),
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp",
-                          add_boundary_pixels=True)
+                          add_boundary_pixels=True, tint=tint)
 
     @staticmethod
     def resize_character_emotion_sprite(input_filename: str, output_filename: str, sprite_offset: tuple[int, int],
-                                        sprite_size: tuple[int, int], y_offset = 0, use_sample_palette = None):
+                                        sprite_size: tuple[int, int], y_offset = 0, use_sample_palette = None, tint: tuple[int, int, int] | None = None):
         palettes = 1
         colors = 16
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
                           dithering=0.0,
                           sprite_offset=sprite_offset, sprite_size=sprite_size,
                           num_color_cluster_passes=16, num_tile_cluster_passes=256,
-                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_spr_palette.bmp")
+                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_spr_palette.bmp",
+                          tint=tint)

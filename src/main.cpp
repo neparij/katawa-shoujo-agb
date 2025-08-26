@@ -19,6 +19,7 @@
 #include "menu/menu_saves.cpp.h"
 
 #include "background_metas.h"
+#include "bn_regular_bg_tiles_ptr.h"
 #include "temp/test_huge_bg.cpp.h"
 
 using size_type = int;
@@ -39,12 +40,13 @@ inline void game(const bool is_new_game) {
     ks::globals::i18n->script_a1_tuesday()();
     ks::globals::i18n->script_a1_wednesday()();
     ks::globals::i18n->script_a1_thursday()();
-    // ks::globals::i18n->script_a1_friday()();
-    // ks::globals::i18n->script_a1_saturday()();
-    // ks::globals::i18n->script_a1_sunday()();
+    ks::globals::i18n->script_a1_friday()();
+    ks::globals::i18n->script_a1_saturday()();
+    ks::globals::i18n->script_a1_sunday()();
 
     if (ks::progress.force_route == FR_EMI) {
         // video: tc_act2_emi
+        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_emi_dxtv, video_tc_act2_emi_dxtv_size, "video_tc_act2_emi.ulc", ks::globals::colors::WHITE););
         // ks::globals::i18n->script_a2_emi()();
         // video: tc_act3_emi
         // ks::globals::i18n->script_a3_emi()();
@@ -58,6 +60,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_HANAKO) {
         // video: tc_act2_hanako
+        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_hanako_dxtv, video_tc_act2_hanako_dxtv_size, "video_tc_act2_hanako.ulc", ks::globals::colors::WHITE););
         // ks::globals::i18n->script_a2_hanako()();
         // video: tc_act3_hanako
         // ks::globals::i18n->script_a3_hanako()();
@@ -73,6 +76,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_LILLY) {
         // video: tc_act2_lilly
+        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_lilly_dxtv, video_tc_act2_lilly_dxtv_size, "video_tc_act2_lilly.ulc", ks::globals::colors::WHITE););
         // ks::globals::i18n->script_a2_lilly()();
         // video: tc_act3_lilly
         // ks::globals::i18n->script_a3_lilly()();
@@ -86,6 +90,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_RIN) {
         // video: tc_act2_rin
+        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_rin_dxtv, video_tc_act2_rin_dxtv_size, "video_tc_act2_rin.ulc", ks::globals::colors::WHITE););
         // ks::globals::i18n->script_a2_rin()();
         // video: tc_act3_rin
         // ks::globals::i18n->script_a3_rin()();
@@ -104,6 +109,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_SHIZU) {
         // video: tc_act2_shizune
+        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_shizune_dxtv, video_tc_act2_shizune_dxtv_size, "video_tc_act2_shizune.ulc", ks::globals::colors::WHITE););
         // ks::globals::i18n->script_a2_shizune()();
         // video: tc_act3_shizune
         // ks::globals::i18n->script_a3_shizune()();
@@ -116,7 +122,7 @@ inline void game(const bool is_new_game) {
             // BAD ENDING
         }
     } else {
-        // ks::SceneManager::fade_out(ks::globals::colors::RED, 240);
+        ks::SceneManager::fade_out(ks::globals::colors::RED, 240);
         // Show blood red scene with Dissolve 4s
         // KENJI ENDING
     }
@@ -124,6 +130,35 @@ inline void game(const bool is_new_game) {
     ks::in_game = false;
 
     // credits
+}
+
+inline float bezier_f(float t) {
+    return t * t * (3.0f - 2.0f * t);
+}
+
+inline void print_save_debug() {
+    const auto flashInfo = ks::saves::get_flash_info();
+    constexpr auto lineHeight = 12;
+
+    bn::bg_palettes::set_transparent_color(ks::globals::colors::BLACK);
+    ks::primary_background.reset();
+    ks::static_text_sprites.clear();
+    ks::text_generator_small->generate_top_left(8, lineHeight * 0, "Flash Info:", ks::static_text_sprites);
+    ks::text_generator_small->generate_top_left(8, lineHeight * 1, bn::format<64>("- ManufacturerId: {}", flashInfo.manufacturer), ks::static_text_sprites);
+    ks::text_generator_small->generate_top_left(8, lineHeight * 2, bn::format<64>("- DeviceType: {}", flashInfo.device), ks::static_text_sprites);
+    ks::text_generator_small->generate_top_left(8, lineHeight * 3, bn::format<64>("- SizeType: {}", flashInfo.size), ks::static_text_sprites);
+    ks::text_generator_small->generate_top_left(8, lineHeight * 4, "Press START to continue...", ks::static_text_sprites);
+    ks::text_generator_small->generate_top_left(8, lineHeight * 5, "Press SELECT to fake SRAM...", ks::static_text_sprites);
+    while (!bn::keypad::start_pressed() && !bn::keypad::select_pressed()) {
+        bn::core::update();
+    }
+    if (bn::keypad::select_pressed()) {
+        ks::saves::set_flash_info_fake_sram();
+        ks::saves::initialize();
+    }
+    ks::primary_background.reset();
+    ks::static_text_sprites.clear();
+    bn::bg_palettes::set_transparent_color(ks::globals::colors::WHITE);
 }
 
 int main() {
@@ -173,8 +208,12 @@ int main() {
     ks::globals::init_filesystem();
 
     if (ks::saves::initialize()) {
+        print_save_debug();
+
         const bool isNewSaveAgain = ks::saves::initialize();
         BN_ASSERT(!isNewSaveAgain, "Failed to initialize saves.");
+    } else {
+        print_save_debug();
     }
 
     ks::globals::settings = ks::saves::readSettings();

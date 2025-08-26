@@ -20,6 +20,11 @@ void flash_switch_bank(int bank);
 #define FLASH_SECTOR_SIZE_4KB  4096
 // #define _FLASH_WRITE(pa, pd) { *(((u16 *)AGB_ROM)+((pa)/2)) = pd; __asm("nop"); }
 
+struct FlashInfo {
+    u8 device;
+    u8 manufacturer;
+    u8 size;
+};
 
 namespace ks {
     namespace saves {
@@ -156,6 +161,30 @@ namespace ks {
             // Integrity check (0xFFFF-i)
             unsigned short integrity;
 
+            [[nodiscard]] bool go_through_lilly() const {
+                // #     def go_through_lilly():
+                // #         return talk_with_hanako and side_lilly
+                return talk_with_hanako && side_lilly;
+            }
+
+            [[nodiscard]] bool go_through_shizu() const {
+                // #     def go_through_shizu():
+                // #         return wait_for_shizu and not side_lilly
+                return wait_for_shizu && !side_lilly;
+            }
+
+            [[nodiscard]] bool get_tired() const {
+                // #     def get_tired():
+                // #         return promised and go_for_it
+                return promised && go_for_it;
+            }
+
+            [[nodiscard]] bool got_kenji() const {
+                // #     def got_kenji():
+                // #         return kick_shizu or fun_fun_at_office or not_much_talking
+                return kick_shizu || fun_fun_at_office || not_much_talking;
+            }
+
             bool operator==(const SaveSlotProgressData &other) const {
                 return metadata == other.metadata &&
                        attraction_hanako == other.attraction_hanako &&
@@ -257,6 +286,10 @@ namespace ks {
         void flash_write_offset(u8 *data, int offset, int size);
 
         bool is_flash();
+
+        FlashInfo get_flash_info();
+
+        void set_flash_info_fake_sram();
 
         template<typename Type>
         void write_offset(const Type& source, int offset) {

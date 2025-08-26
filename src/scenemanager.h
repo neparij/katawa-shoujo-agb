@@ -49,6 +49,7 @@ struct background_visuals_ptr
     int dissolve_time;
     bool dissolve_on_top;
     scene_transition_t transition;
+    palette_variant_t palette_variant;
 };
 
 struct character_restoration_data {
@@ -69,6 +70,7 @@ struct character_visuals_ptr
     bn::optional<bn::regular_bg_item> bg_item;
     bn::optional<bn::sprite_item> sprite_item;
     bn::optional<ks::character_sprite_meta> sprite_meta;
+    palette_variant_t palette_variant;
 
     bn::optional<bn::regular_bg_ptr> background;
     bn::optional<bn::sprite_ptr> sprite;
@@ -112,7 +114,8 @@ public:
                            const int position_x,
                            const int position_y,
                            scene_transition_t transition,
-                           const int dissolve_time);
+                           const int dissolve_time,
+                           const palette_variant_t palette_variant);
     static void hide_background(scene_transition_t transition, int dissolve_time);
     static void set_background_position(const int position_x,
                                        const int position_y);
@@ -132,17 +135,20 @@ public:
     static void show_character(const character_t character,
                                const ks::character_sprite_meta& sprite_meta,
                                const bn::regular_bg_item& bg,
-                               const bn::sprite_item& sprite);
+                               const bn::sprite_item& sprite,
+                               const palette_variant_t palette_variant);
     static void show_character(const character_t character,
                                const ks::character_sprite_meta& sprite_meta,
                                const bn::regular_bg_item& bg,
                                const bn::sprite_item& sprite,
+                               const palette_variant_t palette_variant,
                                const int position_x,
                                const int position_y);
     static void show_character(const character_t character,
                                const ks::character_sprite_meta& sprite_meta,
                                const bn::regular_bg_item& bg,
                                const bn::sprite_item& sprite,
+                               const palette_variant_t palette_variant,
                                const int position_x,
                                const int position_y,
                                const bool position_change);
@@ -177,6 +183,13 @@ public:
     static void pause(const int ticks);
 
     static void timeskip();
+
+    static void apply_palette_variant(const bn::regular_bg_ptr &bg,
+                                      const bn::span<const bn::color> &original_palette,
+                                      const palette_variant_t palette_variant);
+    static void apply_palette_variant(const bn::sprite_ptr &spr,
+                                      const bn::span<const bn::color> &original_palette,
+                                      const palette_variant_t palette_variant);
 
     static void fade_in(const bn::color &color, const int steps);
     static void fade_out(const bn::color &color, const int steps);

@@ -39,6 +39,7 @@
 #include "sprite_metas/rin_basic_close.h"
 #include "sprite_metas/rin_negative_close.h"
 #include "sprite_metas/rin_relaxed_close.h"
+#include "sprite_metas/rin_relaxed_silhouette.h"
 #include "sprite_metas/lilly_back_cas.h"
 #include "sprite_metas/lilly_back.h"
 #include "sprite_metas/lilly_basic_cas.h"
@@ -114,6 +115,7 @@ namespace ks::character_sprite_metas {
             case 0xEA6A: return &sprite_metas::rin_basic_close;
             case 0xD1BB: return &sprite_metas::rin_negative_close;
             case 0x8AD3: return &sprite_metas::rin_relaxed_close;
+            case 0x1766: return &sprite_metas::rin_relaxed_silhouette;
             case 0x91C0: return &sprite_metas::lilly_back_cas;
             case 0x7A24: return &sprite_metas::lilly_back;
             case 0x53A5: return &sprite_metas::lilly_basic_cas;

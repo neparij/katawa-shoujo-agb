@@ -2,6 +2,7 @@
 #define SCRIPTS_DEFINITIONS_H
 
 typedef unsigned char script_t;
+#define SCRIPT_A0_ACTNAME ((script_t)0xFF)
 #define SCRIPT_A1_MONDAY ((script_t)0)
 #define SCRIPT_A1_TUESDAY ((script_t)1)
 #define SCRIPT_A1_WEDNESDAY ((script_t)2)

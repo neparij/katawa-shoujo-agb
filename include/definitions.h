@@ -113,6 +113,17 @@ typedef unsigned char scene_transition_t;
 #define SCENE_TRANSITION_CLOCKWIPE_IN ((scene_transition_t)29)
 #define SCENE_TRANSITION_CLOCKWIPE_OUT ((scene_transition_t)30)
 
+typedef unsigned char palette_variant_t;
+#define PALETTE_VARIANT_DEFAULT ((palette_variant_t)0)
+#define PALETTE_VARIANT_NIGHT ((palette_variant_t)1)
+#define PALETTE_VARIANT_SUNSET ((palette_variant_t)2)
+#define PALETTE_VARIANT_RAIN ((palette_variant_t)3)
+#define PALETTE_VARIANT_SPRITE_NIGHT ((palette_variant_t)4)
+#define PALETTE_VARIANT_SPRITE_SUNSET ((palette_variant_t)5)
+#define PALETTE_VARIANT_SPRITE_RAIN ((palette_variant_t)6)
+#define PALETTE_VARIANT_PAST ((palette_variant_t)7)
+#define PALETTE_VARIANT_PAST_RAIN ((palette_variant_t)8)
+
 typedef unsigned char character_t;
 #define CHARACTER_NONE ((character_t)0)
 #define CHARACTER_AKIRA ((character_t)1)

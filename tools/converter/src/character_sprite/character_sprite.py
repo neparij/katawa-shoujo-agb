@@ -182,13 +182,20 @@ class CharacterDisplayableReplacements:
         # TODO: remove gymbounce, its WORKAROUND for thursday script
         return (displayable_name
                 .replace("gymbounce", "basic_grin_gym")
+                .replace("annoyedbounce", "basic_annoyed")
+                )
+
+    @staticmethod
+    def rin(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("silhouette", "relaxed_surprised_silhouette")
                 )
 
 
 class CharacterSpritesGroup:
     def __init__(self, character_name: str, pose: str, outfit: str | None, base_emotion: str | None,
                  base_emotion_offset: tuple[int, int], base_emotion_size: tuple[int, int] = (32, 32),
-                 base_origin_offset: int = 0, close: bool = False):
+                 base_origin_offset: int = 0, close: bool = False, silhouette_tint: int | None = None):
         self.character_name = character_name
         self.pose = pose
         self.outfit = outfit
@@ -198,13 +205,16 @@ class CharacterSpritesGroup:
         self.base_emotion_size = base_emotion_size
         self.base_emotion_offset = base_emotion_offset
         self.base_origin_offset = base_origin_offset
+        self.silhouette_tint = silhouette_tint
 
     def __str__(self):
         return (f"Name: {self.character_name}\n"
                 f"Pose: {self.pose}\n"
                 f"Outfit: {self.outfit}\n"
                 f"BaseEmotion: {self.base_emotion}\n"
-                f"Sprites: {len(self.sprites)}\n")
+                f"Sprites: {len(self.sprites)}\n"
+                f"Close: {self.close}\n"
+                f"SilhouetteTint: {self.silhouette_tint}\n")
 
     def add_sprite(self, sprite: CharacterSprite):
         self.sprites.append(sprite)
@@ -302,6 +312,14 @@ class CharacterSpritesReader:
         self.character_groups.append(CharacterSpritesGroup("rin", "negative", None, "spaciness", (76, 48), base_emotion_size=(64, 64), close=True))
         self.character_groups.append(CharacterSpritesGroup("rin", "relaxed", None, "doubt", (92, 48), base_emotion_size=(64, 64), close=True))
         self._process_character("rin", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
+
+        self._process_character_silhouette("rin",
+                                           "relaxed",
+                                           None,
+                                           "surprised",
+                                           base_emotion_offset=(116, 68),
+                                           nude_if=lambda filename: CharacterNudeIf.default(filename))
+
         return self.character_groups
 
     def process_lilly(self) -> List[CharacterSpritesGroup]:
@@ -451,6 +469,32 @@ class CharacterSpritesReader:
                                 f" {"Main" if not character.close else "Close"}")
             character_group.add_sprite(character)
 
+    def _process_character_silhouette(self,
+                                      character_key: str,
+                                      pose: str,
+                                      outfit: str | None,
+                                      emotion: str,
+                                      nude_if=None,
+                                      base_emotion_offset: tuple[int, int] = (32,32),
+                                      close=False):
+        if close:
+            character_dir = os.path.join(self.input_dir, character_key, 'close')
+        else:
+            character_dir = os.path.join(self.input_dir, character_key)
+
+        to_group = CharacterSpritesGroup(character_key, pose, "silhouette" if outfit is None else f"{outfit}silhouette", emotion, base_emotion_offset, silhouette_tint=0)
+
+        from_filename = f"{character_key}_{pose}_{"" if outfit is None else f"{outfit}_"}{emotion}.png"
+        from_path = os.path.join(character_dir, from_filename)
+
+        character = CharacterSprite.from_filename(from_filename, CharacterRegex.from_filename(CharacterRegex.default()), nude_if)
+        character.original_filename = from_filename
+        character.original_path = from_path
+        character.outfit = "silhouette" if outfit is None else f"{outfit}silhouette"
+        to_group.outfit = character.outfit
+
+        to_group.add_sprite(character)
+        self.character_groups.append(to_group)
 
 class CharacterSpritesWriter:
     def __init__(self, sprite_output_dir: str, headers_dir: str):
@@ -461,8 +505,8 @@ class CharacterSpritesWriter:
         default_sprite = next((sprite for sprite in group.sprites if sprite.emotion == group.base_emotion),
                               group.sprites[0])
         self.write_character_background(default_sprite, group.base_emotion_size, group.base_emotion_offset,
-                                        group.base_origin_offset)
-        self.write_character_thumbnail(default_sprite, group.base_origin_offset)
+                                        group.base_origin_offset, group.silhouette_tint)
+        self.write_character_thumbnail(default_sprite, group.base_origin_offset, group.silhouette_tint)
 
         for sprite in group.sprites:
             self.write_character_sprite(sprite, group)
@@ -470,12 +514,13 @@ class CharacterSpritesWriter:
         self.write_character_group_metadata(group, f'{group_metadata_name}')
 
     def write_character_background(self, character: CharacterSprite, remove_size: tuple[int, int],
-                                   remove_offset: tuple[int, int], y_offset: int = 0):
+                                   remove_offset: tuple[int, int], y_offset: int = 0, silhouette_tint: int | None = None):
         os.makedirs(self.sprite_output_dir, exist_ok=True)
         output_filename = os.path.join(self.sprite_output_dir, character.to_bg_name())
 
         ImageTools.resize_character_background(character.original_path, f'{output_filename}.bmp', remove_size,
-                                               remove_offset, y_offset)
+                                               remove_offset, y_offset,
+                                               tint = [silhouette_tint, silhouette_tint, silhouette_tint] if silhouette_tint is not None else None)
         self.write_character_background_metadata(f'{output_filename}.json')
 
     def write_character_background_metadata(self, output_filename):
@@ -492,11 +537,12 @@ class CharacterSpritesWriter:
         with open(output_filename, "w", encoding="utf-8") as json_file:
             json.dump(metadata, json_file, indent=4)
 
-    def write_character_thumbnail(self, character: CharacterSprite, y_offset: int = 0):
+    def write_character_thumbnail(self, character: CharacterSprite, y_offset: int = 0, silhouette_tint: int | None = None):
         os.makedirs(self.sprite_output_dir, exist_ok=True)
         output_filename = os.path.join(self.sprite_output_dir, character.to_thumb_name())
 
-        ImageTools.resize_character_thumbnail(character.original_path, f'{output_filename}.bmp', y_offset)
+        ImageTools.resize_character_thumbnail(character.original_path, f'{output_filename}.bmp', y_offset,
+                                              tint = [silhouette_tint, silhouette_tint, silhouette_tint] if silhouette_tint is not None else None)
         self.write_character_thumbnail_metadata(f'{output_filename}.json')
 
     def write_character_thumbnail_metadata(self, output_filename):
@@ -517,7 +563,8 @@ class CharacterSpritesWriter:
 
         ImageTools.resize_character_emotion_sprite(character.original_path, f'{output_filename}.bmp',
                                                    group.base_emotion_offset, group.base_emotion_size,
-                                                   group.base_origin_offset)
+                                                   group.base_origin_offset,
+                                                   tint = [group.silhouette_tint, group.silhouette_tint, group.silhouette_tint] if group.silhouette_tint is not None else None)
         # # for tile in ImageTools.create_8x8_tiles(f'{output_filename}.bmp', f'{output_filename}.bmp'):
         # #     self.write_character_sprite_tiles_metadata(tile.removesuffix('.bmp') + '.json')
         # # os.remove(f'{output_filename}.bmp')
@@ -601,7 +648,7 @@ class CharacterMetaStorageWriter:
                 f.write(f'#include "sprite_metas/{group.to_group_name()}.h"\n')
 
             f.write(f'namespace ks::character_sprite_metas {{\n')
-            f.write(f'    const character_sprite_meta* get_by_hash(const unsigned int hash) {{\n')
+            f.write(f'    inline const character_sprite_meta* get_by_hash(const unsigned int hash) {{\n')
             f.write(f'        switch (hash) {{\n')
             for group in groups:
                 f.write(f'            case 0x{group.to_thumb_hash()}: return &sprite_metas::{group.to_group_name()};\n')

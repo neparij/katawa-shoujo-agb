@@ -52,6 +52,7 @@ class ScenarioReader:
             f.write(content)
             f.seek(0)
             lines = f.readlines()
+            # lines = flatten_python_blocks(lines)
 
         line_pack = []
         for line in lines:
@@ -90,19 +91,21 @@ class ScenarioReader:
         label.translation_identifiers.append(result)
         return result
 
-    # def close_conditions(self, current_indent, next_line):
-    #     """Closes conditions until reaching the target indentation."""
-    #     has_next_condition = next_line.startswith("elif ") or next_line.startswith("else:")
-    #     if self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not (has_next_condition and self.stack.current_indent() < get_line_indent(next_line)):
-    #     # while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not has_conditional_operator:
-    #         condition = self.stack.pop()
-    #         self.scenario.append(condition)
-    #
+    # TODO: Check that
     def close_conditions(self, current_indent, next_line):
         """Closes conditions until reaching the target indentation."""
-        while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent:
+        has_next_condition = next_line.startswith("elif ") or next_line.startswith("else:")
+        if self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not (has_next_condition and self.stack.current_indent() < get_line_indent(next_line)):
+        # while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent and not has_conditional_operator:
             condition = self.stack.pop()
             self.scenario.append(condition)
+
+    # def close_conditions(self, current_indent, next_line):
+    #     """Closes conditions until reaching the target indentation."""
+    #     while self.stack.size() > 0 and self.stack.current().type == SequenceGroupType.CONDITION and self.stack.current_indent() >= current_indent:
+    #         print(f"      - pop condition (current stack indent: {self.stack.current_indent()}, current line indent: {current_indent})")
+    #         condition = self.stack.pop()
+    #         self.scenario.append(condition)
 
     def close_menus(self, current_indent):
         """Closes menu blocks until reaching the target indentation."""
@@ -139,7 +142,6 @@ class ScenarioReader:
                 raise Exception(f"Unknown stack type: {current_group.type}")
 
     def process_line_pack(self, line_pack):
-        print(">>>>>>>>>>>>>>>>>>>>>>")
         with_clause = None
         self.linepack_events : List[SequenceItem] = []
         for line, current_indent in line_pack:
@@ -147,7 +149,6 @@ class ScenarioReader:
         line_pack.clear()
         # TODO: process show sequence with "at" clause here!
 
-        # if SequenceType.SHOW in self.linepack_events or SequenceType.SHOW_TRANSFORM in self.linepack_events:
         if (has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.HIDE) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW_TRANSFORM) or
@@ -156,7 +157,6 @@ class ScenarioReader:
                 has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.CUSTOM_EVENT)):
             self.stack.current().add_sequence_item(self.linepack_events, UpdateVisualsItem())
-        print("<<<<<<<<<<<<<<<<<<<<<<\n")
 
     def process_line(self, line, current_indent):
         stripped_line = line.strip()
@@ -178,10 +178,12 @@ class ScenarioReader:
             self._hack_latest_label_name = label_name
             if label_name.startswith("."):
                 label_name = label_name[1:]
+                print(f" >> Relative label detected: {label_name}")
                 if self.stack.size() == 0 and not self._hack_latest_label_name:
                     raise Exception("Initial label cannot be a relative label")
                 elif self.stack.size() == 0:
-                    label_name = f"{self._hack_latest_label_name}_{label_name}"
+                    # label_name = f"{self._hack_latest_label_name}_{label_name}"
+                    label_name = f"{label_name}"
             name = sanitize_function_name(label_name)
 
             if self.stack.size() > 0:
@@ -211,23 +213,7 @@ class ScenarioReader:
             #     Example in rpy scenario:
             #     if _in_replay:
             #         return
-            #
-            # TODO: custom condition definition for go_through_lilly()
-            #     def go_through_lilly():
-            #         return talk_with_hanako and side_lilly
-            #
-            # TODO: custom condition definition for go_through_shizu()
-            #     def go_through_shizu():
-            #         return wait_for_shizu and not side_lilly
-            #
-            # TODO: custom condition definition for go_through_rin()
-            #     def get_tired():
-            #         return promised and go_for_it
-            #
-            # TODO: custom condition definition for go_through_rin()
-            #     def got_kenji():
-            #         return kick_shizu or fun_fun_at_office or not_much_talking
-            #
+
             # TODO: custom condition definition for persistent.disable_disturbing_content
             #     Example in rpy scenario:
             #     if persistent.disable_disturbing_content:
@@ -243,10 +229,13 @@ class ScenarioReader:
             condition_stack = SequenceGroup(name, SequenceGroupType.CONDITION)
             condition_stack.add_condition(condition)
             self.stack.push(condition_stack, current_indent)
+            print(f" >> Current condition indent: {current_indent}")
             return
 
         elif stripped_line.startswith("elif "):
             condition = stripped_line.split("elif ", 1)[1].strip(":")
+            print(f" >> Elif condition before rewrite: {condition}")
+            print(f"    current indent: {self.stack.current_indent()}")
             condition = rewrite_condition(condition)
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Elif block outside of condition block")
@@ -254,6 +243,8 @@ class ScenarioReader:
             return
 
         elif stripped_line.startswith("else:"):
+            print(f" >> Else condition")
+            print(f"    current indent: {self.stack.current_indent()}")
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Else block outside of condition block")
             self.stack.current().add_condition()
@@ -276,8 +267,10 @@ class ScenarioReader:
                 choice_text = match.group(1)
                 condition_block = match.group(2)
                 choice_text_translated = None
+                print(f" >> Choice_text: {choice_text}, condition: {condition_block}")
                 if self.translation and choice_text in self.translation.strings:
                     choice_text_translated = self.translation.strings[choice_text]
+                    print(f" >> Translated to: {choice_text_translated}")
 
                 condition = condition_block if condition_block else None
                 # self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
@@ -292,6 +285,12 @@ class ScenarioReader:
         elif stripped_line.startswith("$ "):
             # Inline assignments in menu blocks
             command = stripped_line[2:].strip()
+            self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem(command))
+            return
+
+        elif re.match(r'^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.+)$', stripped_line):
+            # General assignment
+            command = stripped_line
             self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem(command))
             return
 
@@ -316,7 +315,8 @@ class ScenarioReader:
 
         elif stripped_line.startswith("scene bg"):
             parts = stripped_line.split()
-            scene_bg_name = parts[2]
+            scene_bg_name = parts[2].removesuffix(":")
+            scene_bg_name = rewrite_motion_background(scene_bg_name)
 
             if "at bgleft" in stripped_line or "at left" in stripped_line:
                 position = BgShowPosition.BGLEFT
@@ -328,10 +328,12 @@ class ScenarioReader:
                 position = BgShowPosition.DEFAULT
 
             self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(scene_bg_name, position=position))
+            self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
         elif stripped_line.startswith("scene black"):
             self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem("black"))
+            self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
         elif stripped_line.startswith("scene ev") or stripped_line.startswith("show ev"):
@@ -347,6 +349,8 @@ class ScenarioReader:
                 self.stack.current().add_sequence_item(self.linepack_events, CustomEventItem(event_bg_name, event))
             else:
                 self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(event_bg_name))
+
+            self._hack_latest_sprite_name = None # TODO: Remove after "Friday"-hack
             return
 
         elif stripped_line.startswith("show passoutOP1"):
@@ -430,10 +434,10 @@ class ScenarioReader:
 
             self.stack.current().add_sequence_item(self.linepack_events,
                                                    BackgroundTransformItem(position))
+            self._hack_latest_sprite_name = None # TODO: Remove after "Friday"-hack
             return
 
         elif stripped_line.startswith("show "):
-            print("Show sequence")
             parts = stripped_line.split()
             sprite_name = parts[1].removesuffix(":")
             variant_name = parts[2].removesuffix(":") if len(parts) > 2 and parts[2] not in ["at", "with"] else None
@@ -461,7 +465,7 @@ class ScenarioReader:
             else:
                 position = ShowPosition.DEFAULT
 
-            self.stack.current().add_sequence_item(self.linepack_events, ShowItem(sprite_name, variant_name, event_type, position))
+            self.stack.current().add_sequence_item(self.linepack_events, ShowItem(sprite_name, variant_name, event_type, position, "PALETTE_VARIANT_DEFAULT"))
             self._hack_latest_sprite_name = sprite_name
             return
 
@@ -474,18 +478,29 @@ class ScenarioReader:
             return
 
         elif "xalign " in stripped_line:
-            print("Show transform sequence (xalign)")
-            # xalign 0.4 blah-blah 1.2 etc should set value to 0.4
-            value = float(stripped_line.split("xalign ")[1].split()[0])
-            self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_xalign_position(value)))
+            # TODO: The background sequences also can be aligned!!!!!! It brokes the Friday now!!!!
+            #                     scene bg misc_sky_ni:
+            #                         xalign 0.0
+            #                         warp acdc_warp 15.0 xalign 1.0
+            #                     with locationchange
+
+            if self._hack_latest_sprite_name is not None:
+                print("Show transform sequence (xalign)")
+                # xalign 0.4 blah-blah 1.2 etc should set value to 0.4
+                value = float(stripped_line.split("xalign ")[1].split()[0])
+                self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_xalign_position(value)))
 
         elif "xpos " in stripped_line:
-            print("Show transform sequence (xpos)")
-            xpos_value = float(stripped_line.split("xpos ")[1].split()[0])
-            xanchor_value = 0.5
-            if "xanchor " in stripped_line:
-                xanchor_value = float(stripped_line.split("xanchor ")[1].split()[0])
-            self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_x_position(xpos_value, anchor=xanchor_value)))
+            # TODO: See above. Same shit...
+            # TODO: As an above - needs to be processed as a block-sequence...
+
+            if self._hack_latest_sprite_name is not None:
+                print("Show transform sequence (xpos)")
+                xpos_value = float(stripped_line.split("xpos ")[1].split()[0])
+                xanchor_value = 0.5
+                if "xanchor " in stripped_line:
+                    xanchor_value = float(stripped_line.split("xanchor ")[1].split()[0])
+                self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_x_position(xpos_value, anchor=xanchor_value)))
 
         elif stripped_line.startswith("nvl "):
             parts = stripped_line.split()
@@ -612,6 +627,18 @@ def rewrite_motion_background(bg_name: str) -> str:
     # TODO: remove this method and allow motion backgrounds
     return (bg_name
             .replace("other_iwanako_start", "other_iwanako")
+            .replace("hana_library_read_std", "hana_library_read")
+            .replace("hana_library_std", "hana_library")
+            .replace("hana_library_gasp_std", "hana_library_gasp")
+            .replace("hana_library_smile_std", "hana_library_smile")
+            .replace("mural_part", "mural")
+            .replace("mural_ss", "mural") # TODO: Paletted variants for backgrounds
+            .replace("suburb_shanghaiext_ss", "suburb_shanghaiext") # TODO: Paletted variants for backgrounds
+            .replace("hanako_shanghaiwindow", "hanako_fw") # TODO: Fireworks event
+            .replace("kenji_rooftop_kenji", "kenji_rooftop") # TODO: Kenji alcotrip event
+            .replace("kenji_rooftop_large", "kenji_rooftop") # TODO: Kenji alcotrip event
+            .replace("kenji_rooftop", "kenji_rooftop") # TODO: Kenji alcotrip event
+
             # .replace("_start", "")
             # .replace("_move", "")
             # .replace("_end", "")
@@ -672,6 +699,25 @@ def scenario_rewrites(scenario_file, content):
             # WITH
             "        show ev showdown_shizu\n"
         )
+
+    if scenario_name == "script-a1-sunday":
+        return content.replace(
+            "            show shizu epictransition at epictransform\n"
+            "            show cityscape zoom behind shizu\n"
+            "            show hill enter behind shizu\n",
+            # WITH
+            "\n" # TODO: Shizune Epic Transition
+        ).replace(
+            "            show shizu out_serious_close_ni\n"
+            "            with charachange\n",
+            # WITH
+            "\n" # TODO: Shizune Epic Transition
+        ).replace(
+            "play music sfx_crowd_outdoors",
+            #WITH
+            "play ambient sfx_crowd_outdoors"
+        )
+
     return content
 
 def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:

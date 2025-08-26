@@ -27,7 +27,7 @@ from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
-from src.utils import sanitize_function_name, sanitize_comment_text
+from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant
 
 DEFAULT_LOCALE = "en"
 PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
@@ -369,7 +369,7 @@ class ScenarioWriter:
                 f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));'
             ]
         else:
-            return [f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}));']
+            return [f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, PALETTE_VARIANT_DEFAULT));']
 
     def process_sequence_condition(self, group: SequenceGroup, condition: ConditionItem) -> List[str]:
         matching_scenario_item = next((item for item in self.scenario if item.name == condition.function_callback),
@@ -513,8 +513,8 @@ class ScenarioWriter:
             result = []
 
             if show.variant:
-                show.variant = show.variant.replace("_ss", "").replace("_ni", "")
-                show.sprite = show.sprite.replace("_ss", "").replace("_ni", "")
+                show.variant, show.palette_variant = get_paletted_variant(show.variant)
+                # show.sprite = show.sprite.replace("_ss", "").replace("_ni", "")
 
                 displayable = f"{show.sprite}_{show.variant}"
                 if show.sprite == "lilly":
@@ -536,6 +536,7 @@ class ScenarioWriter:
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "rin":
+                    displayable = CharacterDisplayableReplacements.rin(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "yuuko":
@@ -547,7 +548,6 @@ class ScenarioWriter:
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.yuukoshang(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "kenji":
-                    print(displayable)
                     displayable = CharacterDisplayableReplacements.kenji(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.kenji(displayable))
@@ -580,10 +580,10 @@ class ScenarioWriter:
 
                 if show.position == ShowPosition.DEFAULT:
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}));')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, {show.palette_variant}));')
                 else:
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, {position[0]}, {position[1]}));')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, {show.palette_variant}, {position[0]}, {position[1]}));')
                 return result
             # Move if not default position and variant is not provided
             if show.position != ShowPosition.DEFAULT:
@@ -694,6 +694,7 @@ def indented_l(code: List[str], indent=4):
 
 
 def label_signature(group: SequenceGroup):
+    print(f"   >>> Label: {group.name}, is_called_inline: {group.is_called_inline}")
     if group.is_called_inline:
         return f"void {group.name}()"
     else:
@@ -722,6 +723,12 @@ def to_snake_case(name):
     return name.lower()
 
 def to_cpp_condition(s: str) -> str:
+    # "in" statement
+    # var in (A, B, C, D): -> (var == A || var == B || var == C || var == D)
+    in_pattern = re.compile(r'(\b[a-zA-Z_][a-zA-Z0-9_]*\b)\s+in\s+\(([^)]+)\)')
+    s = in_pattern.sub(lambda m: '(' + ' || '.join(f'{m.group(1)} == {item.strip()}' for item in m.group(2).split(',')) + ')', s)
+
+    # Replace logical operators and boolean literals
     return (s.replace("not ", "!")
             .replace(" and ", " && ")
             .replace(" or ", " || ")
@@ -735,6 +742,8 @@ def to_ks_progress_variables(s: str) -> str:
         if variable == "_in_replay":
             return "ks::in_replay"
         elif variable in ["true", "false"]:
+            return variable
+        elif variable in ["FR_NONE", "FR_EMI", "FR_HANAKO", "FR_LILLY", "FR_RIN", "FR_SHIZU", "FR_KENJI"]:
             return variable
         return f"ks::progress.{variable}"
 

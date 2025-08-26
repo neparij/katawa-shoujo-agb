@@ -46,3 +46,13 @@ def get_yalign_position(value: float) -> int:
     sprite_height = 160
     anchor_offset = -sprite_height // 2 + int(value * sprite_height)
     return get_y_position(value) - anchor_offset
+
+def get_paletted_variant(variant: str) -> (str, str):
+    if variant.endswith("_ss"):
+        return variant.removesuffix("_ss"), "PALETTE_VARIANT_SPRITE_SUNSET"
+    elif variant.endswith("_ni"):
+        return variant.removesuffix("_ni"), "PALETTE_VARIANT_SPRITE_NIGHT"
+    elif variant.endswith("_rn"):
+        return variant.removesuffix("_rn"), "PALETTE_VARIANT_SPRITE_RAIN"
+    else:
+        return variant, "PALETTE_VARIANT_DEFAULT"

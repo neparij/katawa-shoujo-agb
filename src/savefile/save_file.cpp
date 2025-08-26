@@ -12,12 +12,8 @@
 #define INTEGRITY_VERSION 2121210001
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
 
-struct FlashInfo {
-    u8 device;
-    u8 manufacturer;
-    u8 size;
-};
-extern struct FlashInfo gFlashInfo;
+extern FlashInfo gFlashInfo;
+extern bool faked = false; // For testing purposes, to fake flash memory
 
 // BN_DATA_EWRAM static u8 flash_buffer[FLASH_SECTOR_SIZE_4KB];  // Temporary buffer in RAM
 
@@ -63,15 +59,17 @@ bool ks::saves::initialize() {
 
     auto *save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
 
-    const int flash_init_success = flash_init((u8) FLASH_SIZE_AUTO);
-    BN_LOG("Flash DeviceID: ", gFlashInfo.device);
-    BN_LOG("Flash ManufacturerID: ", gFlashInfo.manufacturer);
-    BN_LOG("Flash SizeType: ", gFlashInfo.size);
-    BN_LOG("Flash init success: ", flash_init_success == 0);
-    if (flash_init_success != 0) {
-        gFlashInfo.device = 0;
-        gFlashInfo.manufacturer = 0;
-        gFlashInfo.size = 0;
+    if (!faked) {
+        const int flash_init_success = flash_init((u8) FLASH_SIZE_AUTO);
+        BN_LOG("Flash DeviceID: ", gFlashInfo.device);
+        BN_LOG("Flash ManufacturerID: ", gFlashInfo.manufacturer);
+        BN_LOG("Flash SizeType: ", gFlashInfo.size);
+        BN_LOG("Flash init success: ", flash_init_success == 0);
+        if (flash_init_success != 0) {
+            gFlashInfo.device = 0;
+            gFlashInfo.manufacturer = 0;
+            gFlashInfo.size = 0;
+        }
     }
 
     load(save_data);
@@ -404,4 +402,16 @@ __attribute__ ((noinline, section(".ewram.flash"))) void ks::saves::flash_write_
 
 bool ks::saves::is_flash() {
     return gFlashInfo.device != 255 && gFlashInfo.manufacturer != 255 && gFlashInfo.size != 0;
+}
+
+FlashInfo ks::saves::get_flash_info() {
+    return gFlashInfo;
+}
+
+void ks::saves::set_flash_info_fake_sram() {
+    gFlashInfo.device = 255;
+    gFlashInfo.manufacturer = 255;
+    gFlashInfo.size = 0;
+
+    faked = true;  // Set faked flag to true for testing purposes
 }

@@ -1,12 +1,32 @@
 import hashlib
 import os
 import json
+import subprocess
+
 from PIL import Image, ImageOps
 from tilequant import Tilequant
 from tilequant.image_converter import DitheringMode
 
 PINK_COLOR = (255, 0, 255)  # Pink background color
-QUANTIZE = True
+
+QUALETIZE = "/Users/n.laptev/development/gba/qualetize/release/qualetize"
+IMAGEMAGICK = "magick"
+
+# Game Boy Advance (GBA) settings - default
+QUALETIZE_COLOURSPACE = "ycbcr-psy"
+QUALETIZE_DITHER_METHOD = "floyd"
+QUALETIZE_DITHER_LEVEL = 1.0
+QUALETIZE_PALETTES_COUNT = 8
+QUALETIZE_PALETTE_COLORS = 16
+QUALETIZE_BITS_PER_COLOR = 5
+QUALETIZE_COLOR_0_IS_CLEAR = True
+DISPLAY_WIDTH = 240
+DISPLAY_HEIGHT = 160
+DISPLAY_BOTTOM_MARGIN = 0
+
+QUALETIZE_PASSES_COLOUR = (2 ** 10) * QUALETIZE_PALETTES_COUNT
+QUALETIZE_PASSES_TILES = (2 ** 10) * QUALETIZE_PALETTES_COUNT
+
 IGNORE_IMAGES = [
     "hisao_class",
     "emi_knockeddown_large",
@@ -17,6 +37,7 @@ IGNORE_IMAGES = [
 
 BG_INCLUDE_VFX_IMAGES = [
     "mural_start",
+    "mural",
     "mural_unfinished"
 ]
 
@@ -58,64 +79,86 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
             print(f"Error processing {image_file}: {e}")
 
 def process_image_quantized(input_path, output_path, quantize_palettes: int):
-    canvas = Image.new("RGB", (256, 256), PINK_COLOR)
-    # canvas = Image.new("RGB", (128, 128), PINK_COLOR)
-    source_image = Image.open(input_path).convert("RGB")
+    canvas = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
+    source_image = Image.open(input_path).convert("RGBA")
+    width = int((source_image.width / source_image.height) * 1080)
+    source_image = source_image.resize((width, 1080), resample=Image.Resampling.LANCZOS)
 
-    # source_resized = ImageOps.fit(source_image, (256, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
-    # # canvas.paste(source_resized, (8, 48))  # Center 240x160 on 256x256
-    # canvas.paste(source_resized, (0, 48))  # Center 256x160 on 256x256
+    crop_x, crop_y = 0, 0
+    if DISPLAY_WIDTH == 240 and DISPLAY_HEIGHT == 160:
+        gba_resize_factor = 160 / 1080
+        extra_width = source_image.width - 1920
+        extra_height = source_image.height - 1080
+        extra_width_percentage = extra_width / 1920
+        extra_height_percentage = extra_height / 1080
 
-    original_ratio = 1920 / 1080
-    gba_ratio = 240 / 160
+        gba_extra_width = int(240 * extra_width_percentage)
+        gba_extra_height = int(160 * extra_height_percentage)
 
-    gba_resize_factor = 160 / 1080
+        if extra_width < 0:
+            print(f"[38;5;197m Source size: {source_image.width}x{source_image.height}, GBA size: 240x160⠀[33;0m")
+            print(f"[38;5;197m Extra width: {extra_width}, Extra height: {extra_height}⠀[33;0m")
+            print(f"[38;5;197m Extra width percentage: {extra_width_percentage}, Extra height percentage: {extra_height_percentage}⠀[33;0m")
+            print(f"[38;5;197m GBA extra width: {gba_extra_width}, GBA extra height: {gba_extra_height}⠀[33;0m")
+            # raise Exception(f"Extra width is negative: {extra_width}")
+            gba_extra_width = 0
+            gba_extra_height = 0
 
-    # source_fhd_resized = ImageOps.scale(source_image, 1080 / source_image.height, resample=Image.Resampling.LANCZOS)
-    #
-    # extra_width = source_fhd_resized.width - 1920
-    # extra_width_percentage = extra_width / 1920
+        # color_filter = ImageEnhance.Color(source_image)
+        # source_image = color_filter.enhance(1.5)
 
-    # source_fhd_resized = ImageOps.scale(source_image, 1080 / source_image.height, resample=Image.Resampling.LANCZOS)
+        source_height_resized = ImageOps.scale(source_image, gba_resize_factor, resample=Image.Resampling.LANCZOS)
 
-    extra_width = source_image.width - 1920
-    extra_height = source_image.height - 1080
-    extra_width_percentage = extra_width / 1920
-    extra_height_percentage = extra_height / 1080
-
-
-    print("Extra size percentage:", extra_width_percentage, extra_height_percentage)
-    gba_extra_width = int(240 * extra_width_percentage)
-    gba_extra_height = int(160 * extra_height_percentage)
-    print("GBA extra width:", gba_extra_width)
-    print("GBA extra height:", gba_extra_height)
-
-    # gba_extra_width = min(gba_extra_width, 8)
-    # gba_extra_height = min(gba_extra_height, 32)
-    # print("GBA extra width:", gba_extra_width)
-    # print("GBA extra height:", gba_extra_height)
-
-    if extra_width < 0:
-        raise Exception(f"Extra width is negative: {extra_width}")
-
-    source_height_resized = ImageOps.scale(source_image, gba_resize_factor, resample=Image.Resampling.LANCZOS)
-
-    crop_x = source_height_resized.width - (240 + gba_extra_width)
-    crop_y = source_height_resized.height - (160 + gba_extra_height)
+        crop_x = source_height_resized.width - (240 + gba_extra_width)
+        crop_y = source_height_resized.height - (160 + gba_extra_height)
+    else:
+        resize_factor = DISPLAY_HEIGHT / 1080
+        # color_filter = ImageEnhance.Color(source_image)
+        # source_image = color_filter.enhance(1.5)
+        source_height_resized = ImageOps.scale(source_image, resize_factor, resample=Image.Resampling.LANCZOS)
+        crop_x = source_height_resized.width - (DISPLAY_WIDTH)
+        crop_y = source_height_resized.height - (DISPLAY_HEIGHT)
 
     source_cropped = ImageOps.crop(source_height_resized, (crop_x // 2, crop_y // 2, crop_x // 2, crop_y // 2))
-    canvas.paste(source_cropped, ((256 - source_cropped.width) // 2, (256 - source_cropped.height) // 2))
+    canvas.paste(source_cropped, ((256 - source_cropped.width) // 2, (256 - source_cropped.height - DISPLAY_BOTTOM_MARGIN) // 2), source_cropped)
 
+    input_filename_path_png = output_path.replace(".bmp", "_input.png")
+    input_filename_path_bmp = output_path.replace(".bmp", "_input.bmp")
+    canvas.save(input_filename_path_png, format="PNG")
 
-    converter = Tilequant(
-        canvas, PINK_COLOR,
-        tile_width=8,
-        tile_height=8,
-    )
-    quantized = converter.convert(num_palettes=quantize_palettes, colors_per_palette=16,
-                                  dithering_mode=DitheringMode.FLOYDSTEINBERG, dithering_level=0.5,
-                                  num_color_cluster_passes=0, num_tile_cluster_passes=0)
-    quantized.save(output_path, format="BMP")
+    # Convert PNG to BMP with alpha using ImageMagick
+    command = [IMAGEMAGICK, input_filename_path_png, "-define", "bmp:format=bmp4", input_filename_path_bmp]
+    try:
+        subprocess.check_output(" ".join(command), shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed with exit code {e.returncode}")
+        print(f"Output: {e.output.decode()}")
+        raise
+
+    # Delete the PNG file after conversion
+    os.remove(input_filename_path_png)
+
+    # Qualetize the BMP image
+    command = [QUALETIZE, input_filename_path_bmp, output_path]
+    command.append(f"-npal:{quantize_palettes}")
+    command.append(f"-cols:{QUALETIZE_PALETTE_COLORS}")
+    command.append(f"-tilepasses:{QUALETIZE_PASSES_TILES}")
+    command.append(f"-colourpasses:{QUALETIZE_PASSES_COLOUR}")
+    command.append(f"-col0isclear:{"y" if QUALETIZE_COLOR_0_IS_CLEAR else "n"}")
+    command.append(f"-rgba:{QUALETIZE_BITS_PER_COLOR}{QUALETIZE_BITS_PER_COLOR}{QUALETIZE_BITS_PER_COLOR}1")
+    command.append(f"-colspace:{QUALETIZE_COLOURSPACE}")
+    command.append(f"-dither:{QUALETIZE_DITHER_METHOD},{QUALETIZE_DITHER_LEVEL}")
+    print(f"Running command: {' '.join(command)}")
+
+    try:
+        subprocess.check_output(" ".join(command), shell=True, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        print(f"Command failed with exit code {e.returncode}")
+        print(f"Output: {e.output.decode()}")
+        raise
+
+    # Delete the BMP file after conversion
+    os.remove(input_filename_path_bmp)
     print(f"Resized, Quantized and saved: {output_path}")
 
 def process_image(input_path, output_path, colors : int = 256):
@@ -255,7 +298,7 @@ def write_background_metadata_store():
             f.write(f'#include "background_metas/{bg[0]}.h"\n')
 
         f.write(f'namespace ks::background_metas {{\n')
-        f.write(f'    const background_meta* get_by_hash(const unsigned int hash) {{\n')
+        f.write(f'    inline const background_meta* get_by_hash(const unsigned int hash) {{\n')
         f.write(f'        switch (hash) {{\n')
         for bg in BG_META_STORAGE:
             f.write(f'            case 0x{bg[1]}: return &{bg[0]};\n')

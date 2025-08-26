@@ -158,6 +158,7 @@
 #include "background_metas/shizu_houseext_ni.h"
 #include "background_metas/misc_ceiling.h"
 #include "background_metas/mural_start.h"
+#include "background_metas/mural.h"
 #include "background_metas/mural_unfinished.h"
 #include "background_metas/hanako_park_look.h"
 #include "background_metas/hanako_missionary_underwear.h"
@@ -572,6 +573,7 @@ namespace ks::background_metas {
             case 0x60537FC0: return &shizu_houseext_ni;
             case 0xE751D1CF: return &misc_ceiling;
             case 0x8201EF9B: return &mural_start;
+            case 0x739D14E0: return &mural;
             case 0x7E2E975F: return &mural_unfinished;
             case 0xFFA32A75: return &hanako_park_look;
             case 0xF70B4944: return &hanako_missionary_underwear;
