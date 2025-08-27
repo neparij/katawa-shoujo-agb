@@ -41,9 +41,16 @@ namespace ks::globals {
     extern void accessibility_apply();
 
     namespace colors {
+        // image black = "#000"
         inline constexpr auto BLACK = bn::color(0, 0, 0);
+        // image white = "#FFF"
         inline constexpr auto WHITE = bn::color(31, 31, 31);
-        inline constexpr auto RED = bn::color(31, 0, 0);
+        // image bloodred = "#d00"
+        inline constexpr auto BLOODRED = bn::color(27, 0 ,0);
+        // image pink = "#FF7FD4"
+        inline constexpr auto PINK = bn::color(31, 15, 26);
+        // image darkgrey = "#0D0D0D"
+        inline constexpr auto DARKGREY = bn::color(2, 2, 2); // Slightly lighter for GBA screen;
     }
 
     namespace text_palettes {

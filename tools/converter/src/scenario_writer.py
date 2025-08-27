@@ -27,7 +27,7 @@ from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
-from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant
+from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg
 
 DEFAULT_LOCALE = "en"
 PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
@@ -349,7 +349,7 @@ class ScenarioWriter:
             # f'IF_NOT_EXIT(ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
-        if not bg.background in self.backgrounds and bg.background != "black":
+        if not bg.background in self.backgrounds and not is_color_filled_bg(bg.background):
             self.backgrounds.append(bg.background)
 
         if bg.position == BgShowPosition.BGLEFT:
@@ -363,10 +363,10 @@ class ScenarioWriter:
         else:
             raise TypeError("Unknown BgShowPosition type")
 
-        if bg.background == "black":
+        if is_color_filled_bg(bg.background):
             return [
                 f'IF_NOT_EXIT(ks::SceneManager::hide_background({bg.transition.value}, {int(bg.dissolve_time * 30)}));',
-                f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));'
+                f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{bg.background.upper()}));'
             ]
         else:
             return [f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, PALETTE_VARIANT_DEFAULT));']
@@ -473,9 +473,10 @@ class ScenarioWriter:
         # if not show.sprite in self.sprites:
         #     self.sprites.append(show.sprite)
         # TODO: rework, that's for test purposes only for the moment
-        if show.sprite == "black":
+        # if show.sprite == "black":
+        if is_color_filled_bg(show.sprite):
             # TODO: show black behind bg
-            return [f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));']
+            return [f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{show.sprite.upper()}));']
         elif show.sprite not in PROCESSED_CHARACTERS:
             return [f'// TODO: Show {show.sprite}']
         else:
@@ -602,12 +603,13 @@ class ScenarioWriter:
         #     raise TypeError("Unknown ShowEvent type")
 
     def process_sequence_hide(self, group: SequenceGroup, hide: HideItem) -> List[str]:
-        if hide.sprite == "black":
+        # if hide.sprite == "black":
+        if is_color_filled_bg(hide.sprite):
             return [f'IF_NOT_EXIT(ks::SceneManager::disable_fill());']
         elif hide.sprite not in PROCESSED_CHARACTERS:
             return [f'// TODO: Hide {hide.sprite}']
         else:
-            return [f'ks::SceneManager::hide_character(CHARACTER_{hide.sprite.upper()});']
+            return [f'IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_{hide.sprite.upper()}));']
 
     def process_sequence_bg_transform(self, group: SequenceGroup, bg_transform: BackgroundTransformItem) -> List[str]:
         # TODO: remove deuplicated positions code!!!!!!

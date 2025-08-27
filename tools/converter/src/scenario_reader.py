@@ -26,7 +26,7 @@ from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
-from src.utils import sanitize_function_name, get_xalign_position, get_x_position
+from src.utils import sanitize_function_name, get_xalign_position, get_x_position, starts_with_filled_bg
 
 
 class ScenarioReader:
@@ -331,8 +331,9 @@ class ScenarioReader:
             self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
-        elif stripped_line.startswith("scene black"):
-            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem("black"))
+        elif starts_with_filled_bg(stripped_line):
+            color = stripped_line.split()[1].removesuffix(":")
+            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(color))
             self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
@@ -714,8 +715,36 @@ def scenario_rewrites(scenario_file, content):
             "\n" # TODO: Shizune Epic Transition
         ).replace(
             "play music sfx_crowd_outdoors",
-            #WITH
+            # WITH
             "play ambient sfx_crowd_outdoors"
+        ).replace(
+            "            show nightsky rotation",
+            # WITH
+            "            scene bg misc_sky_ni" # TODO: Rotation Nightsky scene
+        ).replace(
+            "            show black behind bg\n"
+            "\n"
+            "            show n_vignette:\n"
+            "                xalign 0.5 yalign 0.5 zoom 4.0\n"
+            "                linear 0.2 zoom 1.2\n"
+            "\n"
+            "            pause 0.2\n"
+            "\n"
+            "            show n_vignette:\n"
+            "                zoom 1.2\n"
+            "                linear 8.0 zoom 0.001\n"
+            "            show kenji happy_close_ni:\n"
+            "                xalign 0.5 yalign 0.5\n"
+            "                linear 8.0 zoom 0.001\n"
+            "            show bg school_roof_ni_crop:\n"
+            "                xalign 0.5 yalign 0.5\n"
+            "                linear 8.0 zoom 0.001\n",
+            # WITH
+            "            hide kenji\n" # TODO: Rotation Nightsky scene
+            "            scene black\n"
+            "            with Dissolve(1.0)\n"
+            "\n"
+            "            pause 0.2\n"
         )
 
     return content

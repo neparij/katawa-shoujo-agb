@@ -122,7 +122,10 @@ inline void game(const bool is_new_game) {
             // BAD ENDING
         }
     } else {
-        ks::SceneManager::fade_out(ks::globals::colors::RED, 240);
+        // ks::SceneManager::fade_out(ks::globals::colors::RED, 240);
+        IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 120));
+        IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLOODRED));
+        IF_NOT_EXIT(ks::SceneManager::update_visuals());
         // Show blood red scene with Dissolve 4s
         // KENJI ENDING
     }

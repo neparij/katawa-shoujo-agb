@@ -684,9 +684,13 @@ void SceneManager::update_visuals() {
     BN_LOG("Update visuals process started");
 
     if (background_visual.fill_color.has_value()) {
+        BN_LOG("Set fill color to: ",
+            background_visual.fill_color->red(), ", ",
+            background_visual.fill_color->green(), ", ",
+            background_visual.fill_color->blue(), ", "
+        );
         fill_color = background_visual.fill_color;
-    } else {
-        fill_color.reset();
+        bn::bg_palettes::set_transparent_color(fill_color);
     }
 
     //
@@ -749,9 +753,12 @@ void SceneManager::update_visuals() {
         background_visual.visible_bg_item.reset();
     }
 
-    bool is_scene_visible = !fill_color.has_value();
+    bool is_scene_visible = !background_visual.fill_color.has_value();
     BN_LOG("Is scene visible: ", is_scene_visible);
     BN_LOG("Is paused: ", is_paused);
+
+    BN_LOG("VISIBLE BG HAS VALUE: ", background_visual.visible_bg_item.has_value());
+    BN_LOG("BG HAS VALUE: ", background_visual.bg_item.has_value());
 
     bool background_want_change = background_visual.visible_bg_item.has_value() && background_visual.bg_item.has_value() &&
                                   background_visual.visible_bg_item != background_visual.bg_item && is_scene_visible;
@@ -1103,6 +1110,12 @@ void SceneManager::update_visuals() {
     }
     blend_action.reset();
 
+    if (!background_visual.fill_color.has_value()) {
+        BN_LOG("Reset fill color");
+        fill_color.reset();
+        bn::bg_palettes::set_transparent_color(globals::colors::BLACK);
+    }
+
     /// discard: SHOW DIALOGS (WITH DISSOLVE)
 }
 
@@ -1188,6 +1201,7 @@ void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const 
     }
 
     ks::timer::pause_ingame_timer();
+    bn::blending::restore();
 
     bool is_act_video = true;
 

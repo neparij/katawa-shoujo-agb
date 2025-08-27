@@ -1,6 +1,14 @@
 import re
 
 
+FILL_COLORS = [
+    "black",
+    "bloodred",
+    "white",
+    "pink",
+    "darkgrey"
+]
+
 def sanitize_function_name(text):
     return re.sub(r"[^a-zA-Z0-9_]", "", text.replace(" ", "_").lower())
 
@@ -56,3 +64,12 @@ def get_paletted_variant(variant: str) -> (str, str):
         return variant.removesuffix("_rn"), "PALETTE_VARIANT_SPRITE_RAIN"
     else:
         return variant, "PALETTE_VARIANT_DEFAULT"
+
+def is_color_filled_bg(background: str) -> bool:
+    return background in FILL_COLORS
+
+def starts_with_filled_bg(line: str) -> bool:
+    for color in FILL_COLORS:
+        if line.startswith(f"scene {color}"):
+            return True
+    return False
