@@ -81,7 +81,6 @@ bn::rect_window right_window = bn::rect_window::internal();
 bn::vector<unsigned char, 5> answers_index_map;
 ks::saves::SaveSlotProgressData progress;
 ks::saves::SaveSlotProgressData savedata_progress;
-bool in_game = false;
 bool in_replay = false;
 bool is_loading = false;
 bool is_paused = false;

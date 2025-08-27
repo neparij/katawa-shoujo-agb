@@ -50,7 +50,7 @@ namespace ks {
             text_item_palette = globals::text_palettes::beige;
             total_saves = saves::getUsedSaveSlots();
             saves_from_cursor = total_saves;
-            if (saves::readAutosaveMetadata().has_data || in_game) {
+            if (saves::readAutosaveMetadata().has_data || globals::in_game) {
                 saves_from_cursor++;
                 additional_slots = 1;
             }
@@ -80,7 +80,7 @@ namespace ks {
                 on_back();
             } else {
                 const short slot_index = saveslot_index.at(selection);
-                if (slot_index == -1 && in_game) {
+                if (slot_index == -1 && globals::in_game) {
                     const unsigned short new_slot_index = saves::getUsedSaveSlots();
                     if (new_slot_index < saves::getTotalSaveSlots()) {
                         BN_LOG("Save game to slot ", new_slot_index);
@@ -185,9 +185,9 @@ namespace ks {
             for (unsigned short i = from; i > to; i--, tile_index++, selection_index += 1) {
                 const bool additional_slot = i == total_saves + 1;
                 saves::SaveSlotMetadata slot;
-                if (additional_slot && !in_game) {
+                if (additional_slot && !globals::in_game) {
                     slot = saves::readAutosaveMetadata();
-                } else if (additional_slot && in_game) {
+                } else if (additional_slot && globals::in_game) {
                     slot = progress.metadata;
                     slot.has_data = false;
                 } else {

@@ -20,6 +20,7 @@
 namespace ks::globals {
     inline gameState_t state = GS_INIT;
     inline bool exit_scenario = false;
+    inline bool in_game = false;
     inline bn::unique_ptr<Translation> i18n;
     inline auto settings = saves::SaveSettingsData();
     inline const GBFS_FILE *filesystem = nullptr;

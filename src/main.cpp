@@ -26,7 +26,7 @@ using size_type = int;
 
 inline void game(const bool is_new_game) {
     ks::globals::state = GS_GAME;
-    ks::in_game = true;
+    ks::globals::in_game = true;
     ks::is_paused = false;
     ks::SceneManager::fade_reset();
 
@@ -130,7 +130,11 @@ inline void game(const bool is_new_game) {
         // KENJI ENDING
     }
 
-    ks::in_game = false;
+    if (ks::is_loading) {
+        BN_ERROR("Unable to load savegame.");
+    }
+
+    ks::globals::in_game = false;
 
     // credits
 }
@@ -261,6 +265,7 @@ int main() {
         switch (ks::globals::state) {
             case GS_INIT:
                 ks::globals::state = GS_MENU_MAIN;
+                ks::globals::in_game = false;
 
                 bn::bg_palettes::set_fade(ks::globals::colors::BLACK, bn::fixed(1));
                 bn::sprite_palettes::set_fade(ks::globals::colors::BLACK, bn::fixed(1));
@@ -317,6 +322,7 @@ int main() {
                 ks::timer::reset();
                 ks::SceneManager::free_resources();
                 ks::globals::exit_scenario = false;
+                ks::globals::in_game = false;
                 ks::primary_background.reset();
                 ks::secondary_background.reset();
                 ks::progress_icon_sprites.clear();

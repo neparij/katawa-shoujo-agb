@@ -237,7 +237,6 @@ extern bn::rect_window right_window;
 extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
 extern ks::saves::SaveSlotProgressData savedata_progress;
-extern bool in_game;
 extern bool in_replay;
 extern bool is_loading;
 extern bool is_paused;
