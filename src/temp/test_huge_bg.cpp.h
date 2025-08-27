@@ -18,14 +18,6 @@
 
 #include "ks_huge_bg_items_event_hanako_scars_4bpp.h"
 
-#define WIDTH_BLOCKS 30 // 240 pixels / 8 pixels per tile
-#define HEIGHT_BLOCKS 20 // 160 pixels / 8 pixels per tile
-
-#define TILES_COUNT ((WIDTH_BLOCKS * HEIGHT_BLOCKS) + (WIDTH_BLOCKS + HEIGHT_BLOCKS) + 1)
-#define TILES_COUNT_BPP8 (TILES_COUNT * 2)
-
-#define USE_8BPP false
-
 void test_huge_bg_cpp()
 {
     ks::sound_manager::play(MUSIC_HANAKO);

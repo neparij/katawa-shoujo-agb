@@ -77,6 +77,7 @@ namespace ks::globals {
     }
 
     void release_engine() {
+        ks::huge_background.reset();
         ks::primary_background.reset();
         ks::secondary_background.reset();
         ks::transition_bg.reset();

@@ -11,6 +11,7 @@
 #include "bn_regular_bg_items_thumb_emi_knockeddown.h"
 #include "bn_regular_bg_items_emi_knockeddown_facepullout.h"
 #include "bn_regular_bg_items_emi_knockeddown_legs.h"
+#include "ks_huge_bg_items_event_drugs_en.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_lilly.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_shizu.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_both.h"
@@ -57,15 +58,20 @@ namespace ks::background_metas {
         bn::regular_bg_items::thumb_lilly_shizu_showdown,
         0xFFFF0007);
 
+    constexpr inline huge_background_meta event_drugs_en(
+        ks::huge_bg_items::event_drugs_en,
+        bn::regular_bg_items::thumb_lilly_shizu_showdown,
+        0xFFFF0008);
+
     constexpr inline background_meta kslogo_heart(
         bn::regular_bg_items::kslogo_heart,
         bn::regular_bg_items::thumb_event_missing,
-        0xFFFFFF00);
+        0x0FFFFF00);
 
     constexpr inline background_meta kslogo_words(
         bn::regular_bg_items::kslogo_words,
         bn::regular_bg_items::thumb_event_missing,
-        0xFFFFFF01);
+        0x0FFFFF01);
 
     inline const background_meta *get_custom_by_hash(const unsigned int hash) {
         switch (hash) {

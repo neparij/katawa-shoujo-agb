@@ -65,6 +65,7 @@ bn::optional<bn::sprite_text_generator> text_generator;
 bn::optional<bn::sprite_text_generator> text_generator_bold;
 bn::optional<bn::sprite_text_generator> text_generator_small;
 ks::DialogBox* dialog;
+bn::optional<huge_bg> huge_background;
 bn::optional<bn::regular_bg_ptr> primary_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
 bn::optional<bn::affine_bg_ptr> transition_bg;
@@ -72,7 +73,6 @@ bn::optional<bn::color> fill_color;
 
 bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
 bn::vector<character_visuals_ptr, 4> character_visuals;
-bn::vector<character_restoration_data, 4> character_restoration;
 background_visuals_ptr background_visual;
 
 bn::rect_window left_window = bn::rect_window::external();
@@ -93,6 +93,7 @@ EWRAM_BSS bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 void SceneManager::free_resources() {
     BN_LOG("Free resources...");
     background_visual.bg_item.reset();
+    huge_background.reset();
     primary_background.reset();
     secondary_background.reset();
     custom_event.reset();
@@ -225,9 +226,15 @@ void SceneManager::prepare_save_metadata() {
     // }
 }
 
+void SceneManager::reset_backgrounds_visuals() {
+    background_visual.bg_item.reset();
+    background_visual.huge_bg_item.reset();
+}
 
 void SceneManager::set_background(const background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time, const palette_variant_t palette_variant) {
     custom_event.reset();
+    reset_backgrounds_visuals();
+
     disable_fill();
     progress.metadata.thumbnail_hash = bg.hash;
     background_visual.bg_item = bg.bg;
@@ -248,8 +255,33 @@ void SceneManager::set_background(const background_meta& bg, const int position_
     }
 }
 
+void SceneManager::set_huge_background(const huge_background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time, const palette_variant_t palette_variant) {
+    // TODO: Check the duplicated code with set_background
+    custom_event.reset();
+    reset_backgrounds_visuals();
+
+    disable_fill();
+    progress.metadata.thumbnail_hash = bg.hash;
+    background_visual.huge_bg_item = bg.bg;
+    background_visual.position_x = position_x;
+    background_visual.position_y = position_y;
+    background_visual.dissolve_time = dissolve_time;
+    background_visual.palette_variant = palette_variant;
+    set_background_transition(transition);
+
+
+    if (dissolve_time != 0 || transition != SCENE_TRANSITION_NONE) {
+        // TODO: Check that we need to hide characters only on dissolves!
+        for (const auto& visual : character_visuals) {
+            if (visual.character != CHARACTER_NONE) {
+                hide_character(visual.character, false, true);
+            }
+        }
+    }
+}
+
 void SceneManager::hide_background(const scene_transition_t transition, const int dissolve_time) {
-    background_visual.bg_item.reset();
+    reset_backgrounds_visuals();
     background_visual.transition = transition;
     background_visual.dissolve_time = dissolve_time;
     background_visual.palette_variant = PALETTE_VARIANT_DEFAULT;
@@ -293,6 +325,16 @@ void SceneManager::disable_fill() {
 
 void SceneManager::set_event(const background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
     set_background(bg, 0, 0, transition, dissolve_time, PALETTE_VARIANT_DEFAULT);
+    for (const auto& visual : character_visuals) {
+        if (visual.character != CHARACTER_NONE) {
+            hide_character(visual.character, false, true);
+        }
+    }
+    custom_event = event.clone();
+}
+
+void SceneManager::set_event(const huge_background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
+    set_huge_background(bg, 0, 0, transition, dissolve_time, PALETTE_VARIANT_DEFAULT);
     for (const auto& visual : character_visuals) {
         if (visual.character != CHARACTER_NONE) {
             hide_character(visual.character, false, true);
@@ -425,7 +467,6 @@ void SceneManager::show_character(const character_t character,
     BN_LOG("Show character: ", character, " X: ", position_x, " Y: ", position_y);;
     const auto character_index = get_character_visual_index(character, true);
 
-    character_visuals.at(character_index).index = character_index;
     character_visuals.at(character_index).character = character;
     character_visuals.at(character_index).bg_item = bg;
     character_visuals.at(character_index).sprite_item = sprite;
@@ -1470,7 +1511,6 @@ int SceneManager::get_character_visual_index(const character_t character, const 
     for (int i = 0; i < 4; i++) {
         BN_LOG("Character at index ", i, ":");
         BN_LOG("                      character: ", character_visuals.at(i).character);
-        BN_LOG("                      index: ", character_visuals.at(i).index, " (deprecated)");
         if (character_visuals.at(i).character == character) {
             return i;
         }

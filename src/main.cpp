@@ -20,6 +20,7 @@
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
+#include "temp/test_drugs.cpp.h"
 #include "temp/test_huge_bg.cpp.h"
 
 using size_type = int;
@@ -261,6 +262,8 @@ int main() {
     }
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
 
+    test_drugs();
+
     while (true) {
         switch (ks::globals::state) {
             case GS_INIT:
@@ -306,6 +309,7 @@ int main() {
             case GS_START_GAME:
                 ks::static_text_sprites.clear();
                 ks::progress_icon_sprites.clear();
+                ks::huge_background.reset();
                 ks::primary_background.reset();
                 ks::secondary_background.reset();
                 // ks::globals::main_update();
@@ -323,6 +327,7 @@ int main() {
                 ks::SceneManager::free_resources();
                 ks::globals::exit_scenario = false;
                 ks::globals::in_game = false;
+                ks::huge_background.reset();
                 ks::primary_background.reset();
                 ks::secondary_background.reset();
                 ks::progress_icon_sprites.clear();

@@ -36,10 +36,45 @@ if (ks::is_loading) {                             \
 
 namespace ks {
 
+struct background_item {
+    bn::optional<bn::regular_bg_item> regular;
+    bn::optional<bn::affine_bg_item> affine;
+    bn::optional<ks::huge_bg_item> huge;
+
+    void asserts() const {
+        BN_ASSERT((regular.has_value() ? 1 : 0) +
+                  (affine.has_value() ? 1 : 0) +
+                  (huge.has_value() ? 1 : 0) <= 1,
+                  "Only regular, affine or huge bg can be set at once");
+    }
+
+    bool has_value() const {
+        asserts();
+        return regular.has_value() || affine.has_value() || huge.has_value();
+    }
+
+    bool is_regular() const {
+        asserts();
+        return regular.has_value();
+    }
+
+    bool is_affine() const {
+        asserts();
+        return affine.has_value();
+    }
+
+    bool is_huge() const {
+        asserts();
+        return huge.has_value();
+    }
+
+    ks::background_item& operator->(ks::background_item*) [builtin]
+};
+
 struct background_visuals_ptr
 {
-    bn::optional<bn::regular_bg_item> visible_bg_item;
-    bn::optional<bn::regular_bg_item> bg_item;
+    bn::optional<background_item> visible_bg_item;
+    bn::optional<background_item> bg_item;
     bn::optional<bn::color> fill_color;
     bn::fixed alpha;
     bool will_show;
@@ -52,18 +87,8 @@ struct background_visuals_ptr
     palette_variant_t palette_variant;
 };
 
-struct character_restoration_data {
-    character_t character;
-    bn::regular_bg_item& bg_item;
-    bn::sprite_item& sprite_item;
-    character_sprite_meta& sprite_meta;
-    int position_x;
-    int position_y;
-};
-
 struct character_visuals_ptr
 {
-    int index;
     character_t character;
     bn::optional<bn::regular_bg_item> visible_bg_item;
     bn::optional<bn::sprite_item> visible_sprite_item;
@@ -110,12 +135,19 @@ public:
 
     // Acions
 
+    static void reset_backgrounds_visuals();
     static void set_background(const background_meta& bg,
                            const int position_x,
                            const int position_y,
                            scene_transition_t transition,
                            const int dissolve_time,
                            const palette_variant_t palette_variant);
+    static void set_huge_background(const huge_background_meta& bg,
+                       int position_x,
+                       int position_y,
+                       scene_transition_t transition,
+                       int dissolve_time,
+                       const palette_variant_t palette_variant);
     static void hide_background(scene_transition_t transition, int dissolve_time);
     static void set_background_position(const int position_x,
                                        const int position_y);
@@ -127,6 +159,11 @@ public:
                           const CustomEvent& event,
                           scene_transition_t transition,
                           int dissolve_time);
+
+    static void set_event(const huge_background_meta& bg,
+                      const CustomEvent& event,
+                      scene_transition_t transition,
+                      int dissolve_time);
 
     static void show_dialog(const ks::character_definition& actor, int tl_key);
     static void show_dialog(const char* actor_name, int tl_key);
@@ -223,13 +260,13 @@ extern bn::optional<bn::sprite_text_generator> text_generator;
 extern bn::optional<bn::sprite_text_generator> text_generator_bold;
 extern bn::optional<bn::sprite_text_generator> text_generator_small;
 extern ks::DialogBox* dialog;
+extern bn::optional<huge_bg> huge_background;
 extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
 extern bn::optional<bn::affine_bg_ptr> transition_bg;
 extern bn::optional<bn::color> fill_color;
 extern bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
 extern bn::vector<character_visuals_ptr, 4> character_visuals;
-extern bn::vector<character_restoration_data, 4> character_restoration;
 extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;
