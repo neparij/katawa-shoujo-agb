@@ -19,7 +19,7 @@ namespace ks {
 
         void init() override {
             BN_LOG("HisaoClassEndEvent::init");
-            primary_background->set_position(-120, 0);
+            background_visual.visible_bg_item->set_position(-120, 0);
             SceneManager::set_background_position(-120, 0);
             CustomEvent::init();
         }

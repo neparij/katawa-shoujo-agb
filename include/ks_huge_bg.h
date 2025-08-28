@@ -35,7 +35,7 @@ namespace ks {
 
         [[nodiscard]] static huge_bg create(bn::fixed x, bn::fixed y, const huge_bg_item &item);
 
-        [[nodiscard]] bn::regular_bg_ptr regular_bg_ptr() {
+        [[nodiscard]] bn::regular_bg_ptr regular_bg_ptr() const {
             return _wrapped_bg_ptr;
         }
 
@@ -57,6 +57,8 @@ namespace ks {
         //
         // // Copy assignment operator.
         huge_bg& operator=(const huge_bg& other);
+
+        const bn::fixed_point& position() const;
 
         void update();
 

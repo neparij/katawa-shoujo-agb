@@ -113,6 +113,10 @@ namespace ks {
         return *this;
     }
 
+    const bn::fixed_point & huge_bg::position() const {
+        return regular_bg_ptr().top_left_position();
+    }
+
     huge_bg::~huge_bg() {
         huge_bgs_manager::pop(this);
     }

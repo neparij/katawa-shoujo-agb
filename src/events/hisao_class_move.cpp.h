@@ -21,9 +21,9 @@ namespace ks {
 
         void init() override {
             BN_LOG("HisaoClassMoveEvent::init");
-            BN_ASSERT(primary_background.has_value(), "Event background is not set");
+            BN_ASSERT(background_visual.visible_bg_item.has_value(), "Event background is not set");
             _move_action = bn::regular_bg_move_to_action(
-                primary_background.value(),
+                background_visual.visible_bg_item->regular_ptr(),
                 2000,
                 -120,
                 0

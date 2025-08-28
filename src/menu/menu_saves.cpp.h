@@ -28,6 +28,7 @@ namespace ks {
             globals::main_update();
 
             primary_background.reset();
+            background_visual.visible_bg_item.reset();
             progress_icon_sprites.clear();
             secondary_background = bn::regular_bg_items::ui_bg_menu_saves_front.create_bg(0, 0);
             secondary_background->set_priority(1);

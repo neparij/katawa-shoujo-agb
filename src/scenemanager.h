@@ -11,7 +11,9 @@
 #include <bn_affine_bg_ptr.h>
 #include <bn_unique_ptr.h>
 
+#include "background_item.h"
 #include "background_meta.h"
+#include "background_ptr.h"
 #include "character_sprite_meta.h"
 #include "gba_base.h"
 #include "gba_types.h"
@@ -36,44 +38,10 @@ if (ks::is_loading) {                             \
 
 namespace ks {
 
-struct background_item {
-    bn::optional<bn::regular_bg_item> regular;
-    bn::optional<bn::affine_bg_item> affine;
-    bn::optional<ks::huge_bg_item> huge;
-
-    void asserts() const {
-        BN_ASSERT((regular.has_value() ? 1 : 0) +
-                  (affine.has_value() ? 1 : 0) +
-                  (huge.has_value() ? 1 : 0) <= 1,
-                  "Only regular, affine or huge bg can be set at once");
-    }
-
-    bool has_value() const {
-        asserts();
-        return regular.has_value() || affine.has_value() || huge.has_value();
-    }
-
-    bool is_regular() const {
-        asserts();
-        return regular.has_value();
-    }
-
-    bool is_affine() const {
-        asserts();
-        return affine.has_value();
-    }
-
-    bool is_huge() const {
-        asserts();
-        return huge.has_value();
-    }
-
-    ks::background_item& operator->(ks::background_item*) [builtin]
-};
-
 struct background_visuals_ptr
 {
-    bn::optional<background_item> visible_bg_item;
+    bn::optional<background_ptr> visible_bg_item;
+    bn::optional<background_ptr> visible_fg_item;
     bn::optional<background_item> bg_item;
     bn::optional<bn::color> fill_color;
     bn::fixed alpha;
@@ -197,7 +165,7 @@ public:
     static void hide_character(const character_t character);
     static void hide_character(const character_t character, const bool need_update, bool remove);
 
-    static void perform_transition(scene_transition_t transition, const bn::optional<bn::regular_bg_item>& to);
+    static void perform_transition(scene_transition_t transition, const bn::optional<ks::background_item>& to);
     static void perform_transition(scene_transition_t transition);
 
     static void update();

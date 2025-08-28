@@ -57,6 +57,17 @@ namespace ks {
             return _map_dimensions;
         }
 
+        bool operator==(const huge_bg_item& other) const {
+            return _tiles_ptr == other._tiles_ptr &&
+                   _map_cells_ptr == other._map_cells_ptr &&
+                   _palette_item == other._palette_item &&
+                   _map_dimensions == other._map_dimensions;
+        }
+
+        bool operator!=(const huge_bg_item& other) const {
+            return !(*this == other);
+    }
+
     private:
         const uint8_t* _tiles_ptr;
         const uint16_t* _map_cells_ptr;

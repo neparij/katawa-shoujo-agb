@@ -37,12 +37,12 @@ namespace ks {
                 // SceneManager::transition_fadeout(bn::affine_bg_items::test_dots_col, 16, true);
                 // bn::blending::set_transparency_alpha(1.0);
             } else {
-                if (background_visual.visible_bg_item.has_value()) {
-                    primary_background = background_visual.bg_item->create_bg(
+                if (background_visual.bg_item.has_value()) {
+                    background_visual.visible_bg_item = background_visual.bg_item->create_bg(
                         background_visual.position_x,
                         background_visual.position_y);
-                    primary_background->set_priority(3);
-                    primary_background->set_z_order(10);
+                    background_visual.visible_bg_item->set_priority(3);
+                    background_visual.visible_bg_item->set_z_order(10);
 
                     if (custom_event.has_value()) {
                         (*custom_event)->init();
@@ -50,9 +50,9 @@ namespace ks {
                 }
             }
 
-            if (primary_background.has_value()) {
+            if (background_visual.visible_bg_item.has_value()) {
                 bn::blending::set_fade_alpha(ks::DialogBox::transparency_alpha());
-                primary_background->set_blending_enabled(true);
+                background_visual.visible_bg_item->set_blending_enabled(true);
             }
 
             menu_bg_sprites.push_back(bn::sprite_items::ui_ingame_menu_ne.create_sprite(32, -44));
@@ -94,9 +94,9 @@ namespace ks {
             menu_bg_sprites.clear();
             static_text_sprites.clear();
 
-            if (primary_background.has_value()) {
+            if (background_visual.visible_bg_item.has_value()) {
                 bn::blending::set_fade_alpha(0.0);
-                primary_background->set_blending_enabled(false);
+                background_visual.visible_bg_item->set_blending_enabled(false);
             }
             show_dots_animation(false);
             // bn::blending::set_transparency_alpha(DialogBox::transparency_alpha());
@@ -131,6 +131,7 @@ namespace ks {
                 //     }
                 //     break;
                 case 3:
+                    background_visual.visible_bg_item.reset();
                     primary_background.reset();
                     secondary_background.reset();
                     static_text_sprites.clear();

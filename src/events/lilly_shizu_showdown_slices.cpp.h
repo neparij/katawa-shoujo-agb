@@ -25,11 +25,11 @@ namespace ks {
         void init() override {
             BN_LOG("LillyShizuShowdownSlicesEvent::init");
             CustomEvent::init();
-            primary_background->set_position(-240, 0);
+            background_visual.visible_bg_item->set_position(-240, 0);
             SceneManager::set_background_position(-240, 0);
 
             _lilly_move_action = bn::regular_bg_move_to_action(
-                primary_background.value(),
+                background_visual.visible_bg_item->regular_ptr(),
                 15,
                 0,
                 0

@@ -19,8 +19,8 @@ namespace ks {
 
         void init() override {
             BN_LOG("DrugsEvent::init");
-            BN_ASSERT(primary_background.has_value(), "Event background is not set");
-            primary_background->set_position(8, 0);
+            BN_ASSERT(background_visual.visible_bg_item.has_value(), "Event background is not set");
+            background_visual.visible_bg_item->set_position(8, 0);
             SceneManager::set_background_position(8, 0);
             CustomEvent::init();
         }

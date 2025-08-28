@@ -26,7 +26,7 @@ namespace ks {
             // SceneManager::set_background_position(-120, -80);
 
             _move_action = bn::regular_bg_move_to_action(
-                primary_background.value(),
+                background_visual.visible_bg_item->regular_ptr(),
                 15,
                 64,
                 0
