@@ -301,8 +301,7 @@ namespace ks {
                 IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 60));
                 IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::WHITE));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
-                // TODO: Show drugs
-                // TODO: Show transform drugs -120, 0
+                IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::event_drugs_en, DrugsEvent(), SCENE_TRANSITION_NONE, 0));
                 IF_NOT_EXIT(ks::SceneManager::update_visuals());
                 ks::SceneManager::set_line_hash(0x272846F9);
                 IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 96));

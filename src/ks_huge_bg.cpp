@@ -19,13 +19,21 @@ namespace ks {
     }
 
     huge_bg huge_bg::create(bn::fixed x, bn::fixed y, const huge_bg_item &item) {
+        BN_LOG("huge_bg::create(bn::fixed x, bn::fixed y, const huge_bg_item &item)");
+        BN_LOG("Create PAL");
         const auto bg_palette = bn::bg_palette_ptr::create(item.palette_item());
+        BN_LOG("Create TILES");
         auto bg_tiles = bn::regular_bg_tiles_ptr::allocate(bg_palette.bpp() == bn::bpp_mode::BPP_4 ? TILES_COUNT : TILES_COUNT_BPP8, bg_palette.bpp());
+        BN_LOG("Create MAP");
         auto bg_map = bn::regular_bg_map_ptr::allocate(bn::size(32, 32), bg_tiles, bg_palette);
 
+        BN_LOG("Create PTR");
         auto bg = bn::regular_bg_ptr::create(bg_map);
+
+        BN_LOG("Set Position");
         bg.set_top_left_position(x, y);
 
+        BN_LOG("<<< return huge_bg >>>");
         return huge_bg(bg, item.map_dimensions(), item.cells_ref(), item.tiles_ref(), bg_map.vram()->begin(), bg_tiles.vram()->begin());
     }
 
@@ -92,7 +100,28 @@ namespace ks {
         }
     }
 
+    // huge_bg::huge_bg(const huge_bg& other) : _wrapped_bg_ptr(other._wrapped_bg_ptr),
+    //                                          _map_dimensions(other._map_dimensions),
+    //                                          _map_data(other._map_data),
+    //                                          _tiles_data(other._tiles_data),
+    //                                          _map_vram(other._map_vram),
+    //                                          _tiles_vram(other._tiles_vram) {
+    //     BN_LOG("huge_bg::huge_bg(const huge_bg& other)");
+    //     x_offset = other.x_offset;
+    //     y_offset = other.y_offset;
+    //     previous_x_offset = other.previous_x_offset;
+    //     previous_y_offset = other.previous_y_offset;
+    //     initialized = other.initialized;
+    //     huge_bgs_manager::push(this);
+    // }
+    //
+    // huge_bg::huge_bg(const huge_bg& other) {
+    //     BN_LOG("huge_bg::huge_bg(const huge_bg& other)");
+    //     *this = other;
+    // }
+
     huge_bg& huge_bg::operator=(const huge_bg& other) {
+        BN_LOG("huge_bg::operator=(const huge_bg& other)");
         if (this == &other) {
             return *this;
         }
@@ -113,7 +142,7 @@ namespace ks {
         return *this;
     }
 
-    const bn::fixed_point & huge_bg::position() const {
+    bn::fixed_point huge_bg::position() const {
         return regular_bg_ptr().top_left_position();
     }
 

@@ -6,6 +6,8 @@ import random
 import subprocess
 
 from PIL import Image, ImageOps, ImageDraw, ImageFont
+from tilequant import Tilequant
+from tilequant.image_converter import DitheringMode
 
 PINK_COLOR = (255, 0, 255)  # Pink background color
 STEPS = 63
@@ -62,10 +64,10 @@ DRUGS_EN = [
     "asthma"
 ]
 
-def generate_with_array(drugs: list[str], output_dir: str, output_file_name: str):
+def generate_with_array(drugs: list[str], output_dir: str, output_file_name: str, canvas: tuple[int, int, int] = PINK_COLOR):
     output_path = os.path.join(output_dir, output_file_name)
     image = Image.new("RGB", (512, 512), PINK_COLOR)
-    canvas = Image.new("RGB", (480, 160), PINK_COLOR)
+    canvas = Image.new("RGB", (480, 160), canvas)
 
     draw = ImageDraw.Draw(canvas)
     draw.fontmode = ImageDraw.fontmode
@@ -110,6 +112,29 @@ def generate_with_array(drugs: list[str], output_dir: str, output_file_name: str
     print(f"Resized and saved: {output_path}")
     create_json_metadata(output_path)
 
+def create_thumbnail(input_path, output_path):
+    background = Image.new("RGB", (256, 256), PINK_COLOR)
+    source_image = Image.open(input_path).convert("RGB")
+
+    source_cropped = ImageOps.crop(source_image, border=(
+        - 120 + (512 - 240) // 2,
+        (512 - 160) // 2,
+        120 + (512 - 240) // 2,
+        (512 - 160) // 2))
+    source_resized = ImageOps.fit(source_cropped, (48, 32), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
+    background.paste(source_resized, (104, 112))
+
+    converter = Tilequant(
+        background, PINK_COLOR,
+        tile_width=8,
+        tile_height=8,
+    )
+    quantized = converter.convert(num_palettes=4, colors_per_palette=16,
+                                  dithering_mode=DitheringMode.FLOYDSTEINBERG, dithering_level=0.5,
+                                  num_color_cluster_passes=0, num_tile_cluster_passes=0)
+    quantized.save(output_path, format="BMP")
+    print(f"Resized, quantized and saved: {output_path}")
+
 def create_json_metadata(image_path):
     json_path = f"{os.path.splitext(image_path)[0]}.json"
     metadata = {
@@ -124,9 +149,28 @@ def create_json_metadata(image_path):
 
     print(f"Metadata saved: {json_path}")
 
+def create_thumbnail_json_metadata(image_path):
+    json_path = f"{os.path.splitext(image_path)[0]}.json"
+    metadata = {
+        "type": "regular_bg",
+        "bpp_mode": "bpp_4_manual",
+        "colors_count": 64,
+        "compression": "auto_no_huffman",
+    }
+
+    with open(json_path, "w", encoding="utf-8") as json_file:
+        json.dump(metadata, json_file, indent=4)
+
+    print(f"Metadata saved: {json_path}")
+
 if __name__ == "__main__":
     ImageDraw.fontmode = "1" # Don't use antialiasing for better look (yes, as it would be re-paletted by GBA runtime)
     assert STEPS < COLORS
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/huge"
 
-    generate_with_array(DRUGS_EN, output_directory, "event_drugs_en.bmp")
+    # generate_with_array(DRUGS_EN, output_directory, "event_drugs_en.bmp")
+
+    generate_with_array(DRUGS_EN, "./", "event_drugs.bmp", canvas=(255, 255, 255))
+    output_meta_path = os.path.join(output_directory, "thumbs", f"thumb_event_drugs.bmp")
+    create_thumbnail("./event_drugs.bmp", output_meta_path)
+    create_thumbnail_json_metadata(output_meta_path)

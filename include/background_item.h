@@ -29,6 +29,7 @@ namespace ks {
             : _regular(bn::nullopt),
               _affine(bn::nullopt),
               _huge(huge_bg) {
+            BN_LOG("background_item(const ks::huge_bg_item &huge_bg)");
         }
 
         // Copy constructor and assignment

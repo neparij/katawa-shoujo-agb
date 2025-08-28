@@ -651,6 +651,15 @@ def rewrite_motion_background(bg_name: str) -> str:
 
 def scenario_rewrites(scenario_file, content):
     scenario_name = os.path.splitext(os.path.basename(scenario_file))[0]
+    if scenario_name == "script-a1-monday":
+        return content.replace(
+            "        show drugs:\n"
+            "            xpos 0 ypos 0\n"
+            "            easein 25.0 xanchor 0.5",
+            # WITH
+            "        scene ev drugs_event"
+        )
+
     if scenario_name == "script-a1-thursday":
         return content.replace(
             "        show showdown_lilly_slice:\n"
@@ -775,6 +784,10 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
         return "lilly_shizu_showdown_both", "LillyShizuShowdownLillyEvent"
     elif bg_name == "showdown_shizu":
         return "lilly_shizu_showdown_both", "LillyShizuShowdownShizuEvent"
+
+    # DRUGS EVENT
+    if bg_name == "drugs_event":
+        return "event_drugs_en", "DrugsEvent"
 
     return None, None
 

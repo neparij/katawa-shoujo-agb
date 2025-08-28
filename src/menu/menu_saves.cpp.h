@@ -215,10 +215,10 @@ namespace ks {
                                                    selection_index);
                 }
 
-                const auto thumbnail = background_metas::get_by_hash(slot.thumbnail_hash);
-                if (thumbnail != nullptr && slot.has_data) {
+                const auto thumbnail = background_metas::get_thumbnail_by_hash(slot.thumbnail_hash);
+                if (slot.has_data) {
                     // This is a regular save/autosave
-                    saveslot_thumbnails.push_back(thumbnail->thumbnail.create_bg(
+                    saveslot_thumbnails.push_back(thumbnail.create_bg(
                         -device::screen_width_half + draw_x_from + 24, draw_y_from + 10 + draw_y_offset * tile_index));
                     saveslot_thumbnails.back().set_priority(2);
                     for (const auto &[thumbnail_hash, offset_x] : slot.thumbnail_characters) {

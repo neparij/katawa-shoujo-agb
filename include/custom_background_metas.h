@@ -12,6 +12,7 @@
 #include "bn_regular_bg_items_emi_knockeddown_facepullout.h"
 #include "bn_regular_bg_items_emi_knockeddown_legs.h"
 #include "ks_huge_bg_items_event_drugs_en.h"
+#include "bn_regular_bg_items_thumb_event_drugs.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_lilly.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_shizu.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_both.h"
@@ -60,7 +61,7 @@ namespace ks::background_metas {
 
     constexpr inline huge_background_meta event_drugs_en(
         ks::huge_bg_items::event_drugs_en,
-        bn::regular_bg_items::thumb_lilly_shizu_showdown,
+        bn::regular_bg_items::thumb_event_drugs,
         0xFFFF0008);
 
     constexpr inline background_meta kslogo_heart(
@@ -73,17 +74,18 @@ namespace ks::background_metas {
         bn::regular_bg_items::thumb_event_missing,
         0x0FFFFF01);
 
-    inline const background_meta *get_custom_by_hash(const unsigned int hash) {
+    inline const bn::regular_bg_item& get_custom_thumbnail_by_hash(const unsigned int hash) {
         switch (hash) {
-            case 0xFFFF0000: return &hisao_class;
-            case 0xFFFF0001: return &emi_knockeddown;
-            case 0xFFFF0002: return &emi_knockeddown_facepullout;
-            case 0xFFFF0003: return &emi_knockeddown_largepullout;
-            case 0xFFFF0004: return &emi_knockeddown_legs;
-            case 0xFFFF0005: return &lilly_shizu_showdown_slices_lilly;
-            case 0xFFFF0006: return &lilly_shizu_showdown_slices_shizu;
-            case 0xFFFF0007: return &lilly_shizu_showdown_both;
-            default: return &event_missing;
+            case 0xFFFF0000: return hisao_class.thumbnail;
+            case 0xFFFF0001: return emi_knockeddown.thumbnail;
+            case 0xFFFF0002: return emi_knockeddown_facepullout.thumbnail;
+            case 0xFFFF0003: return emi_knockeddown_largepullout.thumbnail;
+            case 0xFFFF0004: return emi_knockeddown_legs.thumbnail;
+            case 0xFFFF0005: return lilly_shizu_showdown_slices_lilly.thumbnail;
+            case 0xFFFF0006: return lilly_shizu_showdown_slices_shizu.thumbnail;
+            case 0xFFFF0007: return lilly_shizu_showdown_both.thumbnail;
+            case 0xFFFF0008: return event_drugs_en.thumbnail;
+            default: return event_missing.thumbnail;
         }
     }
 }

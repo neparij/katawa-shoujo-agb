@@ -20,7 +20,6 @@
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
-#include "temp/test_drugs.cpp.h"
 #include "temp/test_huge_bg.cpp.h"
 
 using size_type = int;
@@ -261,8 +260,6 @@ int main() {
         }
     }
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
-
-    test_drugs();
 
     while (true) {
         switch (ks::globals::state) {

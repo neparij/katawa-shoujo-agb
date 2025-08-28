@@ -49,16 +49,27 @@ namespace ks {
                                                              other._tiles_data,
                                                              other._map_vram,
                                                              other._tiles_vram) {
-            *this = bn::move(other);
+            // *this = bn::move(other);
+            *this = other;
+        }
+
+        huge_bg(const huge_bg &&other) noexcept : huge_bg(other._wrapped_bg_ptr,
+                                                     other._map_dimensions,
+                                                     other._map_data,
+                                                     other._tiles_data,
+                                                     other._map_vram,
+                                                     other._tiles_vram) {
+            // *this = bn::move(other);
+            *this = other;
         }
 
         // // Copy constructor.
         // huge_bg(const huge_bg& other);
-        //
-        // // Copy assignment operator.
+        
+        // Copy assignment operator.
         huge_bg& operator=(const huge_bg& other);
 
-        const bn::fixed_point& position() const;
+        [[nodiscard]] bn::fixed_point position() const;
 
         void update();
 

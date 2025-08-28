@@ -298,11 +298,11 @@ def write_background_metadata_store():
             f.write(f'#include "background_metas/{bg[0]}.h"\n')
 
         f.write(f'namespace ks::background_metas {{\n')
-        f.write(f'    inline const background_meta* get_by_hash(const unsigned int hash) {{\n')
+        f.write(f'    inline const bn::regular_bg_item& get_thumbnail_by_hash(const unsigned int hash) {{\n')
         f.write(f'        switch (hash) {{\n')
         for bg in BG_META_STORAGE:
-            f.write(f'            case 0x{bg[1]}: return &{bg[0]};\n')
-        f.write(f'            default: return get_custom_by_hash(hash);\n')
+            f.write(f'            case 0x{bg[1]}: return {bg[0]}.thumbnail;\n')
+        f.write(f'            default: return get_custom_thumbnail_by_hash(hash);\n')
         f.write(f'        }}\n')
         f.write(f'    }}\n\n')
         f.write(f'}};\n\n')

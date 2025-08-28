@@ -25,12 +25,13 @@ namespace ks {
               _huge_ptr(bn::nullopt) {
         }
 
-        explicit constexpr background_ptr(const ks::background_item &item, const huge_bg &huge_ptr)
+        explicit constexpr background_ptr(const ks::background_item &item, huge_bg huge_ptr)
             : _item(item),
               _regular_ptr(bn::nullopt),
               _affine_ptr(bn::nullopt),
-              // _huge_ptr(huge_ptr) {
-              _huge_ptr(bn::nullopt) {
+              // _huge_ptr(bn::nullopt) {
+              _huge_ptr(bn::move(huge_ptr)) {
+            // _huge_ptr = huge_ptr;
         }
 
         explicit constexpr background_ptr(const ks::background_item &item, bn::nullopt_t null)
@@ -50,14 +51,16 @@ namespace ks {
 
         ~background_ptr() = default;
 
-        const ks::background_item& item() const;
-        const bn::regular_bg_ptr& regular_ptr() const;
-        const bn::affine_bg_ptr& affine_ptr() const;
-        const bn::fixed_point& position() const;
+        [[nodiscard]] const ks::background_item& item() const;
+        [[nodiscard]] const bn::regular_bg_ptr regular_ptr() const;
+        [[nodiscard]] const bn::affine_bg_ptr affine_ptr() const;
+
+        [[nodiscard]] bn::fixed_point position() const;
         void set_position(bn::fixed x, bn::fixed y);
         void set_priority(int priority);
         void set_z_order(int order);
         void set_blending_enabled(bool enabled);
+        void set_palette(const bn::bg_palette_ptr & bg_palette);
 
     private:
         ks::background_item _item;
