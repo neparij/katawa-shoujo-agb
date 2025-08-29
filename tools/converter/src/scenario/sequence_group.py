@@ -12,11 +12,12 @@ class SequenceGroupType(Enum):
 
 # TODO: Make AnswerWrapper with condition support as separate class
 class ConditionWrapper:
-    def __init__(self, condition, callback = None, answer = None):
+    def __init__(self, condition, label_name, callback = None, answer = None):
         self.function_callback = callback
         self.condition = condition
         self.answer = answer
         self.sequence: List[SequenceItem] = []
+        self.label_name = label_name
 
     def __str__(self):
         return f"ConditionWrapper(condition={self.condition}, sequence={self.sequence})"
@@ -34,11 +35,11 @@ class SequenceGroup:
     def __str__(self):
         return f"SequenceGroup(name={self.name}, type={self.type}, sequence={self.sequence}, translation_identifiers={self.translation_identifiers}, conditions={self.conditions})"
 
-    def add_condition(self, condition = None, callback = None):
-        self.conditions.append(ConditionWrapper(condition, callback=callback, answer=None))
+    def add_condition(self, label_name, condition = None, callback = None):
+        self.conditions.append(ConditionWrapper(condition, label_name, callback=callback, answer=None))
 
-    def add_answer(self, answer = None, condition = None, callback = None):
-        self.conditions.append(ConditionWrapper(condition, callback=callback, answer=answer))
+    def add_answer(self, label_name, answer = None, condition = None, callback = None):
+        self.conditions.append(ConditionWrapper(condition, label_name, callback=callback, answer=answer))
 
     def add_sequence_item(self, linepack: List[SequenceItem], item: SequenceItem):
         if isinstance(item, SequenceItem):

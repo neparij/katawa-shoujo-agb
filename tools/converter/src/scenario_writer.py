@@ -27,7 +27,8 @@ from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
-from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg
+from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
+    add_translation, get_tl_group_hash
 
 DEFAULT_LOCALE = "en"
 PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
@@ -39,8 +40,9 @@ class ScenarioWriter:
         self.output_dir = output_dir
         self.gbfs_dir = gbfs_dir
         self.scenario = scenario
-        self.tl_indexes: Dict[str, int] = {}
-        self.tl_list: List[str] = []
+        # self.tl_indexes: Dict[str, int] = {}
+        # self.tl_list: List[str] = []
+        self.tl_dict: Dict[str, List[str]] = {}
         self.locale = locale if locale else DEFAULT_LOCALE
 
         self.backgrounds = []
@@ -141,7 +143,6 @@ class ScenarioWriter:
     def write_source(self):
         cpp_code = [
             include_header(f"{self.filename}"),
-            include_header(f"{self.filename}_{self.locale}_tl_index"),
         ]
         functions = []
 
@@ -149,6 +150,7 @@ class ScenarioWriter:
             sequences = []
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
+                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}", tl_{get_tl_group_hash(label.name)}_{self.locale}_intl));')
                 sequences.append(f'if (!ks::in_replay) {{')
                 # sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
                 sequences.append(f'}}')
@@ -157,7 +159,10 @@ class ScenarioWriter:
                 sequences.append(f'ks::SceneManager::set_script(SCRIPT_{label.name.upper()});')
                 sequences.append(f'IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));')
                 sequences.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n')
+                    f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}")));\n')
+            else:
+                sequences.append(
+                    f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}", tl_{get_tl_group_hash(label.name)}_{self.locale}_intl));')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -182,24 +187,11 @@ class ScenarioWriter:
                 sequence_code = self.process_sequence(menu, sequence)
                 if sequence_code:
                     sequences.extend(sequence_code)
-            answers_indexes = []
 
             sequences.append(f'bn::vector<ks::answer_ptr, 5> answers;')
             answer_index = 0
             for answer in menu.conditions:
-                tl_index = self.tl_indexes.get(answer.answer)
-
-                if tl_index is None:  # Only process if the id is not already in the index
-                    for i, tl in enumerate(self.tl_list):
-                        if answer.answer == tl:  # Check for duplicate message
-                            tl_index = i
-                            break
-                    else:  # If no duplicate is found
-                        tl_index = len(self.tl_list)
-                        self.tl_list.append(answer.answer)  # Add the message to the list
-
-                    self.tl_indexes[answer.answer] = tl_index  # Store the index for the id
-                answers_indexes.append(str(tl_index))
+                tl_index = add_translation(self.tl_dict, answer.label_name, answer.answer)
                 sequences.append(f'answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});') if not answer.condition else sequences.append(
                     f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({{{answer_index}, {tl_index}}});')
                 answer_index += 1
@@ -237,48 +229,49 @@ class ScenarioWriter:
         functions = as_public("\n".join(functions))
         class_code = as_class(functions, self.get_class_name(), self.get_interface_name())
 
+        for tl_group in self.tl_dict:
+            cpp_code.append(include_header(f"tl_index/{self.filename}_{get_tl_group_hash(tl_group)}_{self.locale}_tl_index"))
         cpp_code.append(namespace(class_code, "ks"))
 
         with open(f"{os.path.join(self.output_dir, self.filename)}{self.locale_suffix()}.cpp", "w") as cpp_file:
             cpp_file.write("\n".join(cpp_code))
 
     def write_scenario_tl(self):
-        current_offset = 0
-        define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
-        h_code = [include_header("bn_vector"),
-                  # f'inline void init_tl_index(bn::vector<unsigned int, {len(self.tl_list)}>& offset_index) {{',
-                  # TODO: Decrease mem consuption
-                  f'constexpr unsigned int {sanitize_function_name(self.filename)}_{self.locale}_intl[] = {{',
-                  ]
+        for tl_group in self.tl_dict:
+            print(f"Writing TL group '{tl_group}' ({get_tl_group_hash(tl_group)}) with {len(self.tl_dict[tl_group])} entries")
+            current_offset = 0
+            define_name = f"{tl_group.upper().replace("-", "_")}"
+            filename_base = f"tl_{get_tl_group_hash(tl_group)}"
+            filename_header_base = f"tl_index/{self.filename}_{get_tl_group_hash(tl_group)}"
+            h_code = [include_header("bn_vector"),
+                      f'constexpr unsigned int tl_{get_tl_group_hash(tl_group)}_{self.locale}_intl[] = {{',
+                      ]
 
-        for tl in self.tl_list:
-            h_code.append(f'    0x{current_offset:04X}, // {sanitize_comment_text(tl)}')
-            current_offset += len(tl.encode("utf-8")) + 1  # +1 for null terminator
+            for tl in self.tl_dict[tl_group]:
+                h_code.append(f'    0x{current_offset:04X}, // {sanitize_comment_text(tl)}')
+                current_offset += len(tl.encode("utf-8")) + 1  # +1 for null terminator
 
-        h_code.append("};")
+            h_code.append("};")
 
-        with open(f"{os.path.join(self.output_dir, self.filename)}_{self.locale}_tl_index.h", "w") as h_file:
-            h_file.write(defined("\n".join(h_code), define_name, "KS", f"{self.locale.upper()}_TL_INDEX"))
+            with open(f"{os.path.join(self.output_dir, filename_header_base)}_{self.locale}_tl_index.h", "w") as h_file:
+                h_file.write(defined("\n".join(h_code), define_name, "KS", f"{self.locale.upper()}_TL_INDEX"))
 
-        tl_filename = f"tl_{self.filename}.{self.locale}"
-        os.makedirs(os.path.dirname(os.path.join(self.gbfs_dir, tl_filename)), exist_ok=True)
+            # Write uncompressed translation file
+            with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}.uncompressed", "wb") as tl_file:
+                for value in self.tl_dict[tl_group]:
+                    tl_file.write(value.encode("utf-8") + b'\0')
 
-        # Write uncompressed translation file
-        with open(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}.uncompressed", "wb") as tl_file:
-            for value in self.tl_list:
-                tl_file.write(value.encode("utf-8") + b'\0')
+            with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}.uncompressed", "rb") as f:
+                uncompressed_bytes = f.read()
 
-        with open(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}.uncompressed", "rb") as f:
-            uncompressed_bytes = f.read()
+            compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
 
-        compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
+            # Write LZ77 compressed translation file
+            with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}", "wb") as f:
+                f.write(compressed_bytes)
 
-        # Write LZ77 compressed translation file
-        with open(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}", "wb") as f:
-            f.write(compressed_bytes)
-
-        # Delete uncompressed translation file
-        os.remove(f"{os.path.join(self.gbfs_dir, self.filename)}.{self.locale}.uncompressed")
+            # Delete uncompressed translation file
+            os.remove(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}.uncompressed")
 
     def get_labels(self) -> List[SequenceGroup]:
         return [group for group in self.scenario if group.type == SequenceGroupType.LABEL]
@@ -394,20 +387,9 @@ class ScenarioWriter:
         return code
 
     def precess_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
-        tl_index = self.tl_indexes.get(dialog.id)
         # TODO: add character symbol to font
         dialog.message = dialog.message.replace("’", "'")
-
-        if tl_index is None:  # Only process if the id is not already in the index
-            for i, tl in enumerate(self.tl_list):
-                if dialog.message == tl:  # Check for duplicate message
-                    tl_index = i
-                    break
-            else:  # If no duplicate is found
-                tl_index = len(self.tl_list)
-                self.tl_list.append(dialog.message)  # Add the message to the list
-
-            self.tl_indexes[dialog.id] = tl_index  # Store the index for the id
+        tl_index = add_translation(self.tl_dict, dialog.label_name, dialog.message)
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
@@ -458,16 +440,16 @@ class ScenarioWriter:
 
     def process_sequence_run_label(self, group: SequenceGroup, run_label: RunLabelItem) -> List[str]:
         if run_label.inline_call:
+            print(f"{group.name} >>> Run Label (inline) {run_label.function_callback}")
             return [
-                f'IF_NOT_EXIT({run_label.function_callback}());',
+                f'IF_NOT_EXIT({run_label.function_callback}()); // INLINE CALL',
             ]
         else:
-            # return [f'scene.add_sequence(ks::RunLabelItem(&{self.get_class_name()}::{run_label.function_callback}));']
-            # return [f'scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}();}}));']
-            return [f'IF_NOT_EXIT({self.get_class_name()}::{run_label.function_callback}());']
-            # return [f'{run_label.function_callback}();']
-            # return [
-            #     f'// scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{run_label.function_callback}(scene);}}));']
+            print(f"{group.name} ({group.type}) >>> Run Label (direct) {run_label.function_callback}")
+            code = [f'IF_NOT_EXIT({self.get_class_name()}::{run_label.function_callback}()); // DIRECT CALL']
+            if group.type == SequenceGroupType.LABEL:
+                code.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(group.name)}", tl_{get_tl_group_hash(group.name)}_{self.locale}_intl));')
+            return code
 
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
         # if not show.sprite in self.sprites:
@@ -647,9 +629,9 @@ class ScenarioWriter:
         if not show_video.video in self.videos:
             self.videos.append(show_video.video)
         return [
-        #     # f'ks::SceneManager::free_resources();',
-            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.ulc"));\n'
-            f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}", {sanitize_function_name(self.filename)}_{self.locale}_intl)));\n'
+            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.ulc"));',
+            f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}")));',
+            # f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(show_video.label_name)}", tl_{get_tl_group_hash(show_video.label_name)}_{self.locale}_intl));'
         ]
 
     def locale_suffix(self):

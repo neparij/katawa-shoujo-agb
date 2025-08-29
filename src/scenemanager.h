@@ -86,13 +86,14 @@ struct answer_ptr
 
 class SceneManager {
 public:
-    constexpr SceneManager(const char* scenario, const char* locale, const unsigned int* translations)
-        : _scenario(scenario), _locale(locale), _script_tl_index(translations) {}
+    constexpr SceneManager(const char* scenario, const char* locale)
+        : _scenario(scenario), _locale(locale) {}
     constexpr ~SceneManager() = default;
 
 
     static void free_resources();
     static void set(const ks::SceneManager instance);
+    static void set_textdb(const char* db, const unsigned int* index);
     static void init_savedata(ks::saves::SaveSlotProgressData &value);
     static void set_script(const script_t script);
     static void set_label(const label_t label);
@@ -133,8 +134,8 @@ public:
                       scene_transition_t transition,
                       int dissolve_time);
 
-    static void show_dialog(const ks::character_definition& actor, int tl_key);
-    static void show_dialog(const char* actor_name, int tl_key);
+    static void show_dialog(const ks::character_definition& actor, unsigned int tl_key);
+    static void show_dialog(const char* actor_name, unsigned int tl_key);
     static void show_dialog_question(bn::vector<ks::answer_ptr, 5> answers);
     static int get_dialog_question_answer();
     static void show_character(const character_t character,
@@ -208,18 +209,13 @@ public:
 
     constexpr const char* scenario() const { return _scenario; }
     constexpr const char* locale() const { return _locale; }
-    constexpr const unsigned int* translation_index() const { return _script_tl_index; }
 
 private:
     static int get_character_visual_index(character_t character, bool create_if_not_found = true);
     const char* _scenario;
     const char* _locale;
-    const unsigned int* _script_tl_index;
 };
 
-extern u8* text_db;
-extern u32 text_db_size;
-extern bool text_db_allocated;
 extern bn::string<1024> message;
 extern bn::vector<bn::string<128>, 5> answers_messages;
 

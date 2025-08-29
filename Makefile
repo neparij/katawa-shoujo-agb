@@ -55,6 +55,7 @@ SOURCES     	:=  ../butano/common/src \
                     src/menu \
                     src/savefile \
                     src/scripts \
+                    src/scripts/tl_index \
                     src/shaders \
                     src/translations \
 		    		src/utils \

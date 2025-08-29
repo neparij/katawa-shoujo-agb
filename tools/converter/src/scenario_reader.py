@@ -205,6 +205,9 @@ class ScenarioReader:
 
         elif stripped_line.startswith("if "):
             condition = stripped_line.split("if ", 1)[1].strip(":")
+            print(f" >> If condition before rewrite: {condition}")
+            print(f"    current indent: {self.stack.current_indent()}")
+            print(f"    current label: {self.stack.current_label().name}")
             condition = rewrite_condition(condition)
 
             # TODO: process conditions, also transpose it from py to c++
@@ -227,7 +230,7 @@ class ScenarioReader:
             self.stack.current().add_sequence_item(self.linepack_events, ConditionItem(name))
 
             condition_stack = SequenceGroup(name, SequenceGroupType.CONDITION)
-            condition_stack.add_condition(condition)
+            condition_stack.add_condition(self.stack.current_label().name, condition=condition)
             self.stack.push(condition_stack, current_indent)
             print(f" >> Current condition indent: {current_indent}")
             return
@@ -236,18 +239,20 @@ class ScenarioReader:
             condition = stripped_line.split("elif ", 1)[1].strip(":")
             print(f" >> Elif condition before rewrite: {condition}")
             print(f"    current indent: {self.stack.current_indent()}")
+            print(f"    current label: {self.stack.current_label().name}")
             condition = rewrite_condition(condition)
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Elif block outside of condition block")
-            self.stack.current().add_condition(condition)
+            self.stack.current().add_condition(self.stack.current_label().name, condition=condition)
             return
 
         elif stripped_line.startswith("else:"):
             print(f" >> Else condition")
             print(f"    current indent: {self.stack.current_indent()}")
+            print(f"    current label:    current label: {self.stack.current_label().name}")
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Else block outside of condition block")
-            self.stack.current().add_condition()
+            self.stack.current().add_condition(self.stack.current_label().name)
             return
 
         elif stripped_line.startswith("menu:"):
@@ -274,7 +279,9 @@ class ScenarioReader:
 
                 condition = condition_block if condition_block else None
                 # self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
+                print(f"Adding menu answers inside label [[[{self.stack.current_label().name}]]]")
                 self.stack.current().add_answer(
+                    self.stack.current_label().name,
                     answer = choice_text_translated if choice_text_translated else choice_text,
                     condition = condition,
                     callback = f"{self.stack.current().name}_{sanitize_function_name(choice_text)}"
@@ -297,7 +304,8 @@ class ScenarioReader:
         elif stripped_line.startswith("call act_op("):
             video_name = stripped_line.split("act_op(\"", 1)[1].strip("\")")
             video_without_extension = video_name.split(".")[0]
-            self.stack.current().add_sequence_item(self.linepack_events, ShowVideoItem(video_without_extension))
+            self.stack.current().add_sequence_item(self.linepack_events, ShowVideoItem(video_without_extension,
+                                                                                       label_name=self.stack.current_label().name))
             return
 
         elif stripped_line.startswith("call "):
@@ -602,15 +610,18 @@ class ScenarioReader:
             if dialog_match_str:
                 actor, dialog = dialog_match_str.groups()
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, actor, dialog.strip().replace("\\n", "\n")))
+                    DialogItem(dialog_hash, actor, dialog.strip().replace("\\n", "\n"),
+                               label_name=self.stack.current_label().name))
             elif dialog_match_ref:
                 actor, dialog = dialog_match_ref.groups()
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, "", dialog.strip().replace("\\n", "\n"), actor))
+                    DialogItem(dialog_hash, "", dialog.strip().replace("\\n", "\n"), actor,
+                               label_name=self.stack.current_label().name))
             elif narration_match:
                 narration = narration_match.group(1)
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n")))
+                    DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n"),
+                               label_name=self.stack.current_label().name))
             return
 
 def get_line_indent(line: str) -> int:
