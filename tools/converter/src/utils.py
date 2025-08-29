@@ -88,6 +88,20 @@ def add_translation(tl_dict: Dict[str, List[str]], tl_group: str, value: str) ->
     tl_dict[tl_group].append(value)
     return len(tl_dict[tl_group]) - 1
 
+def add_translation_optional(tl_dict: Dict[str, List[str]], tl_group: str, value: str) -> int:
+    """
+    Adds a translation value to the specified translation group in the dictionary if it doesn't already exist.
+    :param tl_dict: The dictionary containing translation groups.
+    :param tl_group: The translation group to which the value should be added.
+    :param value: The translation value to add.
+    :return: The index of the value in the group list.
+    """
+    if tl_group not in tl_dict:
+        tl_dict[tl_group] = []
+    if value in tl_dict[tl_group]:
+        return tl_dict[tl_group].index(value)
+    return add_translation(tl_dict, tl_group, value)
+
 def get_tl_group_hash(tl_group: str) -> str:
     hash_value = 1337
     for char in tl_group:

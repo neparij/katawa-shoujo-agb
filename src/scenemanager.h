@@ -86,14 +86,14 @@ struct answer_ptr
 
 class SceneManager {
 public:
-    constexpr SceneManager(const char* scenario, const char* locale)
-        : _scenario(scenario), _locale(locale) {}
+    constexpr explicit SceneManager(const char* scenario) : _scenario(scenario), _locale(ks::globals::i18n->locale()) {
+    }
     constexpr ~SceneManager() = default;
 
 
     static void free_resources();
     static void set(const ks::SceneManager instance);
-    static void set_textdb(const char* db, const unsigned int* index);
+    static void set_textdb(const char* db);
     static void init_savedata(ks::saves::SaveSlotProgressData &value);
     static void set_script(const script_t script);
     static void set_label(const label_t label);
@@ -135,7 +135,7 @@ public:
                       int dissolve_time);
 
     static void show_dialog(const ks::character_definition& actor, unsigned int tl_key);
-    static void show_dialog(const char* actor_name, unsigned int tl_key);
+    static void show_dialog(unsigned int actor_tl_key, unsigned int tl_key);
     static void show_dialog_question(bn::vector<ks::answer_ptr, 5> answers);
     static int get_dialog_question_answer();
     static void show_character(const character_t character,

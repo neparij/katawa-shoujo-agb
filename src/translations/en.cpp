@@ -1,12 +1,5 @@
 #include "translation.h"
 #include "en_definitions_labels.h"
-#include "../scripts/script_a1_monday_en.cpp"
-#include "../scripts/script_a1_tuesday_en.cpp"
-#include "../scripts/script_a1_wednesday_en.cpp"
-#include "../scripts/script_a1_thursday_en.cpp"
-#include "../scripts/script_a1_friday_en.cpp"
-#include "../scripts/script_a1_saturday_en.cpp"
-#include "../scripts/script_a1_sunday_en.cpp"
 
 namespace ks {
 
@@ -15,15 +8,8 @@ public:
     language_t type() override {
         return LANG_ENGLISH;
     }
+    const char* locale() override {return "en";}
     const char* language() override {return screens_english();}
-
-    void (*script_a1_monday())() override { return &ScriptA1MondayEn::a1_monday; }
-    void (*script_a1_tuesday())() override { return &ScriptA1TuesdayEn::a1_tuesday; }
-    void (*script_a1_wednesday())() override { return &ScriptA1WednesdayEn::a1_wednesday; }
-    void (*script_a1_thursday())() override { return &ScriptA1ThursdayEn::a1_thursday; }
-    void (*script_a1_friday())() override { return &ScriptA1FridayEn::a1_friday; }
-    void (*script_a1_saturday())() override { return &ScriptA1SaturdayEn::a1_saturday; }
-    void (*script_a1_sunday())() override { return &ScriptA1SundayEn::a1_sunday; }
 
     const char* menu_author() override {return "port by NeParij";}
     const char* menu_play_a0_test_scene() override {return "Test Scene";}

@@ -127,8 +127,8 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("SceneManager init done!");
 }
 
-void SceneManager::set_textdb(const char *db, const unsigned int* index) {
-    textdb::set(db, index, scene->locale());
+void SceneManager::set_textdb(const char *db) {
+    textdb::set(db, scene->locale());
     if (!is_loading) {
         textdb::free();
         textdb::allocate();
@@ -366,11 +366,11 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
     }
 }
 
-void SceneManager::show_dialog(const char* actor_name, const unsigned int tl_key) {
+void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned int tl_key) {
     if (is_loading) {
         return;
     }
-    const ks::character_definition current = ks::definitions::base.with_name(actor_name);
+    const character_definition current = definitions::base.with_name(textdb::get_tl_cstr(actor_tl_key));
     return show_dialog(current, tl_key);
 }
 

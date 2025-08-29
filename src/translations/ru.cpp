@@ -1,12 +1,5 @@
 #include "translation.h"
 #include "ru_definitions_labels.h"
-#include "../scripts/script_a1_monday_ru.cpp"
-#include "../scripts/script_a1_tuesday_ru.cpp"
-#include "../scripts/script_a1_wednesday_ru.cpp"
-#include "../scripts/script_a1_thursday_ru.cpp"
-#include "../scripts/script_a1_friday_ru.cpp"
-#include "../scripts/script_a1_saturday_ru.cpp"
-#include "../scripts/script_a1_sunday_ru.cpp"
 
 namespace ks {
 class TranslationRu final : public Translation {
@@ -14,15 +7,8 @@ public:
     language_t type() override {
         return LANG_RUSSIAN;
     }
+    const char* locale() override {return "ru";}
     const char* language() override {return screens_russian();}
-
-    void (*script_a1_monday())() override { return &ScriptA1MondayRu::a1_monday; }
-    void (*script_a1_tuesday())() override { return &ScriptA1TuesdayRu::a1_tuesday; }
-    void (*script_a1_wednesday())() override { return &ScriptA1WednesdayRu::a1_wednesday; }
-    void (*script_a1_thursday())() override { return &ScriptA1ThursdayRu::a1_thursday; }
-    void (*script_a1_friday())() override { return &ScriptA1FridayRu::a1_friday; }
-    void (*script_a1_saturday())() override { return &ScriptA1SaturdayRu::a1_saturday; }
-    void (*script_a1_sunday())() override { return &ScriptA1SundayRu::a1_sunday; }
 
     const char* menu_author() override {return "порт от NeParij";}
     const char* menu_play_a0_test_scene() override {return "Тестовая сцена";}

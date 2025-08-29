@@ -28,7 +28,7 @@ from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
-    add_translation, get_tl_group_hash
+    add_translation, get_tl_group_hash, add_translation_optional
 
 DEFAULT_LOCALE = "en"
 PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
@@ -40,8 +40,6 @@ class ScenarioWriter:
         self.output_dir = output_dir
         self.gbfs_dir = gbfs_dir
         self.scenario = scenario
-        # self.tl_indexes: Dict[str, int] = {}
-        # self.tl_list: List[str] = []
         self.tl_dict: Dict[str, List[str]] = {}
         self.locale = locale if locale else DEFAULT_LOCALE
 
@@ -73,12 +71,11 @@ class ScenarioWriter:
 
     def write(self):
         os.makedirs(os.path.dirname(os.path.join(self.output_dir, self.filename)), exist_ok=True)
-        self.write_source()
-        if self.locale == DEFAULT_LOCALE:
-            self.write_header()
+        self.write_source(dry_run = self.locale != DEFAULT_LOCALE)
+        self.write_header(dry_run = self.locale != DEFAULT_LOCALE)
         self.write_scenario_tl()
 
-    def write_header(self):
+    def write_header(self, dry_run: bool = False):
         define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
         h_code = [
             # Define the INLINE modifier:
@@ -137,10 +134,11 @@ class ScenarioWriter:
 
         h_code.append(namespace(class_code, "ks"))
 
-        with open(f"{os.path.join(self.output_dir, self.filename)}.h", "w") as h_file:
-            h_file.write(defined("\n".join(h_code), define_name, "KS"))
+        if not dry_run:
+            with open(f"{os.path.join(self.output_dir, self.filename)}.h", "w") as h_file:
+                h_file.write(defined("\n".join(h_code), define_name, "KS"))
 
-    def write_source(self):
+    def write_source(self, dry_run: bool = False):
         cpp_code = [
             include_header(f"{self.filename}"),
         ]
@@ -150,7 +148,7 @@ class ScenarioWriter:
             sequences = []
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
-                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}", tl_{get_tl_group_hash(label.name)}_{self.locale}_intl));')
+                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}"));')
                 sequences.append(f'if (!ks::in_replay) {{')
                 # sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
                 sequences.append(f'}}')
@@ -159,10 +157,10 @@ class ScenarioWriter:
                 sequences.append(f'ks::SceneManager::set_script(SCRIPT_{label.name.upper()});')
                 sequences.append(f'IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));')
                 sequences.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}")));\n')
+                    f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));\n')
             else:
                 sequences.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}", tl_{get_tl_group_hash(label.name)}_{self.locale}_intl));')
+                    f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}"));')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -176,9 +174,9 @@ class ScenarioWriter:
             #         "}"
             #     ])
             if label.is_initial:
-                functions.append(f"static {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"{label_signature(label, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
             else:
-                functions.append(f"SCENE_INLINE {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"{label_signature(label, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
             # functions.append(f"static {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
 
         for menu in self.get_menus():
@@ -207,13 +205,13 @@ class ScenarioWriter:
 
             sequences.extend(" else ".join(answer_callbacks).split("\n"))
 
-            functions.append(f"SCENE_INLINE {menu_signature(menu)} {{\n{indented_l(sequences)}\n}}")
+            functions.append(f"{menu_signature(menu, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
 
             for answer in menu.conditions:
                 sequences = []
                 for seq in answer.sequence:
                     sequences.extend(self.process_sequence(menu, seq))
-                functions.append(f"SCENE_INLINE {answer_signature(menu, answer)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"{answer_signature(menu, answer, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
 
         for condition in self.get_conditions():
             cnum = 0
@@ -223,41 +221,42 @@ class ScenarioWriter:
                     sequence_code = self.process_sequence(condition, seq)
                     if sequence_code:
                         sequences.extend(sequence_code)
-                functions.append(f"SCENE_INLINE {condition_signature(condition, cnum)} {{\n{indented_l(sequences)}\n}}")
+                functions.append(f"{condition_signature(condition, cnum, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
                 cnum += 1
 
-        functions = as_public("\n".join(functions))
-        class_code = as_class(functions, self.get_class_name(), self.get_interface_name())
+        class_code = indented("\n".join(functions))
 
-        for tl_group in self.tl_dict:
-            cpp_code.append(include_header(f"tl_index/{self.filename}_{get_tl_group_hash(tl_group)}_{self.locale}_tl_index"))
         cpp_code.append(namespace(class_code, "ks"))
 
-        with open(f"{os.path.join(self.output_dir, self.filename)}{self.locale_suffix()}.cpp", "w") as cpp_file:
-            cpp_file.write("\n".join(cpp_code))
+        if not dry_run:
+            with open(f"{os.path.join(self.output_dir, self.filename)}.cpp", "w") as cpp_file:
+                cpp_file.write("\n".join(cpp_code))
 
     def write_scenario_tl(self):
         for tl_group in self.tl_dict:
             print(f"Writing TL group '{tl_group}' ({get_tl_group_hash(tl_group)}) with {len(self.tl_dict[tl_group])} entries")
-            current_offset = 0
+            offsets = []
+            current_offset = 2 + len(self.tl_dict[tl_group]) * 2 # Offset table length + Offset table content
             define_name = f"{tl_group.upper().replace("-", "_")}"
             filename_base = f"tl_{get_tl_group_hash(tl_group)}"
-            filename_header_base = f"tl_index/{self.filename}_{get_tl_group_hash(tl_group)}"
-            h_code = [include_header("bn_vector"),
-                      f'constexpr unsigned int tl_{get_tl_group_hash(tl_group)}_{self.locale}_intl[] = {{',
-                      ]
 
             for tl in self.tl_dict[tl_group]:
-                h_code.append(f'    0x{current_offset:04X}, // {sanitize_comment_text(tl)}')
-                current_offset += len(tl.encode("utf-8")) + 1  # +1 for null terminator
-
-            h_code.append("};")
-
-            with open(f"{os.path.join(self.output_dir, filename_header_base)}_{self.locale}_tl_index.h", "w") as h_file:
-                h_file.write(defined("\n".join(h_code), define_name, "KS", f"{self.locale.upper()}_TL_INDEX"))
+                offsets.append(current_offset)
+                current_offset += len(tl.encode("utf-8")) + 1  # +1 for null terminator sequence
+                if len(offsets) > 65535:
+                    raise Exception(f"Too many translations in group '{tl_group}'")
 
             # Write uncompressed translation file
             with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}.uncompressed", "wb") as tl_file:
+                # Offset table length
+                print(f">>>> Writing TL group '{tl_group}' with {len(self.tl_dict[tl_group])} entries")
+                tl_file.write(len(self.tl_dict[tl_group]).to_bytes(2, byteorder='little'))
+
+                # Offset table
+                for offset in offsets:
+                    tl_file.write(offset.to_bytes(2, byteorder='little'))
+
+                # Translations itself
                 for value in self.tl_dict[tl_group]:
                     tl_file.write(value.encode("utf-8") + b'\0')
 
@@ -396,7 +395,8 @@ class ScenarioWriter:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
             # return [f'scene.add_dialog("{dialog.actor_ref}", \"{resulted_hash}\");']
         elif dialog.actor:
-            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog("{dialog.actor}", {tl_index}));']
+            actor_tl_index = add_translation_optional(self.tl_dict, dialog.label_name, dialog.actor)
+            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog({actor_tl_index}, {tl_index}));']
         else:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
 
@@ -447,8 +447,8 @@ class ScenarioWriter:
         else:
             print(f"{group.name} ({group.type}) >>> Run Label (direct) {run_label.function_callback}")
             code = [f'IF_NOT_EXIT({self.get_class_name()}::{run_label.function_callback}()); // DIRECT CALL']
-            if group.type == SequenceGroupType.LABEL:
-                code.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(group.name)}", tl_{get_tl_group_hash(group.name)}_{self.locale}_intl));')
+            if group.type in [SequenceGroupType.LABEL, SequenceGroupType.MENU]:
+                code.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(run_label.label_name)}"));')
             return code
 
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
@@ -630,15 +630,12 @@ class ScenarioWriter:
             self.videos.append(show_video.video)
         return [
             f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.ulc"));',
-            f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}", "{self.locale}")));',
-            # f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(show_video.label_name)}", tl_{get_tl_group_hash(show_video.label_name)}_{self.locale}_intl));'
+            f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
+            # f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(show_video.label_name)}"));'
         ]
 
-    def locale_suffix(self):
-        return f"_{self.locale}" if self.locale else ""
-
     def get_class_name(self):
-        return to_pascal_case(f'{self.filename}{self.locale_suffix()}')
+        return to_pascal_case(f'{self.filename}')
 
     def get_interface_name(self):
         return to_pascal_case(self.filename)
@@ -655,7 +652,6 @@ def namespace(code, name=""):
 
 def as_class(code, class_name="", extends_name=""):
     return f"class {class_name}{f" : public {extends_name}" if extends_name else ""} {{\n{indented(code)}\n}};"
-
 
 def as_public(code):
     return f"public:\n{indented(code)}"
@@ -677,24 +673,24 @@ def indented_l(code: List[str], indent=4):
     return "\n".join(f"{' ' * indent}{line}" for line in code)
 
 
-def label_signature(group: SequenceGroup):
-    print(f"   >>> Label: {group.name}, is_called_inline: {group.is_called_inline}")
+def label_signature(group: SequenceGroup, ns: str | None = None):
+    print(f"   >>> Label: {f"{ns}::" if ns else ""}{group.name}, is_called_inline: {group.is_called_inline}")
     if group.is_called_inline:
-        return f"void {group.name}()"
+        return f"void {f"{ns}::" if ns else ""}{group.name}()"
     else:
-        return f"void {group.name}()"
+        return f"void {f"{ns}::" if ns else ""}{group.name}()"
 
 
-def menu_signature(group: SequenceGroup):
-    return f"void {group.name}()"
+def menu_signature(group: SequenceGroup, ns: str | None = None):
+    return f"void {f"{ns}::" if ns else ""}{group.name}()"
 
 
-def answer_signature(group: SequenceGroup, answer: ConditionWrapper):
-    return f"void {answer.function_callback}()"
+def answer_signature(group: SequenceGroup, answer: ConditionWrapper, ns: str | None = None):
+    return f"void {f"{ns}::" if ns else ""}{answer.function_callback}()"
 
 
-def condition_signature(group: SequenceGroup, num: int):
-    return f"void {group.name}_{num}()"
+def condition_signature(group: SequenceGroup, num: int, ns: str | None = None):
+    return f"void {f"{ns}::" if ns else ""}{group.name}_{num}()"
 
 
 def to_pascal_case(s: str) -> str:

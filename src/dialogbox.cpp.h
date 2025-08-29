@@ -30,6 +30,7 @@
 
 #include <BN_LOG.h>
 #include <bn_sprite_actions.h>
+#include <cstring>
 
 namespace ks
 {

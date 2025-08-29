@@ -188,7 +188,7 @@ class ScenarioReader:
 
             if self.stack.size() > 0:
                 name = f"{self.stack.parent_label().name}_{name}"
-                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(name, self.initial_name and name.startswith(self.initial_name)))
+                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(name, self.initial_name and name.startswith(self.initial_name), label_name=self.stack.current_label().name))
             else:
                 name = name
 
@@ -318,7 +318,7 @@ class ScenarioReader:
                 function_name = stripped_line.split("call ", 1)[1].strip()
                 if function_name == "a1c4o1":
                     self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem("im_new_here = True"))
-                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(sanitize_function_name(function_name), False))
+                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(sanitize_function_name(function_name), False, label_name=self.stack.current_label().name))
             return
 
         elif stripped_line.startswith("scene bg"):
@@ -610,17 +610,17 @@ class ScenarioReader:
             if dialog_match_str:
                 actor, dialog = dialog_match_str.groups()
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, actor, dialog.strip().replace("\\n", "\n"),
+                    DialogItem(original_dialog_hash[-8:], actor, dialog.strip().replace("\\n", "\n"),
                                label_name=self.stack.current_label().name))
             elif dialog_match_ref:
                 actor, dialog = dialog_match_ref.groups()
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, "", dialog.strip().replace("\\n", "\n"), actor,
+                    DialogItem(original_dialog_hash[-8:], "", dialog.strip().replace("\\n", "\n"), actor,
                                label_name=self.stack.current_label().name))
             elif narration_match:
                 narration = narration_match.group(1)
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n"),
+                    DialogItem(original_dialog_hash[-8:], "", narration.strip().replace("\\n", "\n"),
                                label_name=self.stack.current_label().name))
             return
 

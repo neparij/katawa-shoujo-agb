@@ -1,9 +1,13 @@
 #ifndef KS_SCENARIO_READER_H
 #define KS_SCENARIO_READER_H
 
+#define KS_TEXTDB_INDEX_SIZE 512
+#define KS_TEXTDB_MAX_OFFSET 0xFFFF
+
 #include "bn_string.h"
 #include "gba_types.h"
 #include <BN_LOG.h>
+#include <cstring>
 
 namespace ks {
     namespace textdb {
@@ -22,14 +26,17 @@ namespace ks {
         static u8 *ptr = nullptr;
         static u32 size = 0;
         static bool is_allocated = false;
-        static const unsigned int* _index_ptr = nullptr;
-        static const char* _chunk = nullptr;
-        static const char* _locale = nullptr;
+        static u16 _index[KS_TEXTDB_INDEX_SIZE] = {};
+        static const char *_chunk = nullptr;
+        static const char *_locale = nullptr;
 
-        inline void set(const char* chunk, const unsigned int* index, const char* locale) {
+        inline void set(const char *chunk, const char *locale) {
             _chunk = chunk;
-            _index_ptr = index;
             _locale = locale;
+
+            for (unsigned short & i : _index) {
+                i = 0;
+            }
         }
 
         inline void allocate() {
@@ -56,6 +63,17 @@ namespace ks {
             BN_LOG("Decompress TextDB file...");
             LZ77UnCompWRAM((u32) compressed_data, (u32) ptr);
             BN_LOG("EWRAM after allocation: ", bn::memory::available_alloc_ewram());
+
+            const u16 elements = ((u16*)ptr)[0];
+            BN_ASSERT(elements <= KS_TEXTDB_INDEX_SIZE, "TextDB index size exceeded!");
+            BN_LOG("Filling index table with ", elements, " elements...");
+            for (u16 i = 0; i < KS_TEXTDB_INDEX_SIZE; i++) {
+                if (i < elements) {
+                    _index[i] = ((u16*)ptr)[i + 1];
+                } else {
+                    _index[i] = 0;
+                }
+            }
         }
 
         inline void free() {
@@ -68,12 +86,12 @@ namespace ks {
 
         template<int MaxSize>
         // TODO: check should it be inline?
-        inline void BN_CODE_IWRAM get_tl(const unsigned int key, bn::string<MaxSize> &out) {
+        inline void BN_CODE_IWRAM get_tl(const unsigned short key, bn::string<MaxSize> &out) {
             BN_ASSERT(is_allocated, "TextDB not allocated!");
-            BN_ASSERT(_index_ptr != nullptr, "TextDB Index Table not set!");
             BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
             BN_ASSERT(_locale != nullptr, "TextDB Locale not set!");
-            u32 cursor = _index_ptr[key];
+            u32 cursor = _index[key];
+            BN_LOG("Key: ", key, "; Offset: ", cursor);
             out.clear();
             for (u32 i = 0; i < size; i++) {
                 char c = ptr[cursor];
@@ -85,6 +103,16 @@ namespace ks {
                 out.push_back(c);
                 cursor++;
             }
+        }
+
+        inline char* get_tl_cstr(const unsigned short key) {
+            BN_ASSERT(is_allocated, "TextDB not allocated!");
+            BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
+            BN_ASSERT(_locale != nullptr, "TextDB Locale not set!");
+            const u32 cursor = _index[key];
+            BN_LOG("TL CSTR at position: ", cursor);
+            // return reinterpret_cast<char*>(ptr + cursor);
+            return (char*)(ptr + cursor);
         }
     }
 }

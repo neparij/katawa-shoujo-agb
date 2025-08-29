@@ -20,6 +20,13 @@
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
+#include "scripts/script_a1_friday.h"
+#include "scripts/script_a1_monday.h"
+#include "scripts/script_a1_saturday.h"
+#include "scripts/script_a1_sunday.h"
+#include "scripts/script_a1_thursday.h"
+#include "scripts/script_a1_tuesday.h"
+#include "scripts/script_a1_wednesday.h"
 #include "temp/test_huge_bg.cpp.h"
 
 using size_type = int;
@@ -36,13 +43,13 @@ inline void game(const bool is_new_game) {
         ks::timer::start_ingame_timer(false);
     }
 
-    ks::globals::i18n->script_a1_monday()();
-    ks::globals::i18n->script_a1_tuesday()();
-    ks::globals::i18n->script_a1_wednesday()();
-    ks::globals::i18n->script_a1_thursday()();
-    ks::globals::i18n->script_a1_friday()();
-    ks::globals::i18n->script_a1_saturday()();
-    ks::globals::i18n->script_a1_sunday()();
+    ks::ScriptA1Monday::a1_monday();
+    ks::ScriptA1Tuesday::a1_tuesday();
+    ks::ScriptA1Wednesday::a1_wednesday();
+    ks::ScriptA1Thursday::a1_thursday();
+    ks::ScriptA1Friday::a1_friday();
+    ks::ScriptA1Saturday::a1_saturday();
+    ks::ScriptA1Sunday::a1_sunday();
 
     if (ks::progress.force_route == FR_EMI) {
         // video: tc_act2_emi
