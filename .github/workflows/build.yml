@@ -54,9 +54,19 @@ jobs:
           name: ${{ env.KS_BUILD_FILENAME }}
           path: ${{ env.KS_BUILD_FILENAME }}
 
+  release:
+    permissions:
+      contents: write
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.KS_BUILD_FILENAME }}
       - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: github.ref == 'refs/heads/main'
         with:
           files: ${{ env.KS_BUILD_FILENAME }}
           tag_name: v${{ env.KS_BUILD_VERSION }}
