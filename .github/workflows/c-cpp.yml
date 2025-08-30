@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:latest
 
     steps:
       - name: Checkout project
@@ -18,14 +20,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y wget python3 python3-pip
-
-      - name: Install devkitPro / devkitARM
-        run: |
-          sudo wget https://apt.devkitpro.org/install-devkitpro-pacman
-          sudo chmod +x ./install-devkitpro-pacman
-          sudo ./install-devkitpro-pacman
-          sudo dkp-pacman -Sy --noconfirm
-          sudo dkp-pacman -S --noconfirm gba-dev
 
       - name: Clone Butano fork
         run: |
