@@ -1,7 +1,7 @@
 #ifndef EV_DRUGS_CPP_H
 #define EV_DRUGS_CPP_H
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 
 #include "bn_bg_palettes.h"
 #include "bn_bg_palette_ptr.h"

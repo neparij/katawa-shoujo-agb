@@ -1,7 +1,7 @@
 #ifndef HISAO_CLASS_MOVE_CPP_H
 #define HISAO_CLASS_MOVE_CPP_H
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_regular_bg_actions.h>
 
 #include "custom_event.h"

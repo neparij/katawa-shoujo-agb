@@ -6,7 +6,7 @@
 
 #include "bn_string.h"
 #include "gba_types.h"
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <cstring>
 
 namespace ks {

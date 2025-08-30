@@ -11,7 +11,7 @@
 #include <bn_affine_bg_items_test_clockwipe.h>
 #include <bn_affine_bg_tiles_ptr.h>
 #include <bn_bg_palette_ptr.h>
-#include <BN_LOG.h>
+#include <bn_log.h>
 
 #include "bn_bg_palettes.h"
 #include "bn_blending_actions.h"

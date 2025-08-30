@@ -1,6 +1,6 @@
 #include "ingametimer.h"
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_timer.h>
 #include <bn_timers.h>
 

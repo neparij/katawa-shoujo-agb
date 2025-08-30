@@ -1,7 +1,7 @@
 #ifndef EMI_KNOCKEDDOWN_FACEPULLOUT_CPP_H
 #define EMI_KNOCKEDDOWN_FACEPULLOUT_CPP_H
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_regular_bg_actions.h>
 
 #include "custom_event.h"

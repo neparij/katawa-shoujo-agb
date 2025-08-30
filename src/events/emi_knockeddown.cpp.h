@@ -1,7 +1,7 @@
 #ifndef EMI_KNOCKEDDOWN_CPP_H
 #define EMI_KNOCKEDDOWN_CPP_H
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include "custom_event.h"
 
 namespace ks {

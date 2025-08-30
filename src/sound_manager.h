@@ -2,7 +2,7 @@
 #define KS_SOUND_MANAGER_H
 
 #include <bn_fixed.h>
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_optional.h>
 #include <bn_template_actions.h>
 
