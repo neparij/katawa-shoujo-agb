@@ -84,3 +84,24 @@ jobs:
           tag_name: v${{ needs.build.outputs.KS_BUILD_VERSION }}
           name: Katawa Shoujo GBA v${{ needs.build.outputs.KS_BUILD_STRING }}
           generate_release_notes: true
+
+  publish:
+    needs:
+      - build
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.KS_BUILD_FILENAME }}
+          path: "./publish"
+      - name: Publish to itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
+          unzip butler.zip
+          chmod +x butler
+          ./butler -V
+          ./butler push ./publish/${{ needs.build.outputs.KS_BUILD_FILENAME }} neparij/katawa-shoujo-gba --userversion "Katawa Shoujo GBA — v${{ needs.build.outputs.KS_BUILD_STRING }}"
