@@ -1,7 +1,7 @@
 #ifndef HISAO_CLASS_END_CPP_H
 #define HISAO_CLASS_END_CPP_H
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 
 #include "custom_event.h"
 

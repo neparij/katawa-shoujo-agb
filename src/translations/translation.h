@@ -11,15 +11,8 @@ public:
 
     virtual ~Translation() = default;
     virtual language_t type() = 0;
+    virtual const char* locale() = 0;
     virtual const char* language() = 0;
-
-    virtual void (*script_a1_monday())() = 0;
-    virtual void (*script_a1_tuesday())() = 0;
-    virtual void (*script_a1_wednesday())() = 0;
-    virtual void (*script_a1_thursday())() = 0;
-    virtual void (*script_a1_friday())() = 0;
-    virtual void (*script_a1_saturday())() = 0;
-    virtual void (*script_a1_sunday())() = 0;
 
     virtual const char* menu_author() = 0;
     virtual const char* menu_play_a0_test_scene() = 0;

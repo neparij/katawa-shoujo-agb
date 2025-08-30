@@ -2,7 +2,8 @@ import hashlib
 import os
 import re
 import tempfile
-from typing import List, cast, Tuple
+from time import sleep
+from typing import List, cast, Dict
 
 from src.dto.assignment_item import AssignmentItem
 from src.dto.background_item import BackgroundItem, BgShowPosition, BgTransition
@@ -28,11 +29,12 @@ from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
 from src.utils import sanitize_function_name, get_xalign_position, get_x_position, starts_with_filled_bg
 
+DEFAULT_LOCALE = "en"
 
 class ScenarioReader:
-    def __init__(self, scenario_file, translation: TranslationContainer):
+    def __init__(self, scenario_file, translations: Dict[str, TranslationContainer]):
         self.scenario_file = scenario_file
-        self.translation = translation
+        self.translations = translations
         self.scenario: List[SequenceGroup] = []
         self.stack: ScenarioScriptStack = ScenarioScriptStack()
         self.initial_name = None
@@ -52,7 +54,6 @@ class ScenarioReader:
             f.write(content)
             f.seek(0)
             lines = f.readlines()
-            # lines = flatten_python_blocks(lines)
 
         line_pack = []
         for line in lines:
@@ -188,15 +189,15 @@ class ScenarioReader:
 
             if self.stack.size() > 0:
                 name = f"{self.stack.parent_label().name}_{name}"
-                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(name, self.initial_name and name.startswith(self.initial_name)))
+                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(name, self.initial_name and name.startswith(self.initial_name), label_name=self.stack.current_label().name))
             else:
                 name = name
 
             if not self.initial_name:
                 self.initial_name = name
-                self.stack.push(SequenceGroup(name, SequenceGroupType.LABEL, True, True), current_indent)
+                self.stack.push(SequenceGroup(current_indent, name, SequenceGroupType.LABEL, True, True), current_indent)
             else:
-                self.stack.push(SequenceGroup(name, SequenceGroupType.LABEL, name.startswith(self.initial_name)), current_indent)
+                self.stack.push(SequenceGroup(current_indent, name, SequenceGroupType.LABEL, name.startswith(self.initial_name)), current_indent)
             return
 
         elif stripped_line == "return":
@@ -205,6 +206,9 @@ class ScenarioReader:
 
         elif stripped_line.startswith("if "):
             condition = stripped_line.split("if ", 1)[1].strip(":")
+            print(f" >> If condition before rewrite: {condition}")
+            print(f"    current indent: {self.stack.current_indent()}")
+            print(f"    current label: {self.stack.current_label().name}")
             condition = rewrite_condition(condition)
 
             # TODO: process conditions, also transpose it from py to c++
@@ -226,8 +230,8 @@ class ScenarioReader:
 
             self.stack.current().add_sequence_item(self.linepack_events, ConditionItem(name))
 
-            condition_stack = SequenceGroup(name, SequenceGroupType.CONDITION)
-            condition_stack.add_condition(condition)
+            condition_stack = SequenceGroup(current_indent, name, SequenceGroupType.CONDITION)
+            condition_stack.add_condition(self.stack.current_label().name, condition=condition)
             self.stack.push(condition_stack, current_indent)
             print(f" >> Current condition indent: {current_indent}")
             return
@@ -236,18 +240,20 @@ class ScenarioReader:
             condition = stripped_line.split("elif ", 1)[1].strip(":")
             print(f" >> Elif condition before rewrite: {condition}")
             print(f"    current indent: {self.stack.current_indent()}")
+            print(f"    current label: {self.stack.current_label().name}")
             condition = rewrite_condition(condition)
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Elif block outside of condition block")
-            self.stack.current().add_condition(condition)
+            self.stack.current().add_condition(self.stack.current_label().name, condition=condition)
             return
 
         elif stripped_line.startswith("else:"):
             print(f" >> Else condition")
             print(f"    current indent: {self.stack.current_indent()}")
+            print(f"    current label:    current label: {self.stack.current_label().name}")
             if self.stack.current().type != SequenceGroupType.CONDITION:
                 raise Exception("Else block outside of condition block")
-            self.stack.current().add_condition()
+            self.stack.current().add_condition(self.stack.current_label().name)
             return
 
         elif stripped_line.startswith("menu:"):
@@ -257,29 +263,32 @@ class ScenarioReader:
                 raise Exception("Menu block outside of label stack")
 
             self.stack.current().add_sequence_item(self.linepack_events, MenuItem(name))
-            self.stack.push(SequenceGroup(name, SequenceGroupType.MENU), current_indent)
+            self.stack.push(SequenceGroup(current_indent, name, SequenceGroupType.MENU), current_indent)
             return
 
-        elif self.stack.current().type == SequenceGroupType.MENU and stripped_line.startswith("\""):
+        elif self.stack.current().type == SequenceGroupType.MENU and stripped_line.startswith("\"") and current_indent == self.stack.current().indentation_level + 1:
             # Parse menu choice
             match = re.match(r"\"(.*)\"(?:| if (.*)):$", stripped_line)
             if match:
-                choice_text = match.group(1)
+                choice_text = {
+                    DEFAULT_LOCALE: match.group(1)
+                }
                 condition_block = match.group(2)
-                choice_text_translated = None
-                print(f" >> Choice_text: {choice_text}, condition: {condition_block}")
-                if self.translation and choice_text in self.translation.strings:
-                    choice_text_translated = self.translation.strings[choice_text]
-                    print(f" >> Translated to: {choice_text_translated}")
+                print(f" >> Choice_text: {choice_text[DEFAULT_LOCALE]}, condition: {condition_block}")
+                for locale, translation in self.translations.items():
+                    if locale == DEFAULT_LOCALE:
+                        continue
+                    choice_text[locale] = translation.strings[choice_text[DEFAULT_LOCALE]] if choice_text[DEFAULT_LOCALE] in translation.strings else choice_text[DEFAULT_LOCALE]
+                    print(f"    - {locale}: {choice_text[locale]}")
 
                 condition = condition_block if condition_block else None
-                # self.stack.current().add_condition(choice_text_translated if choice_text_translated else choice_text, f"{self.stack.current().name}_{sanitize_function_name(choice_text)}")
+                print(f"Adding menu answers inside label [[[{self.stack.current_label().name}]]]")
                 self.stack.current().add_answer(
-                    answer = choice_text_translated if choice_text_translated else choice_text,
+                    self.stack.current_label().name,
+                    answer = choice_text,
                     condition = condition,
-                    callback = f"{self.stack.current().name}_{sanitize_function_name(choice_text)}"
+                    callback = f"{self.stack.current().name}_{sanitize_function_name(choice_text[DEFAULT_LOCALE])}"
                 )
-                # self.stack.push(SequenceGroup(f"{self.stack.current().name}_{sanitize_function_name(choice_text)}", SequenceGroupType.MENU), current_indent)
             return
 
         elif stripped_line.startswith("$ "):
@@ -297,7 +306,8 @@ class ScenarioReader:
         elif stripped_line.startswith("call act_op("):
             video_name = stripped_line.split("act_op(\"", 1)[1].strip("\")")
             video_without_extension = video_name.split(".")[0]
-            self.stack.current().add_sequence_item(self.linepack_events, ShowVideoItem(video_without_extension))
+            self.stack.current().add_sequence_item(self.linepack_events, ShowVideoItem(video_without_extension,
+                                                                                       label_name=self.stack.current_label().name))
             return
 
         elif stripped_line.startswith("call "):
@@ -310,7 +320,7 @@ class ScenarioReader:
                 function_name = stripped_line.split("call ", 1)[1].strip()
                 if function_name == "a1c4o1":
                     self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem("im_new_here = True"))
-                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(sanitize_function_name(function_name), False))
+                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(sanitize_function_name(function_name), False, label_name=self.stack.current_label().name))
             return
 
         elif stripped_line.startswith("scene bg"):
@@ -486,7 +496,6 @@ class ScenarioReader:
             #                     with locationchange
 
             if self._hack_latest_sprite_name is not None:
-                print("Show transform sequence (xalign)")
                 # xalign 0.4 blah-blah 1.2 etc should set value to 0.4
                 value = float(stripped_line.split("xalign ")[1].split()[0])
                 self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_xalign_position(value)))
@@ -496,7 +505,6 @@ class ScenarioReader:
             # TODO: As an above - needs to be processed as a block-sequence...
 
             if self._hack_latest_sprite_name is not None:
-                print("Show transform sequence (xpos)")
                 xpos_value = float(stripped_line.split("xpos ")[1].split()[0])
                 xanchor_value = 0.5
                 if "xanchor " in stripped_line:
@@ -569,48 +577,99 @@ class ScenarioReader:
             hashing_contents = stripped_line
             if _hack_prepend_dialog_nvl_clear:
                 hashing_contents = f"nvl clear\r\n{hashing_contents}"
-            # if self.stack.current().type == SequenceGroupType.MENU:
-                # hashing_contents = f"{hashing_contents} nointeract"
 
-            dialog_match_str = re.match(r"^\"(.+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
-            dialog_match_ref = re.match(r"^(.+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
-            narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
+            dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+            dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+            # narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
+            # TODO: Fix translation in KS:RE project: "tl/ru/script-a1-sunday.rpy:943"
+            narration_match = re.match(r"^\"(.*)\"(?:| nointeract| with vpunch)$", stripped_line)
 
             original_dialog_hash = self.calculate_tl_hash(hashing_contents)
-            dialog_hash = original_dialog_hash
 
+            matches : Dict[str, re.Match] = {}
             if dialog_match_str or dialog_match_ref or narration_match:
-                if self.translation:
-                    if dialog_hash not in self.translation.translations:
+                if dialog_match_str:
+                    matches[DEFAULT_LOCALE] = dialog_match_str
+                elif dialog_match_ref:
+                    matches[DEFAULT_LOCALE] = dialog_match_ref
+                elif narration_match:
+                    matches[DEFAULT_LOCALE] = narration_match
+
+                for locale, translation in self.translations.items():
+                    if locale == DEFAULT_LOCALE:
+                        continue
+                    dialog_hash = original_dialog_hash
+                    if dialog_hash not in translation.translations:
                         dialog_hash = self.calculate_tl_hash(f"{hashing_contents} nointeract")
-                    if dialog_hash not in self.translation.translations:
+                    if dialog_hash not in translation.translations:
                         # Hack: there is a case where the dialog hash label contains unclosed previous label.
                         # So we need to find a key by remaining part of hash
                         # Example: a1_thursday_things_you_can_do_5abaf868 should be a1_thursday_5abaf868
                         short_hash = original_dialog_hash[-8:]
-                        for key in self.translation.translations:
+                        for key in translation.translations:
                             if key.endswith(short_hash):
                                 dialog_hash = key
                                 break
-                    if dialog_hash not in self.translation.translations:
-                        raise Exception(f"Missing translation for:\n{stripped_line}")
-                    stripped_line = self.translation.translations[dialog_hash]
-                    dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
-                    dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
-                    narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
+                    if dialog_hash not in translation.translations:
+                        raise Exception(f"Missing translation for hash {dialog_hash} in locale {locale} for line: {stripped_line}")
+                    translated_stripped_line = translation.translations[dialog_hash]
 
+                    if dialog_match_str:
+                        matches[locale] = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
+                    elif dialog_match_ref:
+                        matches[locale] = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
+                    else:
+                        # matches[locale] = re.match(r"^\"(.*)\"(?:| nointeract)$", translated_stripped_line)
+                        # TODO: Fix translation in KS:RE project: "tl/ru/script-a1-sunday.rpy:943"
+                        matches[locale] = re.match(r"^\"(.*)\"(?:| nointeract| with vpunch)$", translated_stripped_line)
+
+            actor: Dict[str, str] = {}
+            dialog: Dict[str, str] = {}
             if dialog_match_str:
-                actor, dialog = dialog_match_str.groups()
+                for locale, match in matches.items():
+                    if match:
+                        actor_locale, dialog_locale = match.groups()
+                        actor[locale] = actor_locale
+                        dialog[locale] = dialog_locale.strip().replace("\\n", "\n")
+                    else:
+                        # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
+                        # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
+                        print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
+                        sleep(0.25)
+                        actor[locale] = actor[DEFAULT_LOCALE]
+                        dialog[locale] = dialog[DEFAULT_LOCALE]
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, actor, dialog.strip().replace("\\n", "\n")))
+                    DialogItem(original_dialog_hash[-8:], actor, dialog, label_name=self.stack.current_label().name))
             elif dialog_match_ref:
-                actor, dialog = dialog_match_ref.groups()
+                for locale, match in matches.items():
+                    if match:
+                        actor_locale, dialog_locale = match.groups()
+                        actor[locale] = actor_locale
+                        dialog[locale] = dialog_locale.strip().replace("\\n", "\n")
+                    else:
+                        # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
+                        # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
+                        print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
+                        sleep(0.25)
+                        actor[locale] = actor[DEFAULT_LOCALE]
+                        dialog[locale] = dialog[DEFAULT_LOCALE]
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, "", dialog.strip().replace("\\n", "\n"), actor))
+                    DialogItem(original_dialog_hash[-8:], None, dialog, actor[DEFAULT_LOCALE],
+                               label_name=self.stack.current_label().name))
             elif narration_match:
-                narration = narration_match.group(1)
+                for locale, match in matches.items():
+                    if match:
+                        narration_locale = match.group(1)
+                        dialog[locale] = narration_locale.strip().replace("\\n", "\n")
+                    else:
+                        # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
+                        # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
+                        print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
+                        sleep(0.25)
+                        dialog[locale] = dialog[DEFAULT_LOCALE]
                 self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(dialog_hash, "", narration.strip().replace("\\n", "\n")))
+                    DialogItem(original_dialog_hash[-8:], None, dialog,
+                               label_name=self.stack.current_label().name))
             return
 
 def get_line_indent(line: str) -> int:

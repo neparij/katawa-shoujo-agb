@@ -1,7 +1,7 @@
 #include "save_file.h"
 
 #include <bn_core.h>
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_sram.h>
 
 #include <bn_memory.h>

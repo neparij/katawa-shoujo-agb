@@ -1,5 +1,5 @@
 import re
-
+from typing import Dict, List
 
 FILL_COLORS = [
     "black",
@@ -73,3 +73,45 @@ def starts_with_filled_bg(line: str) -> bool:
         if line.startswith(f"scene {color}"):
             return True
     return False
+
+def add_translations(tl_dict: Dict[str, List[Dict[str,str]]], tl_group: str, values: Dict[str,str]) -> int:
+    """
+    Adds a translation values to the specified translation group in the dictionary.
+    :param tl_dict: The dictionary containing translation groups.
+    :param tl_group: The translation group to which the value should be added.
+    :param values: The translation values to add.
+    :return: The index of the added value in the group list.
+    """
+    print(f"Adding translation to group '{tl_group}' (): {values}")
+    if tl_group not in tl_dict:
+        tl_dict[tl_group] = []
+    tl_dict[tl_group].append(values)
+    return len(tl_dict[tl_group]) - 1
+
+def add_translations_optional(tl_dict: Dict[str, List[Dict[str,str]]], tl_group: str, values: Dict[str,str]) -> int:
+    """
+    Adds a translation values to the specified translation group in the dictionary if it doesn't already exist.
+    :param tl_dict: The dictionary containing translation groups.
+    :param tl_group: The translation group to which the value should be added.
+    :param values: The translation values to add.
+    :return: The index of the value in the group list.
+    """
+    if tl_group not in tl_dict:
+        tl_dict[tl_group] = []
+    if values in tl_dict[tl_group]:
+        return tl_dict[tl_group].index(values)
+    return add_translations(tl_dict, tl_group, values)
+
+def get_tl_group_hash(tl_group: str) -> str:
+    hash_value = 1337
+    for char in tl_group:
+        hash_value = (hash_value * 31 + ord(char)) & 0xFFFFFFFF
+    return f"{hash_value:08X}"
+
+def get_tl_group_locales(tl_group: List[Dict[str,str]]) -> List[str]:
+    locales = []
+    for entry in tl_group:
+        for locale in entry.keys():
+            if locale not in locales:
+                locales.append(locale)
+    return locales

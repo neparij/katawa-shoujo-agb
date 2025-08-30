@@ -1,6 +1,6 @@
 #include "videoplayer.h"
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <gba_dma.h>
 
 #include "base.h"

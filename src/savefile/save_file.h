@@ -2,7 +2,7 @@
 #define SAVE_FILE_H
 
 #include <bn_array.h>
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_sprite_item.h>
 #include <bn_sram.h>
 #include <gba_types.h>

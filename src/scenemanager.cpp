@@ -11,7 +11,7 @@
 #include <bn_affine_bg_items_test_clockwipe.h>
 #include <bn_affine_bg_tiles_ptr.h>
 #include <bn_bg_palette_ptr.h>
-#include <BN_LOG.h>
+#include <bn_log.h>
 
 #include "bn_bg_palettes.h"
 #include "bn_blending_actions.h"
@@ -54,9 +54,6 @@
 
 namespace ks {
 
-u8* text_db;
-u32 text_db_size;
-bool text_db_allocated;
 EWRAM_BSS bn::string<1024> message;
 EWRAM_BSS bn::vector<bn::string<128>, 5> answers_messages;
 
@@ -110,11 +107,7 @@ void SceneManager::free_resources() {
     }
     character_visuals.clear();
 
-    if (text_db_allocated) {
-        BN_LOG("Free text database...");
-        bn::memory::ewram_free(text_db);
-        text_db_allocated = false;
-    }
+    ks::textdb::free();
 }
 
 void SceneManager::set(const ks::SceneManager instance) {
@@ -127,28 +120,19 @@ void SceneManager::set(const ks::SceneManager instance) {
     scene.reset();
     BN_LOG("Set SM Instance");
     scene = instance;
-    u32 src_len = 0;
-
-    BN_LOG("Read Scene File...");
-    const auto filename = bn::string<32>(scene->scenario()).append(".").append(scene->locale()).c_str();
-    const u8 *compressed_data = (u8 *) gbfs_get_obj(globals::filesystem, filename, &src_len);
-
-    text_db_size = (compressed_data[1]) | (compressed_data[2] << 8) | (compressed_data[3] << 16);
-
-    BN_LOG("EWRAM free: ", bn::memory::available_alloc_ewram());
-    BN_LOG("Allocate ", text_db_size, " bytes for text database...");
-    BN_ASSERT(!text_db_allocated, "Text database already allocated!");
-    text_db = static_cast<u8 *>(bn::memory::ewram_alloc(static_cast<int>(text_db_size)));
-    text_db_allocated = true;
-
-    BN_LOG("Decompress Scene file...");
-    LZ77UnCompWRAM((u32)compressed_data, (u32)text_db);
-    BN_LOG("EWRAM after allocation: ", bn::memory::available_alloc_ewram());
 
     BN_LOG("Set Window boundaries");
     left_window.set_boundaries(-80,-120,80,0);
     right_window.set_boundaries(-80,0,80,120);
     BN_LOG("SceneManager init done!");
+}
+
+void SceneManager::set_textdb(const char *db) {
+    textdb::set(db, scene->locale());
+    if (!is_loading) {
+        textdb::free();
+        textdb::allocate();
+    }
 }
 
 void SceneManager::init_savedata(ks::saves::SaveSlotProgressData &value) {
@@ -174,6 +158,8 @@ void SceneManager::set_line_hash(const unsigned int line_hash) {
             is_loading = false;
             ks::sound_manager::restore_after_loading();
             sound_mixer::unmute();
+            textdb::free();
+            textdb::allocate();
             update_visuals();
         }
     }
@@ -344,7 +330,7 @@ void SceneManager::set_event(const huge_background_meta& bg, const CustomEvent& 
     custom_event = event.clone();
 }
 
-void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
+void SceneManager::show_dialog(const character_definition& actor, const unsigned int tl_key) {
     if (is_loading) {
         return;
     }
@@ -352,8 +338,7 @@ void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
     while (!ks::globals::exit_scenario) {
         switch (globals::state) {
             case GS_GAME:
-                BN_LOG("TextDB pointer in global scope:", (u32)text_db);
-                ks::scenario::gbfs_reader::get_tl<1024>(text_db, text_db_size, scene->_script_tl_index[tl_key], message);
+                ks::textdb::get_tl<1024>(tl_key, message);
 
                 dialog->show(actor, message);
                 while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
@@ -381,11 +366,11 @@ void SceneManager::show_dialog(const character_definition& actor, int tl_key) {
     }
 }
 
-void SceneManager::show_dialog(const char* actor_name, int tl_key) {
+void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned int tl_key) {
     if (is_loading) {
         return;
     }
-    const ks::character_definition current = ks::definitions::base.with_name(actor_name);
+    const character_definition current = definitions::base.with_name(textdb::get_tl_cstr(actor_tl_key));
     return show_dialog(current, tl_key);
 }
 
@@ -412,9 +397,7 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
 
                 for (int i = 0; i < answers.size(); i++) {
                     bn::string<128> answer;
-                    // ks::scenario::gbfs_reader::get_tl<128>(
-                    //     scene->scenario(), scene->locale(), scene->_script_tl_index[answers.at(i).tl_key], answer);
-                    ks::scenario::gbfs_reader::get_tl<128>(text_db, text_db_size, scene->_script_tl_index[answers.at(i).tl_key], answer);
+                    ks::textdb::get_tl<128>(answers.at(i).tl_key, answer);
                     answers_messages.push_back(answer);
                     answers_index_map.push_back(answers.at(i).index);
                 }

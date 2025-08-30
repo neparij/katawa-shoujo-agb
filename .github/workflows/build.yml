@@ -1,0 +1,64 @@
+name: Build Katawa Shoujo GBA
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget python3 python3-pip
+
+      - name: Clone Butano fork
+        run: |
+          git clone --branch katawa https://github.com/neparij/butano.git ../butano
+
+      - name: Clone libsavgba fork
+        run: |
+          git clone https://github.com/laqieer/libsavgba ../libsavgba
+
+      - name: Build
+        run: |
+          export DEVKITPRO=/opt/devkitpro
+          export DEVKITARM=${DEVKITPRO}/devkitARM
+          make
+
+      - name: Prepare artifact
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          KS_BUILD_VERSION=$(cat VERSION)
+          KS_BUILD_COMMIT=$(git rev-parse --short HEAD)
+          KS_BUILD_STRING="${KS_BUILD_VERSION}-${KS_BUILD_COMMIT}"
+          KS_BUILD_FILENAME="katawa.${KS_BUILD_STRING}.gba"
+          cp katawa-shoujo-agb.out.gba "${KS_BUILD_FILENAME}"
+          echo "KS_BUILD_VERSION=${KS_BUILD_VERSION}" >> $GITHUB_ENV
+          echo "KS_BUILD_COMMIT=${KS_BUILD_COMMIT}" >> $GITHUB_ENV
+          echo "KS_BUILD_STRING=${KS_BUILD_STRING}" >> $GITHUB_ENV
+          echo "KS_BUILD_FILENAME=${KS_BUILD_FILENAME}" >> $GITHUB_ENV
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.KS_BUILD_FILENAME }}
+          path: ${{ env.KS_BUILD_FILENAME }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          files: ${{ env.KS_BUILD_FILENAME }}
+          tag_name: v${{ env.KS_BUILD_VERSION }}
+          name: Katawa Shoujo GBA v${{ env.KS_BUILD_STRING }}
+          generate_release_notes: true

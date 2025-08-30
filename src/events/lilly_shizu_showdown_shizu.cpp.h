@@ -1,7 +1,7 @@
 #ifndef LILLY_SHIZU_SHOWDOWN_SHIZU_CPP_H
 #define LILLY_SHIZU_SHOWDOWN_SHIZU_CPP_H
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_regular_bg_actions.h>
 
 #include "custom_event.h"

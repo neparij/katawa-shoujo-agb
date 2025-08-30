@@ -6,7 +6,7 @@
 #include "base.h"
 // #include "sys/decompress.h"
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <cstring>
 #include <gba_compression.h>
 #include <gba_systemcalls.h>

@@ -28,8 +28,9 @@
 #include "bn_sprite_items_ui_talkbox_actor.h"
 #include "bn_sprite_items_ui_talkbox_actor_end.h"
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <bn_sprite_actions.h>
+#include <cstring>
 
 namespace ks
 {

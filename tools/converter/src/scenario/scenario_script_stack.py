@@ -7,19 +7,19 @@ class ScenarioScriptStack:
     def __init__(self):
         self.stack: [(SequenceGroup, int)] = []
 
-    def current_label(self):
+    def current_label(self) -> SequenceGroup|None:
         for entry in reversed(self.stack):
             if entry[0].type == SequenceGroupType.LABEL:
                 return entry[0]
         return None
 
-    def parent_label(self):
+    def parent_label(self) -> SequenceGroup|None:
         for entry in self.stack:
             if entry[0].type == SequenceGroupType.LABEL:
                 return entry[0]
         return None
 
-    def current_indent(self):
+    def current_indent(self) -> int:
         if len(self.stack) == 0:
             return 0
         return self.stack[-1][1]
@@ -32,17 +32,17 @@ class ScenarioScriptStack:
     def push(self, sequence_group, indent):
         self.stack.append((sequence_group, indent))
 
-    def pop(self):
+    def pop(self) -> SequenceGroup|None:
         if len(self.stack) == 0:
             return None
         return self.stack.pop()[0]
 
-    def top(self):
+    def top(self) -> SequenceGroup|None:
         if len(self.stack) == 0:
             return None
         return self.stack[-1][0]
 
-    def size(self):
+    def size(self) -> int:
         return len(self.stack)
 
     def clear(self):

@@ -1,7 +1,7 @@
 #ifndef VIDEO_PLAYER_H
 #define VIDEO_PLAYER_H
 
-#include <BN_LOG.h>
+#include <bn_log.h>
 #include <gba.h>
 
 // Constants
