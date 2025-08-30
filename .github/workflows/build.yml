@@ -104,4 +104,4 @@ jobs:
           unzip butler.zip
           chmod +x butler
           ./butler -V
-          ./butler push ./publish/${{ needs.build.outputs.KS_BUILD_FILENAME }} neparij/katawa-shoujo-gba --userversion "Katawa Shoujo GBA — v${{ needs.build.outputs.KS_BUILD_STRING }}"
+          ./butler push ./publish/${{ needs.build.outputs.KS_BUILD_FILENAME }} neparij/katawa-shoujo-gba:gba --userversion "Katawa Shoujo GBA — v${{ needs.build.outputs.KS_BUILD_STRING }}"
