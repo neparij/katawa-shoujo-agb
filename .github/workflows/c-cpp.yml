@@ -37,6 +37,7 @@ jobs:
 
       - name: Prepare artifact
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           VERSION=$(cat VERSION)
           HASH=$(git rev-parse --short HEAD)
           OUT_NAME="katawa.${VERSION}+${HASH}.gba"
