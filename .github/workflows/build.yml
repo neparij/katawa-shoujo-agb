@@ -100,8 +100,10 @@ jobs:
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
+          mv ./publish/${{ needs.build.outputs.KS_BUILD_FILENAME }} ./publish/KatawaShoujo.gba
           curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
           unzip butler.zip
           chmod +x butler
           ./butler -V
-          ./butler push ./publish/${{ needs.build.outputs.KS_BUILD_FILENAME }} neparij/katawa-shoujo-gba:gba --userversion "Katawa Shoujo GBA — v${{ needs.build.outputs.KS_BUILD_STRING }}"
+          ./butler push ./publish/KatawaShoujo.gba neparij/katawa-shoujo-gba:gba --userversion "${{ needs.build.outputs.KS_BUILD_STRING }}" --if-changed
+          ./butler status neparij/katawa-shoujo-gba:gba
