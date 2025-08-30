@@ -106,4 +106,4 @@ jobs:
           chmod +x butler
           ./butler -V
           ./butler push ./publish/KatawaShoujo.gba neparij/katawa-shoujo-gba:gba --userversion "${{ needs.build.outputs.KS_BUILD_STRING }}" --if-changed
-          ./butler status neparij/katawa-shoujo-gba:gba
+          ./butler status neparij/katawa-shoujo-gba
