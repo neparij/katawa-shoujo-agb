@@ -1,0 +1,50 @@
+name: Build Katawa Shoujo GBA
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget python3 python3-pip
+
+      - name: Clone Butano fork
+        run: |
+          git clone --branch katawa https://github.com/neparij/butano.git ../butano
+
+      - name: Clone libsavgba fork
+        run: |
+          git clone https://github.com/laqieer/libsavgba ../libsavgba
+
+      - name: Build
+        run: |
+          export DEVKITPRO=/opt/devkitpro
+          export DEVKITARM=${DEVKITPRO}/devkitARM
+          make
+
+      - name: Prepare artifact
+        run: |
+          VERSION=$(cat VERSION)
+          HASH=$(git rev-parse --short HEAD)
+          OUT_NAME="katawa.${VERSION}+${HASH}.gba"
+          cp katawa.out.gba "${OUT_NAME}"
+          echo "OUT_NAME=${OUT_NAME}" >> $GITHUB_ENV
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.OUT_NAME }}
+          path: ${{ env.OUT_NAME }}
