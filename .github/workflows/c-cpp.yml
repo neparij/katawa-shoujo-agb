@@ -41,7 +41,7 @@ jobs:
           VERSION=$(cat VERSION)
           HASH=$(git rev-parse --short HEAD)
           OUT_NAME="katawa.${VERSION}+${HASH}.gba"
-          cp katawa.out.gba "${OUT_NAME}"
+          cp katawa-shoujo-agb.out.gba "${OUT_NAME}"
           echo "OUT_NAME=${OUT_NAME}" >> $GITHUB_ENV
 
       - name: Upload artifact
