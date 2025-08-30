@@ -28,20 +28,17 @@ from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
-    add_translation, get_tl_group_hash, add_translation_optional
+    add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales
 
-DEFAULT_LOCALE = "en"
 PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
 
 class ScenarioWriter:
-    def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup],
-                 locale: str = DEFAULT_LOCALE):
+    def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup]):
         self.filename = filename
         self.output_dir = output_dir
         self.gbfs_dir = gbfs_dir
         self.scenario = scenario
-        self.tl_dict: Dict[str, List[str]] = {}
-        self.locale = locale if locale else DEFAULT_LOCALE
+        self.tl_dict: Dict[str, List[Dict[str, str]]] = {}
 
         self.backgrounds = []
         self.character_backgrounds = []
@@ -71,11 +68,11 @@ class ScenarioWriter:
 
     def write(self):
         os.makedirs(os.path.dirname(os.path.join(self.output_dir, self.filename)), exist_ok=True)
-        self.write_source(dry_run = self.locale != DEFAULT_LOCALE)
-        self.write_header(dry_run = self.locale != DEFAULT_LOCALE)
+        self.write_source()
+        self.write_header()
         self.write_scenario_tl()
 
-    def write_header(self, dry_run: bool = False):
+    def write_header(self):
         define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
         h_code = [
             # Define the INLINE modifier:
@@ -134,11 +131,10 @@ class ScenarioWriter:
 
         h_code.append(namespace(class_code, "ks"))
 
-        if not dry_run:
-            with open(f"{os.path.join(self.output_dir, self.filename)}.h", "w") as h_file:
-                h_file.write(defined("\n".join(h_code), define_name, "KS"))
+        with open(f"{os.path.join(self.output_dir, self.filename)}.h", "w") as h_file:
+            h_file.write(defined("\n".join(h_code), define_name, "KS"))
 
-    def write_source(self, dry_run: bool = False):
+    def write_source(self):
         cpp_code = [
             include_header(f"{self.filename}"),
         ]
@@ -189,7 +185,7 @@ class ScenarioWriter:
             sequences.append(f'bn::vector<ks::answer_ptr, 5> answers;')
             answer_index = 0
             for answer in menu.conditions:
-                tl_index = add_translation(self.tl_dict, answer.label_name, answer.answer)
+                tl_index = add_translations(self.tl_dict, answer.label_name, answer.answer)
                 sequences.append(f'answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});') if not answer.condition else sequences.append(
                     f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({{{answer_index}, {tl_index}}});')
                 answer_index += 1
@@ -228,49 +224,54 @@ class ScenarioWriter:
 
         cpp_code.append(namespace(class_code, "ks"))
 
-        if not dry_run:
-            with open(f"{os.path.join(self.output_dir, self.filename)}.cpp", "w") as cpp_file:
-                cpp_file.write("\n".join(cpp_code))
+        with open(f"{os.path.join(self.output_dir, self.filename)}.cpp", "w") as cpp_file:
+            cpp_file.write("\n".join(cpp_code))
 
     def write_scenario_tl(self):
         for tl_group in self.tl_dict:
             print(f"Writing TL group '{tl_group}' ({get_tl_group_hash(tl_group)}) with {len(self.tl_dict[tl_group])} entries")
-            offsets = []
-            current_offset = 2 + len(self.tl_dict[tl_group]) * 2 # Offset table length + Offset table content
-            define_name = f"{tl_group.upper().replace("-", "_")}"
+            locales = get_tl_group_locales(self.tl_dict[tl_group])
+            offsets : Dict[str, List[int]] = {}
+            current_offset : Dict[str, int] = {}
+            for locale in locales:
+                offsets[locale] = []
+                current_offset[locale] = 2 + len(self.tl_dict[tl_group]) * 2 # Offset table size + Offset table content
+
             filename_base = f"tl_{get_tl_group_hash(tl_group)}"
 
             for tl in self.tl_dict[tl_group]:
-                offsets.append(current_offset)
-                current_offset += len(tl.encode("utf-8")) + 1  # +1 for null terminator sequence
-                if len(offsets) > 65535:
-                    raise Exception(f"Too many translations in group '{tl_group}'")
+                for locale in locales:
+                    offsets[locale].append(current_offset[locale])
+                    current_offset[locale] += len(tl[locale].encode("utf-8")) + 1  # +1 for null terminator sequence
+                    if len(offsets) > 65535:
+                        raise Exception(f"Too many translations in group '{tl_group}'")
 
             # Write uncompressed translation file
-            with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}.uncompressed", "wb") as tl_file:
-                # Offset table length
-                print(f">>>> Writing TL group '{tl_group}' with {len(self.tl_dict[tl_group])} entries")
-                tl_file.write(len(self.tl_dict[tl_group]).to_bytes(2, byteorder='little'))
+            for locale in locales:
+                with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed", "wb") as tl_file:
+                    # Offset table length
+                    print(f">>>> Writing TL group '{tl_group}' ({locale}) with {len(self.tl_dict[tl_group])} entries")
+                    tl_file.write(len(self.tl_dict[tl_group]).to_bytes(2, byteorder='little'))
 
-                # Offset table
-                for offset in offsets:
-                    tl_file.write(offset.to_bytes(2, byteorder='little'))
+                    # Offset table
+                    for offset in offsets[locale]:
+                        tl_file.write(offset.to_bytes(2, byteorder='little'))
 
-                # Translations itself
-                for value in self.tl_dict[tl_group]:
-                    tl_file.write(value.encode("utf-8") + b'\0')
+                    # Translations itself
+                    for value in self.tl_dict[tl_group]:
+                        tl_file.write(value[locale].encode("utf-8") + b'\0')
 
-            with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}.uncompressed", "rb") as f:
-                uncompressed_bytes = f.read()
+                with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed", "rb") as f:
+                    uncompressed_bytes = f.read()
 
-            compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
+                compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
 
-            # Write LZ77 compressed translation file
-            with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}", "wb") as f:
-                f.write(compressed_bytes)
+                # Write LZ77 compressed translation file
+                with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}", "wb") as f:
+                    f.write(compressed_bytes)
 
-            # Delete uncompressed translation file
-            os.remove(f"{os.path.join(self.gbfs_dir, filename_base)}.{self.locale}.uncompressed")
+                # Delete uncompressed translation file
+                os.remove(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed")
 
     def get_labels(self) -> List[SequenceGroup]:
         return [group for group in self.scenario if group.type == SequenceGroupType.LABEL]
@@ -387,15 +388,16 @@ class ScenarioWriter:
 
     def precess_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
         # TODO: add character symbol to font
-        dialog.message = dialog.message.replace("’", "'")
-        tl_index = add_translation(self.tl_dict, dialog.label_name, dialog.message)
+        for locale, text in dialog.message.items():
+            dialog.message[locale] = text.replace("’", "'")
+        tl_index = add_translations(self.tl_dict, dialog.label_name, dialog.message)
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
             # return [f'scene.add_dialog("{dialog.actor_ref}", \"{resulted_hash}\");']
         elif dialog.actor:
-            actor_tl_index = add_translation_optional(self.tl_dict, dialog.label_name, dialog.actor)
+            actor_tl_index = add_translations_optional(self.tl_dict, dialog.label_name, dialog.actor)
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog({actor_tl_index}, {tl_index}));']
         else:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']

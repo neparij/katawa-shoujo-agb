@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Dict
 
 from src.dto.sequence_item import SequenceItem
 
@@ -12,7 +12,7 @@ class SequenceGroupType(Enum):
 
 # TODO: Make AnswerWrapper with condition support as separate class
 class ConditionWrapper:
-    def __init__(self, condition, label_name, callback = None, answer = None):
+    def __init__(self, condition, label_name, callback = None, answer : Dict[str, str]|None = None):
         self.function_callback = callback
         self.condition = condition
         self.answer = answer
@@ -23,9 +23,10 @@ class ConditionWrapper:
         return f"ConditionWrapper(condition={self.condition}, sequence={self.sequence})"
 
 class SequenceGroup:
-    def __init__(self, name, t: SequenceGroupType, is_called_inline = False, is_initial = False):
+    def __init__(self, indentation_level, name, t: SequenceGroupType, is_called_inline = False, is_initial = False):
         self.name = name
         self.type = t
+        self.indentation_level = indentation_level
         self.sequence: List[SequenceItem] = []
         self.translation_identifiers: List[str] = []
         self.conditions: List[ConditionWrapper] = []
@@ -38,7 +39,7 @@ class SequenceGroup:
     def add_condition(self, label_name, condition = None, callback = None):
         self.conditions.append(ConditionWrapper(condition, label_name, callback=callback, answer=None))
 
-    def add_answer(self, label_name, answer = None, condition = None, callback = None):
+    def add_answer(self, label_name, answer : Dict[str,str]|None = None, condition = None, callback = None):
         self.conditions.append(ConditionWrapper(condition, label_name, callback=callback, answer=answer))
 
     def add_sequence_item(self, linepack: List[SequenceItem], item: SequenceItem):

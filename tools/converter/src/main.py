@@ -1,11 +1,12 @@
 import argparse
 import os
-from typing import List
+from typing import List, Dict
 
 from src.definitions_reader import DefinitionsReader
 from src.definitions_writer import DefinitionsWriter
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
+from src.translation.translation_container import TranslationContainer
 from src.translation_reader import TranslationReader
 from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSprite, CharacterSpritesGroup, \
     CharacterSpritesWriter, CharacterMetaStorageWriter
@@ -32,9 +33,9 @@ def main():
         help="Path to KS GBA sources"
     )
     scenario_parser.add_argument(
-        "--translation",
+        "--translations",
         required=False,
-        help="Translation key (de, es, fr, ru, zh_hans)"
+        help="Translation keys, comma separated. Example: de,es,fr,ru,zh_hans"
     )
 
     character_sprites_parser = subparsers.add_parser("character-sprites", help="Character sprites converter")
@@ -66,9 +67,9 @@ def main():
         help="Path to KS GBA sources"
     )
     definitions_parser.add_argument(
-        "--translation",
+        "--locales",
         required=False,
-        help="Translation key (de, es, fr, ru, zh_hans)"
+        help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
     )
 
     args = parser.parse_args()
@@ -77,26 +78,29 @@ def main():
         ksre_path = args.source
         ksagb_path = args.outdir
         script_name = args.script
-        locale = args.translation
+        locales = args.translations.split(",") if args.translations else []
 
         rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
-        rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, f"{script_name}.rpy") if locale else None
         gba_scripts_path = os.path.join(ksagb_path, "src", "scripts")
         gbfs_path = os.path.join(ksagb_path, "gbfs_files")
         output_file = script_name.replace("-", "_")
 
-        tl = None
-        if rpy_translation_file:
+        translations : Dict[str, TranslationContainer] = {}
+        for locale in locales:
+            if locale == "en":
+                # Skip the default locale
+                continue
+            rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, f"{script_name}.rpy")
             print(f"Processing translation file: {rpy_translation_file}")
             reader = TranslationReader(locale, rpy_translation_file)
-            tl = reader.read()
+            translations[locale] = reader.read()
 
         print(f"Processing scenario file: {rpy_scenario_file}")
-        reader = ScenarioReader(rpy_scenario_file, tl)
+        reader = ScenarioReader(rpy_scenario_file, translations)
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, scenario, locale)
+        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, scenario)
         # writer.clean()
         writer.write()
         exit(0)
@@ -130,30 +134,29 @@ def main():
     if args.command == "definitions":
         ksre_path = args.source
         ksagb_path = args.outdir
-        locale = args.translation
+        locales = args.locales.split(",") if args.locales else []
 
-        rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, "definitions.rpy") if locale else None
+        for locale in locales:
+            print(f"Processing definitions for locale: {locale}")
+            rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, "definitions.rpy") if locale != "en" else None
 
-        tl = None
-        if rpy_translation_file:
-            print(f"Processing translation file: {rpy_translation_file}")
-            reader = TranslationReader(locale, rpy_translation_file)
-            tl = reader.read()
+            tl = None
+            if rpy_translation_file:
+                print(f"Processing translation file: {rpy_translation_file}")
+                reader = TranslationReader(locale, rpy_translation_file)
+                tl = reader.read()
 
-        definitions_reader = DefinitionsReader(os.path.join(ksre_path, "game", "definitions.rpy"), tl)
-        definitions_writer = DefinitionsWriter(
-            os.path.join(ksagb_path, "include"),
-            os.path.join(ksagb_path, "src")
-        )
+            definitions_reader = DefinitionsReader(os.path.join(ksre_path, "game", "definitions.rpy"), tl)
+            definitions_writer = DefinitionsWriter(
+                os.path.join(ksagb_path, "include"),
+                os.path.join(ksagb_path, "src")
+            )
 
-        replays_ast = definitions_reader.extract_replays_block()
-        routes = definitions_reader.parse_routes_structure(replays_ast)
-        definitions_writer.write_scripts_definitions(routes)
-        definitions_writer.write_labels_definitions(routes)
-        if locale:
+            replays_ast = definitions_reader.extract_replays_block()
+            routes = definitions_reader.parse_routes_structure(replays_ast)
+            definitions_writer.write_scripts_definitions(routes)
+            definitions_writer.write_labels_definitions(routes)
             definitions_writer.write_labels_translations(routes, locale)
-        else:
-            definitions_writer.write_labels_translations(routes, "en")
 
 
 if __name__ == "__main__":

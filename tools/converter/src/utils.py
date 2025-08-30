@@ -74,36 +74,44 @@ def starts_with_filled_bg(line: str) -> bool:
             return True
     return False
 
-def add_translation(tl_dict: Dict[str, List[str]], tl_group: str, value: str) -> int:
+def add_translations(tl_dict: Dict[str, List[Dict[str,str]]], tl_group: str, values: Dict[str,str]) -> int:
     """
-    Adds a translation value to the specified translation group in the dictionary.
+    Adds a translation values to the specified translation group in the dictionary.
     :param tl_dict: The dictionary containing translation groups.
     :param tl_group: The translation group to which the value should be added.
-    :param value: The translation value to add.
+    :param values: The translation values to add.
     :return: The index of the added value in the group list.
     """
-    print(f"Adding translation to group '{tl_group}' (): {value}")
+    print(f"Adding translation to group '{tl_group}' (): {values}")
     if tl_group not in tl_dict:
         tl_dict[tl_group] = []
-    tl_dict[tl_group].append(value)
+    tl_dict[tl_group].append(values)
     return len(tl_dict[tl_group]) - 1
 
-def add_translation_optional(tl_dict: Dict[str, List[str]], tl_group: str, value: str) -> int:
+def add_translations_optional(tl_dict: Dict[str, List[Dict[str,str]]], tl_group: str, values: Dict[str,str]) -> int:
     """
-    Adds a translation value to the specified translation group in the dictionary if it doesn't already exist.
+    Adds a translation values to the specified translation group in the dictionary if it doesn't already exist.
     :param tl_dict: The dictionary containing translation groups.
     :param tl_group: The translation group to which the value should be added.
-    :param value: The translation value to add.
+    :param values: The translation values to add.
     :return: The index of the value in the group list.
     """
     if tl_group not in tl_dict:
         tl_dict[tl_group] = []
-    if value in tl_dict[tl_group]:
-        return tl_dict[tl_group].index(value)
-    return add_translation(tl_dict, tl_group, value)
+    if values in tl_dict[tl_group]:
+        return tl_dict[tl_group].index(values)
+    return add_translations(tl_dict, tl_group, values)
 
 def get_tl_group_hash(tl_group: str) -> str:
     hash_value = 1337
     for char in tl_group:
         hash_value = (hash_value * 31 + ord(char)) & 0xFFFFFFFF
     return f"{hash_value:08X}"
+
+def get_tl_group_locales(tl_group: List[Dict[str,str]]) -> List[str]:
+    locales = []
+    for entry in tl_group:
+        for locale in entry.keys():
+            if locale not in locales:
+                locales.append(locale)
+    return locales
