@@ -38,14 +38,27 @@ jobs:
       - name: Prepare artifact
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
-          VERSION=$(cat VERSION)
-          HASH=$(git rev-parse --short HEAD)
-          OUT_NAME="katawa.${VERSION}+${HASH}.gba"
-          cp katawa-shoujo-agb.out.gba "${OUT_NAME}"
-          echo "OUT_NAME=${OUT_NAME}" >> $GITHUB_ENV
+          KS_BUILD_VERSION=$(cat VERSION)
+          KS_BUILD_COMMIT=$(git rev-parse --short HEAD)
+          KS_BUILD_STRING="${KS_BUILD_VERSION}-${KS_BUILD_COMMIT}"
+          KS_BUILD_FILENAME="katawa.${KS_BUILD_STRING}.gba"
+          cp katawa-shoujo-agb.out.gba "${KS_BUILD_FILENAME}"
+          echo "KS_BUILD_VERSION=${KS_BUILD_VERSION}" >> $GITHUB_ENV
+          echo "KS_BUILD_COMMIT=${KS_BUILD_COMMIT}" >> $GITHUB_ENV
+          echo "KS_BUILD_STRING=${KS_BUILD_STRING}" >> $GITHUB_ENV
+          echo "KS_BUILD_FILENAME=${KS_BUILD_FILENAME}" >> $GITHUB_ENV
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.OUT_NAME }}
-          path: ${{ env.OUT_NAME }}
+          name: ${{ env.KS_BUILD_FILENAME }}
+          path: ${{ env.KS_BUILD_FILENAME }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          files: ${{ env.KS_BUILD_FILENAME }}
+          tag_name: v${{ env.KS_BUILD_VERSION }}
+          name: Katawa Shoujo GBA v${{ env.KS_BUILD_STRING }}
+          generate_release_notes: true
