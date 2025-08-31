@@ -15,15 +15,8 @@ jobs:
   github-releases-to-discord:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (Manual Release)
-        uses: actions/checkout@v4
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        with:
-          ref: ${{ github.event.inputs.manual_release_tag }}
-
       - name: Checkout
         uses: actions/checkout@v4
-        if: ${{ github.event_name != 'workflow_dispatch' }}
 
       - name: GitHub Releases to Discord
         uses: SethCohen/github-releases-to-discord@v1
