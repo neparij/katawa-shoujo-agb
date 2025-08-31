@@ -164,7 +164,16 @@ jobs:
           persist-credentials: false
           ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Setup SSH Keys
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
       - name: SemVer - Increase version
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
           git config user.name "github-actions[bot]"
