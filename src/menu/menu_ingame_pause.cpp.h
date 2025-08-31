@@ -20,6 +20,7 @@ namespace ks {
             static_text_sprites.clear();
             animated_text_sprites.clear();
             progress_icon_sprites.clear();
+            menu_bg_sprites.clear();
             globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);

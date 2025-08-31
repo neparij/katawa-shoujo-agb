@@ -100,7 +100,6 @@ public:
     static void set_line_hash(const unsigned int line_hash);
     static void autosave();
     static void save(unsigned short slot_index);
-    static void prepare_save_metadata();
 
     // Acions
 

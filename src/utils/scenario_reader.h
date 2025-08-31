@@ -85,8 +85,7 @@ namespace ks {
         }
 
         template<int MaxSize>
-        // TODO: check should it be inline?
-        inline void BN_CODE_IWRAM get_tl(const unsigned short key, bn::string<MaxSize> &out) {
+        void get_tl(const unsigned short key, bn::string<MaxSize> &out) {
             BN_ASSERT(is_allocated, "TextDB not allocated!");
             BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
             BN_ASSERT(_locale != nullptr, "TextDB Locale not set!");
