@@ -150,7 +150,68 @@ jobs:
           name: Katawa Shoujo GBA v${{ needs.build-gba.outputs.KS_BUILD_STRING }}
           generate_release_notes: true
 
-  publish:
+  semver:
+    permissions:
+      contents: write
+    needs: release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: SemVer - Increase version
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          CURRENT_VERSION=$(cat VERSION)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+          PATCH=$((PATCH + 1))
+          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "Current version: $CURRENT_VERSION"
+          echo "New version: $NEW_VERSION"
+          echo -en "$NEW_VERSION" > VERSION
+          git add VERSION
+          git commit -m "[skip ci] Bump version to $NEW_VERSION"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+
+  publish-discord:
+    needs:
+      - build-gba
+      - build-web
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          repository: neparij/katawa-shoujo-agb-html5
+          path: "./html5-src"
+
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-web.outputs.KS_BUILD_FILENAME }}
+          path: "./publish"
+
+      - name: Prepare HTML5 for Firebase
+        run: |
+          mkdir -p ./dist
+          unzip ./publish/${{ needs.build-web.outputs.KS_BUILD_FILENAME }} -d ./dist
+          cp ./html5-src/firebase.json ./
+
+      - name: Publish HTML5 to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          channelId: live
+          projectId: katawa-shoujo-gba
+          entryPoint: '.'
+
+  publish-itchio:
     needs:
       - build-gba
       - build-web
