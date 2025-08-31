@@ -5,6 +5,9 @@ changelog:
     authors:
       - octocat
   categories:
+    - title: "🔥🔥🔥 Epic Changes 🔥🔥🔥"
+      labels:
+        - epic
     - title: "💝 New Features"
       labels:
         - feature
@@ -14,9 +17,6 @@ changelog:
     - title: "💔 Bug Fixes"
       labels:
         - bugfix
-    - title: "🔥🔥🔥 Epic Changes 🔥🔥🔥"
-      labels:
-        - epic
     - title: "Other Changes"
       labels:
         - "*"
