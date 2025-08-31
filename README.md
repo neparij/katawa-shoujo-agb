@@ -10,7 +10,7 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 
 ![Screenshots](site/github-screenshots.png)
 
-<h2 style="text-align: center !important;">FMVs also included!</h2>
+## FMVs also included!
 
 ![FMVs](site/github-fmvs.png)
 
