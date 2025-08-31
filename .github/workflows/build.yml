@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-gba:
     if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[ci skip]')"
     runs-on: ubuntu-latest
     container:
@@ -16,18 +16,14 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y wget python3 python3-pip
-
-      - name: Clone Butano fork
-        run: |
           git clone --branch katawa https://github.com/neparij/butano.git ../butano
-
-      - name: Clone libsavgba fork
-        run: |
           git clone https://github.com/laqieer/libsavgba ../libsavgba
 
       - name: Build
@@ -58,6 +54,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          if-no-files-found: 'error'
           name: ${{ env.KS_BUILD_FILENAME }}
           path: ${{ env.KS_BUILD_FILENAME }}
 
@@ -67,44 +64,132 @@ jobs:
       KS_BUILD_STRING: ${{ steps.prepare.outputs.KS_BUILD_STRING }}
       KS_BUILD_FILENAME: ${{ steps.prepare.outputs.KS_BUILD_FILENAME }}
 
+  build-web:
+    runs-on: ubuntu-latest
+    needs:
+      - build-gba
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Download GBA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-gba.outputs.KS_BUILD_FILENAME }}
+          path: "./publish"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: html5
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          npm install
+
+      - name: Build web version
+        working-directory: html5
+        run: |
+          mkdir -p ./assets/data
+          cp ../publish/${{ needs.build-gba.outputs.KS_BUILD_FILENAME }} ./assets/data/KatawaShoujo.gba
+          sed -i "s|ROM_CACHE_KEY: \".*\"|ROM_CACHE_KEY: \"${{ needs.build-gba.outputs.KS_BUILD_STRING }}\"|g" env.js
+          sed -i "s|DISCORD_CLIENT_ID: \".*\"|DISCORD_CLIENT_ID: \"${{ secrets.DISCORD_CLIENT_ID }}\"|g" env.js
+          npm run build
+
+      - name: Prepare artifact
+        id: prepare
+        working-directory: html5
+        run: |
+          KS_BUILD_FILENAME="katawa.${{ needs.build-gba.outputs.KS_BUILD_STRING }}-html5.zip"
+          echo "KS_BUILD_FILENAME=${KS_BUILD_FILENAME}" >> $GITHUB_ENV
+          echo "KS_BUILD_FILENAME=${KS_BUILD_FILENAME}" >> "$GITHUB_OUTPUT"
+          cd dist || exit 404
+          zip -r "../../${KS_BUILD_FILENAME}" ./*
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          if-no-files-found: 'error'
+          name: ${{ env.KS_BUILD_FILENAME }}
+          path: ${{ env.KS_BUILD_FILENAME }}
+
+    outputs:
+      KS_BUILD_FILENAME: ${{ steps.prepare.outputs.KS_BUILD_FILENAME }}
+      KS_BUILD_STRING: ${{ needs.build-gba.outputs.KS_BUILD_STRING }}
+
   release:
     permissions:
       contents: write
-    needs: build
+    needs:
+      - build-gba
+      - build-web
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Download artifact
+      - name: Download GBA artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ needs.build.outputs.KS_BUILD_FILENAME }}
+          name: ${{ needs.build-gba.outputs.KS_BUILD_FILENAME }}
+
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-web.outputs.KS_BUILD_FILENAME }}
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ needs.build.outputs.KS_BUILD_FILENAME }}
-          tag_name: v${{ needs.build.outputs.KS_BUILD_VERSION }}
-          name: Katawa Shoujo GBA v${{ needs.build.outputs.KS_BUILD_STRING }}
+          files: |
+            ${{ needs.build-gba.outputs.KS_BUILD_FILENAME }}
+            ${{ needs.build-web.outputs.KS_BUILD_FILENAME }}
+          tag_name: v${{ needs.build-gba.outputs.KS_BUILD_VERSION }}
+          name: Katawa Shoujo GBA v${{ needs.build-gba.outputs.KS_BUILD_STRING }}
           generate_release_notes: true
 
   publish:
     needs:
-      - build
+      - build-gba
+      - build-web
       - release
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.build.outputs.KS_BUILD_FILENAME }}
-          path: "./publish"
-      - name: Publish to itch.io
-        env:
-          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+      - name: Install Dependencies
         run: |
-          mv ./publish/${{ needs.build.outputs.KS_BUILD_FILENAME }} ./publish/KatawaShoujo.gba
           curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default
           unzip butler.zip
           chmod +x butler
           ./butler -V
-          ./butler push ./publish/KatawaShoujo.gba neparij/katawa-shoujo-gba:gba --userversion "${{ needs.build.outputs.KS_BUILD_STRING }}" --if-changed
-          ./butler status neparij/katawa-shoujo-gba
+
+      - name: Download GBA artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-gba.outputs.KS_BUILD_FILENAME }}
+          path: "./publish"
+
+      - name: Download HTML5 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-web.outputs.KS_BUILD_FILENAME }}
+          path: "./publish"
+
+      - name: Publish GBA to itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          mv ./publish/${{ needs.build-gba.outputs.KS_BUILD_FILENAME }} ./publish/KatawaShoujo.gba
+          ./butler push ./publish/KatawaShoujo.gba neparij/katawa-shoujo-gba:gba --userversion "${{ needs.build-gba.outputs.KS_BUILD_STRING }}" --if-changed
+          sleep 5
+          ./butler status neparij/katawa-shoujo-gba:gba
+
+      - name: Publish HTML5 to itch.io
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          mv ./publish/${{ needs.build-web.outputs.KS_BUILD_FILENAME }} ./publish/KatawaShoujo.zip
+          ./butler push ./publish/KatawaShoujo.zip neparij/katawa-shoujo-gba:html5 --userversion "${{ needs.build-web.outputs.KS_BUILD_STRING }}" --if-changed
+          sleep 5
+          ./butler status neparij/katawa-shoujo-gba:html5
