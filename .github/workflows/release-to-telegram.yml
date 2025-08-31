@@ -1,0 +1,19 @@
+name: Notify Telegram
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  github-releases-to-discord:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: GitHub Releases to Telegram
+        uses: tyagdit/release-telegram-action@master
+        with:
+          token: ${{ secrets.TELEGRAM_RELEASE_BOT_TOKEN }}
+          channel: ${{ secrets.TELEGRAM_RELEASE_CHANNEL_ID }}
+          changelog: ${{ github.event.release.body }}
