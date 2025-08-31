@@ -161,6 +161,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
+          persist-credentials: false
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: SemVer - Increase version
         run: |
@@ -176,7 +178,7 @@ jobs:
           echo -en "$NEW_VERSION" > VERSION
           git add VERSION
           git commit -m "[skip ci] Bump version to $NEW_VERSION"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+          git push origin main
 
   publish-discord:
     needs:
@@ -251,6 +253,6 @@ jobs:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
           mv ./publish/${{ needs.build-web.outputs.KS_BUILD_FILENAME }} ./publish/KatawaShoujo.zip
-          ./butler push ./publish/KatawaShoujo.zip neparij/katawa-shoujo-gba:html5 --userversion "${{ needs.build-web.outputs.KS_BUILD_STRING }}" --if-changed
-          sleep 5
+          ./butler push ./publish/KatawaShoujo.zip neparij/katawa-shoujo-gba:html5 --userversion "${{ needs.build-web.outputs.KS_BUILD_STRING }}"
+          sleep 10
           ./butler status neparij/katawa-shoujo-gba:html5
