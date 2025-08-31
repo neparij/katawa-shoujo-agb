@@ -1,0 +1,3 @@
+[submodule "html5"]
+	path = html5
+	url = git@github.com:neparij/katawa-shoujo-agb-html5.git
