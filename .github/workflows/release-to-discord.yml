@@ -4,12 +4,6 @@ on:
   release:
     types: [ published ]
   workflow_dispatch:
-    inputs:
-      manual_release_tag:
-        type: string
-        description: 'Release tag to announce (if not the latest release)'
-        required: true
-        default: ''
 
 jobs:
   github-releases-to-discord:
