@@ -1,4 +1,4 @@
-![Katawa Shoujo - Game Boy Advance Port](site/logo-github-nobg.png)
+![Katawa Shoujo - Game Boy Advance Port](site/github-logo.png)
 
 # Katawa Shoujo - Game Boy Advance Port
 
@@ -6,23 +6,13 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by
 the [Butano framework](https://github.com/GValiente/butano). Includes Python tools to convert assets and scripts from
 the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
 
-<div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-main-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Main Menu)" style="width: 45%;">
-    <img src="site/agb-ks-screenshot-extras-cinema-menu.png" alt="Katawa Shoujo - Game Boy Advance Port (Extras Menu - Cinema)" style="width: 45%;">
-</div>
-<div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-translations-en.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - En)" style="width: 45%;">
-    <img src="site/agb-ks-screenshot-translations-ru.png" alt="Katawa Shoujo - Game Boy Advance Port (Translations - Ru)" style="width: 45%;">
-</div>
-<div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-rin-introduced.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Rin Introduced)" style="width: 45%;">
-    <img src="site/agb-ks-screenshot-rin-close.png" alt="Katawa Shoujo - Game Boy Advance Port (Closeup view - Rin)" style="width: 45%;">
-</div>
-<div style="display: flex; justify-content: flex-start;">
-    <img src="site/agb-ks-screenshot-thursday-emi.png" alt="Katawa Shoujo - Game Boy Advance Port (Emi)" style="width: 45%;">
-    <img src="site/agb-ks-screenshot-thursday-showdown.png" alt="Katawa Shoujo - Game Boy Advance Port (Events - Showdown)" style="width: 45%;">
-</div>
+## Screenshots
 
+![Screenshots](site/github-screenshots.png)
+
+<h2 style="text-align: center;">FMVs also included!</h2>
+
+![FMVs](site/github-fmvs.png)
 
 ---
 
