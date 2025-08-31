@@ -97,8 +97,8 @@ jobs:
         run: |
           mkdir -p ./assets/data
           cp ../publish/${{ needs.build-gba.outputs.KS_BUILD_FILENAME }} ./assets/data/KatawaShoujo.gba
-          sed -i "s|ROM_CACHE_KEY: \".*\"|ROM_CACHE_KEY: \"${{ needs.build-gba.outputs.KS_BUILD_STRING }}\"|g" html5/env.js
-          sed -i "s|DISCORD_CLIENT_ID: \".*\"|DISCORD_CLIENT_ID: \"${{ secrets.DISCORD_CLIENT_ID }}\"|g" html5/env.js
+          sed -i "s|ROM_CACHE_KEY: \".*\"|ROM_CACHE_KEY: \"${{ needs.build-gba.outputs.KS_BUILD_STRING }}\"|g" env.js
+          sed -i "s|DISCORD_CLIENT_ID: \".*\"|DISCORD_CLIENT_ID: \"${{ secrets.DISCORD_CLIENT_ID }}\"|g" env.js
           npm run build
 
       - name: Prepare artifact
