@@ -76,8 +76,8 @@ bn::rect_window left_window = bn::rect_window::external();
 bn::rect_window right_window = bn::rect_window::internal();
 
 bn::vector<unsigned char, 5> answers_index_map;
-ks::saves::SaveSlotProgressData progress;
-ks::saves::SaveSlotProgressData savedata_progress;
+EWRAM_BSS ks::saves::SaveSlotProgressData progress;
+EWRAM_BSS ks::saves::SaveSlotProgressData savedata_progress;
 bool in_replay = false;
 bool is_loading = false;
 bool is_paused = false;
@@ -172,7 +172,6 @@ void SceneManager::autosave() {
     if (is_loading) {
         return;
     }
-    prepare_save_metadata();
     savedata_progress.metadata = progress.metadata;
     savedata_progress.reproduction = progress.reproduction;
     BN_LOG("Savedata progress linehash: ", savedata_progress.reproduction.line_hash);
@@ -180,38 +179,12 @@ void SceneManager::autosave() {
     ks::saves::writeAutosave(savedata_progress);
 }
 
-void SceneManager::save(unsigned short slot_index) {
-    prepare_save_metadata();
+void SceneManager::save(const unsigned short slot_index) {
     savedata_progress.metadata = progress.metadata;
     savedata_progress.reproduction = progress.reproduction;
     BN_LOG("Savedata progress linehash: ", savedata_progress.reproduction.line_hash);
     BN_LOG("Savedata progress answers count: ", savedata_progress.reproduction.answer_indices.size());
     ks::saves::writeSaveSlot(slot_index, savedata_progress);
-}
-
-void SceneManager::prepare_save_metadata() {
-    // BN_LOG("Prepare save metadata");
-    // for (auto & thumbnail_character : progress.metadata.thumbnail_characters) {
-    //     thumbnail_character.thumbnail_hash = 0;
-    //     thumbnail_character.offset_x = 0;
-    // }
-    //
-    // int char_counter = 0;
-    // for (auto& visual : character_visuals) {
-    //     BN_LOG("Check visual");
-    //     BN_LOG("Has sprite_meta: ", visual.sprite_meta.has_value());
-    //     BN_LOG("Has background: ", visual.background.has_value());
-    //     BN_LOG("Background is visible: ", visual.background.has_value() && visual.background.value().visible());
-    //     if (char_counter >= 4) {
-    //         break;
-    //     }
-    //     char_counter++;
-    //     if (visual.sprite_meta.has_value() && visual.background.has_value() && visual.background.value().visible()) {
-    //         BN_LOG("Add character thumbnail hash: ", visual.sprite_meta->hash);
-    //         progress.metadata.thumbnail_characters[visual.index].thumbnail_hash = visual.sprite_meta->hash;
-    //         progress.metadata.thumbnail_characters[visual.index].offset_x = visual.offset_x;
-    //     }
-    // }
 }
 
 void SceneManager::reset_backgrounds_visuals() {

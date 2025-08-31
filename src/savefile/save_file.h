@@ -279,7 +279,7 @@ namespace ks {
 
         SaveSlotProgressData readSaveSlot(unsigned int slot);
 
-        void writeSaveSlot(unsigned int slot, SaveSlotProgressData progress);
+        void writeSaveSlot(unsigned int slot, SaveSlotProgressData &progress);
 
         void deleteSaveSlot(unsigned int slot);
 

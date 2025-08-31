@@ -221,7 +221,7 @@ void ks::saves::writeAutosave(SaveSlotProgressData progress) {
     bn::core::update();
 
     const SaveSlotProgressData saved_progress = readAutosave();
-    // BN_ASSERT(progress == saved_progress, "Writing autosave failed. SRAM data does not match.");
+    BN_ASSERT(progress == saved_progress, "Writing autosave failed. SRAM data does not match.");
 }
 
 ks::saves::SaveSlotMetadata ks::saves::readSlotMetadata(const unsigned int slot) {
@@ -242,12 +242,13 @@ ks::saves::SaveSlotProgressData ks::saves::readSaveSlot(const unsigned int slot)
     return progress;
 }
 
-void ks::saves::writeSaveSlot(const unsigned int slot, SaveSlotProgressData progress) {
+void ks::saves::writeSaveSlot(const unsigned int slot, SaveSlotProgressData& progress) {
     BN_LOG("Write Save Slot ", slot);
     progress.metadata.has_data = true;
     progress.integrity = 0xFFFF - slot;
 
     write_offset(progress, getSaveSlotDataOffset(slot));
+    bn::core::update();
 
     const SaveSlotProgressData saved_progress = readSaveSlot(slot);
     BN_ASSERT(progress == saved_progress, "Writing save slot failed. SRAM data does not match.");
