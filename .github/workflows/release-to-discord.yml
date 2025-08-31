@@ -7,7 +7,7 @@ on:
     inputs:
       manual_release_tag:
         type: string
-        description: 'Release tag to announce (if not the latest release)'
+        description: 'Release tag to announce. Example: v1.2.3'
         required: true
         default: ''
 
