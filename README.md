@@ -6,6 +6,8 @@ A faithful adaptation of *Katawa Shoujo* for the GBA, powered by
 the [Butano framework](https://github.com/GValiente/butano). Includes Python tools to convert assets and scripts from
 the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** project.
 
+[<img src="site/github-itchio-button.svg" alt="Itch.io Link" height="50">](https://neparij.itch.io/katawa-shoujo-gba)
+
 ## Screenshots
 
 ![Screenshots](site/github-screenshots.png)
