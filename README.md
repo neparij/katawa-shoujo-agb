@@ -42,8 +42,10 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
     - Verify: `arm-none-eabi-gcc --version`
 2. **Python 3.12** for tools.
 3. **[Butano](https://github.com/neparij/butano/tree/katawa)**
-   fork with custom audio integrated (uses branch `katawa`)
+   fork with custom audio integrated (uses branch `katawa`).
+   Should be placed to `../butano` relative to this repository.
 4. **[libsavgba](https://github.com/laqieer/libsavgba)**
+   should be placed to `../libsavgba` relative to this repository.
 5. ***For CLion IDE users***:
     - Install `compiledb`
         - macOS:
