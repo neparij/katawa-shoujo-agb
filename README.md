@@ -99,7 +99,6 @@ Some tools and projects may no longer be part of the current build, but they pla
 
 ## License
 
-This project is licensed under the
-**Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License**.
-See the [LICENSE](LICENSE.md) file for details.
+This project is not affiliated with Four Leaf Studios and Fleeting Heartbeat Studios.
 
+The code is licensed under the [Mozilla Public License 2.0](https://mozilla.org/MPL/2.0/), while the original assets are under by their original [CC-BY-NC-ND](https://creativecommons.org/licenses/by-nc-nd/3.0/) license.
