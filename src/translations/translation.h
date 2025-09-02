@@ -3,6 +3,7 @@
 
 #include "definitions.h"
 #include "bn_array.h"
+#include "../openings/act_opening.h"
 
 namespace ks {
 class Translation
@@ -112,6 +113,8 @@ public:
     virtual const char* definitions_hx_() = 0;
     virtual const char* definitions_hh_() = 0;
     virtual const char* definitions_emm_() = 0;
+
+    // virtual const opening_text opening_text_act1() = 0;
 
     const char* music(const music_t music) {
         switch (music) {

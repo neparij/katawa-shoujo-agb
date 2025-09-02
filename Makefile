@@ -49,6 +49,7 @@ SOURCES     	:=  ../butano/common/src \
                     src/dxtvplayer \
                     src/dxtvplayer/debug \
                     src/events \
+                    src/openings \
                     src/sound \
                     src/sound/libulc \
                     src/videoplayer \

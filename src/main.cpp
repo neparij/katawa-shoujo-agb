@@ -20,6 +20,7 @@
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
+#include "openings/act_1.cpp.h"
 #include "scripts/script_a1_friday.h"
 #include "scripts/script_a1_monday.h"
 #include "scripts/script_a1_saturday.h"
@@ -220,6 +221,12 @@ int main() {
     bn::core::update();
     sound_mixer::mute();
     ks::globals::init_filesystem();
+
+    auto opening_test = ks::ActOpening1();
+    opening_test.init();
+    sound_mixer::unmute();
+    ks::sound_manager::play<SOUND_CHANNEL_VIDEO>("video_tc_act1.ulc");
+    opening_test.process();
 
     if (ks::saves::initialize()) {
         print_save_debug();
