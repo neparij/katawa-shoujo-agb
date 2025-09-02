@@ -53,6 +53,7 @@ namespace ks {
     public:
         explicit ActOpening(const opening_slide slides[BgMoveables],
                             const opening_text_config &text_config,
+                            const char *ulc_audiofile,
                             const action_duration fade_in,
                             const action_duration fade_out,
                             const action_duration slides_move_in,
@@ -63,30 +64,31 @@ namespace ks {
                                                                        _slides_fade_in(slides_fade_in),
                                                                        _slides_colorize_in(slides_colorize_in),
                                                                        _slides(slides),
-                                                                       _text_config(text_config) {
+                                                                       _text_config(text_config),
+                                                                       _ulc_audiofile(ulc_audiofile) {
         }
 
         explicit ActOpening(const opening_slide slides[BgMoveables],
-                            const opening_text_config &text_config): _fade_in{60, 240},
-                                                                     _fade_out{720, 900},
-                                                                     _slides_move_in{60, 360},
-                                                                     _slides_fade_in{120, 300},
-                                                                     _slides_colorize_in{240, 420},
-                                                                     _slides(slides),
-                                                                     _text_config(text_config) {
+                            const opening_text_config &text_config,
+                            const char *ulc_audiofile): _fade_in{60, 240},
+                                                        _fade_out{720, 900},
+                                                        _slides_move_in{60, 360},
+                                                        _slides_fade_in{120, 300},
+                                                        _slides_colorize_in{240, 420},
+                                                        _slides(slides),
+                                                        _text_config(text_config),
+                                                        _ulc_audiofile(ulc_audiofile) {
         }
 
         virtual ~ActOpening() {
             _slide_ptrs.clear();
         }
 
-        [[nodiscard]] int duration() const;
-
-        void init();
-
-        void process();
+        void run();
 
     protected:
+        void init();
+
         opening_text _text;
 
     private:
@@ -98,6 +100,7 @@ namespace ks {
         action_duration _slides_colorize_in;
         const opening_slide *_slides;
         const opening_text_config _text_config;
+        const char *_ulc_audiofile;
         bn::vector<moveable_bg, BgMoveables> _slide_ptrs;
         bn::optional<bn::regular_bg_ptr> bg_ptr = bn::nullopt;
         bn::optional<bn::bg_palette_ptr> bg_pal_ptr = bn::nullopt;

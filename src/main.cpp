@@ -271,12 +271,8 @@ int main() {
 
 
 
-    auto opening_test = ks::ActOpening1();
-    opening_test.init();
     sound_mixer::unmute();
-    ks::sound_manager::play<SOUND_CHANNEL_VIDEO>("video_tc_act1.ulc");
-    opening_test.process();
-    delete &opening_test;
+    ks::ActOpening1().run();
 
     while (true) {
         switch (ks::globals::state) {

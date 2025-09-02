@@ -19,9 +19,11 @@ namespace ks {
             {
                 OP_TEXT_ALIGN_RIGHT, 164, 104,
                 OP_TEXT_ALIGN_CENTER, 164, 120
-            }
+            },
+            "video_tc_act1.ulc"
         ) {
             _text = globals::i18n->opening_text_act1();
+            init();
         }
     };
 }
