@@ -115,6 +115,6 @@ public:
     const char* definitions_hh_() override {return "Стройная";}
     const char* definitions_emm_() override {return "Женщина с косой";}
 
-    // const opening_text opening_text_act1() override {return {"Акт 1:", "Продолжительность", "жизни"};}
+    opening_text opening_text_act1() override {return {"Акт 1:", "Продолжительность", "жизни"};}
 };
 }

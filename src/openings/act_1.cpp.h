@@ -8,18 +8,6 @@
 namespace ks {
     class ActOpening1 final : public ActOpening<1> {
     public:
-        // explicit ActOpening1(): ActOpening(
-        //     15 * 60,
-        //     5 * 60,
-        //     (const opening_slide[]){
-        //         opening_slide {
-        //             bn::regular_bg_items::act_1_slide,
-        //             80,
-        //             0
-        //         }
-        //     }
-        // ) {
-        // }
         explicit ActOpening1(): ActOpening(
             (const opening_slide[]){
                 opening_slide{
@@ -27,15 +15,14 @@ namespace ks {
                     88,
                     0
                 }
+            },
+            {
+                OP_TEXT_ALIGN_RIGHT, 164, 104,
+                OP_TEXT_ALIGN_CENTER, 164, 120
             }
         ) {
+            _text = globals::i18n->opening_text_act1();
         }
     };
 }
-
-
-// const action_duration move_in_duration = {0, 360};
-// const action_duration fade_in_duration = {120, 300};
-// const action_duration colorize_in_duration = {240, 420};
-
 #endif //KS_ACT_OPENING_1_H

@@ -116,6 +116,6 @@ public:
     const char* definitions_hh_() override {return "Slim girl";}
     const char* definitions_emm_() override {return "Woman with braid";}
 
-    // const opening_text opening_text_act1() override {return {"Act 1:", "Life Expectancy"};}
+    opening_text opening_text_act1() override {return {"Act 1:", "Life Expectancy"};}
 };
 }

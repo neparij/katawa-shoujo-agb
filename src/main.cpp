@@ -222,12 +222,6 @@ int main() {
     sound_mixer::mute();
     ks::globals::init_filesystem();
 
-    auto opening_test = ks::ActOpening1();
-    opening_test.init();
-    sound_mixer::unmute();
-    ks::sound_manager::play<SOUND_CHANNEL_VIDEO>("video_tc_act1.ulc");
-    opening_test.process();
-
     if (ks::saves::initialize()) {
         print_save_debug();
 
@@ -274,6 +268,15 @@ int main() {
         }
     }
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
+
+
+
+    auto opening_test = ks::ActOpening1();
+    opening_test.init();
+    sound_mixer::unmute();
+    ks::sound_manager::play<SOUND_CHANNEL_VIDEO>("video_tc_act1.ulc");
+    opening_test.process();
+    delete &opening_test;
 
     while (true) {
         switch (ks::globals::state) {
