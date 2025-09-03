@@ -20,11 +20,6 @@
 #include <bn_sprite_items_ui_tn_tc_act2_shizu.h>
 #include <bn_sprite_items_ui_tn_tc_act2_shizu_bw.h>
 #include <video_op_1_dxtv.h>
-#include <video_tc_act2_emi_dxtv.h>
-#include <video_tc_act2_hanako_dxtv.h>
-#include <video_tc_act2_lilly_dxtv.h>
-#include <video_tc_act2_rin_dxtv.h>
-#include <video_tc_act2_shizune_dxtv.h>
 
 #include "menu_base.h"
 
@@ -81,27 +76,20 @@ namespace ks {
                 on_back();
             } else {
                 if (option == 0) {
-                    SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.ulc",
-                                             globals::colors::BLACK);
+                    SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.ulc");
                 } else if (option == 1) {
-                    SceneManager::show_video(video_tc_act2_emi_dxtv, video_tc_act2_emi_dxtv_size,
-                                             "video_tc_act2_emi.ulc", globals::colors::WHITE);
+                    SceneManager::show_title(TC_ACT2_EMI);
                 } else if (option == 2) {
-                    SceneManager::show_video(video_tc_act2_hanako_dxtv, video_tc_act2_hanako_dxtv_size,
-                                             "video_tc_act2_hanako.ulc", globals::colors::WHITE);
+                    SceneManager::show_title(TC_ACT2_HANAKO);
                 } else if (option == 3) {
-                    SceneManager::show_video(video_tc_act2_lilly_dxtv, video_tc_act2_lilly_dxtv_size,
-                                             "video_tc_act2_lilly.ulc", globals::colors::WHITE);
+                    SceneManager::show_title(TC_ACT2_LILLY);
                 } else if (option == 4) {
-                    SceneManager::show_video(video_tc_act2_rin_dxtv, video_tc_act2_rin_dxtv_size,
-                                             "video_tc_act2_rin.ulc", globals::colors::WHITE);
+                    SceneManager::show_title(TC_ACT2_RIN);
                 } else if (option == 5) {
-                    SceneManager::show_video(video_tc_act2_shizune_dxtv, video_tc_act2_shizune_dxtv_size,
-                                             "video_tc_act2_shizune.ulc", globals::colors::WHITE);
+                    SceneManager::show_title(TC_ACT2_SHIZUNE);
                 }
 
                 // TODO: see src/temp/test_videopal_draw.cpp.h
-
                 sound_manager::play(MUSIC_MENUS);
                 draw();
                 need_repalette = true;

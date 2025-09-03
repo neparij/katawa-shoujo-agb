@@ -628,6 +628,12 @@ class ScenarioWriter:
         return [f'IF_NOT_EXIT(ks::SceneManager::update_visuals());']
 
     def process_sequence_show_video(self, group: SequenceGroup, show_video: ShowVideoItem) -> List[str]:
+        if show_video.video.startswith("tc_"):
+            return [
+                f'IF_NOT_EXIT(ks::SceneManager::show_title({show_video.video.upper()}));',
+                f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
+            ]
+
         if not show_video.video in self.videos:
             self.videos.append(show_video.video)
         return [

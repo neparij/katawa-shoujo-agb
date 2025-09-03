@@ -70,7 +70,7 @@ void inframe_updates() {
     ks::sound_manager::update();
 }
 
-void videoplayer_play()
+void videoplayer_play(const bool force_white)
 {
     sound_started = false;
     Video::play();
@@ -89,4 +89,12 @@ void videoplayer_play()
     }
     inframe_updates();
     Video::stop();
+
+    REG_BG2CNT = 0x0000;
+
+    // Disable BG2 and Enable Force Blank screen (LCDC_OFF)
+    REG_DISPCNT &= ~BG2_ENABLE;
+    if (force_white) {
+        REG_DISPCNT |= LCDC_OFF;
+    }
 }

@@ -37,6 +37,11 @@
 #include <video_4ls_dxtv.h>
 #include <video_op_1_dxtv.h>
 
+#include "video_tc_act2_emi_dxtv.h"
+#include "video_tc_act2_hanako_dxtv.h"
+#include "video_tc_act2_lilly_dxtv.h"
+#include "video_tc_act2_rin_dxtv.h"
+#include "video_tc_act2_shizune_dxtv.h"
 #include "../../butano/butano/hw/include/bn_hw_irq.h"
 #include "../../butano/butano/src/bn_bgs_manager.h"
 #include "../../butano/butano/src/bn_display_manager.h"
@@ -48,6 +53,12 @@
 
 #include "menu/menu_ingame_pause.cpp.h"
 #include "menu/menu_saves.cpp.h"
+#include "openings/act1.cpp.h"
+#include "openings/act2_emi.cpp.h"
+#include "openings/act2_hanako.cpp.h"
+#include "openings/act2_lilly.cpp.h"
+#include "openings/act2_rin.cpp.h"
+#include "openings/act2_shizune.cpp.h"
 #include "shaders/paletted_color_shader.h"
 #include "sound/sound_mixer.h"
 #include "utils/string_utils.h"
@@ -1180,59 +1191,71 @@ void SceneManager::sfx_stop(const sound_channel_t channel, const int fade) {
     }
 }
 
-void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear) {
+void SceneManager::show_title(const title_card_t tc) {
     if (is_loading) {
         return;
     }
 
+    if (!dialog->is_hidden()) {
+        dialog->hide();
+    }
+
+
     ks::timer::pause_ingame_timer();
+
+    perform_act_fadeout();
+    free_resources();
+
+    pause(60);
+
     bn::blending::restore();
 
-    bool is_act_video = true;
-
-    bn::color clear_color;
-    if (dxtv_file == video_4ls_dxtv) {
-        clear_color = globals::colors::BLACK;
-        is_act_video = false;
-    } else if (is_act_video && dxtv_file != video_op_1_dxtv) {
-        clear_color = globals::colors::WHITE;
-        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(120);
-        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_SOUND>(120);
-        ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_AMBIENT>(120);
-        fade_out(clear_color, 120);
-    } else {
-        clear_color = clear;
+    switch (tc) {
+        case TC_ACT1:
+            ActOpening1().run();
+            break;
+        case TC_ACT2_EMI:
+            perform_render_video(video_tc_act2_emi_dxtv, video_tc_act2_emi_dxtv_size, "video_tc_act2_emi.ulc", globals::colors::WHITE);
+            ActOpening2Emi().run();
+            break;
+        case TC_ACT2_HANAKO:
+            perform_render_video(video_tc_act2_hanako_dxtv, video_tc_act2_hanako_dxtv_size, "video_tc_act2_hanako.ulc", globals::colors::WHITE);
+            ActOpening2Hanako().run();
+            break;
+        case TC_ACT2_LILLY:
+            perform_render_video(video_tc_act2_lilly_dxtv, video_tc_act2_lilly_dxtv_size, "video_tc_act2_lilly.ulc", globals::colors::WHITE);
+            ActOpening2Lilly().run();
+            break;
+        case TC_ACT2_RIN:
+            perform_render_video(video_tc_act2_rin_dxtv, video_tc_act2_rin_dxtv_size, "video_tc_act2_rin.ulc", globals::colors::WHITE);
+            ActOpening2Rin().run();
+            break;
+        case TC_ACT2_SHIZUNE:
+            perform_render_video(video_tc_act2_shizune_dxtv, video_tc_act2_shizune_dxtv_size, "video_tc_act2_shizune.ulc", globals::colors::WHITE);
+            ActOpening2Shizune().run();
+            break;
+        default: BN_ERROR("Unknown title card: ", tc); break;
     }
 
-    sound_mixer::mute();
+    bn::bg_palettes::set_transparent_color(globals::colors::WHITE);
+    fade_reset();
 
-    // Free last sound chunks
-    ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
-    ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
-    ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
-
-    free_resources();
-    ks::globals::release_engine();
-    bn::core::update();
-
-    videoplayer_init(dxtv_file, dxtv_size, audio_file, clear_color.red(), clear_color.green(), clear_color.blue());
-    if (is_act_video) {
-        pause(60);
-    }
-    videoplayer_play();
-
-    // Re-init Butano Core
-    // ks::globals::release_engine();
-    ks::globals::init_engine();
-    // sound_mixer::unmute();
-    BN_LOG("Init engine done!");
-
-    // TODO: Check the ingame timer after engine restoration.
     ks::timer::resume_ingame_timer();
 }
 
-void SceneManager::show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file) {
-    show_video(dxtv_file, dxtv_size, audio_file, ks::globals::colors::BLACK);
+void SceneManager::show_video(const uint8_t* dxtv_file, const size_t dxtv_size, const char* audio_file) {
+    if (is_loading) {
+        return;
+    }
+
+    bool force_white = false;
+    if (dxtv_file == video_4ls_dxtv) {
+        force_white = true;
+    }
+
+    ks::timer::pause_ingame_timer();
+    perform_render_video(dxtv_file, dxtv_size, audio_file, ks::globals::colors::BLACK, force_white);
+    ks::timer::resume_ingame_timer();
 }
 
 void SceneManager::exit_scenario_from_ingame_menu() {
@@ -1450,6 +1473,38 @@ void SceneManager::transition_fadeout(const bn::affine_bg_item &transition_item,
 
     bn::blending::set_fade_alpha(0.0);
     ks::transition_bg.reset();
+}
+
+void SceneManager::perform_act_fadeout() {
+    ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(120);
+    ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_SOUND>(120);
+    ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_AMBIENT>(120);
+    fade_out(globals::colors::WHITE, 120);
+}
+
+void SceneManager::perform_render_video(const uint8_t* dxtv_file, const size_t dxtv_size, const char* audio_file, const bn::color clear) {
+    perform_render_video(dxtv_file, dxtv_size, audio_file, clear, clear == globals::colors::WHITE);
+}
+
+void SceneManager::perform_render_video(const uint8_t* dxtv_file, const size_t dxtv_size, const char* audio_file, const bn::color clear, const bool force_white_end) {
+    bn::blending::restore();
+    sound_mixer::mute();
+
+    // Free last sound chunks
+    ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+    ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
+    ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
+
+    free_resources();
+    ks::globals::release_engine();
+    bn::core::update();
+
+    videoplayer_init(dxtv_file, dxtv_size, audio_file, clear.red(), clear.green(), clear.blue());
+    videoplayer_play(force_white_end);
+
+    ks::globals::init_engine();
+    // sound_mixer::unmute();
+    BN_LOG("Init engine done!");
 }
 
 int SceneManager::get_character_visual_index(const character_t character, const bool create_if_not_found) {

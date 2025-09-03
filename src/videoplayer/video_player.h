@@ -19,7 +19,7 @@ void videoplayer_init(const uint8_t* dxtv_file,
                 unsigned char r_clear,
                 unsigned char g_clear,
                 unsigned char b_clear);
-void videoplayer_play();
+void videoplayer_play(bool force_white);
 void videoplayer_clean();
 
 #endif // VIDEO_PLAYER_H

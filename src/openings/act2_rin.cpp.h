@@ -1,24 +1,24 @@
-#ifndef KS_ACT_OPENING_2_EMI_H
-#define KS_ACT_OPENING_2_EMI_H
+#ifndef KS_ACT_OPENING_2_RIN_H
+#define KS_ACT_OPENING_2_RIN_H
 
 #include "act_opening.h"
 
-#include "bn_regular_bg_items_act_2_emi_slide.h"
+#include "bn_regular_bg_items_act_2_rin_slide.h"
 
 namespace ks {
-    class ActOpening2Emi final : public ActOpening<1> {
+    class ActOpening2Rin final : public ActOpening<1> {
     public:
-        explicit ActOpening2Emi(): ActOpening(
+        explicit ActOpening2Rin(): ActOpening(
             (const opening_slide[1]){
                 opening_slide{
-                    bn::regular_bg_items::act_2_emi_slide,
+                    bn::regular_bg_items::act_2_rin_slide,
                     -88,
                     0
                 }
             },
             {
                 32,
-                24,
+                104,
                 OP_TEXT_ALIGN_LEFT
             },
             nullptr,
@@ -31,8 +31,8 @@ namespace ks {
             ) {}
     protected:
         opening_text get_text() override {
-            return globals::i18n->opening_text_act2_emi();
+            return globals::i18n->opening_text_act2_rin();
         }
     };
 }
-#endif //KS_ACT_OPENING_2_EMI_H
+#endif //KS_ACT_OPENING_2_RIN_H

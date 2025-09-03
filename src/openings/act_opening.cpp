@@ -82,6 +82,7 @@ namespace ks {
     void ActOpening<BgMoveables>::run() {
         _text = get_text();
         init();
+        SceneManager::fade_reset();
 
         if (_ulc_audiofile != nullptr) {
             ks::sound_manager::stop<SOUND_CHANNEL_VIDEO>();
@@ -133,7 +134,7 @@ namespace ks {
             }
 
             // TEXT ACTIONS:
-            if (_current_update == 420) {
+            if (_current_update == _text_fade_in.start) {
                 for (auto &sprite: header_sprites) {
                     sprite.set_visible(true);
                     sprite.set_blending_enabled(true);
@@ -145,10 +146,10 @@ namespace ks {
                     text_move_actions.push_back(bn::sprite_move_by_action(sprite, bn::fixed(0.125), 0));
                 }
             }
-            if (_current_update >= 420 && _current_update < 480) {
-                bn::blending::set_transparency_alpha(1 - bn::fixed(480 - _current_update) / 60);
+            if (_current_update >= _text_fade_in.start && _current_update < _text_fade_in.end) {
+                bn::blending::set_transparency_alpha(1 - bn::fixed(_text_fade_in.end - _current_update) / (_text_fade_in.end - _text_fade_in.start));
             }
-            if (_current_update == 480) {
+            if (_current_update == _text_fade_in.end) {
                 text_move_actions.clear();
                 bn::blending::restore();
             }

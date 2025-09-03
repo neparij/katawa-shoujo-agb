@@ -65,7 +65,7 @@ inline void game(const bool is_new_game) {
 
     if (ks::progress.force_route == FR_EMI) {
         // video: tc_act2_emi
-        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_emi_dxtv, video_tc_act2_emi_dxtv_size, "video_tc_act2_emi.ulc", ks::globals::colors::WHITE););
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_EMI););
         // ks::globals::i18n->script_a2_emi()();
         // video: tc_act3_emi
         // ks::globals::i18n->script_a3_emi()();
@@ -79,7 +79,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_HANAKO) {
         // video: tc_act2_hanako
-        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_hanako_dxtv, video_tc_act2_hanako_dxtv_size, "video_tc_act2_hanako.ulc", ks::globals::colors::WHITE););
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_HANAKO););
         // ks::globals::i18n->script_a2_hanako()();
         // video: tc_act3_hanako
         // ks::globals::i18n->script_a3_hanako()();
@@ -95,7 +95,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_LILLY) {
         // video: tc_act2_lilly
-        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_lilly_dxtv, video_tc_act2_lilly_dxtv_size, "video_tc_act2_lilly.ulc", ks::globals::colors::WHITE););
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_LILLY););
         // ks::globals::i18n->script_a2_lilly()();
         // video: tc_act3_lilly
         // ks::globals::i18n->script_a3_lilly()();
@@ -109,7 +109,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_RIN) {
         // video: tc_act2_rin
-        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_rin_dxtv, video_tc_act2_rin_dxtv_size, "video_tc_act2_rin.ulc", ks::globals::colors::WHITE););
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_RIN););
         // ks::globals::i18n->script_a2_rin()();
         // video: tc_act3_rin
         // ks::globals::i18n->script_a3_rin()();
@@ -128,7 +128,7 @@ inline void game(const bool is_new_game) {
         }
     } else if (ks::progress.force_route == FR_SHIZU) {
         // video: tc_act2_shizune
-        IF_NOT_EXIT(ks::SceneManager::show_video(video_tc_act2_shizune_dxtv, video_tc_act2_shizune_dxtv_size, "video_tc_act2_shizune.ulc", ks::globals::colors::WHITE););
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_SHIZUNE););
         // ks::globals::i18n->script_a2_shizune()();
         // video: tc_act3_shizune
         // ks::globals::i18n->script_a3_shizune()();
@@ -250,7 +250,7 @@ int main() {
     if constexpr (KS_SHOW_4LS_INTRO) {
         // Show the 4LS intro video (p1 - video playback)
         ks::sound_manager::set_channel_loop<SOUND_CHANNEL_VIDEO>(false);
-        ks::SceneManager::show_video(video_4ls_dxtv, video_4ls_dxtv_size, "video_4ls.ulc", ks::globals::colors::BLACK);
+        ks::SceneManager::show_video(video_4ls_dxtv, video_4ls_dxtv_size, "video_4ls.ulc");
 
         // Show the 4LS intro video (p2 - native gfx playback)
         ks::primary_background = bn::regular_bg_items::video_end_4ls.create_bg(0, 0);
@@ -279,20 +279,6 @@ int main() {
         }
     }
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
-
-    sound_mixer::unmute();
-    ks::ActOpening1().run();
-    ks::ActOpening2Emi().run();
-    ks::ActOpening3Emi().run();
-    ks::ActOpening3Hanako().run();
-    ks::ActOpening3Lilly().run();
-    ks::ActOpening3Rin().run();
-    ks::ActOpening3Shizune().run();
-    ks::ActOpening4Emi().run();
-    ks::ActOpening4Hanako().run();
-    ks::ActOpening4Lilly().run();
-    ks::ActOpening4Rin().run();
-    ks::ActOpening4Shizune().run();
 
     while (true) {
         switch (ks::globals::state) {

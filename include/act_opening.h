@@ -53,10 +53,12 @@ namespace ks {
                             const char *ulc_audiofile,
                             const action_duration fade_in,
                             const action_duration fade_out,
+                            const action_duration text_fade_in,
                             const action_duration slides_move_in,
                             const action_duration slides_fade_in,
                             const action_duration slides_colorize_in): _fade_in(fade_in),
                                                                        _fade_out(fade_out),
+                                                                       _text_fade_in(text_fade_in),
                                                                        _slides_move_in(slides_move_in),
                                                                        _slides_fade_in(slides_fade_in),
                                                                        _slides_colorize_in(slides_colorize_in),
@@ -69,6 +71,7 @@ namespace ks {
                             const opening_text_config &text_config,
                             const char *ulc_audiofile): _fade_in{60, 240},
                                                         _fade_out{720, 900},
+                                                        _text_fade_in{420, 480},
                                                         _slides_move_in{60, 360},
                                                         _slides_fade_in{120, 300},
                                                         _slides_colorize_in{240, 420},
@@ -98,6 +101,7 @@ namespace ks {
         int _current_update = 0;
         action_duration _fade_in;
         action_duration _fade_out;
+        action_duration _text_fade_in;
         action_duration _slides_move_in;
         action_duration _slides_fade_in;
         action_duration _slides_colorize_in;
