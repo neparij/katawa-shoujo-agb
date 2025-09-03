@@ -34,12 +34,9 @@ namespace ks {
     };
 
     struct opening_text_config {
-        const opening_text_align_t header_align;
-        const int header_x;
-        const int header_y;
-        const opening_text_align_t caption_align;
-        const int caption_x;
-        const int caption_y;
+        const int value_x;
+        const int top_y;
+        const opening_text_align_t align = OP_TEXT_ALIGN_CENTER;
     };
 
     struct moveable_bg {
@@ -82,13 +79,19 @@ namespace ks {
 
         virtual ~ActOpening() {
             _slide_ptrs.clear();
+            header_sprites.clear();
+            caption_sprites.clear();
+            text_move_actions.clear();
+            bg_ptr.reset();
+            bg_pal_ptr.reset();
+            slides_pal_ptr.reset();
         }
 
         void run();
 
     protected:
         void init();
-
+        virtual opening_text get_text() = 0;
         opening_text _text;
 
     private:

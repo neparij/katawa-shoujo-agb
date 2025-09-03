@@ -116,7 +116,7 @@ public:
     const char* definitions_emm_() override {return "Женщина с косой";}
 
     opening_text opening_text_act1() override {return {"Акт 1:", "Продолжительность", "жизни"};}
-    opening_text opening_text_act2_emi() override {return {"Акт 2:", "Приходим в форму"};}
+    opening_text opening_text_act2_emi() override {return {"Акт 2:", "Приходим в форму", " "};}
     opening_text opening_text_act2_hanako() override {return {"Акт 2:", "Игра в прятки"};}
     opening_text opening_text_act2_lilly() override {return {"Акт 2:", "Прошлое"};}
     opening_text opening_text_act2_rin() override {return {"Акт 2:", "Потеря связи"};}

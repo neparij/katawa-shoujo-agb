@@ -38,58 +38,50 @@ namespace ks {
         text_generator->set_palette_item(globals::text_palettes::beige);
         text_generator_small->set_palette_item(globals::text_palettes::beige);
 
+        text_generator_bold->set_left_alignment();
+        text_generator->set_left_alignment();
+        text_generator_small->set_left_alignment();
 
-        switch (_text_config.header_align) {
-            case OP_TEXT_ALIGN_LEFT: text_generator_bold->set_left_alignment();
-                break;
-            case OP_TEXT_ALIGN_CENTER: text_generator_bold->set_center_alignment();
-                break;
-            case OP_TEXT_ALIGN_RIGHT: text_generator_bold->set_right_alignment();
-                break;
-            default: BN_ERROR("Unknown header_align");
-        }
-        text_generator_bold->generate_top_left(_text_config.header_x, _text_config.header_y, _text.header,
-                                               header_sprites);
-        for (auto &sprite: header_sprites) {
-            sprite.set_visible(false);
-        }
-
+        int caption_width = 0;
         if (_text.caption_1 == nullptr) {
-            switch (_text_config.caption_align) {
-                case OP_TEXT_ALIGN_LEFT: text_generator->set_left_alignment();
-                    break;
-                case OP_TEXT_ALIGN_CENTER: text_generator->set_center_alignment();
-                    break;
-                case OP_TEXT_ALIGN_RIGHT: text_generator->set_right_alignment();
-                    break;
-                default: BN_ERROR("Unknown caption_align");
-            }
-            text_generator->set_center_alignment();
-            text_generator->generate_top_left(_text_config.caption_x, _text_config.caption_y, _text.caption_0,
+            caption_width = text_generator->width(_text.caption_0);
+            const int offset_x = _text_config.align == OP_TEXT_ALIGN_CENTER ? caption_width / 2 :
+                                 _text_config.align == OP_TEXT_ALIGN_RIGHT ? caption_width : 0;
+
+            text_generator->generate_top_left(_text_config.value_x - offset_x - 8, _text_config.top_y + 16, _text.caption_0,
                                               caption_sprites);
         } else {
-            switch (_text_config.caption_align) {
-                case OP_TEXT_ALIGN_LEFT: text_generator_small->set_left_alignment();
-                    break;
-                case OP_TEXT_ALIGN_CENTER: text_generator_small->set_center_alignment();
-                    break;
-                case OP_TEXT_ALIGN_RIGHT: text_generator_small->set_right_alignment();
-                    break;
-                default: BN_ERROR("Unknown caption_align");
-            }
-            text_generator_small->generate_top_left(_text_config.caption_x, _text_config.caption_y, _text.caption_0,
+            caption_width = text_generator_small->width(_text.caption_0);
+            const int offset_x = _text_config.align == OP_TEXT_ALIGN_CENTER ? caption_width / 2 :
+                                 _text_config.align == OP_TEXT_ALIGN_RIGHT ? caption_width : 0;
+
+            text_generator_small->generate_top_left(_text_config.value_x - offset_x - 8, _text_config.top_y + 16, _text.caption_0,
                                                     caption_sprites);
-            text_generator_small->generate_top_left(_text_config.caption_x, _text_config.caption_y + 8, _text.caption_1,
+            text_generator_small->generate_top_left(_text_config.value_x - offset_x - 8, _text_config.top_y + 24, _text.caption_1,
                                                     caption_sprites);
+
+            // Add header 8px offset for two-lines text for better visual balance
+            caption_width -= 8;
         }
 
         for (auto &sprite: caption_sprites) {
+            sprite.set_visible(false);
+        }
+
+
+        const int offset_x = _text_config.align == OP_TEXT_ALIGN_CENTER ? caption_width / 2 :
+                                 _text_config.align == OP_TEXT_ALIGN_RIGHT ? caption_width : 0;
+        text_generator_bold->generate_top_left(_text_config.value_x - offset_x, _text_config.top_y, _text.header,
+                                               header_sprites);
+        for (auto &sprite: header_sprites) {
             sprite.set_visible(false);
         }
     }
 
     template<int BgMoveables>
     void ActOpening<BgMoveables>::run() {
+        _text = get_text();
+        init();
 
         if (_ulc_audiofile != nullptr) {
             ks::sound_manager::stop<SOUND_CHANNEL_VIDEO>();
@@ -198,14 +190,6 @@ namespace ks {
             _current_update++;
             globals::main_update();
         }
-
-        _slide_ptrs.clear();
-        header_sprites.clear();
-        caption_sprites.clear();
-        text_move_actions.clear();
-        bg_ptr.reset();
-        bg_pal_ptr.reset();
-        slides_pal_ptr.reset();
 
         text_generator_bold->set_palette_item(globals::text_palettes::original);
         text_generator->set_palette_item(globals::text_palettes::original);

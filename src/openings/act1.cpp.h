@@ -9,7 +9,7 @@ namespace ks {
     class ActOpening1 final : public ActOpening<1> {
     public:
         explicit ActOpening1(): ActOpening(
-            (const opening_slide[]){
+            (const opening_slide[1]){
                 opening_slide{
                     bn::regular_bg_items::act_1_slide,
                     88,
@@ -17,13 +17,14 @@ namespace ks {
                 }
             },
             {
-                OP_TEXT_ALIGN_RIGHT, 164, 104,
-                OP_TEXT_ALIGN_CENTER, 164, 120
+                172,
+                104,
             },
-            "video_tc_act1.ulc"
-        ) {
-            _text = globals::i18n->opening_text_act1();
-            init();
+            "tc_act1.ulc"
+        ) {}
+    protected:
+        opening_text get_text() override {
+            return globals::i18n->opening_text_act1();
         }
     };
 }

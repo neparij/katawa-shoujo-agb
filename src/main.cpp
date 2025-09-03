@@ -20,7 +20,18 @@
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
-#include "openings/act_1.cpp.h"
+#include "openings/act1.cpp.h"
+#include "openings/act2_emi.cpp.h"
+#include "openings/act3_emi.cpp.h"
+#include "openings/act3_hanako.cpp.h"
+#include "openings/act3_lilly.cpp.h"
+#include "openings/act3_rin.cpp.h"
+#include "openings/act3_shizune.cpp.h"
+#include "openings/act4_emi.cpp.h"
+#include "openings/act4_hanako.cpp.h"
+#include "openings/act4_lilly.cpp.h"
+#include "openings/act4_rin.cpp.h"
+#include "openings/act4_shizune.cpp.h"
 #include "scripts/script_a1_friday.h"
 #include "scripts/script_a1_monday.h"
 #include "scripts/script_a1_saturday.h"
@@ -269,10 +280,19 @@ int main() {
     }
     ks::sound_manager::set_channel_loop<SOUND_CHANNEL_MUSIC>(true);
 
-
-
     sound_mixer::unmute();
     ks::ActOpening1().run();
+    ks::ActOpening2Emi().run();
+    ks::ActOpening3Emi().run();
+    ks::ActOpening3Hanako().run();
+    ks::ActOpening3Lilly().run();
+    ks::ActOpening3Rin().run();
+    ks::ActOpening3Shizune().run();
+    ks::ActOpening4Emi().run();
+    ks::ActOpening4Hanako().run();
+    ks::ActOpening4Lilly().run();
+    ks::ActOpening4Rin().run();
+    ks::ActOpening4Shizune().run();
 
     while (true) {
         switch (ks::globals::state) {
