@@ -51,6 +51,7 @@ struct background_visuals_ptr
     int position_y;
     int dissolve_time;
     bool dissolve_on_top;
+    bn::optional<bn::unique_ptr<CustomEvent>> active_event;
     scene_transition_t transition;
     palette_variant_t palette_variant;
 };
@@ -228,7 +229,7 @@ extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
 extern bn::optional<bn::affine_bg_ptr> transition_bg;
 extern bn::optional<bn::color> fill_color;
-extern bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
+extern bn::optional<bn::unique_ptr<CustomEvent>> next_event;
 extern bn::vector<character_visuals_ptr, 4> character_visuals;
 extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
@@ -240,6 +241,7 @@ extern ks::saves::SaveSlotProgressData savedata_progress;
 extern bool in_replay;
 extern bool is_loading;
 extern bool is_paused;
+extern bool is_returned_from_pause;
 extern unsigned char savedata_answer_index;
 
 extern bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;

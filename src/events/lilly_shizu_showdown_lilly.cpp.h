@@ -16,8 +16,8 @@ namespace ks {
             _move_action.reset();
         };
 
-        [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
-            return bn::make_unique<LillyShizuShowdownLillyEvent>(*this);
+        [[nodiscard]] bn::unique_ptr<CustomEvent> create() const override {
+            return bn::make_unique<LillyShizuShowdownLillyEvent>();
         }
 
         void init() override {

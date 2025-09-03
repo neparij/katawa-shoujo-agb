@@ -11,7 +11,9 @@ namespace ks
         CustomEvent() = default;
         virtual ~CustomEvent() = default;
 
-        virtual bn::unique_ptr<CustomEvent> clone() const = 0;
+        // virtual CustomEvent clone();
+
+        virtual bn::unique_ptr<CustomEvent> create() const = 0;
 
         virtual void init() {
             _initialized = true;
@@ -27,14 +29,10 @@ namespace ks
             return false;
         }
 
-        /// Perform show blend effect. Returns true if blend effect is performed, false otherwise.
-        virtual bool show_blend() {
-            return true;
+        virtual void before_hide(void (*on_update)()) {
         }
 
-        /// Perform hide blend effect. Returns true if blend effect is performed, false otherwise.
-        virtual bool hide_blend() {
-            return true;
+        virtual void after_show(void (*on_update)()) {
         }
 
         bool is_initialized() const {

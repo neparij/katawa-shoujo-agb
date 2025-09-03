@@ -16,8 +16,8 @@ namespace ks {
             // _background.reset();
         };
 
-        [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
-            return bn::make_unique<OpSnowywoodsEvent>(*this);
+        [[nodiscard]] bn::unique_ptr<CustomEvent> create() const override {
+            return bn::make_unique<OpSnowywoodsEvent>();
         }
 
         void init() override {
@@ -27,8 +27,8 @@ namespace ks {
 
             _vfx_snow_layer_0->set_priority(background_visual.visible_bg_item->priority() - 1);
             _vfx_snow_layer_1->set_priority(background_visual.visible_bg_item->priority() - 1);
-            // _vfx_snow_layer_0->set_visible(false);
-            // _vfx_snow_layer_1->set_visible(false);
+            _vfx_snow_layer_0->set_visible(false);
+            _vfx_snow_layer_1->set_visible(false);
             CustomEvent::init();
         }
 
@@ -36,42 +36,43 @@ namespace ks {
             return true;
         }
 
-        bool show_blend() override {
-            if (_alpha < 1) {
-                _vfx_snow_layer_0->set_visible(true);
-                _vfx_snow_layer_1->set_visible(true);
-                _vfx_snow_layer_0->set_blending_enabled(true);
-                _vfx_snow_layer_1->set_blending_enabled(true);
+        void before_hide(void(*on_update)()) override {
+            _blend_action = bn::blending_transparency_alpha_to_action(15, 0);
 
-                _alpha += bn::fixed(0.1);
-                bn::blending::set_transparency_alpha(bn::fixed(_alpha > 0 ? _alpha < 1 ? _alpha : 1 : 0));
+            _vfx_snow_layer_0->set_visible(true);
+            _vfx_snow_layer_1->set_visible(true);
+            _vfx_snow_layer_0->set_blending_enabled(true);
+            _vfx_snow_layer_1->set_blending_enabled(true);
 
-                return false;
+            while (!_blend_action->done()) {
+                _blend_action->update();
+                on_update();
             }
-
-            _vfx_snow_layer_0->set_blending_enabled(false);
-            _vfx_snow_layer_1->set_blending_enabled(false);
-            bn::blending::set_transparency_alpha(bn::fixed(1));
-            return true;
-        }
-
-        bool hide_blend() override {
-            if (_alpha > 1) {
-                _vfx_snow_layer_0->set_visible(true);
-                _vfx_snow_layer_1->set_visible(true);
-                _vfx_snow_layer_0->set_blending_enabled(true);
-                _vfx_snow_layer_1->set_blending_enabled(true);
-
-                _alpha -= bn::fixed(0.005);
-                bn::blending::set_transparency_alpha(bn::fixed(_alpha > 0 ? _alpha < 1 ? _alpha : 1 : 0));
-
-                return false;
-            }
+            _blend_action.reset();
 
             _vfx_snow_layer_0.reset();
             _vfx_snow_layer_1.reset();
-            bn::blending::set_transparency_alpha(bn::fixed(1));
-            return true;
+            bn::blending::restore();
+        }
+
+        void after_show(void(*on_update)()) override {
+            bn::blending::set_transparency_alpha(0);
+            _blend_action = bn::blending_transparency_alpha_to_action(30, 1);
+
+            _vfx_snow_layer_0->set_visible(true);
+            _vfx_snow_layer_1->set_visible(true);
+            _vfx_snow_layer_0->set_blending_enabled(true);
+            _vfx_snow_layer_1->set_blending_enabled(true);
+
+            while (!_blend_action->done()) {
+                _blend_action->update();
+                on_update();
+            }
+            _blend_action.reset();
+
+            _vfx_snow_layer_0->set_blending_enabled(false);
+            _vfx_snow_layer_1->set_blending_enabled(false);
+            bn::blending::restore();
         }
 
         void update() override {
@@ -107,10 +108,10 @@ namespace ks {
         }
 
     private:
-        bn::fixed _alpha = 0;
         bn::fixed _animation_sine = 0;
         bn::optional<bn::regular_bg_ptr> _vfx_snow_layer_0;
         bn::optional<bn::regular_bg_ptr> _vfx_snow_layer_1;
+        bn::optional<bn::blending_transparency_alpha_to_action> _blend_action;
     };
 }
 #endif // OP_SNOWYWOODS_CPP_H
