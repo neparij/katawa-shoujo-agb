@@ -117,5 +117,20 @@ public:
     const char* definitions_emm_() override {return "Woman with braid";}
 
     opening_text opening_text_act1() override {return {"Act 1:", "Life Expectancy"};}
+    opening_text opening_text_act2_emi() override {return {"Act 2:", "Form"};}
+    opening_text opening_text_act2_hanako() override {return {"Act 2:", "Hide and Seek"};}
+    opening_text opening_text_act2_lilly() override {return {"Act 2:", "Past"};}
+    opening_text opening_text_act2_rin() override {return {"Act 2:", "Disconnect"};}
+    opening_text opening_text_act2_shizune() override {return {"Act 2:", "Learning to Read"};}
+    opening_text opening_text_act3_emi() override {return {"Act 3:", "Perspective"};}
+    opening_text opening_text_act3_hanako() override {return {"Act 3:", "Castling"};}
+    opening_text opening_text_act3_lilly() override {return {"Act 3:", "Present"};}
+    opening_text opening_text_act3_rin() override {return {"Act 3:", "Distance"};}
+    opening_text opening_text_act3_shizune() override {return {"Act 3:", "Sleight of Hand"};}
+    opening_text opening_text_act4_emi() override {return {"Act 4:", "Motion"};}
+    opening_text opening_text_act4_hanako() override {return {"Act 4:", "Scars"};}
+    opening_text opening_text_act4_lilly() override {return {"Act 4:", "Future"};}
+    opening_text opening_text_act4_rin() override {return {"Act 4:", "Dream"};}
+    opening_text opening_text_act4_shizune() override {return {"Act 4:", "To My Other Self"};}
 };
 }

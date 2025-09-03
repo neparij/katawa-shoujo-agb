@@ -116,5 +116,20 @@ public:
     const char* definitions_emm_() override {return "Женщина с косой";}
 
     opening_text opening_text_act1() override {return {"Акт 1:", "Продолжительность", "жизни"};}
+    opening_text opening_text_act2_emi() override {return {"Акт 2:", "Приходим в форму"};}
+    opening_text opening_text_act2_hanako() override {return {"Акт 2:", "Игра в прятки"};}
+    opening_text opening_text_act2_lilly() override {return {"Акт 2:", "Прошлое"};}
+    opening_text opening_text_act2_rin() override {return {"Акт 2:", "Потеря связи"};}
+    opening_text opening_text_act2_shizune() override {return {"Акт 2:", "Учимся читать"};}
+    opening_text opening_text_act3_emi() override {return {"Акт 3:", "Перспектива"};}
+    opening_text opening_text_act3_hanako() override {return {"Акт 3:", "Рокировка"};}
+    opening_text opening_text_act3_lilly() override {return {"Акт 3:", "Настоящее"};}
+    opening_text opening_text_act3_rin() override {return {"Акт 3:", "Расстояние"};}
+    opening_text opening_text_act3_shizune() override {return {"Акт 3:", "Ловкость рук"};}
+    opening_text opening_text_act4_emi() override {return {"Акт 4:", "Движение"};}
+    opening_text opening_text_act4_hanako() override {return {"Акт 4:", "Шрамы"};}
+    opening_text opening_text_act4_lilly() override {return {"Акт 4:", "Будущее"};}
+    opening_text opening_text_act4_rin() override {return {"Акт 4:", "Мечта"};}
+    opening_text opening_text_act4_shizune() override {return {"Акт 4:", "Другой мне"};}
 };
 }
