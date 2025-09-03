@@ -863,6 +863,16 @@ void SceneManager::update_visuals() {
 
     /// HIDE BACKGROUNDS (WITH DISSOLVE)
     if (background_want_hide) {
+        // if (custom_event.has_value() && (*custom_event)->is_initialized() && (*custom_event)->is_blendable()) {
+        //     BN_LOG("SHOULD HIDE CUSTOM EVENT");
+        //     if (!dialog->is_hidden()) {
+        //         dialog->hide_blend();
+        //     }
+        //     while (!(*custom_event)->hide_blend()) {
+        //         globals::main_update();
+        //     }
+        //     globals::main_update();
+        // }
         if (background_want_dissolve) {
             BN_LOG("Update visuals: Hide background with dissolve");
             background_visual.visible_bg_item->set_blending_enabled(true);
@@ -920,6 +930,15 @@ void SceneManager::update_visuals() {
                 if (custom_event.has_value()) {
                     (*custom_event)->init();
                 }
+                //
+                // if (custom_event.has_value() && (*custom_event)->is_initialized() && (*custom_event)->is_blendable()) {
+                //     if (!dialog->is_hidden()) {
+                //         dialog->hide_blend();
+                //     }
+                //     while (!(*custom_event)->show_blend()) {
+                //         globals::main_update();
+                //     }
+                // }
                 blend_action.reset();
             } else {
                 BN_LOG("   <<< Unable to create secondary background! Fallback to change without dissolve");
@@ -942,6 +961,14 @@ void SceneManager::update_visuals() {
             if (custom_event.has_value()) {
                 (*custom_event)->init();
             }
+            // if (custom_event.has_value() && (*custom_event)->is_initialized() && (*custom_event)->is_blendable()) {
+            //     if (!dialog->is_hidden()) {
+            //         dialog->hide_blend();
+            //     }
+            //     while (!(*custom_event)->show_blend()) {
+            //         globals::main_update();
+            //     }
+            // }
         }
 
         // background_visual.visible_bg_item = background_visual.bg_item;
@@ -964,6 +991,15 @@ void SceneManager::update_visuals() {
             BN_LOG("                with transition ", background_visual.transition);
             perform_transition(background_visual.transition);
             background_visual.transition = SCENE_TRANSITION_NONE;
+            //
+            // if (custom_event.has_value() && (*custom_event)->is_initialized() && (*custom_event)->is_blendable()) {
+            //     if (!dialog->is_hidden()) {
+            //         dialog->hide_blend();
+            //     }
+            //     while (!(*custom_event)->show_blend()) {
+            //         globals::main_update();
+            //     }
+            // }
         }
 
         if (background_want_dissolve) {
@@ -977,6 +1013,15 @@ void SceneManager::update_visuals() {
             }
             background_visual.visible_bg_item->set_blending_enabled(false);
             blend_action.reset();
+            //
+            // if (custom_event.has_value() && (*custom_event)->is_initialized() && (*custom_event)->is_blendable()) {
+            //     if (!dialog->is_hidden()) {
+            //         dialog->hide_blend();
+            //     }
+            //     while (!(*custom_event)->show_blend()) {
+            //         globals::main_update();
+            //     }
+            // }
         }
 
         // background_visual.visible_bg_item = background_visual.bg_item;

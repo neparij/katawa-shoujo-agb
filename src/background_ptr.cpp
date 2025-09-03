@@ -56,6 +56,56 @@ namespace ks {
         BN_ERROR("set_position: Background pointer has no value");
     }
 
+    bool background_ptr::visible() {
+        if (_regular_ptr.has_value()) {
+            return _regular_ptr->visible();
+        }
+
+        if (_affine_ptr.has_value()) {
+            return _affine_ptr->visible();
+        }
+
+        if (_huge_ptr.has_value()) {
+            return _huge_ptr->regular_bg_ptr().visible();
+        }
+
+        BN_ERROR("visible: Background pointer has no value");
+        return false;
+    }
+
+    void background_ptr::set_visible(bool visible) {
+        if (_regular_ptr.has_value()) {
+            return _regular_ptr->set_visible(visible);
+        }
+
+        if (_affine_ptr.has_value()) {
+            return _affine_ptr->set_visible(visible);
+        }
+
+        if (_huge_ptr.has_value()) {
+            return _huge_ptr->regular_bg_ptr().set_visible(visible);
+        }
+
+        BN_ERROR("set_visible: Background pointer has no value");
+    }
+
+    int background_ptr::priority() {
+        if (_regular_ptr.has_value()) {
+            return _regular_ptr->priority();
+        }
+
+        if (_affine_ptr.has_value()) {
+            return _affine_ptr->priority();
+        }
+
+        if (_huge_ptr.has_value()) {
+            return _huge_ptr->regular_bg_ptr().priority();
+        }
+
+        BN_ERROR("priority: Background pointer has no value");
+        return 0;
+    }
+
     void background_ptr::set_priority(int priority) {
         if (_regular_ptr.has_value()) {
             return _regular_ptr->set_priority(priority);
@@ -72,6 +122,23 @@ namespace ks {
         BN_ERROR("set_priority: Background pointer has no value");
     }
 
+    int background_ptr::z_order() {
+        if (_regular_ptr.has_value()) {
+            return _regular_ptr->z_order();
+        }
+
+        if (_affine_ptr.has_value()) {
+            return _affine_ptr->z_order();
+        }
+
+        if (_huge_ptr.has_value()) {
+            return _huge_ptr->regular_bg_ptr().z_order();
+        }
+
+        BN_ERROR("z_order: Background pointer has no value");
+        return 0;
+    }
+
     void background_ptr::set_z_order(int order) {
         if (_regular_ptr.has_value()) {
             return _regular_ptr->set_z_order(order);
@@ -86,6 +153,23 @@ namespace ks {
         }
 
         BN_ERROR("set_z_order: Background pointer has no value");
+    }
+
+    bool background_ptr::blending_enabled() {
+        if (_regular_ptr.has_value()) {
+            return _regular_ptr->blending_enabled();
+        }
+
+        if (_affine_ptr.has_value()) {
+            return _affine_ptr->blending_enabled();
+        }
+
+        if (_huge_ptr.has_value()) {
+            return _huge_ptr->regular_bg_ptr().blending_enabled();
+        }
+
+        BN_ERROR("blending_enabled: Background pointer has no value");
+        return false;
     }
 
     void background_ptr::set_blending_enabled(bool enabled) {

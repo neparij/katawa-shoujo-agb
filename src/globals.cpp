@@ -35,6 +35,12 @@ namespace ks::globals {
         update_konami_code();
     }
 
+    void main_except_sm_update() {
+        huge_bgs_manager::update();
+        bn::core::update();
+        sound_manager::update();
+    }
+
     void BN_CODE_IWRAM ISR_VBlank() {
         if (!is_loading) {
             timer::update();

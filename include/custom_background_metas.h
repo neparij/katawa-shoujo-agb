@@ -16,7 +16,12 @@
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_lilly.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_shizu.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_both.h"
+#include "bn_regular_bg_items_op_snowywoods.h"
+#include "bn_regular_bg_items_other_iwanako.h"
+#include "bn_regular_bg_items_other_iwanako_nosnow.h"
 #include "bn_regular_bg_items_thumb_lilly_shizu_showdown.h"
+#include "bn_regular_bg_items_thumb_op_snowywoods.h"
+#include "bn_regular_bg_items_thumb_other_iwanako.h"
 
 namespace ks::background_metas {
     constexpr inline background_meta hisao_class(
@@ -64,6 +69,16 @@ namespace ks::background_metas {
         bn::regular_bg_items::thumb_event_drugs,
         0xFFFF0008);
 
+    constexpr inline background_meta op_snowywoods(
+        bn::regular_bg_items::op_snowywoods,
+        bn::regular_bg_items::thumb_op_snowywoods,
+        0xFFFF0009);
+
+    constexpr inline background_meta other_iwanako(
+        bn::regular_bg_items::other_iwanako_nosnow,
+        bn::regular_bg_items::thumb_other_iwanako,
+        0x0FFF000A);
+
     constexpr inline background_meta kslogo_heart(
         bn::regular_bg_items::kslogo_heart,
         bn::regular_bg_items::thumb_event_missing,
@@ -85,6 +100,8 @@ namespace ks::background_metas {
             case 0xFFFF0006: return lilly_shizu_showdown_slices_shizu.thumbnail;
             case 0xFFFF0007: return lilly_shizu_showdown_both.thumbnail;
             case 0xFFFF0008: return event_drugs_en.thumbnail;
+            case 0xFFFF0009: return op_snowywoods.thumbnail;
+            case 0xFFFF000A: return other_iwanako.thumbnail;
             default: return event_missing.thumbnail;
         }
     }

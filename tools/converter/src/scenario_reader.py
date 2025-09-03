@@ -686,7 +686,6 @@ def rewrite_background(bg_name: str) -> str:
 def rewrite_motion_background(bg_name: str) -> str:
     # TODO: remove this method and allow motion backgrounds
     return (bg_name
-            .replace("other_iwanako_start", "other_iwanako")
             .replace("hana_library_read_std", "hana_library_read")
             .replace("hana_library_std", "hana_library")
             .replace("hana_library_gasp_std", "hana_library_gasp")
@@ -717,6 +716,22 @@ def scenario_rewrites(scenario_file, content):
             "            easein 25.0 xanchor 0.5",
             # WITH
             "        scene ev drugs_event"
+        ).replace(
+            "        scene ev other_iwanako_start\n"
+            "        show snow",
+            # WITH
+            # TODO: Other Iwanako Start event (Affine background scaling down)
+            "        scene ev other_iwanako"
+        ).replace(
+            "        scene ev other_iwanako\n"
+            "        show snow",
+            # WITH
+            "        scene ev other_iwanako"
+        ).replace(
+            "        scene bg op_snowywoods\n"
+            "        show snow",
+            # WITH
+            "        scene ev op_snowywoods"
         )
 
     if scenario_name == "script-a1-thursday":
@@ -818,6 +833,16 @@ def scenario_rewrites(scenario_file, content):
     return content
 
 def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
+
+    # OP_SNOWYWOODS
+    if bg_name == "op_snowywoods":
+        return "op_snowywoods", "OpSnowywoodsEvent"
+
+    # OTHER_IWANAKO
+    # TODO: Other Iwanako Start event (Affine background scaling down)
+    if bg_name == "other_iwanako":
+        return "other_iwanako", "OtherIwanakoEvent"
+
     # HISAO CLASS
     if bg_name == "hisao_class_start":
         return "hisao_class", "HisaoClassStartEvent"

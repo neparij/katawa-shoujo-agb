@@ -5,8 +5,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::set_textdb("5906962E"));
             if (!ks::in_replay) {
             }
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::op_snowywoods, 0, 0, SCENE_TRANSITION_NONE, 60, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show snow
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::op_snowywoods, OpSnowywoodsEvent(), SCENE_TRANSITION_NONE, 60));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_SERENE, 120));
             ks::SceneManager::set_line_hash(0x6B1549A4);
@@ -44,8 +43,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 15));
             ks::SceneManager::set_line_hash(0xEF23AC66);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 16));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::other_iwanako, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show snow
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::other_iwanako, OtherIwanakoEvent(), SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x05BEB236);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 17));
@@ -58,8 +56,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x6A0447D2);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 22));
             IF_NOT_EXIT(ks::SceneManager::music_stop(600));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::op_snowywoods, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show snow
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::op_snowywoods, OpSnowywoodsEvent(), SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_heartslow.8ad", SOUND_CHANNEL_SOUND));
             // TODO: Show heartattack
@@ -74,8 +71,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x16ABA0BF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 23));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::other_iwanako, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show snow
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::other_iwanako, OtherIwanakoEvent(), SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x479FC400);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 24));
@@ -89,8 +85,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 28));
             ks::SceneManager::set_line_hash(0x92C4AB32);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 29));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::op_snowywoods, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show snow
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::op_snowywoods, OpSnowywoodsEvent(), SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xFA8930F2);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 30));

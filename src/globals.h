@@ -37,6 +37,8 @@ namespace ks::globals {
 
     extern void main_update();
 
+    extern void main_except_sm_update();
+
     extern void ISR_VBlank();
 
     extern void accessibility_apply();

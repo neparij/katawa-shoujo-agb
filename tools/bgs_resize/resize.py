@@ -35,6 +35,13 @@ IGNORE_IMAGES = [
     "lilly_shizu_showdown_large"
 ]
 
+# Used for CustomEvents based on original images.
+IGNORE_METAS = [
+    "op_snowywoods",
+    "other_iwanako",
+    "other_iwanako_nosnow",
+]
+
 BG_INCLUDE_VFX_IMAGES = [
     "mural_start",
     "mural",
@@ -74,7 +81,8 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
                 process_image(image_file, output_path, unquant_colors)
                 create_json_metadata(output_path, quantize, unquant_colors)
 
-            write_background_metadata(os.path.splitext(output_file_name)[0])
+            if os.path.splitext(output_file_name)[0] not in IGNORE_METAS:
+                write_background_metadata(os.path.splitext(output_file_name)[0])
         except Exception as e:
             print(f"Error processing {image_file}: {e}")
 

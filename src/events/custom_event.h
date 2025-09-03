@@ -23,6 +23,20 @@ namespace ks
             _initialized = false;
         }
 
+        virtual bool is_blendable() {
+            return false;
+        }
+
+        /// Perform show blend effect. Returns true if blend effect is performed, false otherwise.
+        virtual bool show_blend() {
+            return true;
+        }
+
+        /// Perform hide blend effect. Returns true if blend effect is performed, false otherwise.
+        virtual bool hide_blend() {
+            return true;
+        }
+
         bool is_initialized() const {
             return _initialized;
         }
