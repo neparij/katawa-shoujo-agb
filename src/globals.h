@@ -31,6 +31,8 @@ namespace ks::globals {
 
     extern void init_engine();
 
+    extern void release_resources();
+
     extern void release_engine();
 
     extern void set_language(language_t tl);

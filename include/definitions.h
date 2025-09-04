@@ -113,6 +113,24 @@ typedef unsigned char scene_transition_t;
 #define SCENE_TRANSITION_CLOCKWIPE_IN ((scene_transition_t)29)
 #define SCENE_TRANSITION_CLOCKWIPE_OUT ((scene_transition_t)30)
 
+typedef unsigned char title_card_t;
+#define TC_ACT1 ((title_card_t)0)
+#define TC_ACT2_EMI ((title_card_t)1)
+#define TC_ACT2_HANAKO ((title_card_t)2)
+#define TC_ACT2_LILLY ((title_card_t)3)
+#define TC_ACT2_RIN ((title_card_t)4)
+#define TC_ACT2_SHIZUNE ((title_card_t)5)
+#define TC_ACT3_EMI ((title_card_t)6)
+#define TC_ACT3_HANAKO ((title_card_t)7)
+#define TC_ACT3_LILLY ((title_card_t)8)
+#define TC_ACT3_RIN ((title_card_t)9)
+#define TC_ACT3_SHIZUNE ((title_card_t)10)
+#define TC_ACT4_EMI ((title_card_t)11)
+#define TC_ACT4_HANAKO ((title_card_t)12)
+#define TC_ACT4_LILLY ((title_card_t)13)
+#define TC_ACT4_RIN ((title_card_t)14)
+#define TC_ACT4_SHIZUNE ((title_card_t)15)
+
 typedef unsigned char palette_variant_t;
 #define PALETTE_VARIANT_DEFAULT ((palette_variant_t)0)
 #define PALETTE_VARIANT_NIGHT ((palette_variant_t)1)

@@ -181,7 +181,7 @@ public:
     static void sfx_stop(const sound_channel_t channel);
     static void sfx_stop(const sound_channel_t channel, const int fade);
 
-    static void show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear);
+    static void show_title(const title_card_t tc);
     static void show_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file);
 
     static void exit_scenario_from_ingame_menu();
@@ -211,6 +211,9 @@ public:
     constexpr const char* locale() const { return _locale; }
 
 private:
+    static void perform_act_fadeout();
+    static void perform_render_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear);
+    static void perform_render_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear, bool force_white_end);
     static int get_character_visual_index(character_t character, bool create_if_not_found = true);
     const char* _scenario;
     const char* _locale;

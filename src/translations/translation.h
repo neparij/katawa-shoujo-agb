@@ -3,6 +3,7 @@
 
 #include "definitions.h"
 #include "bn_array.h"
+#include "act_opening.h"
 
 namespace ks {
 class Translation
@@ -112,6 +113,23 @@ public:
     virtual const char* definitions_hx_() = 0;
     virtual const char* definitions_hh_() = 0;
     virtual const char* definitions_emm_() = 0;
+
+    virtual opening_text opening_text_act1() = 0;
+    virtual opening_text opening_text_act2_emi() = 0;
+    virtual opening_text opening_text_act2_hanako() = 0;
+    virtual opening_text opening_text_act2_lilly() = 0;
+    virtual opening_text opening_text_act2_rin() = 0;
+    virtual opening_text opening_text_act2_shizune() = 0;
+    virtual opening_text opening_text_act3_emi() = 0;
+    virtual opening_text opening_text_act3_hanako() = 0;
+    virtual opening_text opening_text_act3_lilly() = 0;
+    virtual opening_text opening_text_act3_rin() = 0;
+    virtual opening_text opening_text_act3_shizune() = 0;
+    virtual opening_text opening_text_act4_emi() = 0;
+    virtual opening_text opening_text_act4_hanako() = 0;
+    virtual opening_text opening_text_act4_lilly() = 0;
+    virtual opening_text opening_text_act4_rin() = 0;
+    virtual opening_text opening_text_act4_shizune() = 0;
 
     const char* music(const music_t music) {
         switch (music) {

@@ -76,7 +76,7 @@ namespace ks::globals {
         init_engine(bn::nullopt);
     }
 
-    void release_engine() {
+    void release_resources() {
         ks::huge_background.reset();
         ks::primary_background.reset();
         ks::secondary_background.reset();
@@ -88,12 +88,10 @@ namespace ks::globals {
         ks::progress_icon_sprites.clear();
         ks::static_text_sprites.clear();
         ks::animated_text_sprites.clear();
-        // ks::scene.reset();
+    }
 
-        // delete &ks::text_db;
-        // delete ks::globals::i18n;
-
-        bn::memory::log_alloc_ewram_status();
+    void release_engine() {
+        release_resources();
 
         delete ks::dialog;
         i18n.reset();
