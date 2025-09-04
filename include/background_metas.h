@@ -22,7 +22,6 @@
 #include "background_metas/school_gate.h"
 #include "background_metas/school_dormext_start_ni.h"
 #include "background_metas/school_roof_ni.h"
-#include "background_metas/hosp_room.h"
 #include "background_metas/school_dormhisao_blurred.h"
 #include "background_metas/suburb_konbiniext_ni.h"
 #include "background_metas/school_dormhallway.h"
@@ -434,7 +433,6 @@ namespace ks::background_metas {
             case 0xDA1D1C2B: return school_gate.thumbnail;
             case 0xD08F4060: return school_dormext_start_ni.thumbnail;
             case 0x3BF14FE2: return school_roof_ni.thumbnail;
-            case 0x3E47FD6A: return hosp_room.thumbnail;
             case 0xA5C694D3: return school_dormhisao_blurred.thumbnail;
             case 0x99499E46: return suburb_konbiniext_ni.thumbnail;
             case 0x3D1C39CA: return school_dormhallway.thumbnail;

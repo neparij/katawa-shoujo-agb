@@ -535,7 +535,7 @@ class ScenarioReader:
                             return
                     self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(transition))
                     return
-            displayable_dissolve_match = re.match(r"^with Dissolve\(([\d.]+)\)$", stripped_line)
+            displayable_dissolve_match = re.match(r"^with Dissolve\s*\(([\d.]+)\)$", stripped_line)
             if displayable_dissolve_match:
                 dissolve_time = float(displayable_dissolve_match.group(1))
                 for sequence in self.linepack_events:
@@ -732,6 +732,12 @@ def scenario_rewrites(scenario_file, content):
             "        show snow",
             # WITH
             "        scene ev op_snowywoods"
+        ).replace(
+            "        scene bg hosp_room\n"
+            "        show sakura\n"
+            "        show hospitalmask",
+            # WITH
+            "        scene ev hosp_room"
         )
 
     if scenario_name == "script-a1-thursday":
@@ -842,6 +848,10 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     # TODO: Other Iwanako Start event (Affine background scaling down)
     if bg_name == "other_iwanako":
         return "other_iwanako", "OtherIwanakoEvent"
+
+    # HOSP_ROOM
+    if bg_name == "hosp_room":
+        return "hosp_room", "HospRoomEvent"
 
     # HISAO CLASS
     if bg_name == "hisao_class_start":

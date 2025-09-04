@@ -90,6 +90,7 @@ EWRAM_BSS bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 
 void SceneManager::free_resources() {
     BN_LOG("Free resources...");
+    background_visual.active_event.reset();
     background_visual.bg_item.reset();
     background_visual.visible_bg_item.reset();
     background_visual.visible_fg_item.reset();
@@ -122,9 +123,6 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("Set SM Instance");
     scene = instance;
 
-    BN_LOG("Set Window boundaries");
-    left_window.set_boundaries(-80,-120,80,0);
-    right_window.set_boundaries(-80,0,80,120);
     BN_LOG("SceneManager init done!");
 }
 
@@ -473,6 +471,11 @@ void SceneManager::set_character_position(const character_t character,
 // void SceneManager::set_character_window_visibility(bn::regular_bg_ptr bg, bn::fixed target_x, bn::fixed target_y)
 void SceneManager::set_character_window_visibility(bn::regular_bg_ptr bg)
 {
+    // TODO: Check for ability to use with sprite windows. (See hosp_room event for sprite window usage)
+    BN_LOG("Set Window boundaries");
+    // left_window.set_boundaries(-80,-120,80,0);
+    // right_window.set_boundaries(-80,0,80,120);
+
     bool is_right = true;
     bool is_left = true;
     bn::fixed x_pos = bg.position().x();
@@ -769,6 +772,7 @@ void SceneManager::update_visuals() {
                                 background_visual.visible_bg_item.has_value() &&
                                 (background_visual.position_x != background_visual.visible_bg_item->position().x() ||
                                 background_visual.position_y != background_visual.visible_bg_item->position().y());
+    bool next_event_is_blendable = next_event.has_value() && (*next_event)->is_blendable();
 
     bool characters_want_show = false;
     bool characters_want_hide = false;
@@ -793,7 +797,8 @@ void SceneManager::update_visuals() {
     }
 
     /// HIDE DIALOGS (WITH DISSOLVE)
-    if (background_want_dissolve || background_want_transition || characters_want_show || characters_want_hide || is_paused) {
+    if (background_want_dissolve || background_want_transition || characters_want_show || characters_want_hide ||
+        is_paused || (background_want_show && next_event_is_blendable)) {
         if (!dialog->is_hidden()) {
             BN_LOG("Update visuals: Hide dialogbox");
             dialog->hide_blend();

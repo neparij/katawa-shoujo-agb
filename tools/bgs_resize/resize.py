@@ -40,6 +40,7 @@ IGNORE_METAS = [
     "op_snowywoods",
     "other_iwanako",
     "other_iwanako_nosnow",
+    "hosp_room"
 ]
 
 BG_INCLUDE_VFX_IMAGES = [

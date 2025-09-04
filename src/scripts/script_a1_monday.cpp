@@ -180,9 +180,7 @@ namespace ks {
             }
             ks::SceneManager::set_line_hash(0x010658DE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::centered, 0));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hosp_room, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show sakura
-            // TODO: Show hospitalmask
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::hosp_room, HospRoomEvent(), SCENE_TRANSITION_NONE, 45));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             // renpy.music.set_volume(0.5, 0.0, channel="music"); TODO: unknown assignment
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_RAIN, 240));
@@ -310,9 +308,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0xDA51AA5E);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 60));
             // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hosp_room, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show sakura
-            // TODO: Show hospitalmask
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::hosp_room, HospRoomEvent(), SCENE_TRANSITION_NONE, 30));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x0C43076B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(47, 61));
