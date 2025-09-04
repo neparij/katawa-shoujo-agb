@@ -23,6 +23,12 @@
 #include "bn_regular_bg_items_thumb_op_snowywoods.h"
 #include "bn_regular_bg_items_thumb_other_iwanako.h"
 
+// TODO: add before-compile tool to generate unique hashes for each background
+// How to calculate hash:
+// Use MD5 hash of the background name and take first 8 digits.
+// Example: hisao_class -> 506DE7CF
+// Bash oneliner: echo -en "hisao_class" | md5 | awk '{print $1}' | cut -c1-8 | tr '[:lower:]' '[:upper:]' | sed 's/^/0x/'
+
 namespace ks::background_metas {
     constexpr inline background_meta hisao_class(
         bn::regular_bg_items::hisao_class,
