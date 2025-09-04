@@ -77,6 +77,7 @@ GRAPHICS    	:=  graphics \
 					graphics/event/thumbs \
 					graphics/event/custom \
 					graphics/huge/thumbs \
+					graphics/vfx \
 					graphics/characters/shizu \
 					graphics/characters/misha \
 					graphics/characters/emi \

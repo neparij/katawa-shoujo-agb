@@ -45,8 +45,10 @@ namespace ks {
                     background_visual.visible_bg_item->set_priority(3);
                     background_visual.visible_bg_item->set_z_order(10);
 
-                    if (custom_event.has_value()) {
-                        (*custom_event)->init();
+                    if (next_event.has_value()) {
+                        background_visual.active_event = bn::move(next_event);
+                        (*background_visual.active_event)->init();
+                        next_event.reset();
                     }
                 }
             }
@@ -106,6 +108,7 @@ namespace ks {
 
             ks::globals::state = GS_GAME;
             is_paused = false;
+            is_returned_from_pause = true;
             ks::SceneManager::update_visuals();
             timer::resume_ingame_timer();
         }
@@ -138,9 +141,11 @@ namespace ks {
                     static_text_sprites.clear();
                     animated_text_sprites.clear();
                     progress_icon_sprites.clear();
-                    if (custom_event.has_value()) {
+                    if (background_visual.active_event.has_value()) {
                         BN_LOG("Should dispose custom event");
-                        (*custom_event)->destroy();
+                        (*background_visual.active_event)->destroy();
+                        next_event = (*background_visual.active_event)->create();
+                        background_visual.active_event.reset();
                     }
                     menu_bg_sprites.clear();
                     globals::state = GS_GAME_MENU_SAVES;

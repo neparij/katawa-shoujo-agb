@@ -18,8 +18,8 @@ namespace ks {
             _shizu_move_action.reset();
         };
 
-        [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
-            return bn::make_unique<LillyShizuShowdownSlicesEvent>(*this);
+        [[nodiscard]] bn::unique_ptr<CustomEvent> create() const override {
+            return bn::make_unique<LillyShizuShowdownSlicesEvent>();
         }
 
         void init() override {

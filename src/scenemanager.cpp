@@ -68,7 +68,7 @@ bn::optional<bn::regular_bg_ptr> secondary_background;
 bn::optional<bn::affine_bg_ptr> transition_bg;
 bn::optional<bn::color> fill_color;
 
-bn::optional<bn::unique_ptr<CustomEvent>> custom_event;
+bn::optional<bn::unique_ptr<CustomEvent>> next_event;
 bn::vector<character_visuals_ptr, 4> character_visuals;
 background_visuals_ptr background_visual;
 
@@ -81,6 +81,7 @@ EWRAM_BSS ks::saves::SaveSlotProgressData savedata_progress;
 bool in_replay = false;
 bool is_loading = false;
 bool is_paused = false;
+bool is_returned_from_pause = false;
 unsigned char savedata_answer_index = 0;
 
 EWRAM_BSS bn::vector<bn::sprite_ptr, 18> progress_icon_sprites;
@@ -89,13 +90,14 @@ EWRAM_BSS bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 
 void SceneManager::free_resources() {
     BN_LOG("Free resources...");
+    background_visual.active_event.reset();
     background_visual.bg_item.reset();
     background_visual.visible_bg_item.reset();
     background_visual.visible_fg_item.reset();
     huge_background.reset();
     primary_background.reset();
     secondary_background.reset();
-    custom_event.reset();
+    next_event.reset();
 
     for (auto &visual : character_visuals) {
         visual.background.reset();
@@ -121,9 +123,6 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("Set SM Instance");
     scene = instance;
 
-    BN_LOG("Set Window boundaries");
-    left_window.set_boundaries(-80,-120,80,0);
-    right_window.set_boundaries(-80,0,80,120);
     BN_LOG("SceneManager init done!");
 }
 
@@ -192,7 +191,7 @@ void SceneManager::reset_backgrounds_visuals() {
 }
 
 void SceneManager::set_background(const background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time, const palette_variant_t palette_variant) {
-    custom_event.reset();
+    next_event.reset();
     reset_backgrounds_visuals();
 
     disable_fill();
@@ -217,7 +216,7 @@ void SceneManager::set_background(const background_meta& bg, const int position_
 
 void SceneManager::set_huge_background(const huge_background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time, const palette_variant_t palette_variant) {
     // TODO: Check the duplicated code with set_background
-    custom_event.reset();
+    next_event.reset();
     reset_backgrounds_visuals();
 
     disable_fill();
@@ -290,7 +289,8 @@ void SceneManager::set_event(const background_meta& bg, const CustomEvent& event
             hide_character(visual.character, false, true);
         }
     }
-    custom_event = event.clone();
+
+    next_event = event.create();
 }
 
 void SceneManager::set_event(const huge_background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
@@ -300,7 +300,7 @@ void SceneManager::set_event(const huge_background_meta& bg, const CustomEvent& 
             hide_character(visual.character, false, true);
         }
     }
-    custom_event = event.clone();
+    next_event = event.create();
 }
 
 void SceneManager::show_dialog(const character_definition& actor, const unsigned int tl_key) {
@@ -471,6 +471,11 @@ void SceneManager::set_character_position(const character_t character,
 // void SceneManager::set_character_window_visibility(bn::regular_bg_ptr bg, bn::fixed target_x, bn::fixed target_y)
 void SceneManager::set_character_window_visibility(bn::regular_bg_ptr bg)
 {
+    // TODO: Check for ability to use with sprite windows. (See hosp_room event for sprite window usage)
+    BN_LOG("Set Window boundaries");
+    // left_window.set_boundaries(-80,-120,80,0);
+    // right_window.set_boundaries(-80,0,80,120);
+
     bool is_right = true;
     bool is_left = true;
     bn::fixed x_pos = bg.position().x();
@@ -548,8 +553,8 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
             // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-            if (custom_event.has_value()) {
-                (*custom_event)->init();
+            if (next_event.has_value()) {
+                (*next_event)->init();
             }
         }
         transition_fadein(bn::affine_bg_items::test_eyes, transition == SCENE_TRANSITION_OPENEYE ? 2 : 8,  false);
@@ -570,8 +575,8 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
             // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-            if (custom_event.has_value()) {
-                (*custom_event)->init();
+            if (next_event.has_value()) {
+                (*next_event)->init();
             }
         }
         transition_fadein(bn::affine_bg_items::test_handsdissolve, 8,  false);
@@ -590,8 +595,8 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
             // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-            if (custom_event.has_value()) {
-                (*custom_event)->init();
+            if (next_event.has_value()) {
+                (*next_event)->init();
             }
         }
         transition_fadein(bn::affine_bg_items::test_delayblinds, 4, false);
@@ -609,8 +614,8 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
             // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-            if (custom_event.has_value()) {
-                (*custom_event)->init();
+            if (next_event.has_value()) {
+                (*next_event)->init();
             }
         }
         fade_in(ks::globals::colors::WHITE, 45);
@@ -626,8 +631,8 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
             // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-            if (custom_event.has_value()) {
-                (*custom_event)->init();
+            if (next_event.has_value()) {
+                (*next_event)->init();
             }
         }
         fade_in(ks::globals::colors::WHITE, transition == SCENE_TRANSITION_SHOWDOWN_THUNDER_LONG ? 180 : 90);
@@ -660,14 +665,14 @@ void SceneManager::perform_transition(const scene_transition_t transition) {
 }
 
 void SceneManager::update() {
-    if (custom_event.has_value() && (*custom_event)->is_initialized()) {
-        (*custom_event)->update();
+    if (background_visual.active_event.has_value()) {
+        (*background_visual.active_event)->update();
     }
 }
 
 void SceneManager::update_transitions() {
-    if (custom_event.has_value()) {
-        (*custom_event)->update();
+    if (background_visual.active_event.has_value()) {
+        (*background_visual.active_event)->update();
     }
     ks::globals::main_update();
 }
@@ -763,12 +768,11 @@ void SceneManager::update_visuals() {
     bool background_want_show = !background_visual.visible_bg_item.has_value() && background_visual.bg_item.has_value() && is_scene_visible;
     bool background_want_transition = background_visual.transition != SCENE_TRANSITION_NONE;
     bool background_want_dissolve = background_visual.dissolve_time != 0 && (background_want_change || background_want_hide || background_want_show) && !background_want_transition;
-    bool background_want_move = !background_want_change && !background_want_hide && !background_want_show && !custom_event.has_value() &&
+    bool background_want_move = !background_want_change && !background_want_hide && !background_want_show && !background_visual.active_event.has_value() &&
                                 background_visual.visible_bg_item.has_value() &&
                                 (background_visual.position_x != background_visual.visible_bg_item->position().x() ||
                                 background_visual.position_y != background_visual.visible_bg_item->position().y());
-    bool custom_event_want_init = custom_event.has_value() && !(*custom_event)->is_initialized();
-    BN_LOG("CUSTOM EVENT WANT INIT: ", custom_event_want_init);
+    bool next_event_is_blendable = next_event.has_value() && (*next_event)->is_blendable();
 
     bool characters_want_show = false;
     bool characters_want_hide = false;
@@ -783,8 +787,18 @@ void SceneManager::update_visuals() {
         characters_want_hide = characters_want_hide || visual.will_hide;
     }
 
+    if (is_returned_from_pause && !is_paused) {
+        if (background_visual.active_event.has_value()) {
+            if ((*background_visual.active_event)->is_blendable()) {
+                (*background_visual.active_event)->after_show(globals::main_update);
+            }
+        }
+        is_returned_from_pause = false;
+    }
+
     /// HIDE DIALOGS (WITH DISSOLVE)
-    if (background_want_dissolve || background_want_transition || characters_want_show || characters_want_hide || is_paused) {
+    if (background_want_dissolve || background_want_transition || characters_want_show || characters_want_hide ||
+        is_paused || (background_want_show && next_event_is_blendable)) {
         if (!dialog->is_hidden()) {
             BN_LOG("Update visuals: Hide dialogbox");
             dialog->hide_blend();
@@ -863,6 +877,16 @@ void SceneManager::update_visuals() {
 
     /// HIDE BACKGROUNDS (WITH DISSOLVE)
     if (background_want_hide) {
+        if (background_visual.active_event.has_value()) {
+            if ((*background_visual.active_event)->is_blendable()) {
+                if (!dialog->is_hidden()) {
+                    dialog->hide_blend();
+                }
+            }
+            (*background_visual.active_event)->before_hide(globals::main_update);
+            background_visual.active_event.reset();
+        }
+
         if (background_want_dissolve) {
             BN_LOG("Update visuals: Hide background with dissolve");
             background_visual.visible_bg_item->set_blending_enabled(true);
@@ -890,6 +914,17 @@ void SceneManager::update_visuals() {
     if (background_want_change) {
         BN_LOG(" >>> WANT CHANGE BG");
         bool background_change_fallback = false;
+
+        if (background_visual.active_event.has_value()) {
+            if ((*background_visual.active_event)->is_blendable()) {
+                if (!dialog->is_hidden()) {
+                    dialog->hide_blend();
+                }
+            }
+            (*background_visual.active_event)->before_hide(globals::main_update);
+            background_visual.active_event.reset();
+        }
+
         if (background_want_dissolve) {
             BN_LOG("Update visuals: Change background with dissolve");
 
@@ -917,8 +952,10 @@ void SceneManager::update_visuals() {
                 background_visual.visible_bg_item->set_z_order(10);
                 // TODO: UNCOMMENT!
                 // apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-                if (custom_event.has_value()) {
-                    (*custom_event)->init();
+                if (next_event.has_value()) {
+                    background_visual.active_event = bn::move(next_event);
+                    (*background_visual.active_event)->init();
+                    next_event.reset();
                 }
                 blend_action.reset();
             } else {
@@ -939,9 +976,15 @@ void SceneManager::update_visuals() {
             background_visual.visible_bg_item->set_z_order(10);
             // TODO: UNCOMMENT!
             // apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-            if (custom_event.has_value()) {
-                (*custom_event)->init();
+            if (next_event.has_value()) {
+                background_visual.active_event = bn::move(next_event);
+                (*background_visual.active_event)->init();
+                next_event.reset();
             }
+        }
+
+        if (background_visual.active_event.has_value()) {
+            (*background_visual.active_event)->after_show(globals::main_update);
         }
 
         // background_visual.visible_bg_item = background_visual.bg_item;
@@ -956,8 +999,10 @@ void SceneManager::update_visuals() {
         background_visual.visible_bg_item->set_z_order(10);
         // TODO: UNCOMMENT!
         // apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
-        if (custom_event_want_init) {
-            (*custom_event)->init();
+        if (next_event.has_value()) {
+            background_visual.active_event = bn::move(next_event);
+            (*background_visual.active_event)->init();
+            next_event.reset();
         }
 
         if (background_want_transition) {
@@ -979,22 +1024,43 @@ void SceneManager::update_visuals() {
             blend_action.reset();
         }
 
+        if (background_visual.active_event.has_value()) {
+            (*background_visual.active_event)->after_show(globals::main_update);
+        }
+
         // background_visual.visible_bg_item = background_visual.bg_item;
     }
 
-    /// STILL HAVE TRANSITIONS? PERFORM IT ANYWAY (example: PASSOUTP1)
-    if (background_want_transition && background_visual.transition != SCENE_TRANSITION_NONE) {
-        BN_LOG("Update visuals: Still have transition ", background_visual.transition);
-        perform_transition(background_visual.transition);
-        background_visual.transition = SCENE_TRANSITION_NONE;
-    }
+    // TODO: Review. Looks like it working now...
+    // /// STILL HAVE TRANSITIONS? PERFORM IT ANYWAY (example: PASSOUTP1)
+    // if (background_want_transition && background_visual.transition != SCENE_TRANSITION_NONE) {
+    //     BN_LOG("Update visuals: Still have transition ", background_visual.transition);
+    //     perform_transition(background_visual.transition);
+    //     background_visual.transition = SCENE_TRANSITION_NONE;
+    // }
 
     /// If we have actually same background but different event - we should initialize it anyway!
-    if (custom_event_want_init && !(*custom_event)->is_initialized()) {
-        BN_LOG("Update visuals: Custom event still want init");
-        (*custom_event)->init();
+    if (next_event.has_value()) {
+        background_visual.active_event = bn::move(next_event);
+        (*background_visual.active_event)->init();
+        next_event.reset();
+
+        if ((*background_visual.active_event)->is_blendable()) {
+            if (!dialog->is_hidden()) {
+                dialog->hide_blend();
+            }
+            (*background_visual.active_event)->after_show(globals::main_update);
+        }
     }
 
+    if (is_paused && background_visual.active_event.has_value()) {
+        if ((*background_visual.active_event)->is_blendable()) {
+            (*background_visual.active_event)->before_hide(globals::main_update);
+            (*background_visual.active_event)->destroy();
+            next_event = (*background_visual.active_event)->create();
+            background_visual.active_event.reset();
+        }
+    }
     ks::globals::main_update();
 
     /// SHOW AND MOVE CHARACTERS (WITH DISSOLVE), MOVE BACKGROUND

@@ -11,7 +11,9 @@ namespace ks
         CustomEvent() = default;
         virtual ~CustomEvent() = default;
 
-        virtual bn::unique_ptr<CustomEvent> clone() const = 0;
+        // virtual CustomEvent clone();
+
+        virtual bn::unique_ptr<CustomEvent> create() const = 0;
 
         virtual void init() {
             _initialized = true;
@@ -21,6 +23,16 @@ namespace ks
         }
         virtual void destroy() {
             _initialized = false;
+        }
+
+        virtual bool is_blendable() {
+            return false;
+        }
+
+        virtual void before_hide(void (*on_update)()) {
+        }
+
+        virtual void after_show(void (*on_update)()) {
         }
 
         bool is_initialized() const {

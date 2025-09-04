@@ -16,9 +16,13 @@ namespace ks {
         ~DrugsEvent() override {
             // _background.reset();
         };
+        //
+        // CustomEvent clone() override {
+        //     return DrugsEvent();
+        // }
 
-        [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
-            return bn::make_unique<DrugsEvent>(*this);
+        [[nodiscard]] bn::unique_ptr<CustomEvent> create() const override {
+            return bn::make_unique<DrugsEvent>();
         }
 
         void init() override {

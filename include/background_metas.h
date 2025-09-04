@@ -22,7 +22,6 @@
 #include "background_metas/school_gate.h"
 #include "background_metas/school_dormext_start_ni.h"
 #include "background_metas/school_roof_ni.h"
-#include "background_metas/hosp_room.h"
 #include "background_metas/school_dormhisao_blurred.h"
 #include "background_metas/suburb_konbiniext_ni.h"
 #include "background_metas/school_dormhallway.h"
@@ -128,7 +127,6 @@
 #include "background_metas/city_karaokeext.h"
 #include "background_metas/school_dormhisao_blurred_ni.h"
 #include "background_metas/school_miyagi_ss.h"
-#include "background_metas/op_snowywoods.h"
 #include "background_metas/school_stalls2.h"
 #include "background_metas/school_dormrin.h"
 #include "background_metas/school_track_on.h"
@@ -208,7 +206,6 @@
 #include "background_metas/hanako_park_away.h"
 #include "background_metas/shizu_straddle_open.h"
 #include "background_metas/kenji_rooftop_large.h"
-#include "background_metas/other_iwanako.h"
 #include "background_metas/shizu_table_comeclosed.h"
 #include "background_metas/hanako_bed_crotch_glance.h"
 #include "background_metas/rin_nap_total_wind.h"
@@ -345,7 +342,6 @@
 #include "background_metas/rin_artclass4.h"
 #include "background_metas/hanako_after_smile.h"
 #include "background_metas/shizu_shanghai.h"
-#include "background_metas/other_iwanako_nosnow.h"
 #include "background_metas/rin_high_open.h"
 #include "background_metas/misha_naked.h"
 #include "background_metas/rin_rain_towards_close.h"
@@ -437,7 +433,6 @@ namespace ks::background_metas {
             case 0xDA1D1C2B: return school_gate.thumbnail;
             case 0xD08F4060: return school_dormext_start_ni.thumbnail;
             case 0x3BF14FE2: return school_roof_ni.thumbnail;
-            case 0x3E47FD6A: return hosp_room.thumbnail;
             case 0xA5C694D3: return school_dormhisao_blurred.thumbnail;
             case 0x99499E46: return suburb_konbiniext_ni.thumbnail;
             case 0x3D1C39CA: return school_dormhallway.thumbnail;
@@ -543,7 +538,6 @@ namespace ks::background_metas {
             case 0xF1C6915C: return city_karaokeext.thumbnail;
             case 0xDDB27076: return school_dormhisao_blurred_ni.thumbnail;
             case 0x7E0B50B5: return school_miyagi_ss.thumbnail;
-            case 0xF97499F3: return op_snowywoods.thumbnail;
             case 0x063C56CC: return school_stalls2.thumbnail;
             case 0xB2899EE5: return school_dormrin.thumbnail;
             case 0x7D93AD36: return school_track_on.thumbnail;
@@ -623,7 +617,6 @@ namespace ks::background_metas {
             case 0x2819D271: return hanako_park_away.thumbnail;
             case 0x609E25BC: return shizu_straddle_open.thumbnail;
             case 0x24E43576: return kenji_rooftop_large.thumbnail;
-            case 0x0D5F896E: return other_iwanako.thumbnail;
             case 0x61A6CAD8: return shizu_table_comeclosed.thumbnail;
             case 0x37493D30: return hanako_bed_crotch_glance.thumbnail;
             case 0x77050DAA: return rin_nap_total_wind.thumbnail;
@@ -760,7 +753,6 @@ namespace ks::background_metas {
             case 0x52378501: return rin_artclass4.thumbnail;
             case 0x3F2F9C97: return hanako_after_smile.thumbnail;
             case 0x9425AC62: return shizu_shanghai.thumbnail;
-            case 0x7569F4AC: return other_iwanako_nosnow.thumbnail;
             case 0x7ED9A3A0: return rin_high_open.thumbnail;
             case 0x2847FDAA: return misha_naked.thumbnail;
             case 0xE9512F30: return rin_rain_towards_close.thumbnail;

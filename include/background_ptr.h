@@ -57,8 +57,17 @@ namespace ks {
 
         [[nodiscard]] bn::fixed_point position() const;
         void set_position(bn::fixed x, bn::fixed y);
+
+        [[nodiscard]] bool visible();
+        void set_visible(bool visible);
+
+        [[nodiscard]] int priority();
         void set_priority(int priority);
+
+        [[nodiscard]] int z_order();
         void set_z_order(int order);
+
+        [[nodiscard]] bool blending_enabled();
         void set_blending_enabled(bool enabled);
         void set_palette(const bn::bg_palette_ptr & bg_palette);
 

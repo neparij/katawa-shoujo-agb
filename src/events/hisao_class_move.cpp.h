@@ -15,8 +15,8 @@ namespace ks {
             // _background.reset();
         };
 
-        [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
-            return bn::make_unique<HisaoClassMoveEvent>(*this);
+        [[nodiscard]] bn::unique_ptr<CustomEvent> create() const override {
+            return bn::make_unique<HisaoClassMoveEvent>();
         }
 
         void init() override {
@@ -32,7 +32,6 @@ namespace ks {
         }
         void update() override {
             CustomEvent::update();
-            BN_LOG("HisaoClassMoveEvent::update");
             if (_move_action.has_value() && !_move_action->done()) {
                 _move_action->update();
             }

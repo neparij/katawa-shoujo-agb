@@ -11,12 +11,25 @@
 #include "bn_regular_bg_items_thumb_emi_knockeddown.h"
 #include "bn_regular_bg_items_emi_knockeddown_facepullout.h"
 #include "bn_regular_bg_items_emi_knockeddown_legs.h"
+#include "bn_regular_bg_items_hosp_room.h"
 #include "ks_huge_bg_items_event_drugs_en.h"
 #include "bn_regular_bg_items_thumb_event_drugs.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_lilly.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_shizu.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_both.h"
+#include "bn_regular_bg_items_op_snowywoods.h"
+#include "bn_regular_bg_items_other_iwanako.h"
+#include "bn_regular_bg_items_other_iwanako_nosnow.h"
+#include "bn_regular_bg_items_thumb_hosp_room.h"
 #include "bn_regular_bg_items_thumb_lilly_shizu_showdown.h"
+#include "bn_regular_bg_items_thumb_op_snowywoods.h"
+#include "bn_regular_bg_items_thumb_other_iwanako.h"
+
+// TODO: add before-compile tool to generate unique hashes for each background
+// How to calculate hash:
+// Use MD5 hash of the background name and take first 8 digits.
+// Example: hisao_class -> 506DE7CF
+// Bash oneliner: echo -en "hisao_class" | md5 | awk '{print $1}' | cut -c1-8 | tr '[:lower:]' '[:upper:]' | sed 's/^/0x/'
 
 namespace ks::background_metas {
     constexpr inline background_meta hisao_class(
@@ -64,6 +77,21 @@ namespace ks::background_metas {
         bn::regular_bg_items::thumb_event_drugs,
         0xFFFF0008);
 
+    constexpr inline background_meta op_snowywoods(
+        bn::regular_bg_items::op_snowywoods,
+        bn::regular_bg_items::thumb_op_snowywoods,
+        0xFFFF0009);
+
+    constexpr inline background_meta other_iwanako(
+        bn::regular_bg_items::other_iwanako_nosnow,
+        bn::regular_bg_items::thumb_other_iwanako,
+        0x0FFF000A);
+
+    constexpr inline background_meta hosp_room(
+                 bn::regular_bg_items::hosp_room,
+                 bn::regular_bg_items::thumb_hosp_room,
+                 0x3E47FD6A);
+
     constexpr inline background_meta kslogo_heart(
         bn::regular_bg_items::kslogo_heart,
         bn::regular_bg_items::thumb_event_missing,
@@ -85,6 +113,9 @@ namespace ks::background_metas {
             case 0xFFFF0006: return lilly_shizu_showdown_slices_shizu.thumbnail;
             case 0xFFFF0007: return lilly_shizu_showdown_both.thumbnail;
             case 0xFFFF0008: return event_drugs_en.thumbnail;
+            case 0xFFFF0009: return op_snowywoods.thumbnail;
+            case 0xFFFF000A: return other_iwanako.thumbnail;
+            case 0x3E47FD6A: return hosp_room.thumbnail;
             default: return event_missing.thumbnail;
         }
     }

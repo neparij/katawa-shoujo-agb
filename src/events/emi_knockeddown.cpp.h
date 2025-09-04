@@ -13,8 +13,8 @@ namespace ks {
             // _background.reset();
         };
 
-        [[nodiscard]] bn::unique_ptr<CustomEvent> clone() const override {
-            return bn::make_unique<EmiKnockeddownEvent>(*this);
+        [[nodiscard]] bn::unique_ptr<CustomEvent> create() const override {
+            return bn::make_unique<EmiKnockeddownEvent>();
         }
 
         void init() override {

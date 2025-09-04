@@ -1,0 +1,7 @@
+{
+    "type": "regular_bg",
+    "bpp_mode": "bpp_4_manual",
+    "compression": "auto_no_huffman",
+    "big": true,
+    "map_compression": "none"
+}
