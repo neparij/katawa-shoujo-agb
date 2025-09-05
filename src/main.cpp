@@ -1,3 +1,7 @@
+#ifdef RUN_TESTS
+    #include "../tests/run_tests.cpp.h"
+#endif
+
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_memory.h"
@@ -188,6 +192,11 @@ inline void print_save_debug() {
 }
 
 int main() {
+#ifdef RUN_TESTS
+    ks::tests::run();
+#endif
+
+
     while(REG_VCOUNT != 160)
     {
     }
