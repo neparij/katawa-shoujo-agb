@@ -51,11 +51,12 @@ namespace ks::text {
     };
 
 
-    template<int MaxTextSize, int MaxLines>
+    template<int MaxLines>
     class renderer {
     public:
-        explicit renderer(const bn::sprite_font &font)
-            : _text_generator(bn::sprite_text_generator(font)) {
+        explicit renderer(bn::istring& text_ref, bn::sprite_text_generator &text_generator)
+            : _text(text_ref),
+              _text_generator(text_generator) {
         }
 
         void generate_lines();
@@ -63,18 +64,6 @@ namespace ks::text {
         void generate_commands();
 
         static unsigned char get_char_size(unsigned char c);
-
-        void set_text(const char *text) {
-            _text = text;
-        }
-
-        [[nodiscard]] bn::string<MaxTextSize> &text() {
-            return _text;
-        }
-
-        [[nodiscard]] const bn::string<MaxTextSize> &text() const {
-            return _text;
-        }
 
         [[nodiscard]] bn::vector<bn::string_view, MaxLines> &lines() {
             return _lines;
@@ -93,8 +82,8 @@ namespace ks::text {
         }
 
     private:
-        bn::sprite_text_generator _text_generator;
-        bn::string<MaxTextSize> _text;
+        bn::istring &_text;
+        bn::sprite_text_generator &_text_generator;
         bn::vector<bn::string_view, MaxLines> _lines;
         bn::vector<render_cmd, MaxLines * 4> _commands;
     };

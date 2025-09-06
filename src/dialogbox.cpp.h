@@ -139,12 +139,12 @@ namespace ks
             reset_title();
             reset_message();
             reset_question();
-            nvl1_l.reset();
-            nvl1_r.reset();
-            nvl2_l.reset();
-            nvl2_r.reset();
-            nvl3_l.reset();
-            nvl3_r.reset();
+            // nvl1_l.reset();
+            // nvl1_r.reset();
+            // nvl2_l.reset();
+            // nvl2_r.reset();
+            // nvl3_l.reset();
+            // nvl3_r.reset();
             talkbox1.reset();
             talkbox2.reset();
             // talkbox3.reset();
@@ -153,12 +153,12 @@ namespace ks
         }
 
         void set_blending(bool enabled) {
-            nvl1_l->set_blending_enabled(enabled);
-            nvl1_r->set_blending_enabled(enabled);
-            nvl2_l->set_blending_enabled(enabled);
-            nvl2_r->set_blending_enabled(enabled);
-            nvl3_l->set_blending_enabled(enabled);
-            nvl3_r->set_blending_enabled(enabled);
+            // nvl1_l->set_blending_enabled(enabled);
+            // nvl1_r->set_blending_enabled(enabled);
+            // nvl2_l->set_blending_enabled(enabled);
+            // nvl2_r->set_blending_enabled(enabled);
+            // nvl3_l->set_blending_enabled(enabled);
+            // nvl3_r->set_blending_enabled(enabled);
             talkbox1->set_blending_enabled(enabled);
             talkbox2->set_blending_enabled(enabled);
             // talkbox3->set_blending_enabled(enabled);
@@ -191,12 +191,12 @@ namespace ks
         }
 
         void set_show_nvl(const bool visible) {
-            nvl1_l->set_visible(visible);
-            nvl1_r->set_visible(visible);
-            nvl2_l->set_visible(visible);
-            nvl2_r->set_visible(visible);
-            nvl3_l->set_visible(visible);
-            nvl3_r->set_visible(visible);
+            // nvl1_l->set_visible(visible);
+            // nvl1_r->set_visible(visible);
+            // nvl2_l->set_visible(visible);
+            // nvl2_r->set_visible(visible);
+            // nvl3_l->set_visible(visible);
+            // nvl3_r->set_visible(visible);
         }
 
         void set_show_talkboxes(const bool visible) {
@@ -251,32 +251,32 @@ namespace ks
                 _remaining_message = message;
             }
 
-            nvl1_l = bn::sprite_items::ui_nvl1.create_sprite(-ks::device::screen_width_half + 64, -ks::device::screen_height_half + 32);
-            nvl1_r = bn::sprite_items::ui_nvl1.create_sprite(-ks::device::screen_width_half + 192, -ks::device::screen_height_half + 32);
-            nvl2_l = bn::sprite_items::ui_nvl2.create_sprite(-ks::device::screen_width_half + 64, 0);
-            nvl2_r = bn::sprite_items::ui_nvl2.create_sprite(-ks::device::screen_width_half + 192, 0);
-            nvl3_l = bn::sprite_items::ui_nvl3.create_sprite(-ks::device::screen_width_half + 64, ks::device::screen_height_half - 32);
-            nvl3_r = bn::sprite_items::ui_nvl3.create_sprite(-ks::device::screen_width_half + 192, ks::device::screen_height_half - 32);
+            // nvl1_l = bn::sprite_items::ui_nvl1.create_sprite(-ks::device::screen_width_half + 64, -ks::device::screen_height_half + 32);
+            // nvl1_r = bn::sprite_items::ui_nvl1.create_sprite(-ks::device::screen_width_half + 192, -ks::device::screen_height_half + 32);
+            // nvl2_l = bn::sprite_items::ui_nvl2.create_sprite(-ks::device::screen_width_half + 64, 0);
+            // nvl2_r = bn::sprite_items::ui_nvl2.create_sprite(-ks::device::screen_width_half + 192, 0);
+            // nvl3_l = bn::sprite_items::ui_nvl3.create_sprite(-ks::device::screen_width_half + 64, ks::device::screen_height_half - 32);
+            // nvl3_r = bn::sprite_items::ui_nvl3.create_sprite(-ks::device::screen_width_half + 192, ks::device::screen_height_half - 32);
+            //
+            // nvl1_l->set_horizontal_scale(bn::fixed(2.0));
+            // nvl1_r->set_horizontal_scale(bn::fixed(2.0));
+            // nvl2_l->set_horizontal_scale(bn::fixed(2.0));
+            // nvl2_r->set_horizontal_scale(bn::fixed(2.0));
+            // nvl3_l->set_horizontal_scale(bn::fixed(2.0));
+            // nvl3_r->set_horizontal_scale(bn::fixed(2.0));
+            // nvl1_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            // nvl1_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            // nvl2_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            // nvl2_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            // nvl3_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            // nvl3_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
 
-            nvl1_l->set_horizontal_scale(bn::fixed(2.0));
-            nvl1_r->set_horizontal_scale(bn::fixed(2.0));
-            nvl2_l->set_horizontal_scale(bn::fixed(2.0));
-            nvl2_r->set_horizontal_scale(bn::fixed(2.0));
-            nvl3_l->set_horizontal_scale(bn::fixed(2.0));
-            nvl3_r->set_horizontal_scale(bn::fixed(2.0));
-            nvl1_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
-            nvl1_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
-            nvl2_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
-            nvl2_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
-            nvl3_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
-            nvl3_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
-
-            nvl1_l->set_bg_priority(1);
-            nvl1_r->set_bg_priority(1);
-            nvl2_l->set_bg_priority(1);
-            nvl2_r->set_bg_priority(1);
-            nvl3_l->set_bg_priority(1);
-            nvl3_r->set_bg_priority(1);
+            // nvl1_l->set_bg_priority(1);
+            // nvl1_r->set_bg_priority(1);
+            // nvl2_l->set_bg_priority(1);
+            // nvl2_r->set_bg_priority(1);
+            // nvl3_l->set_bg_priority(1);
+            // nvl3_r->set_bg_priority(1);
 
             talkbox1 = bn::sprite_items::ui_talkbox1.create_sprite(-ks::device::screen_width_half + 32, ks::device::screen_height_half - 32);
             // talkbox2 = bn::sprite_items::ui_talkbox2.create_sprite(-ks::device::screen_width_half + 32 + 64, ks::device::screen_height_half - 32);
@@ -897,12 +897,12 @@ private:
         unsigned short _answer_pause_cycle_counter;
 
         // Talkbox related stuff
-        bn::optional<bn::sprite_ptr> nvl1_l;
-        bn::optional<bn::sprite_ptr> nvl1_r;
-        bn::optional<bn::sprite_ptr> nvl2_l;
-        bn::optional<bn::sprite_ptr> nvl2_r;
-        bn::optional<bn::sprite_ptr> nvl3_l;
-        bn::optional<bn::sprite_ptr> nvl3_r;
+        // bn::optional<bn::sprite_ptr> nvl1_l;
+        // bn::optional<bn::sprite_ptr> nvl1_r;
+        // bn::optional<bn::sprite_ptr> nvl2_l;
+        // bn::optional<bn::sprite_ptr> nvl2_r;
+        // bn::optional<bn::sprite_ptr> nvl3_l;
+        // bn::optional<bn::sprite_ptr> nvl3_r;
         bn::optional<bn::sprite_ptr> talkbox1;
         bn::optional<bn::sprite_ptr> talkbox2;
         // bn::optional<bn::sprite_ptr> talkbox3;

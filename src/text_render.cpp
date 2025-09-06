@@ -8,8 +8,8 @@ namespace ks::text {
     /**
      * @brief Generates wrapped text lines from the internal `_text`.
      */
-    template<int MaxTextSize, int MaxLines>
-    void renderer<MaxTextSize, MaxLines>::generate_lines() {
+    template<int MaxLines>
+    void renderer<MaxLines>::generate_lines() {
         _lines.clear();
         BN_ASSERT(!_text.empty(), "Text should not be empty");
 
@@ -26,7 +26,8 @@ namespace ks::text {
         bn::string_view::size_type cursor_end = 0;
 
         while (!done) {
-            // BN_LOG("Processing '", cursor, "'");
+            BN_ASSERT(_lines.size() != MaxLines, "Too many lines");
+
             const int ch_length = get_char_size(*(cursor + cursor_i));
             bn::string<4> part = bn::string_view(cursor + cursor_i, ch_length);
             cursor_i += ch_length;
@@ -44,12 +45,9 @@ namespace ks::text {
                                          part.starts_with(CTL_COLOR_START) ||
                                          part.starts_with(CTL_COLOR_END);
 
-            // BN_LOG("Buffer: '", buffer_stream.view(), "'");
             const auto buffer_width = _text_generator.width(buffer_stream.view());
-            // BN_LOG("Buffer: '", buffer_stream.view(), "' width: ", buffer_width);
-
             if (is_eol || is_space || is_newline) {
-                // BN_LOG("EOL: ", is_eol, " SPACE: ", is_space, " NEWLINE: ", is_newline);
+
 
                 if (buffer_width < max_width) {
                     // Save the possible line break
@@ -93,7 +91,6 @@ namespace ks::text {
                             buffer_stream.append(part);
                         } else {
                             // If this is a single long word that exceeds the line width, we have no choice but to break it
-                            BN_LOG("Single long word exceeds line width, breaking");
                             _lines.push_back(bn::string_view(cursor, cursor_i - ch_length));
                             buffer.clear();
                             istring = bn::istring_base(buffer);
@@ -108,22 +105,13 @@ namespace ks::text {
                 }
             }
         }
-
-        BN_LOG("Finished");
-        for (auto &line: _lines) {
-            if (line.empty()) {
-                BN_LOG("Line: empty");
-                continue;
-            }
-            BN_LOG("Line: '", line, "'");
-        }
     }
 
     /**
      * @brief Generates rendering commands from the internal `_lines`.
      */
-    template<int MaxTextSize, int MaxLines>
-    void renderer<MaxTextSize, MaxLines>::generate_commands() {
+    template<int MaxLines>
+    void renderer<MaxLines>::generate_commands() {
         _commands.clear();
         BN_ASSERT(!_text.empty(), "Text should not be empty");
         BN_ASSERT(!_lines.empty(), "Text-referenced lines should not be empty");
@@ -135,6 +123,8 @@ namespace ks::text {
 
         for (const auto line: _lines) {
             if (!line.empty()) {
+                BN_ASSERT(_commands.size() != MaxLines * 4, "Too many commands");
+
                 _commands.push_back({RC_START_LINE, line_index, SV_NULL});
                 if (bold_flag) {
                     _commands.push_back({RC_SET_FONT, 1, SV_NULL});
@@ -196,32 +186,6 @@ namespace ks::text {
             }
             line_index++;
         }
-
-        for (auto &cmd: _commands) {
-            bn::string<16> command = "UNKNOWN";
-            if (cmd.command == RC_START_LINE) {
-                command = "START_LINE";
-            } else if (cmd.command == RC_TEXT_OUT) {
-                command = "TEXT_OUT";
-            } else if (cmd.command == RC_SET_FONT) {
-                command = "SET_FONT";
-            } else if (cmd.command == RC_SET_PALETTE) {
-                command = "SET_PALETTE";
-            } else if (cmd.command == RC_IMMEDIATE_START) {
-                command = "IMMEDIATE_START";
-            } else if (cmd.command == RC_IMMEDIATE_END) {
-                command = "IMMEDIATE_END";
-            } else if (cmd.command == RC_WAIT) {
-                command = "WAIT";
-            } else if (cmd.command == RC_NO_WAIT) {
-                command = "NO_WAIT";
-            }
-            if (cmd.view != SV_NULL) {
-                BN_LOG("Cmd: ", command, " Param: ", cmd.param, " View: '", cmd.view, "'");
-            } else {
-                BN_LOG("Cmd: ", command, " Param: ", cmd.param);
-            }
-        }
     }
 
     /**
@@ -236,8 +200,8 @@ namespace ks::text {
      * @note If the byte does not match any valid UTF-8 leading byte pattern,
      *       an error is triggered via BN_ERROR and 1 is returned by default.
      */
-    template<int MaxTextSize, int MaxLines>
-    unsigned char BN_CODE_IWRAM renderer<MaxTextSize, MaxLines>::get_char_size(const unsigned char c) {
+    template<int MaxLines>
+    unsigned char BN_CODE_IWRAM renderer<MaxLines>::get_char_size(const unsigned char c) {
         if (c == CTL_WAIT || c == CTL_COLOR_START) {
             return 2;
         }
@@ -257,5 +221,6 @@ namespace ks::text {
         return 1;
     }
 
-    template class renderer<512, 32>;
+    template class renderer<1>;
+    template class renderer<32>;
 }
