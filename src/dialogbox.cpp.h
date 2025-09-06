@@ -16,13 +16,17 @@
 
 #include "constants.h"
 #include "globals.h"
+#include "character.h"
 
 #include "bn_sprite_items_ui_answerbox1.h"
 #include "bn_sprite_items_ui_answerbox2.h"
 #include "bn_sprite_items_ui_answerbox3.h"
+#include "bn_sprite_items_ui_nvl1.h"
+#include "bn_sprite_items_ui_nvl2.h"
+#include "bn_sprite_items_ui_nvl3.h"
 #include "bn_sprite_items_ui_talkbox1.h"
 #include "bn_sprite_items_ui_talkbox2.h"
-#include "bn_sprite_items_ui_talkbox3.h"
+// #include "bn_sprite_items_ui_talkbox3.h"
 #include "bn_sprite_items_ui_talkbox4.h"
 #include "bn_sprite_items_ui_talkbox_actor_start.h"
 #include "bn_sprite_items_ui_talkbox_actor.h"
@@ -31,6 +35,9 @@
 #include <bn_log.h>
 #include <bn_sprite_actions.h>
 #include <cstring>
+
+#include "bn_sprite_double_size_mode.h"
+#include "utils/scenario_reader.h"
 
 namespace ks
 {
@@ -62,8 +69,6 @@ namespace ks
             // talkbox3 = bn::sprite_items::ui_talkbox3.create_sprite(-ks::device::screen_width_half + 32 + 128, ks::device::screen_height_half - 32);
             // talkbox4 = bn::sprite_items::ui_talkbox4.create_sprite(-ks::device::screen_width_half + 32 + 192, ks::device::screen_height_half - 32);
         }
-
-        const constexpr static bool DRAW_PACKED_SPRITES_IN_ONE_CHUNK = true;
 
         bool is_finished() {
             return _is_finished;
@@ -134,17 +139,29 @@ namespace ks
             reset_title();
             reset_message();
             reset_question();
+            nvl1_l.reset();
+            nvl1_r.reset();
+            nvl2_l.reset();
+            nvl2_r.reset();
+            nvl3_l.reset();
+            nvl3_r.reset();
             talkbox1.reset();
             talkbox2.reset();
-            talkbox3.reset();
+            // talkbox3.reset();
             talkbox4.reset();
             talkbox_actor_sprites.clear();
         }
 
         void set_blending(bool enabled) {
+            nvl1_l->set_blending_enabled(enabled);
+            nvl1_r->set_blending_enabled(enabled);
+            nvl2_l->set_blending_enabled(enabled);
+            nvl2_r->set_blending_enabled(enabled);
+            nvl3_l->set_blending_enabled(enabled);
+            nvl3_r->set_blending_enabled(enabled);
             talkbox1->set_blending_enabled(enabled);
             talkbox2->set_blending_enabled(enabled);
-            talkbox3->set_blending_enabled(enabled);
+            // talkbox3->set_blending_enabled(enabled);
             talkbox4->set_blending_enabled(enabled);
             for (auto& s : talkbox_actor_sprites) {
                 s.set_blending_enabled(true);
@@ -173,10 +190,19 @@ namespace ks
             }
         }
 
-        void set_show_talkboxes(bool visible) {
+        void set_show_nvl(const bool visible) {
+            nvl1_l->set_visible(visible);
+            nvl1_r->set_visible(visible);
+            nvl2_l->set_visible(visible);
+            nvl2_r->set_visible(visible);
+            nvl3_l->set_visible(visible);
+            nvl3_r->set_visible(visible);
+        }
+
+        void set_show_talkboxes(const bool visible) {
             talkbox1->set_visible(visible);
             talkbox2->set_visible(visible);
-            talkbox3->set_visible(visible);
+            // talkbox3->set_visible(visible);
             talkbox4->set_visible(visible);
             for (auto& s : talkbox_actor_sprites) {
                 s.set_visible(visible);
@@ -225,14 +251,44 @@ namespace ks
                 _remaining_message = message;
             }
 
+            nvl1_l = bn::sprite_items::ui_nvl1.create_sprite(-ks::device::screen_width_half + 64, -ks::device::screen_height_half + 32);
+            nvl1_r = bn::sprite_items::ui_nvl1.create_sprite(-ks::device::screen_width_half + 192, -ks::device::screen_height_half + 32);
+            nvl2_l = bn::sprite_items::ui_nvl2.create_sprite(-ks::device::screen_width_half + 64, 0);
+            nvl2_r = bn::sprite_items::ui_nvl2.create_sprite(-ks::device::screen_width_half + 192, 0);
+            nvl3_l = bn::sprite_items::ui_nvl3.create_sprite(-ks::device::screen_width_half + 64, ks::device::screen_height_half - 32);
+            nvl3_r = bn::sprite_items::ui_nvl3.create_sprite(-ks::device::screen_width_half + 192, ks::device::screen_height_half - 32);
+
+            nvl1_l->set_horizontal_scale(bn::fixed(2.0));
+            nvl1_r->set_horizontal_scale(bn::fixed(2.0));
+            nvl2_l->set_horizontal_scale(bn::fixed(2.0));
+            nvl2_r->set_horizontal_scale(bn::fixed(2.0));
+            nvl3_l->set_horizontal_scale(bn::fixed(2.0));
+            nvl3_r->set_horizontal_scale(bn::fixed(2.0));
+            nvl1_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            nvl1_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            nvl2_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            nvl2_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            nvl3_l->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            nvl3_r->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+
+            nvl1_l->set_bg_priority(1);
+            nvl1_r->set_bg_priority(1);
+            nvl2_l->set_bg_priority(1);
+            nvl2_r->set_bg_priority(1);
+            nvl3_l->set_bg_priority(1);
+            nvl3_r->set_bg_priority(1);
+
             talkbox1 = bn::sprite_items::ui_talkbox1.create_sprite(-ks::device::screen_width_half + 32, ks::device::screen_height_half - 32);
-            talkbox2 = bn::sprite_items::ui_talkbox2.create_sprite(-ks::device::screen_width_half + 32 + 64, ks::device::screen_height_half - 32);
-            talkbox3 = bn::sprite_items::ui_talkbox3.create_sprite(-ks::device::screen_width_half + 32 + 128, ks::device::screen_height_half - 32);
+            // talkbox2 = bn::sprite_items::ui_talkbox2.create_sprite(-ks::device::screen_width_half + 32 + 64, ks::device::screen_height_half - 32);
+            talkbox2 = bn::sprite_items::ui_talkbox2.create_sprite(-ks::device::screen_width_half + 32 + 96, ks::device::screen_height_half - 32);
+            talkbox2->set_horizontal_scale(bn::fixed(2.0));
+            talkbox2->set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
+            // talkbox3 = bn::sprite_items::ui_talkbox3.create_sprite(-ks::device::screen_width_half + 32 + 128, ks::device::screen_height_half - 32);
             talkbox4 = bn::sprite_items::ui_talkbox4.create_sprite(-ks::device::screen_width_half + 32 + 192, ks::device::screen_height_half - 32);
 
             talkbox1->set_bg_priority(1);
             talkbox2->set_bg_priority(1);
-            talkbox3->set_bg_priority(1);
+            // talkbox3->set_bg_priority(1);
             talkbox4->set_bg_priority(1);
 
 
@@ -421,7 +477,6 @@ namespace ks
             return _answer_selected;
         }
 
-
         void render_message_line(const int cursor, const bool immediately = false) {
             constexpr int max_width = ks::device::screen_width - 20;
             const unsigned char space_width = _text_generator.width(" ");
@@ -474,8 +529,8 @@ namespace ks
             }
 
             while (!line_end) {
-                unsigned char first_byte = static_cast<unsigned char>(message.at(cursor_i));
-                int char_length = get_char_size(first_byte);
+                const unsigned char first_byte = static_cast<unsigned char>(message.at(cursor_i));
+                const int char_length = get_char_size(first_byte);
 
                 bn::string<4> part = message.substr(cursor_i, char_length);
                 cursor_i += char_length;
@@ -496,6 +551,7 @@ namespace ks
 
                 if (is_eol || is_space || is_newline) {
                     word_width = _text_generator.width(_word_buffer);
+                    // BN_LOG("Word buffer [", _word_buffer, "] width: ", word_width, " cursor_x: ", cursor_x, (is_space ? " (space)" : ""), (is_newline ? " (newline)" : ""), (is_eol ? " (eol)" : ""));
 
                     if (cursor_x + word_width < max_width) {
                         _word_buffer.clear();
@@ -588,7 +644,7 @@ namespace ks
             }
 
             // Render text in chunks
-            if (DRAW_PACKED_SPRITES_IN_ONE_CHUNK && !one_sprite_per_character) {
+            if (!one_sprite_per_character) {
                 _text_generator.generate(
                     -ks::device::screen_width_half + 10 + current_x,
                     ks::device::screen_height_half - 36 + y,
@@ -699,7 +755,20 @@ namespace ks
             _is_writing = false;
         }
 
-        inline unsigned char BN_CODE_IWRAM get_char_size(unsigned char c) {
+
+        /**
+         * @brief Determines the byte length of a UTF-8 encoded character.
+         *
+         * This function inspects the leading byte of a UTF-8 character
+         * and returns the number of bytes that character occupies.
+         *
+         * @param c The first byte of the UTF-8 character.
+         * @return unsigned char The size of the character in bytes (1 to 4).
+         *
+         * @note If the byte does not match any valid UTF-8 leading byte pattern,
+         *       an error is triggered via BN_ERROR and 1 is returned by default.
+         */
+        static unsigned char BN_CODE_IWRAM get_char_size(const unsigned char c) {
             if ((c & 0x80) == 0) {
                 return 1;
             } else if ((c & 0xE0) == 0xC0) {
@@ -774,6 +843,14 @@ namespace ks
                     if (bn::keypad::a_pressed() || is_skipping()) {
                         _is_finished = true;
                     }
+                    if (bn::keypad::l_held()) {
+                        talkbox2->set_horizontal_scale(
+                            talkbox2->horizontal_scale() - bn::fixed(0.05));
+                    }
+                    if (bn::keypad::r_held()) {
+                        talkbox2->set_horizontal_scale(
+                            talkbox2->horizontal_scale() + bn::fixed(0.05));
+                    }
                 } else {
                     // There is more pages to display
                     if (bn::keypad::a_pressed() || is_skipping()) {
@@ -820,16 +897,22 @@ private:
         unsigned short _answer_pause_cycle_counter;
 
         // Talkbox related stuff
+        bn::optional<bn::sprite_ptr> nvl1_l;
+        bn::optional<bn::sprite_ptr> nvl1_r;
+        bn::optional<bn::sprite_ptr> nvl2_l;
+        bn::optional<bn::sprite_ptr> nvl2_r;
+        bn::optional<bn::sprite_ptr> nvl3_l;
+        bn::optional<bn::sprite_ptr> nvl3_r;
         bn::optional<bn::sprite_ptr> talkbox1;
         bn::optional<bn::sprite_ptr> talkbox2;
-        bn::optional<bn::sprite_ptr> talkbox3;
+        // bn::optional<bn::sprite_ptr> talkbox3;
         bn::optional<bn::sprite_ptr> talkbox4;
         bn::vector<bn::sprite_ptr, 8> talkbox_actor_sprites;
         bn::vector<bn::sprite_ptr, 8> _title_sprites;
 
         bn::timer _text_render_timer;
         bn::string<1024> _remaining_message;
-        bn::string<64> _word_buffer; // May be resize form verylongphraseswithoutspaces
+        bn::string<64> _word_buffer; // May be resize for verylongphraseswithoutspaces
 
         const character_definition* _actor = nullptr;  // Store pointer to character definition
     };

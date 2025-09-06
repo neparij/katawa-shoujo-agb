@@ -5,11 +5,14 @@
 #include "bn_log.h"
 
 #define KS_ASSERT(condition, ...) \
-    do \
-    { \
+    do { \
         ks::tests::set_message(__VA_ARGS__); \
-        BN_ASSERT(condition, __VA_ARGS__); \
-        ks::tests::pass(); \
+        if(! (condition)) [[unlikely]] { \
+            ks::tests::fail(); \
+            return; \
+        } else { \
+            ks::tests::pass(); \
+        } \
     } while(false)
 
 
@@ -28,13 +31,13 @@ namespace ks::tests {
 
     inline void pass() {
         if (message_buffer[0] != '\0') {
-            BN_LOG("Test passed: ", message_buffer);
+            BN_LOG("✅ Test passed: ", message_buffer);
         }
     }
 
     inline void fail() {
         if (message_buffer[0] != '\0') {
-            BN_LOG('\a', "Test failed: ", message_buffer);
+            BN_LOG('\a', "❌ Test failed: ", message_buffer);
         } else {
             BN_ERROR("Failing test without message");
         }

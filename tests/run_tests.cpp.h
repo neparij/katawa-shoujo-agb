@@ -4,6 +4,7 @@
 #include "asserts.h"
 #include "tests.h"
 #include "bn_core.h"
+#include "suites/text_render_tests.h"
 
 #include "suites/example_tests.h"
 
@@ -15,6 +16,7 @@ namespace ks::tests {
         BN_LOG("Running tests...");
 
         example_tests();
+        text_render_tests();
     }
 }
 

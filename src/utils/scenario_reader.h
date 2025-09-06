@@ -4,24 +4,16 @@
 #define KS_TEXTDB_INDEX_SIZE 512
 #define KS_TEXTDB_MAX_OFFSET 0xFFFF
 
+#include "bn_memory.h"
 #include "bn_string.h"
 #include "gba_types.h"
+#include "lz77.h"
 #include <bn_log.h>
 #include <cstring>
 
 namespace ks {
     namespace textdb {
-        static const char CTL_TERMINATOR = '\0'; // NUL - the end of textdb chunk
-        static const char CTL_FAST = '\1'; // SOH - sets cursor to render text by chars
-        static const char CTL_BOLD_START = '\2'; // STX - starts bold text (switch spritefont)
-        static const char CTL_BOLD_END = '\3'; // ETX - ends bold text (restore spritefont)
-        static const char CTL_STRIKE_START = '\4'; // EOT - starts strikethrough text (switch spritefont?)
-        static const char CTL_STRIKE_END = '\5'; // ENQ - ends strikethrough text (restore spritefont?)
-        static const char CTL_WAIT = '\6'; // ACK - wait command (next byte is count of 1/10 seconds to wait)
-        static const char CTL_NOWAIT = '\7'; // BEL - do not wait for user input to continue dialogue
-        static const char CTL_COLOR_START = '\10';
-        // BS - sets the color (switch spritepalette, next byte is palette index)
-        static const char CTL_COLOR_END = '\11'; // HT - restore color (switch spritepalette)
+        static constexpr char CTL_TERMINATOR = '\0';
 
         static u8 *ptr = nullptr;
         static u32 size = 0;
@@ -34,7 +26,7 @@ namespace ks {
             _chunk = chunk;
             _locale = locale;
 
-            for (unsigned short & i : _index) {
+            for (unsigned short &i: _index) {
                 i = 0;
             }
         }
@@ -64,12 +56,12 @@ namespace ks {
             LZ77UnCompWRAM((u32) compressed_data, (u32) ptr);
             BN_LOG("EWRAM after allocation: ", bn::memory::available_alloc_ewram());
 
-            const u16 elements = ((u16*)ptr)[0];
+            const u16 elements = ((u16 *) ptr)[0];
             BN_ASSERT(elements <= KS_TEXTDB_INDEX_SIZE, "TextDB index size exceeded!");
             BN_LOG("Filling index table with ", elements, " elements...");
             for (u16 i = 0; i < KS_TEXTDB_INDEX_SIZE; i++) {
                 if (i < elements) {
-                    _index[i] = ((u16*)ptr)[i + 1];
+                    _index[i] = ((u16 *) ptr)[i + 1];
                 } else {
                     _index[i] = 0;
                 }
@@ -104,14 +96,14 @@ namespace ks {
             }
         }
 
-        inline char* get_tl_cstr(const unsigned short key) {
+        inline char *get_tl_cstr(const unsigned short key) {
             BN_ASSERT(is_allocated, "TextDB not allocated!");
             BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
             BN_ASSERT(_locale != nullptr, "TextDB Locale not set!");
             const u32 cursor = _index[key];
             BN_LOG("TL CSTR at position: ", cursor);
             // return reinterpret_cast<char*>(ptr + cursor);
-            return (char*)(ptr + cursor);
+            return (char *) (ptr + cursor);
         }
     }
 }
