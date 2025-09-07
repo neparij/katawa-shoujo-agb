@@ -37,6 +37,7 @@
 #include <video_4ls_dxtv.h>
 #include <video_op_1_dxtv.h>
 
+#include "dialog_box.h"
 #include "video_tc_act2_emi_dxtv.h"
 #include "video_tc_act2_hanako_dxtv.h"
 #include "video_tc_act2_lilly_dxtv.h"
@@ -73,6 +74,7 @@ bn::optional<bn::sprite_text_generator> text_generator;
 bn::optional<bn::sprite_text_generator> text_generator_bold;
 bn::optional<bn::sprite_text_generator> text_generator_small;
 ks::DialogBox* dialog;
+ks::dialog_box* dialogbox;
 bn::optional<huge_bg> huge_background;
 bn::optional<bn::regular_bg_ptr> primary_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
@@ -323,6 +325,13 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
         switch (globals::state) {
             case GS_GAME:
                 ks::textdb::get_tl<1024>(tl_key, message);
+
+                dialogbox = new dialog_box(message, text_generator.value());
+                // dialog_box db(message, text_generator.value());
+                dialogbox->proceed_message();
+                dialogbox->set_actor(actor);
+                dialogbox->log();
+                delete dialogbox;
 
                 dialog->show(actor, message);
                 while (!dialog->is_finished() && !bn::keypad::start_pressed()) {

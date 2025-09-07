@@ -4,7 +4,6 @@
 #include "bn_string.h"
 #include "bn_string_view.h"
 #include "bn_vector.h"
-#include "bn_sprite_font.h"
 #include "bn_sprite_text_generator.h"
 
 typedef unsigned char render_cmd_t;

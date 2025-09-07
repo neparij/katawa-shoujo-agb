@@ -15,6 +15,7 @@
 #include "background_meta.h"
 #include "background_ptr.h"
 #include "character_sprite_meta.h"
+#include "dialog_box.h"
 #include "gba_base.h"
 #include "gba_types.h"
 #include "savefile/save_file.h"
@@ -227,6 +228,7 @@ extern bn::optional<bn::sprite_text_generator> text_generator;
 extern bn::optional<bn::sprite_text_generator> text_generator_bold;
 extern bn::optional<bn::sprite_text_generator> text_generator_small;
 extern ks::DialogBox* dialog;
+extern dialog_box* dialogbox;
 extern bn::optional<huge_bg> huge_background;
 extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
