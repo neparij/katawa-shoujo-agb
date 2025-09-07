@@ -1,4 +1,4 @@
-#include "text_render.h"
+#include "text_parser.h"
 
 #include "bn_assert.h"
 #include "bn_log.h"
@@ -12,11 +12,11 @@ namespace ks::text {
      * @brief Generates wrapped text lines from the internal `_text`.
      */
     template<int MaxLines>
-    void renderer<MaxLines>::generate_lines() {
+    void parser<MaxLines>::generate_lines() {
         _lines.clear();
         BN_ASSERT(!_text.empty(), "Text should not be empty");
 
-        bn::string<BUFFER_SIZE> buffer;
+        buffer.clear();
         constexpr int max_width = device::screen_width - 20;
         bn::istring_base istring(buffer);
         bn::ostringstream buffer_stream(istring);
@@ -48,9 +48,8 @@ namespace ks::text {
                                          part.starts_with(CTL_COLOR_START) ||
                                          part.starts_with(CTL_COLOR_END);
 
-            const auto buffer_width = _text_generator.width(buffer_stream.view());
             if (is_eol || is_space || is_newline) {
-
+                const auto buffer_width = _text_generator.width(buffer_stream.view());
 
                 if (buffer_width < max_width) {
                     // Save the possible line break
@@ -89,6 +88,7 @@ namespace ks::text {
             } else {
                 if (!is_control_char) {
                     if (cursor_end == 0) {
+                        const auto buffer_width = _text_generator.width(buffer_stream.view());
                         const auto part_width = _text_generator.width(part);
                         if (buffer_width + part_width < max_width) {
                             buffer_stream.append(part);
@@ -114,7 +114,7 @@ namespace ks::text {
      * @brief Generates rendering commands from the internal `_lines`.
      */
     template<int MaxLines>
-    void renderer<MaxLines>::generate_commands() {
+    void parser<MaxLines>::generate_commands() {
         _commands.clear();
         BN_ASSERT(!_text.empty(), "Text should not be empty");
         BN_ASSERT(!_lines.empty(), "Text-referenced lines should not be empty");
@@ -204,7 +204,7 @@ namespace ks::text {
      *       an error is triggered via BN_ERROR and 1 is returned by default.
      */
     template<int MaxLines>
-    unsigned char BN_CODE_IWRAM renderer<MaxLines>::get_char_size(const unsigned char c) {
+    unsigned char BN_CODE_IWRAM parser<MaxLines>::get_char_size(const unsigned char c) {
         if (c == CTL_WAIT || c == CTL_COLOR_START) {
             return 2;
         }
@@ -224,6 +224,6 @@ namespace ks::text {
         return 1;
     }
 
-    template class renderer<1>;
-    template class renderer<32>;
+    template class parser<1>;
+    template class parser<32>;
 }

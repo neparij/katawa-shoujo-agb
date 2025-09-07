@@ -5,7 +5,7 @@
 #include "bn_core.h"
 
 #include "suites/example_tests.h"
-#include "suites/text_render_tests.h"
+#include "suites/text_parser_tests.h"
 
 namespace ks::tests {
     inline void run() {
@@ -13,7 +13,7 @@ namespace ks::tests {
         bn::assert::set_callback(fail);
 
         example_tests().run();
-        text_render_tests().run();
+        text_parser_tests().run();
     }
 }
 

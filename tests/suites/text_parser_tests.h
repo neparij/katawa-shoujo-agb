@@ -1,17 +1,17 @@
-#ifndef TEXT_RENDER_TESTS_H
-#define TEXT_RENDER_TESTS_H
+#ifndef TEXT_PARSER_TESTS_H
+#define TEXT_PARSER_TESTS_H
 
 
 #include "bn_sprite_text_generator.h"
 #include "bn_string.h"
 #include "testing/suite.h"
 
-#include "../src/text_render.h"
+#include "../src/text_parser.h"
 #include "fonts_info.h"
 
-class text_render_tests : public test_suite {
+class text_parser_tests : public test_suite {
 public:
-    text_render_tests() : test_suite("text_render") {
+    text_parser_tests() : test_suite("text_render") {
     }
 
     void run() {
@@ -138,7 +138,7 @@ public:
 private:
     bn::string<512> text;
     bn::sprite_text_generator text_generator{font_playtime_sprite_font};
-    ks::text::renderer<32> renderer_inst{text, text_generator};
+    ks::text::parser<32> renderer_inst{text, text_generator};
 };
 
-#endif //TEXT_RENDER_TESTS_H
+#endif //TEXT_PARSER_TESTS_H

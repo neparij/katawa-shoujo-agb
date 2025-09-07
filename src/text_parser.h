@@ -1,5 +1,5 @@
-#ifndef KS_TEXT_RENDER_H
-#define KS_TEXT_RENDER_H
+#ifndef KS_TEXT_PARSER_H
+#define KS_TEXT_PARSER_H
 
 #include "bn_string.h"
 #include "bn_string_view.h"
@@ -51,9 +51,9 @@ namespace ks::text {
 
 
     template<int MaxLines>
-    class renderer {
+    class parser {
     public:
-        explicit renderer(bn::istring& text_ref, bn::sprite_text_generator &text_generator)
+        explicit parser(bn::istring& text_ref, bn::sprite_text_generator &text_generator)
             : _text(text_ref),
               _text_generator(text_generator) {
         }
@@ -80,13 +80,29 @@ namespace ks::text {
             return _commands;
         }
 
+        [[nodiscard]] bn::vector<render_cmd, MaxLines * 4> commands(int line_index) const {
+            bn::vector<render_cmd, MaxLines * 4> line_commands;
+            for (const auto& cmd : _commands) {
+                if (cmd.command == RC_START_LINE && cmd.param == line_index) {
+                    line_commands.push_back(cmd);
+                } else if (!line_commands.empty()) {
+                    if (cmd.command == RC_START_LINE) {
+                        break;
+                    }
+                    line_commands.push_back(cmd);
+                }
+            }
+            return line_commands;
+        }
+
     private:
         bn::istring &_text;
         bn::sprite_text_generator &_text_generator;
         bn::vector<bn::string_view, MaxLines> _lines;
         bn::vector<render_cmd, MaxLines * 4> _commands;
+        bn::string<BUFFER_SIZE> buffer;
     };
 }
 
 
-#endif //KS_TEXT_RENDER_H
+#endif //KS_TEXT_PARSER_H

@@ -326,18 +326,31 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
             case GS_GAME:
                 ks::textdb::get_tl<1024>(tl_key, message);
 
-                dialogbox = new dialog_box(message, text_generator.value());
+                // message = "Test message with ""\x02""bold words""\x03"".";
+
+                static_text_sprites.clear();
+                animated_text_sprites.clear();
+                dialogbox = new dialog_box(message, text_generator.value(), text_generator_bold.value());
                 // dialog_box db(message, text_generator.value());
                 dialogbox->proceed_message();
                 dialogbox->set_actor(actor);
-                dialogbox->log();
-                delete dialogbox;
+                // dialogbox->log();
 
-                dialog->show(actor, message);
-                while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-                    dialog->update();
+
+                // dialog->show(actor, message);
+                // while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+                //     dialogbox->update();
+                //     dialog->update();
+                //     ks::globals::main_update();
+                // }
+                while (!dialogbox->is_finished()) {
+                    dialogbox->update();
                     ks::globals::main_update();
                 }
+
+                ks::globals::main_update();
+                BN_LOG("FINISHED DIALOG");
+
                 if (bn::keypad::start_pressed()) {
                     globals::state = GS_GAME_MENU;
                     is_paused = true;
@@ -354,8 +367,13 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
             default:
                 BN_ERROR("Wrong state: ", ks::globals::state);
         }
-        if (dialog->is_finished())
+        // if (dialog->is_finished())
+            // break;
+        if (dialogbox->is_finished()) {
+            delete dialogbox;
             break;
+        }
+        // break;
     }
 }
 
