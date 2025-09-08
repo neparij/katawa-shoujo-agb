@@ -73,8 +73,7 @@ bn::optional<ks::SceneManager> scene;
 bn::optional<bn::sprite_text_generator> text_generator;
 bn::optional<bn::sprite_text_generator> text_generator_bold;
 bn::optional<bn::sprite_text_generator> text_generator_small;
-ks::DialogBox* dialog;
-ks::dialog_box* dialogbox;
+dialog_box* dialogbox;
 bn::optional<huge_bg> huge_background;
 bn::optional<bn::regular_bg_ptr> primary_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
@@ -137,6 +136,8 @@ void SceneManager::set(const ks::SceneManager instance) {
     scene = instance;
 
     BN_LOG("SceneManager init done!");
+
+    dialogbox = new dialog_box_default(message, text_generator.value(), text_generator_bold.value());
 }
 
 void SceneManager::set_textdb(const char *db) {
@@ -325,32 +326,22 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
         switch (globals::state) {
             case GS_GAME:
                 ks::textdb::get_tl<1024>(tl_key, message);
-
-                // message = "Test message with ""\x02""bold words""\x03"".";
-
-                static_text_sprites.clear();
-                animated_text_sprites.clear();
-                dialogbox = new dialog_box(message, text_generator.value(), text_generator_bold.value());
+                BN_LOG(message.substr(0, 128).c_str());
+                // static_text_sprites.clear();
+                // animated_text_sprites.clear();
+                // dialogbox = new dialog_box_default(message, text_generator.value(), text_generator_bold.value());
                 // dialog_box db(message, text_generator.value());
-                dialogbox->proceed_message();
+
                 dialogbox->set_actor(actor);
-                // dialogbox->log();
+                dialogbox->proceed_message();
+                dialogbox->show(true);
 
-
-                // dialog->show(actor, message);
-                // while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-                //     dialogbox->update();
-                //     dialog->update();
-                //     ks::globals::main_update();
-                // }
-                while (!dialogbox->is_finished()) {
+                while (!dialogbox->is_finished() && !bn::keypad::start_pressed()) {
                     dialogbox->update();
                     ks::globals::main_update();
                 }
 
-                ks::globals::main_update();
-                BN_LOG("FINISHED DIALOG");
-
+                // ks::globals::main_update();
                 if (bn::keypad::start_pressed()) {
                     globals::state = GS_GAME_MENU;
                     is_paused = true;
@@ -370,7 +361,6 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
         // if (dialog->is_finished())
             // break;
         if (dialogbox->is_finished()) {
-            delete dialogbox;
             break;
         }
         // break;
@@ -395,38 +385,38 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
     while (!ks::globals::exit_scenario) {
         switch (globals::state) {
             case GS_GAME:
-                if (redisplay_dialog) {
-                    dialog->restore_from_pause();
-                    while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-                        dialog->update();
-                        globals::main_update();
-                    }
-                }
-                // Phase 2: Display the question dialog
-                answers_index_map.clear();
-                answers_messages.clear();
-
-                for (int i = 0; i < answers.size(); i++) {
-                    bn::string<128> answer;
-                    ks::textdb::get_tl<128>(answers.at(i).tl_key, answer);
-                    answers_messages.push_back(answer);
-                    answers_index_map.push_back(answers.at(i).index);
-                }
-
-                dialog->show_question(answers_messages);
-
-                while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-                    dialog->update();
-                    ks::globals::main_update();
-                }
-
-                if (bn::keypad::start_pressed()) {
-                    dialog->reset_question();
-                    redisplay_dialog = true;
-                    globals::state = GS_GAME_MENU;
-                    is_paused = true;
-                    update_visuals();
-                }
+                // if (redisplay_dialog) {
+                //     dialog->restore_from_pause();
+                //     while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+                //         dialog->update();
+                //         globals::main_update();
+                //     }
+                // }
+                // // Phase 2: Display the question dialog
+                // answers_index_map.clear();
+                // answers_messages.clear();
+                //
+                // for (int i = 0; i < answers.size(); i++) {
+                //     bn::string<128> answer;
+                //     ks::textdb::get_tl<128>(answers.at(i).tl_key, answer);
+                //     answers_messages.push_back(answer);
+                //     answers_index_map.push_back(answers.at(i).index);
+                // }
+                //
+                // dialog->show_question(answers_messages);
+                //
+                // while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
+                //     dialog->update();
+                //     ks::globals::main_update();
+                // }
+                //
+                // if (bn::keypad::start_pressed()) {
+                //     dialog->reset_question();
+                //     redisplay_dialog = true;
+                //     globals::state = GS_GAME_MENU;
+                //     is_paused = true;
+                //     update_visuals();
+                // }
                 break;
             case GS_GAME_MENU:
                 ks::MenuIngamePause().run();
@@ -437,8 +427,9 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
             default:
                 BN_ERROR("Wrong state: ", ks::globals::state);
         }
-        if (dialog->is_finished())
-            break;
+        // if (dialog->is_finished())
+            // break;
+        break;
     }
 }
 
@@ -446,7 +437,8 @@ int SceneManager::get_dialog_question_answer() {
     if (is_loading) {
         return savedata_progress.reproduction.answer_indices.at(savedata_answer_index++);
     }
-    const unsigned char answer = answers_index_map.at(dialog->get_answer_index());
+    // const unsigned char answer = answers_index_map.at(dialog->get_answer_index());
+    const unsigned char answer = 0;
     progress.reproduction.answer_indices[savedata_answer_index++] = answer;
     return answer;
 }
@@ -837,10 +829,8 @@ void SceneManager::update_visuals() {
     /// HIDE DIALOGS (WITH DISSOLVE)
     if (background_want_dissolve || background_want_transition || characters_want_show || characters_want_hide ||
         is_paused || (background_want_show && next_event_is_blendable)) {
-        if (!dialog->is_hidden()) {
-            BN_LOG("Update visuals: Hide dialogbox");
-            dialog->hide_blend();
-        }
+        BN_LOG("Update visuals: Hide dialogbox");
+        dialogbox->hide(true);
     }
 
     /// CHANGE CHARACTER POSES
@@ -917,9 +907,7 @@ void SceneManager::update_visuals() {
     if (background_want_hide) {
         if (background_visual.active_event.has_value()) {
             if ((*background_visual.active_event)->is_blendable()) {
-                if (!dialog->is_hidden()) {
-                    dialog->hide_blend();
-                }
+                dialogbox->hide(true);
             }
             (*background_visual.active_event)->before_hide(globals::main_update);
             background_visual.active_event.reset();
@@ -955,9 +943,7 @@ void SceneManager::update_visuals() {
 
         if (background_visual.active_event.has_value()) {
             if ((*background_visual.active_event)->is_blendable()) {
-                if (!dialog->is_hidden()) {
-                    dialog->hide_blend();
-                }
+                dialogbox->hide(true);
             }
             (*background_visual.active_event)->before_hide(globals::main_update);
             background_visual.active_event.reset();
@@ -1084,9 +1070,7 @@ void SceneManager::update_visuals() {
         next_event.reset();
 
         if ((*background_visual.active_event)->is_blendable()) {
-            if (!dialog->is_hidden()) {
-                dialog->hide_blend();
-            }
+            dialogbox->hide(true);
             (*background_visual.active_event)->after_show(globals::main_update);
         }
     }
@@ -1289,9 +1273,7 @@ void SceneManager::show_title(const title_card_t tc) {
         return;
     }
 
-    if (!dialog->is_hidden()) {
-        dialog->hide();
-    }
+    dialogbox->hide(true);
 
 
     ks::timer::pause_ingame_timer();

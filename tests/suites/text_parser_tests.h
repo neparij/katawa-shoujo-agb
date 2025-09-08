@@ -8,6 +8,7 @@
 
 #include "../src/text_parser.h"
 #include "fonts_info.h"
+#include "../../src/constants.h"
 
 class text_parser_tests : public test_suite {
 public:
@@ -32,14 +33,14 @@ public:
 
         test_case("generate_lines, single line", [this] {
             text = "Single line";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 1, "single line should have one line");
             KS_ASSERT(renderer_inst.lines().at(0) == "Single line", "single line content should match");
         });
 
         test_case("generate_lines, multiple lines", [this] {
             text = "Multiple\nbeautiful lines";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 2, "string with newline should have two lines");
             KS_ASSERT(renderer_inst.lines().at(0) == "Multiple");
             KS_ASSERT(renderer_inst.lines().at(1) == "beautiful lines");
@@ -47,7 +48,7 @@ public:
 
         test_case("generate_lines, newline character", [this] {
             text = "\nMiddle";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 2, "string starting with newline should have two lines");
             KS_ASSERT(renderer_inst.lines().at(0).empty(), "first line should be empty");
             KS_ASSERT(renderer_inst.lines().at(1) == "Middle", "second line content should match");
@@ -55,7 +56,7 @@ public:
 
         test_case("generate_lines, word wrapping", [this] {
             text = "Лёгкий ветерок колышет голые ветви над головой, заставляя их шуметь, словно деревянные колокольчики.";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 3, "long text should be broken into several lines");
             KS_ASSERT(renderer_inst.lines().at(0) == "Лёгкий ветерок колышет голые ветви");
             KS_ASSERT(renderer_inst.lines().at(1) == "над головой, заставляя их шуметь,");
@@ -64,7 +65,7 @@ public:
 
         test_case("generate_lines, word chopping", [this] {
             text = "Aaaaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhhhhhggggggggggghhhhhhhh……";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 2, "long unbroken text should be split");
             KS_ASSERT(renderer_inst.lines().at(0) == "Aaaaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhh");
             KS_ASSERT(renderer_inst.lines().at(1) == "hhhggggggggggghhhhhhhh……");
@@ -72,7 +73,7 @@ public:
 
         test_case("generate_lines, control characters", [this] {
             text = "Text with ""\x02""bold""\x03"".""\x06""\x05""Wait 0.5 sec";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 1, "break_to_lines size");
             KS_ASSERT(renderer_inst.lines().at(0) == "Text with ""\x02""bold""\x03"".""\x06""\x05""Wait 0.5 sec", "break_to_lines line 1");
         });
@@ -80,7 +81,7 @@ public:
         // TODO: rewrite it. Bad test design.
         test_case("generate_commands", [this] {
             text = "Text with ""\x02""bold""\x03"".""\x06""\x05""Wait 0.5 sec";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             renderer_inst.generate_commands();
             KS_ASSERT(renderer_inst.commands().size() == 8, "parse_to_commands size");
             KS_ASSERT(renderer_inst.commands().at(0).command == RC_START_LINE, "parse_to_commands cmd 0");
@@ -100,7 +101,7 @@ public:
             KS_ASSERT(renderer_inst.commands().at(7).view == "Wait 0.5 sec", "parse_to_commands cmd 7 view");
 
             text = "It's nice to meet you, too!""\x06""\x05"" But~!";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             renderer_inst.generate_commands();
             KS_ASSERT(renderer_inst.commands().size() == 4, "parse_to_commands size");
             KS_ASSERT(renderer_inst.commands().at(0).command == RC_START_LINE, "parse_to_commands cmd 0");
@@ -112,7 +113,7 @@ public:
             KS_ASSERT(renderer_inst.commands().at(3).view == " But~!", "parse_to_commands cmd 3 view");
 
             text = "It's nice to meet you, too! But~!""\x01"", I'm not Hakamichi, I'm Misha! This is Hakamichi. Shicchan~!";
-            renderer_inst.generate_lines();
+            renderer_inst.generate_lines(max_width);
             renderer_inst.generate_commands();
             KS_ASSERT(renderer_inst.commands().size() == 9, "parse_to_commands size");
             KS_ASSERT(renderer_inst.commands().at(0).command == RC_IMMEDIATE_START, "parse_to_commands cmd 0");
@@ -139,6 +140,7 @@ private:
     bn::string<512> text;
     bn::sprite_text_generator text_generator{font_playtime_sprite_font};
     ks::text::parser<32> renderer_inst{text, text_generator};
+    const int max_width = ks::device::screen_width - 20;
 };
 
 #endif //TEXT_PARSER_TESTS_H

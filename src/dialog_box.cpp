@@ -1,14 +1,10 @@
 #include "dialog_box.h"
+#include "bn_keypad.h"
+#include "bn_sprite_text_generator.h"
 
 #include "constants.h"
 
 namespace ks {
-    void dialog_box::show(const bool blending) {
-    }
-
-    void dialog_box::hide(bool blending) {
-    }
-
     void dialog_box::update() {
         if (finished) {
             return;
@@ -17,7 +13,7 @@ namespace ks {
         const bool user_skip = bn::keypad::b_held();
         const bool user_advance = bn::keypad::a_pressed();
         constexpr int lines_per_page = 3;
-        constexpr int render_speed = 5;
+        constexpr int render_speed = 3;
 
         if (waiting_for_input) {
             if (user_advance || user_skip) {
@@ -37,12 +33,13 @@ namespace ks {
         }
 
         if (user_skip || user_advance) {
+            text_chunk_sprites.clear();
             text_single_sprites.clear();
             current_char_index = 0;
 
             const int page_start = (current_page_index * lines_per_page);
             const int page_end = bn::min(page_start + lines_per_page, lines_count());
-            for (int i = current_line_index; i < page_end; i++) {
+            for (int i = page_start; i < page_end; i++) {
                 draw_line(i, false);
             }
             current_line_index = page_end;
@@ -88,11 +85,11 @@ namespace ks {
     }
 
     void dialog_box::draw_line(const int line_index, const bool one_sprite_per_character) {
-        bn::sprite_text_generator* tg = &_default_text_generator;
+        bn::sprite_text_generator *tg = &_default_text_generator;
         int x_offset = 0;
         bool line_found = false;
 
-        for (const auto& cmd : _text_parser.commands()) {
+        for (const auto &cmd: _text_parser.commands()) {
             if (cmd.command == RC_START_LINE && cmd.param == line_index) {
                 line_found = true;
                 tg = &_default_text_generator;
@@ -116,17 +113,20 @@ namespace ks {
                     tg->set_palette_item(globals::text_palettes::original);
                     if (one_sprite_per_character) {
                         tg->generate(
-                        -device::screen_width_half + 10 + x_offset,
-                        device::screen_height_half - 36 + (line_index % 3) * 12, cmd.view,
-                        text_single_sprites);
-                        for (auto& sprite : text_single_sprites) {
+                            _text_start_position.x() + x_offset,
+                            _text_start_position.y() + (line_index % 3) * 12,
+                            cmd.view,
+                            text_single_sprites);
+                        for (auto &sprite: text_single_sprites) {
                             sprite.set_visible(false);
                         }
                     } else {
+                        BN_LOG("Start position: ", _text_start_position.x() + x_offset, ", ", _text_start_position.y() + (line_index % 3) * 12);
                         tg->generate(
-                        -device::screen_width_half + 10 + x_offset,
-                        device::screen_height_half - 36 + (line_index % 3) * 12, cmd.view,
-                        text_chunk_sprites);
+                            _text_start_position.x() + x_offset,
+                            _text_start_position.y() + (line_index % 3) * 12,
+                            cmd.view,
+                            text_chunk_sprites);
                     }
                     x_offset += tg->width(cmd.view);
                     BN_LOG("Draw chunk: ", line_index, " '", cmd.view, "'");

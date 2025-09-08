@@ -58,7 +58,7 @@ namespace ks::text {
               _text_generator(text_generator) {
         }
 
-        void generate_lines();
+        void generate_lines(int max_width);
 
         void generate_commands();
 

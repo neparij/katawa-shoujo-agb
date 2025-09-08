@@ -12,12 +12,11 @@ namespace ks::text {
      * @brief Generates wrapped text lines from the internal `_text`.
      */
     template<int MaxLines>
-    void parser<MaxLines>::generate_lines() {
+    void parser<MaxLines>::generate_lines(const int max_width) {
         _lines.clear();
         BN_ASSERT(!_text.empty(), "Text should not be empty");
 
         buffer.clear();
-        constexpr int max_width = device::screen_width - 20;
         bn::istring_base istring(buffer);
         bn::ostringstream buffer_stream(istring);
 
