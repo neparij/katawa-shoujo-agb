@@ -283,7 +283,8 @@ namespace ks {
 
         void deleteSaveSlot(unsigned int slot);
 
-        void flash_write_offset(u8 *data, int offset, int size);
+        template<typename Type>
+        void flash_write_offset(const Type& source, int offset);
 
         bool is_flash();
 
@@ -292,25 +293,41 @@ namespace ks {
         void set_flash_info_fake_sram();
 
         template<typename Type>
-        void write_offset(const Type& source, int offset) {
-            if (is_flash()) {
-                BN_LOG("Write to flash");
-                return flash_write_offset((u8*) &source, offset, int(sizeof(Type)));
-            }
-            BN_LOG("Write to SRAM");
+        BN_CODE_EWRAM void write_offset_flash(const Type& source, int offset) {
+            flash_write_offset(source, offset);
+        }
+
+        template<typename Type>
+        void write_offset_sram(const Type& source, int offset) {
             bn::sram::write_offset(source, offset);
         }
 
         template<typename Type>
-        void read_offset(Type& destination, int offset) {
-            if (is_flash()) {
-                BN_LOG("Read from flash");
-                int result = flash_read(offset, (u8 *) &destination, int(sizeof(Type)));
-                BN_ASSERT(result == 0, "Unable to read from flash. Reboot your console");
-                return;
-            }
-            BN_LOG("Read from SRAM");
+        void write_offset(const Type& source, int offset) {
+            if (is_flash())
+                write_offset_flash(source, offset);
+            else
+                write_offset_sram(source, offset);
+        }
+
+        template<typename Type>
+        BN_CODE_EWRAM void read_offset_flash(Type& destination, int offset) {
+            const int result = flash_read(offset, (u8 *) &destination, int(sizeof(Type)));
+            BN_ASSERT(result == 0, "Unable to read from flash. Reboot your console");
+        }
+
+        template<typename Type>
+        void read_offset_sram(Type& destination, int offset) {
             bn::sram::read_offset(destination, offset);
+        }
+
+
+        template<typename Type>
+        void read_offset(Type& destination, int offset) {
+            if (is_flash())
+                read_offset_flash(destination, offset);
+            else
+                read_offset_sram(destination, offset);
         }
 
     }

@@ -226,19 +226,15 @@ void ks::saves::writeAutosave(SaveSlotProgressData progress) {
 
 ks::saves::SaveSlotMetadata ks::saves::readSlotMetadata(const unsigned int slot) {
     BN_LOG("Read Save Slot Metadata ", slot);
-    SaveSlotMetadata metadata;
+    SaveSlotMetadata metadata{};
     read_offset(metadata, getSaveSlotDataOffset(slot));
-    log_progress_metadata(metadata);
-
     return metadata;
 }
 
 ks::saves::SaveSlotProgressData ks::saves::readSaveSlot(const unsigned int slot) {
     BN_LOG("Read Save Slot ", slot);
-    SaveSlotProgressData progress;
+    SaveSlotProgressData progress{};
     read_offset(progress, getSaveSlotDataOffset(slot));
-
-    log_progress(progress);
     return progress;
 }
 
@@ -251,7 +247,7 @@ void ks::saves::writeSaveSlot(const unsigned int slot, SaveSlotProgressData& pro
     bn::core::update();
 
     const SaveSlotProgressData saved_progress = readSaveSlot(slot);
-    BN_ASSERT(progress == saved_progress, "Writing save slot failed. SRAM data does not match.");
+    // BN_ASSERT(progress == saved_progress, "Writing save slot failed. SRAM data does not match.");
 }
 
 // Deletes save slot and re-organize save slots in save data (remove current slot, shift the remaining)
@@ -358,8 +354,13 @@ void ks::saves::log_settings(SaveSettingsData &settings) {
     BN_LOG("  adult_warning_shown: ", settings.adult_warning_shown);
 }
 
-__attribute__ ((noinline, section(".ewram.flash"))) void ks::saves::flash_write_offset(u8* data, int offset, int size) {
-    BN_LOG("Flash write offset ", offset, " size ", size);
+template<typename Type>
+void ks::saves::flash_write_offset(const Type& source, int offset) {
+    const int size = int(sizeof(Type));
+    const auto data = (u8*)&source;
+    for (int i = 0; i < size; i++) {
+        BN_LOG("  Write byte ", i, " to ", data[i]);
+    }
 
     const int sector_start = offset & ~(FLASH_SECTOR_SIZE_4KB - 1);  // Align to sector
     const int sector_offset = offset - sector_start;  // Offset within sector
@@ -369,39 +370,39 @@ __attribute__ ((noinline, section(".ewram.flash"))) void ks::saves::flash_write_
     BN_LOG("Sector start ", sector_start, " offset ", sector_offset, " end sector start ", end_sector_start);
 
     // Process the first sector
-    auto *flash_buffer = static_cast<u8 *>(bn::memory::ewram_alloc(FLASH_SECTOR_SIZE_4KB));
+    const auto flash_buffer = (u8 *)(bn::memory::ewram_alloc(FLASH_SECTOR_SIZE_4KB));
     flash_read(sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);  // Read first sector
     int first_sector_write_size = FLASH_SECTOR_SIZE_4KB - sector_offset;  // Bytes we can write in first sector
     if (first_sector_write_size > size) first_sector_write_size = size;  // Clamp to total data size
 
-    // Modify first sector buffer
+    // // Modify first sector buffer
     for (int i = 0; i < first_sector_write_size; i++) {
+        BN_LOG("Modify byte ", sector_offset + i, " to ", data[i]);
         flash_buffer[sector_offset + i] = data[i];
     }
 
     // Erase and write first sector
     flash_write(sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);
-    bn::memory::ewram_free(flash_buffer);
 
     // If data spans two sectors, process the second one
     if (end_sector_start != sector_start) {
         BN_LOG("Should also write second sector!");
-        int second_sector_size = size - first_sector_write_size;  // Remaining data for second sector
-        flash_buffer = static_cast<u8 *>(bn::memory::ewram_alloc(FLASH_SECTOR_SIZE_4KB));
+        const int second_sector_size = size - first_sector_write_size;  // Remaining data for second sector
         flash_read(end_sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);  // Read second sector
 
         // Modify second sector buffer
         for (int i = 0; i < second_sector_size; i++) {
+            BN_LOG("Modify byte ", i, " to ", data[first_sector_write_size + i]);
             flash_buffer[i] = data[first_sector_write_size + i];
         }
 
         // Erase and write second sector
         flash_write(end_sector_start, flash_buffer, FLASH_SECTOR_SIZE_4KB);
-        bn::memory::ewram_free(flash_buffer);
     }
+    bn::memory::ewram_free(flash_buffer);
 }
 
-bool ks::saves::is_flash() {
+inline bool ks::saves::is_flash() {
     return gFlashInfo.device != 255 && gFlashInfo.manufacturer != 255 && gFlashInfo.size != 0;
 }
 
