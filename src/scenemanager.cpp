@@ -37,6 +37,7 @@
 #include <video_4ls_dxtv.h>
 #include <video_op_1_dxtv.h>
 
+#include "bn_sprite_palette_ptr.h"
 #include "dialog_box.h"
 #include "video_tc_act2_emi_dxtv.h"
 #include "video_tc_act2_hanako_dxtv.h"
@@ -73,7 +74,7 @@ bn::optional<ks::SceneManager> scene;
 bn::optional<bn::sprite_text_generator> text_generator;
 bn::optional<bn::sprite_text_generator> text_generator_bold;
 bn::optional<bn::sprite_text_generator> text_generator_small;
-dialog_box* dialogbox;
+dialog_box_default* dialogbox;
 bn::optional<huge_bg> huge_background;
 bn::optional<bn::regular_bg_ptr> primary_background;
 bn::optional<bn::regular_bg_ptr> secondary_background;
@@ -87,7 +88,6 @@ background_visuals_ptr background_visual;
 bn::rect_window left_window = bn::rect_window::external();
 bn::rect_window right_window = bn::rect_window::internal();
 
-bn::vector<unsigned char, 5> answers_index_map;
 EWRAM_BSS ks::saves::SaveSlotProgressData progress;
 EWRAM_BSS ks::saves::SaveSlotProgressData savedata_progress;
 bool in_replay = false;
@@ -326,12 +326,6 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
         switch (globals::state) {
             case GS_GAME:
                 ks::textdb::get_tl<1024>(tl_key, message);
-                BN_LOG(message.substr(0, 128).c_str());
-                // static_text_sprites.clear();
-                // animated_text_sprites.clear();
-                // dialogbox = new dialog_box_default(message, text_generator.value(), text_generator_bold.value());
-                // dialog_box db(message, text_generator.value());
-
                 dialogbox->set_actor(actor);
                 dialogbox->proceed_message();
                 dialogbox->show(true);
@@ -341,7 +335,6 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
                     ks::globals::main_update();
                 }
 
-                // ks::globals::main_update();
                 if (bn::keypad::start_pressed()) {
                     globals::state = GS_GAME_MENU;
                     is_paused = true;
@@ -349,7 +342,6 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
                 }
                 break;
             case GS_GAME_MENU:
-                // SceneManager::open_ingame_menu();
                 ks::MenuIngamePause().run();
                 break;
             case GS_GAME_MENU_SAVES:
@@ -358,12 +350,9 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
             default:
                 BN_ERROR("Wrong state: ", ks::globals::state);
         }
-        // if (dialog->is_finished())
-            // break;
         if (dialogbox->is_finished()) {
             break;
         }
-        // break;
     }
 }
 
@@ -385,38 +374,35 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
     while (!ks::globals::exit_scenario) {
         switch (globals::state) {
             case GS_GAME:
-                // if (redisplay_dialog) {
-                //     dialog->restore_from_pause();
-                //     while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-                //         dialog->update();
-                //         globals::main_update();
-                //     }
-                // }
-                // // Phase 2: Display the question dialog
-                // answers_index_map.clear();
-                // answers_messages.clear();
-                //
-                // for (int i = 0; i < answers.size(); i++) {
-                //     bn::string<128> answer;
-                //     ks::textdb::get_tl<128>(answers.at(i).tl_key, answer);
-                //     answers_messages.push_back(answer);
-                //     answers_index_map.push_back(answers.at(i).index);
-                // }
-                //
-                // dialog->show_question(answers_messages);
-                //
-                // while (!dialog->is_finished() && !bn::keypad::start_pressed()) {
-                //     dialog->update();
-                //     ks::globals::main_update();
-                // }
-                //
-                // if (bn::keypad::start_pressed()) {
-                //     dialog->reset_question();
-                //     redisplay_dialog = true;
-                //     globals::state = GS_GAME_MENU;
-                //     is_paused = true;
-                //     update_visuals();
-                // }
+                // Phase 1: Redisplay the dialog box with the message (optional)
+                if (redisplay_dialog) {
+                    dialogbox->show(true);
+                    while (!dialogbox->is_finished() && !bn::keypad::start_pressed()) {
+                        dialogbox->update();
+                        globals::main_update();
+                    }
+                }
+
+                // Phase 2: Display the question dialog
+                answers_messages.clear();
+                for (const auto& answer : answers) {
+                    answers_messages.push_back(bn::string<128>(""));
+                    textdb::get_tl<128>(answer.tl_key, answers_messages.back());
+                }
+                dialogbox->show_answers(answers_messages);
+
+                while (!dialogbox->is_finished() && !bn::keypad::start_pressed()) {
+                    dialogbox->update();
+                    globals::main_update();
+                }
+                dialogbox->reset_answers();
+
+                if (bn::keypad::start_pressed()) {
+                    redisplay_dialog = true;
+                    globals::state = GS_GAME_MENU;
+                    is_paused = true;
+                    update_visuals();
+                }
                 break;
             case GS_GAME_MENU:
                 ks::MenuIngamePause().run();
@@ -427,9 +413,9 @@ void BN_CODE_EWRAM SceneManager::show_dialog_question(bn::vector<ks::answer_ptr,
             default:
                 BN_ERROR("Wrong state: ", ks::globals::state);
         }
-        // if (dialog->is_finished())
-            // break;
-        break;
+        if (dialogbox->is_finished()) {
+            break;
+        }
     }
 }
 
@@ -438,7 +424,7 @@ int SceneManager::get_dialog_question_answer() {
         return savedata_progress.reproduction.answer_indices.at(savedata_answer_index++);
     }
     // const unsigned char answer = answers_index_map.at(dialog->get_answer_index());
-    const unsigned char answer = 0;
+    const unsigned char answer = dialogbox->get_answer_index();
     progress.reproduction.answer_indices[savedata_answer_index++] = answer;
     return answer;
 }
@@ -1062,6 +1048,7 @@ void SceneManager::update_visuals() {
     //     perform_transition(background_visual.transition);
     //     background_visual.transition = SCENE_TRANSITION_NONE;
     // }
+    background_visual.transition = SCENE_TRANSITION_NONE;
 
     /// If we have actually same background but different event - we should initialize it anyway!
     if (next_event.has_value()) {

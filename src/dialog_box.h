@@ -3,6 +3,7 @@
 #include "text_parser.h"
 
 #include "bn_assert.h"
+#include "bn_camera_actions.h"
 #include "bn_log.h"
 #include "bn_string.h"
 #include "bn_sprite_ptr.h"
@@ -47,13 +48,6 @@ namespace ks {
             BN_LOG("GENERATE COMMANDS");
             _text_parser.generate_commands();
             BN_LOG("---");
-
-            next_render_cooldown = 0;
-            current_char_index = 0;
-            current_line_index = 0;
-            current_page_index = 0;
-            finished = false;
-            waiting_for_input = false;
         }
 
         [[nodiscard]] int pages_count() {
@@ -97,6 +91,12 @@ namespace ks {
         virtual void update();
 
         virtual void show(bool blending) {
+            next_render_cooldown = 0;
+            current_char_index = 0;
+            current_line_index = 0;
+            current_page_index = 0;
+            finished = false;
+            waiting_for_input = false;
         }
 
         virtual void hide(bool blending) {
@@ -110,6 +110,7 @@ namespace ks {
         bn::sprite_text_generator &_bold_text_generator;
         bn::vector<bn::sprite_ptr, 8 * 3> text_chunk_sprites;
         bn::vector<bn::sprite_ptr, 128> text_single_sprites;
+        bool finished = false;
         bool hidden = true;
 
     private:
@@ -123,7 +124,6 @@ namespace ks {
         unsigned char current_char_index = 0;
         unsigned char current_line_index = 0;
         unsigned char current_page_index = 0;
-        bool finished = false;
         bool waiting_for_input = false;
     };
 
@@ -145,16 +145,41 @@ namespace ks {
 
         void hide(bool blending) override;
 
+        void show_answers(bn::ivector<bn::string<128>>& answers);
+
         void set_blending(bool boxes_blending_enabled, bool text_blending_enabled);
 
-        [[nodiscard]] static bn::fixed transparency_alpha() {
-            return globals::settings.high_contrast ? 1.0 : 0.85;
+        void setup_answer_camera();
+
+        void set_answer_box_blending();
+
+        void set_answers_palette();
+
+        void set_answer_sprites_visibility(unsigned short answer_index);
+
+        void reset_answers();
+
+        [[nodiscard]] int get_answer_index() const {
+            return answer_selected;
         }
 
     private:
         bn::vector<bn::sprite_ptr, 4> text_boxes;
         bn::vector<bn::sprite_ptr, 8> actor_boxes;
+        bn::vector<bn::sprite_ptr, 5 * 3> answer_boxes;
         bn::vector<bn::sprite_ptr, 8> title_sprites;
+
+        bool is_question = false;
+        bn::vector<unsigned short, 5> answers_widths;
+        const unsigned short answers_width_max = 184;
+        bn::vector<bn::sprite_ptr, 128> answer_sprites;
+        bn::vector<unsigned short, 128> answer_sprite_indexes;
+        bn::optional<bn::camera_ptr> answers_camera;
+        bn::optional<bn::camera_move_loop_action> answers_camera_action;
+        unsigned short answers_camera_loop_duration;
+        unsigned char answer_selected;
+        unsigned short answer_loop_cycle_counter;
+        unsigned short answer_pause_cycle_counter;
     };
 
     class dialog_box_doublespeak_window : public dialog_box {

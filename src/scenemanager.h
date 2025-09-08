@@ -5,7 +5,6 @@
 #include "bn_regular_bg_item.h"
 #include "bn_affine_bg_item.h"
 #include "character.h"
-#include "dialogbox.cpp.h"
 #include <bn_blending_transparency_attributes_hbe_ptr.h>
 #include <bn_regular_bg_ptr.h>
 #include <bn_affine_bg_ptr.h>
@@ -14,6 +13,7 @@
 #include "background_item.h"
 #include "background_meta.h"
 #include "background_ptr.h"
+#include "bn_rect_window.h"
 #include "character_sprite_meta.h"
 #include "dialog_box.h"
 #include "gba_base.h"
@@ -227,7 +227,7 @@ extern bn::optional<ks::SceneManager> scene;
 extern bn::optional<bn::sprite_text_generator> text_generator;
 extern bn::optional<bn::sprite_text_generator> text_generator_bold;
 extern bn::optional<bn::sprite_text_generator> text_generator_small;
-extern dialog_box* dialogbox;
+extern dialog_box_default* dialogbox;
 extern bn::optional<huge_bg> huge_background;
 extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
@@ -239,7 +239,6 @@ extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;
 
-extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
 extern ks::saves::SaveSlotProgressData savedata_progress;
 extern bool in_replay;

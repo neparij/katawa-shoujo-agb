@@ -4,6 +4,7 @@
 #include <bn_log.h>
 
 #include "bn_core.h"
+#include "bn_blending_actions.h"
 #include "bn_regular_bg_actions.h"
 #include "bn_regular_bg_map_ptr.h"
 #include "bn_regular_bg_tiles_ptr.h"

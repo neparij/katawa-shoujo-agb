@@ -5,6 +5,7 @@
 
 #include <bn_regular_bg_items_ui_bg_menu_main.h>
 
+#include "bn_blending_actions.h"
 #include "bn_sprite_items_ui_icon_00_tc1_hisao.h"
 #include "bn_sprite_items_ui_icon_01_tc2_hanako.h"
 #include "bn_sprite_items_ui_icon_02_tc3_hanako.h"

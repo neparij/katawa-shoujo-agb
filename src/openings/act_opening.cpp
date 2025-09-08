@@ -3,6 +3,7 @@
 #include "../scenemanager.h"
 #include "../sound_manager.h"
 
+#include "bn_blending.h"
 #include "bn_regular_bg_items_act_background.h"
 #include "bn_bg_palette_items_pal_act_slide.h"
 

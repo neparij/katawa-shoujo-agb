@@ -66,9 +66,6 @@ namespace ks::globals {
         text_generator_small->set_bg_priority(1);
         text_generator_small->set_z_order(-10);
 
-        ks::dialog = new ks::DialogBox(ks::text_generator.value(), ks::text_generator_bold.value(),
-                                       ks::static_text_sprites, ks::animated_text_sprites);
-
         ks::globals::accessibility_apply();
     }
 
@@ -92,8 +89,6 @@ namespace ks::globals {
 
     void release_engine() {
         release_resources();
-
-        delete ks::dialog;
         i18n.reset();
     }
 
@@ -113,5 +108,9 @@ namespace ks::globals {
     void accessibility_apply() {
         bn::bg_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
         bn::sprite_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
+    }
+
+    [[nodiscard]] bn::fixed transparency_alpha() {
+        return settings.high_contrast ? 1.0 : 0.85;
     }
 }
