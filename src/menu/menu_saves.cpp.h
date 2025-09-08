@@ -51,9 +51,15 @@ namespace ks {
             text_item_palette = globals::text_palettes::beige;
             total_saves = saves::getUsedSaveSlots();
             saves_from_cursor = total_saves;
-            if (saves::readAutosaveMetadata().has_data || globals::in_game) {
+
+            if (globals::in_game) {
                 saves_from_cursor++;
                 additional_slots = 1;
+            } else {
+                if (saves::readAutosaveMetadata().has_data) {
+                    saves_from_cursor++;
+                    additional_slots = 1;
+                }
             }
 
             draw_slots(saves_from_cursor);
