@@ -8,6 +8,7 @@ class SequenceType(Enum):
     CUSTOM_EVENT = "custom_event"
     CONDITION = "condition"
     DIALOG = "dialog"
+    DOUBLESPEAK = "doublespeak"
     MENU = "menu"
     MUSIC = "music"
     SOUND = "sound"

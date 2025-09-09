@@ -9,6 +9,7 @@
 #include "../src/text_parser.h"
 #include "fonts_info.h"
 #include "../../src/constants.h"
+#include "../../src/scenemanager.h"
 
 class text_parser_tests : public test_suite {
 public:
@@ -137,7 +138,7 @@ public:
     }
 
 private:
-    bn::string<512> text;
+    bn::istring& text = ks::message;
     bn::sprite_text_generator text_generator{font_playtime_sprite_font};
     ks::text::parser<32> renderer_inst{text, text_generator};
     const int max_width = ks::device::screen_width - 20;

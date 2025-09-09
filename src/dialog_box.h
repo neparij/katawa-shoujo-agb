@@ -145,7 +145,7 @@ namespace ks {
 
         void hide(bool blending) override;
 
-        void show_answers(bn::ivector<bn::string<128>>& answers);
+        void show_answers(bn::ivector<bn::string<128> > &answers);
 
         void set_blending(bool boxes_blending_enabled, bool text_blending_enabled);
 
@@ -192,7 +192,20 @@ namespace ks {
                          default_text_generator,
                          bold_text_generator,
                          text_start_position,
-                         device::screen_width_half - 20) {
+                         device::screen_width_half - 16) {
+        }
+
+        [[nodiscard]] const character_definition *get_actor() const {
+            return _actor;
+        }
+
+        void set_hidden(const bool _hidden) {
+            hidden = _hidden;
+        }
+
+        void clear_sprites() {
+            text_chunk_sprites.clear();
+            text_single_sprites.clear();
         }
     };
 
@@ -206,19 +219,50 @@ namespace ks {
                                                          default_text_generator,
                                                          bold_text_generator,
                                                          bn::fixed_point(
-                                                             -device::screen_width_half + 10,
+                                                             -device::screen_width_half + 8,
                                                              device::screen_height_half - 36))),
               _right_window(dialog_box_doublespeak_window(message_storage_b,
                                                           default_text_generator,
                                                           bold_text_generator,
                                                           bn::fixed_point(
-                                                              10,
-                                                              device::screen_height_half - 36))) {
+                                                              6,
+                                                              device::screen_height_half - 36))),
+              _bold_text_generator(bold_text_generator) {
+        }
+
+        void set_actors(const character_definition &actor_left, const character_definition &actor_right) {
+            _left_window.set_actor(actor_left);
+            _right_window.set_actor(actor_right);
+        }
+
+        void proceed_messages() {
+            _left_window.proceed_message();
+            _right_window.proceed_message();
+        }
+
+        void update();
+
+        void show(bool blending);
+
+        void hide(bool blending);
+
+        void set_blending(bool boxes_blending_enabled, bool text_blending_enabled);
+
+        [[nodiscard]] bool is_finished() const {
+            return _left_window.is_finished() && _right_window.is_finished();
+        }
+
+        [[nodiscard]] bool is_hidden() const {
+            return _left_window.is_hidden() && _right_window.is_hidden();
         }
 
     private:
         dialog_box_doublespeak_window _left_window;
         dialog_box_doublespeak_window _right_window;
+        bn::sprite_text_generator &_bold_text_generator;
+        bn::vector<bn::sprite_ptr, 4> text_boxes;
+        bn::vector<bn::sprite_ptr, 8> actor_boxes;
+        bn::vector<bn::sprite_ptr, 8> title_sprites;
     };
 }
 

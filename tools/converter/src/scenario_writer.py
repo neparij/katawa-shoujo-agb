@@ -14,6 +14,7 @@ from src.dto.background_transition_item import BackgroundTransitionItem
 from src.dto.condition_item import ConditionItem
 from src.dto.custom_event_item import CustomEventItem
 from src.dto.dialog_item import DialogItem
+from src.dto.doublespeak_item import DoubleSpeakItem
 from src.dto.hide_item import HideItem
 from src.dto.menu_item import MenuItem
 from src.dto.music_item import MusicItem, MusicAction, MusicEffect
@@ -293,6 +294,8 @@ class ScenarioWriter:
             return self.process_sequence_condition(group, cast(ConditionItem, sequence))
         elif sequence.type == SequenceType.DIALOG:
             return self.precess_sequence_dialogue(group, cast(DialogItem, sequence))
+        elif sequence.type == SequenceType.DOUBLESPEAK:
+            return self.precess_sequence_doublespeak(group, cast(DoubleSpeakItem, sequence))
         elif sequence.type == SequenceType.MENU:
             return self.process_sequence_menu(group, cast(MenuItem, sequence))
         elif sequence.type == SequenceType.MUSIC:
@@ -401,6 +404,20 @@ class ScenarioWriter:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog({actor_tl_index}, {tl_index}));']
         else:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
+
+    def precess_sequence_doublespeak(self, group: SequenceGroup, ds: DoubleSpeakItem) -> List[str]:
+        for locale, text in ds.message_left.items():
+            ds.message_left[locale] = text.replace("’", "'")
+        for locale, text in ds.message_right.items():
+            ds.message_right[locale] = text.replace("’", "'")
+        tl_index_left = add_translations(self.tl_dict, ds.label_name, ds.message_left)
+        tl_index_right = add_translations(self.tl_dict, ds.label_name, ds.message_right)
+
+        hashed_id = hashlib.md5(ds.id.encode()).hexdigest()[:8].upper()
+        return [
+            f'ks::SceneManager::set_line_hash(0x{hashed_id});',
+            f'IF_NOT_EXIT(ks::SceneManager::show_doublespeak(ks::definitions::{ds.actor_left_ref}, {tl_index_left}, ks::definitions::{ds.actor_right_ref}, {tl_index_right}));'
+        ]
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
         return [
