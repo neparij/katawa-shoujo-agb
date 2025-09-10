@@ -21,18 +21,28 @@ namespace ks {
                 // const int target_render_offset = render_offset + 12 * (lines_count());
                 if (camera->y() < target_render_offset - 144) {
                     camera->set_y(target_render_offset - 144);
+                    for (int i = 0; i < text_cache_sprites.size(); i++) {
+                        auto sprite = text_cache_sprites.back();
+                        text_cache_sprites.pop_back();
+                        if (sprite.y() - camera->y() >= -80) {
+                            sprite.set_camera(camera);
+                            text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
+                        }
+                    }
                 }
             } else {
                 if (camera->y() < render_offset - 144) {
                     camera->set_y(camera->y() + 2);
-                }
-            }
-            for (int i = 0; i < text_cache_sprites.size(); i++) {
-                auto sprite = text_cache_sprites.back();
-                text_cache_sprites.pop_back();
-                if (sprite.y() - camera->y() >= -80) {
-                    sprite.set_camera(camera);
-                    text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
+                    if (camera->y() >= render_offset - 144) {
+                        for (int i = 0; i < text_cache_sprites.size(); i++) {
+                            auto sprite = text_cache_sprites.back();
+                            text_cache_sprites.pop_back();
+                            if (sprite.y() - camera->y() >= -80) {
+                                sprite.set_camera(camera);
+                                text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -93,9 +103,14 @@ namespace ks {
         hidden = false;
 
 
+        // Setup camera and object-cutting windows (to prevent diaplaying text out of the novelbox)
         if (!camera.has_value()) {
             camera = bn::camera_ptr::create(0, 0);
         }
+        left_window.set_boundaries(-80, -120, -80 + 4, 120);
+        right_window.set_boundaries(80 - 4, -120, 80, 120);
+        left_window.set_show_sprites(false);
+        right_window.set_show_sprites(false);
 
         if (current_tl_indexes.size() > 1) {
             render_offset += 6;
@@ -149,15 +164,21 @@ namespace ks {
         proceed_message();
         while (text_chunk_sprites.size() > 0) {
             auto sprite = text_chunk_sprites.back();
-            sprite.set_camera(camera);
-            text_chunk_sprites.pop_back();
-            text_cache_sprites.push_back(bn::move(sprite));
+            if (sprite.y() - camera->y() >= -80) {
+                sprite.set_camera(camera);
+                text_chunk_sprites.pop_back();
+                text_cache_sprites.push_back(bn::move(sprite));
+            }
         }
 
         text_chunk_sprites.clear();
     }
 
     void dialog_box_novel::hide(const bool blending) {
+        left_window.restore_boundaries();
+        right_window.restore_boundaries();
+        left_window.set_show_sprites(true);
+        right_window.set_show_sprites(true);
         nvl_box.reset();
         text_chunk_sprites.clear();
         text_single_sprites.clear();
