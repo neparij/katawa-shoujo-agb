@@ -226,7 +226,6 @@ private:
 };
 
 extern bn::string<1024> message;
-// extern bn::string<1024> message_nvl;
 extern bn::string<128> message_doublespeak_a;
 extern bn::string<128> message_doublespeak_b;
 extern bn::vector<bn::string<128>, 5> answers_messages;

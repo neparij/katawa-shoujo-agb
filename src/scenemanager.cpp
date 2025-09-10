@@ -68,7 +68,6 @@
 namespace ks {
 
 BN_DATA_EWRAM bn::string<1024> message;
-// EWRAM_DATA bn::string<1024> message_nvl;
 BN_DATA_EWRAM bn::string<128> message_doublespeak_a;
 BN_DATA_EWRAM bn::string<128> message_doublespeak_b;
 BN_DATA_EWRAM bn::vector<bn::string<128>, 5> answers_messages;
@@ -128,22 +127,6 @@ void SceneManager::free_resources() {
     }
     character_visuals.clear();
 
-    // if (dialog_default != nullptr) {
-    //     delete &dialog_default;
-    //     dialog_default = nullptr;
-    // }
-    // if (dialog_doublespeak != nullptr) {
-    //     delete &dialog_doublespeak;
-    //     dialog_doublespeak = nullptr;
-    // }
-    // if (dialog_novel != nullptr) {
-    //     delete &dialog_novel;
-    //     dialog_novel = nullptr;
-    // }
-
-    // delete &dialog_doublespeak;
-    // delete &dialog_novel;
-
     ks::textdb::free();
 }
 
@@ -157,31 +140,6 @@ void SceneManager::set(const ks::SceneManager instance) {
     scene.reset();
     BN_LOG("Set SM Instance");
     scene = instance;
-
-    BN_LOG("Setup dialogue systems");
-    // dialog_default = new dialog_box_default(&message, text_generator, text_generator_bold);
-    // // // dialog_doublespeak = new dialog_box_doublespeak(message_doublespeak_a, message_doublespeak_b, text_generator.value(), text_generator_bold.value());
-    // dialog_doublespeak = new dialog_box_doublespeak(&message_doublespeak_a, &message_doublespeak_b, text_generator_small, text_generator_bold);
-    // dialog_novel = new dialog_box_novel(&message_nvl, text_generator, text_generator_bold);
-
-
-    // BN_LOG("Allocate ", sizeof(dialog_box_default), " bytes for dialog_box_default");
-    // dialog_default = (dialog_box_default*)bn::memory::ewram_alloc(sizeof(dialog_box_default));
-    //
-    // // dialog_default = dialog_box_default(&message, &text_generator.value(), &text_generator_bold.value());
-    //
-    // BN_LOG("Allocate ", sizeof(dialog_box_doublespeak), " bytes for dialog_box_doublespeak");
-    // dialog_doublespeak = (dialog_box_doublespeak*)bn::memory::ewram_alloc(sizeof(dialog_box_doublespeak));
-    //
-    // // dialog_novel;
-    // BN_LOG("Allocate ", sizeof(dialog_box_novel), " bytes for dialog_box_novel");
-    // dialog_novel = (dialog_box_novel*)bn::memory::ewram_alloc(sizeof(dialog_box_novel));
-
-
-
-
-    // left_window.set_boundaries(-80,-120,80,0);
-    // right_window.set_boundaries(-80,0,80,120);
 
     BN_LOG("SceneManager init done!");
 }
@@ -426,7 +384,6 @@ void SceneManager::show_doublespeak(const character_definition &actor_left, unsi
 
                 dialog_doublespeak.set_actors(actor_left, actor_right);
                 dialog_doublespeak.proceed_messages();
-                // dialog_doublespeak.show(dialog_default.is_hidden() && !dialog_doublespeak.is_hidden());
 
                 dialog_novel.hide(true);
                 dialog_default.hide(true);
@@ -517,7 +474,6 @@ int SceneManager::get_dialog_question_answer() {
     if (is_loading) {
         return savedata_progress.reproduction.answer_indices.at(savedata_answer_index++);
     }
-    // const unsigned char answer = answers_index_map.at(dialog->get_answer_index());
     const unsigned char answer = dialog_default.get_answer_index();
     progress.reproduction.answer_indices[savedata_answer_index++] = answer;
     return answer;
@@ -1069,7 +1025,7 @@ void SceneManager::update_visuals() {
         blend_action.reset();
     }
 
-    // ks::globals::main_update();
+    ks::globals::main_update();
 
     /// CHANGE BACKGROUNDS (WITH DISSOLVE)
     if (background_want_change) {
