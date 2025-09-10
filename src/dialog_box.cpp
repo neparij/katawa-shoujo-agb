@@ -122,14 +122,14 @@ namespace ks {
 
     template<int LinesPerPage>
     void dialog_box<LinesPerPage>::draw_line(const int line_index, const bool one_sprite_per_character) {
-        bn::sprite_text_generator *tg = _default_text_generator;
+        bn::sprite_text_generator *tg = &_default_text_generator.value();
         int x_offset = 0;
         bool line_found = false;
 
         for (const auto &cmd: _text_parser.commands()) {
             if (cmd.command == RC_START_LINE && cmd.param == line_index) {
                 line_found = true;
-                tg = _default_text_generator;
+                tg = &_default_text_generator.value();
             } else if (line_found) {
                 if (cmd.command == RC_START_LINE) {
                     break;
@@ -137,10 +137,10 @@ namespace ks {
                 if (cmd.command == RC_SET_FONT) {
                     if (cmd.param == 0) {
                         BN_LOG("Set font: default");
-                        tg = _default_text_generator;
+                        tg = &_default_text_generator.value();
                     } else if (cmd.param == 1) {
                         BN_LOG("Set font: BOLD");
-                        tg = _bold_text_generator;
+                        tg = &_bold_text_generator.value();
                     }
                 }
                 if (cmd.command == RC_TEXT_OUT) {

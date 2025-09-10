@@ -17,7 +17,7 @@ namespace ks {
     }
 
     void dialog_box_doublespeak::show(const bool blending) {
-        BN_ASSERT(_bold_text_generator != nullptr, "Bold text generator is null");
+        BN_ASSERT(_bold_text_generator.has_value(), "Bold text generator is null");
 
         BN_LOG("Left: ");
         _left_window.log();

@@ -15,7 +15,7 @@ namespace ks::text {
     void parser<MaxLines>::generate_lines(const int max_width) {
         _lines.clear();
         BN_ASSERT(_text != nullptr, "Text pointer should not be null");
-        BN_ASSERT(_text_generator != nullptr, "Text generator pointer should not be null");
+        BN_ASSERT(_text_generator.has_value(), "Text generator should not be empty");
         BN_ASSERT(!_text->empty(), "Text should not be empty");
 
         buffer.clear();

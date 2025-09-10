@@ -124,8 +124,8 @@ namespace ks {
     }
 
     void dialog_box_default::show_answers(bn::ivector<bn::string<128> > &answers) {
-        BN_ASSERT(_default_text_generator != nullptr, "Default text generator is null");
-        BN_ASSERT(_bold_text_generator != nullptr, "Bold text generator is null");
+        BN_ASSERT(_default_text_generator.has_value(), "Default text generator is null");
+        BN_ASSERT(_bold_text_generator.has_value(), "Bold text generator is null");
 
         is_question = true;
         finished = false;
