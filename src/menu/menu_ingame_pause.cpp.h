@@ -54,7 +54,7 @@ namespace ks {
             }
 
             if (background_visual.visible_bg_item.has_value()) {
-                bn::blending::set_fade_alpha(ks::DialogBox::transparency_alpha());
+                bn::blending::set_fade_alpha(globals::transparency_alpha());
                 background_visual.visible_bg_item->set_blending_enabled(true);
             }
 
@@ -184,7 +184,7 @@ namespace ks {
             secondary_background->set_priority(3);
             secondary_background->set_z_order(9);
             secondary_background->set_blending_enabled(true);
-            bn::blending::set_transparency_alpha(DialogBox::transparency_alpha());
+            bn::blending::set_transparency_alpha(globals::transparency_alpha());
             while (forward ? dots_offset < 320 : dots_offset > 0) {
                 dots_offset += forward ? 16 : -16;
                 secondary_background->set_position(0, 336 + dots_offset);

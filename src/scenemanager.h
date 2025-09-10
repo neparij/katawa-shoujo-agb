@@ -5,7 +5,6 @@
 #include "bn_regular_bg_item.h"
 #include "bn_affine_bg_item.h"
 #include "character.h"
-#include "dialogbox.cpp.h"
 #include <bn_blending_transparency_attributes_hbe_ptr.h>
 #include <bn_regular_bg_ptr.h>
 #include <bn_affine_bg_ptr.h>
@@ -14,7 +13,9 @@
 #include "background_item.h"
 #include "background_meta.h"
 #include "background_ptr.h"
+#include "bn_rect_window.h"
 #include "character_sprite_meta.h"
+#include "dialog_box.h"
 #include "gba_base.h"
 #include "gba_types.h"
 #include "savefile/save_file.h"
@@ -136,8 +137,13 @@ public:
 
     static void show_dialog(const ks::character_definition& actor, unsigned int tl_key);
     static void show_dialog(unsigned int actor_tl_key, unsigned int tl_key);
+    static void show_doublespeak(const ks::character_definition& actor_left, unsigned int tl_key_left,
+                                 const ks::character_definition& actor_right, unsigned int tl_key_right);
     static void show_dialog_question(bn::vector<ks::answer_ptr, 5> answers);
     static int get_dialog_question_answer();
+    static void nvl_clear();
+    static void nvl_hide();
+    static void nvl_show(unsigned int tl_key);
     static void show_character(const character_t character,
                                const ks::character_sprite_meta& sprite_meta,
                                const bn::regular_bg_item& bg,
@@ -220,13 +226,17 @@ private:
 };
 
 extern bn::string<1024> message;
+extern bn::string<128> message_doublespeak_a;
+extern bn::string<128> message_doublespeak_b;
 extern bn::vector<bn::string<128>, 5> answers_messages;
+extern dialog_box_default dialog_default;
+extern dialog_box_doublespeak dialog_doublespeak;
+extern dialog_box_novel dialog_novel;
 
 extern bn::optional<ks::SceneManager> scene;
 extern bn::optional<bn::sprite_text_generator> text_generator;
 extern bn::optional<bn::sprite_text_generator> text_generator_bold;
 extern bn::optional<bn::sprite_text_generator> text_generator_small;
-extern ks::DialogBox* dialog;
 extern bn::optional<huge_bg> huge_background;
 extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
@@ -238,7 +248,6 @@ extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;
 
-extern bn::vector<unsigned char, 5> answers_index_map;
 extern ks::saves::SaveSlotProgressData progress;
 extern ks::saves::SaveSlotProgressData savedata_progress;
 extern bool in_replay;

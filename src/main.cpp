@@ -356,7 +356,6 @@ int main() {
                 ks::primary_background.reset();
                 ks::secondary_background.reset();
                 ks::progress_icon_sprites.clear();
-                ks::dialog->reset();
                 ks::globals::main_update();
                 bn::bg_palettes::set_fade_intensity(0);
                 bn::sprite_palettes::set_fade_intensity(0);

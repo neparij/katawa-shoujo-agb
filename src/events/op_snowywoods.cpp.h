@@ -4,6 +4,8 @@
 #include <bn_log.h>
 
 #include "bn_core.h"
+#include "bn_blending_actions.h"
+#include "bn_math.h"
 #include "custom_event.h"
 #include "bn_regular_bg_items_snow_layer_0.h"
 #include "bn_regular_bg_items_snow_layer_1.h"

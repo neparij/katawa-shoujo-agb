@@ -12,9 +12,12 @@ from src.dto.background_transition_item import BackgroundTransitionItem
 from src.dto.condition_item import ConditionItem
 from src.dto.custom_event_item import CustomEventItem
 from src.dto.dialog_item import DialogItem
+from src.dto.doublespeak_item import DoubleSpeakItem
 from src.dto.hide_item import HideEvent, HideItem
 from src.dto.menu_item import MenuItem
 from src.dto.music_item import MusicItem, MusicAction, MusicEffect
+from src.dto.novel_clear_item import NovelClearItem
+from src.dto.novel_hide_item import NovelHideItem
 from src.dto.pause_item import PauseItem
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
@@ -303,6 +306,47 @@ class ScenarioReader:
             self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem(command))
             return
 
+        elif stripped_line.startswith("call screen doublespeak("):
+            doublespeak_match = re.match(r"^call screen doublespeak\((.*)\)$", stripped_line)
+            if not doublespeak_match:
+                raise Exception(f"Invalid doublespeak syntax: {stripped_line}")
+            params = doublespeak_match.group(1).split(",")
+            if len(params) != 4:
+                raise Exception(f"Invalid doublespeak parameters count: {stripped_line}")
+
+            hashing_contents = stripped_line
+            original_dialog_hash = self.calculate_tl_hash(hashing_contents)
+
+            actor_left_ref = params[0].strip()
+            actor_right_ref = params[2].strip()
+            dialogs = [params[1].strip(), params[3].strip()]
+
+            print(f' >> DoubleSpeak actors: left="{actor_left_ref}", right="{actor_right_ref}"')
+            print(f' >> DoubleSpeak dialogs: left="{dialogs[0]}", right="{dialogs[1]}"')
+
+            dialog_left: Dict[str, str] = {
+                DEFAULT_LOCALE: re.search(r'\"(.*)\"', dialogs[0]).group(1)
+            }
+            dialog_right: Dict[str, str] = {
+                DEFAULT_LOCALE: re.search(r'\"(.*)\"', dialogs[1]).group(1)
+            }
+
+            for locale, translation in self.translations.items():
+                if dialogs[0].startswith("_(") and dialogs[0].endswith(")"):
+                    dialogs[0] = re.match(r"^_\(\"(.*)\"\)$", dialogs[0]).group(1)
+                    dialog_left[locale] = translation.strings[dialogs[0]] if dialogs[0] in translation.strings else dialogs[0]
+                else:
+                    dialog_left[locale] = dialog_left[DEFAULT_LOCALE]
+                if dialogs[1].startswith("_(") and dialogs[1].endswith(")"):
+                    dialogs[1] = re.match(r"^_\(\"(.*)\"\)$", dialogs[1]).group(1)
+                    dialog_right[locale] = translation.strings[dialogs[1]] if dialogs[1] in translation.strings else dialogs[1]
+
+            self.stack.current().add_sequence_item(self.linepack_events,
+                                                   DoubleSpeakItem(original_dialog_hash[-8:],
+                                                                   actor_left_ref, actor_right_ref,
+                                                                   dialog_left, dialog_right,
+                                                                   label_name=self.stack.current_label().name))
+
         elif stripped_line.startswith("call act_op("):
             video_name = stripped_line.split("act_op(\"", 1)[1].strip("\")")
             video_without_extension = video_name.split(".")[0]
@@ -516,6 +560,9 @@ class ScenarioReader:
             action_name = parts[1]
             if action_name == "clear":
                 self._hack_nvl_cleared = True
+                self.stack.current().add_sequence_item(self.linepack_events, NovelClearItem())
+            elif action_name == "hide":
+                self.stack.current().add_sequence_item(self.linepack_events, NovelHideItem())
             return
 
         elif stripped_line.startswith("with "):
@@ -576,6 +623,12 @@ class ScenarioReader:
         else:
             hashing_contents = stripped_line
             if _hack_prepend_dialog_nvl_clear:
+                # If novel mode was cleared just before dialog - we need to add this to hashing contents
+                # See translations, for example:
+                # - /tl/de/script-a3-emi.rpy@12642
+                # - /tl/es/script-a3-rin.rpy@3892
+                # - /tl/ru/script-a4-shizune.rpy@90
+
                 hashing_contents = f"nvl clear\r\n{hashing_contents}"
 
             dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)

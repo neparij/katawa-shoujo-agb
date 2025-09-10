@@ -43,7 +43,7 @@ struct character_definition
     character_definition with(const char* (*new_name)() = nullptr,
                               const char* new_prefix = nullptr,
                               const char* new_suffix = nullptr,
-                              bn::sprite_palette_item new_who_color = bn::sprite_items::fontpalette_main.palette_item(),
+                              const bn::sprite_palette_item &new_who_color = bn::sprite_items::fontpalette_main.palette_item(),
                               const char* new_log_color = nullptr) const
     {
         return character_definition{
@@ -66,11 +66,20 @@ struct character_definition
                                     who_color,
                                     log_color};
     }
+
+    bool operator==(const character_definition& other) const {
+        return name == other.name &&
+               what_prefix == other.what_prefix &&
+               what_suffix == other.what_suffix &&
+               who_color == other.who_color;
+    }
 };
 
 namespace definitions {
 
-constexpr character_definition base([]() {return "";}, "\"", "\"");
+inline const char* empty_name() { return ""; }
+
+constexpr character_definition base(empty_name, "\"", "\"");
 
 constexpr character_definition no_char = base;
 

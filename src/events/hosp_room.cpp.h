@@ -4,6 +4,7 @@
 #include <bn_log.h>
 
 #include "bn_core.h"
+#include "bn_blending_actions.h"
 #include "bn_regular_bg_actions.h"
 #include "bn_regular_bg_map_ptr.h"
 #include "bn_regular_bg_tiles_ptr.h"
@@ -45,8 +46,14 @@ namespace ks {
 
             // TODO: Check for characters boundaries after.
             bn::window outside_window = bn::window::outside();
-            left_window.restore_boundaries();
-            right_window.restore_boundaries();
+            // left_window.restore_boundaries();
+            // right_window.restore_boundaries();
+            left_window.set_show_bg(_vfx_sakura_layer_0.value(), false);
+            left_window.set_show_bg(_vfx_sakura_layer_1.value(), false);
+
+            right_window.set_show_bg(_vfx_sakura_layer_0.value(), false);
+            right_window.set_show_bg(_vfx_sakura_layer_1.value(), false);
+
             outside_window.set_show_bg(_vfx_sakura_layer_0.value(), false);
             outside_window.set_show_bg(_vfx_sakura_layer_1.value(), false);
 

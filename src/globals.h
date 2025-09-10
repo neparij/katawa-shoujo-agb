@@ -43,6 +43,8 @@ namespace ks::globals {
 
     extern void accessibility_apply();
 
+    extern bn::fixed transparency_alpha();
+
     namespace colors {
         // image black = "#000"
         inline constexpr auto BLACK = bn::color(0, 0, 0);
