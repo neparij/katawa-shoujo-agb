@@ -140,7 +140,7 @@ public:
 private:
     bn::istring& text = ks::message;
     bn::sprite_text_generator text_generator{font_playtime_sprite_font};
-    ks::text::parser<32> renderer_inst{text, text_generator};
+    ks::text::parser<32> renderer_inst{&text, &text_generator};
     const int max_width = ks::device::screen_width - 20;
 };
 

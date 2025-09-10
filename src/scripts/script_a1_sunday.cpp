@@ -2643,18 +2643,21 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x121788A8);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 37));
             // renpy.music.set_volume(1.0, 0.0, channel="ambient"); TODO: unknown assignment
+            IF_NOT_EXIT(ks::SceneManager::nvl_clear());
             // renpy.music.set_volume(0.5, 1.0, channel="music"); TODO: unknown assignment
             ks::SceneManager::set_line_hash(0x19B4DB48);
-            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::n, 38));
+            IF_NOT_EXIT(ks::SceneManager::nvl_show(38));
             ks::SceneManager::set_line_hash(0x282BD803);
-            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::n, 39));
+            IF_NOT_EXIT(ks::SceneManager::nvl_show(39));
             ks::SceneManager::set_line_hash(0x56309792);
-            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::n, 40));
+            IF_NOT_EXIT(ks::SceneManager::nvl_show(40));
             ks::SceneManager::set_line_hash(0x8E817383);
-            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::n, 41));
+            IF_NOT_EXIT(ks::SceneManager::nvl_show(41));
             ks::SceneManager::set_line_hash(0x804C8C6C);
-            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::n, 42));
+            IF_NOT_EXIT(ks::SceneManager::nvl_show(42));
+            IF_NOT_EXIT(ks::SceneManager::nvl_hide());
             // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
+            IF_NOT_EXIT(ks::SceneManager::nvl_clear());
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::suburb_shanghaiext, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF4839173);

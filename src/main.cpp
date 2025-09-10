@@ -358,6 +358,9 @@ int main() {
                 ks::progress_icon_sprites.clear();
                 // TODO: CHECK!!!
                 // delete ks::dialogbox;
+                // delete ks::dialog_default;
+                // delete ks::dialog_doublespeak;
+                // delete ks::dialog_novel;
                 // ks::dialog->reset();
                 ks::globals::main_update();
                 bn::bg_palettes::set_fade_intensity(0);

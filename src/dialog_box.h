@@ -5,6 +5,7 @@
 #include "bn_assert.h"
 #include "bn_camera_actions.h"
 #include "bn_log.h"
+#include "bn_regular_bg_ptr.h"
 #include "bn_string.h"
 #include "bn_sprite_ptr.h"
 #include "bn_vector.h"
@@ -24,20 +25,23 @@ namespace ks {
     //     QuestionActive,
     // };
 
+    template <int LinesPerPage>
     class dialog_box {
     public:
-        dialog_box(bn::istring &message_storage,
-                   bn::sprite_text_generator &default_text_generator,
-                   bn::sprite_text_generator &bold_text_generator,
+        dialog_box(bn::istring* message_storage,
+                   bn::sprite_text_generator* default_text_generator,
+                   bn::sprite_text_generator* bold_text_generator,
                    const bn::fixed_point text_start_position,
-                   const int max_width)
+                   const int max_width,
+                   const bool infinite_render)
             : _message_storage(message_storage),
               _default_text_generator(default_text_generator),
               _bold_text_generator(bold_text_generator),
               _text_start_position(text_start_position),
               _max_width(max_width),
               _text_parser(message_storage, default_text_generator),
-              _actor(&definitions::no_char) {
+              _actor(&definitions::no_char),
+              _infinite_render(infinite_render) {
         }
 
         virtual ~dialog_box() = default;
@@ -52,8 +56,11 @@ namespace ks {
 
         [[nodiscard]] int pages_count() {
             BN_ASSERT(!_text_parser.lines().empty(), "Text-referenced lines should not be empty");
+            if (_infinite_render) {
+                return 1;
+            }
             const int lines_count = _text_parser.lines().size();
-            return (lines_count + 2) / 3;
+            return (lines_count + LinesPerPage - 1) / LinesPerPage;
         }
 
         [[nodiscard]] int lines_count() {
@@ -88,7 +95,10 @@ namespace ks {
             return hidden;
         }
 
-        virtual void update();
+        virtual void update(bool force_render);
+        virtual void update() {
+            update(false);
+        }
 
         virtual void show(bool blending) {
             next_render_cooldown = 0;
@@ -105,38 +115,40 @@ namespace ks {
     protected:
         void draw_line(int line_index, bool one_sprite_per_character);
 
+        bn::istring *_message_storage;
         const character_definition *_actor;
-        bn::sprite_text_generator &_default_text_generator;
-        bn::sprite_text_generator &_bold_text_generator;
-        bn::vector<bn::sprite_ptr, 8 * 3> text_chunk_sprites;
+        bn::sprite_text_generator *_default_text_generator;
+        bn::sprite_text_generator *_bold_text_generator;
+        bn::vector<bn::sprite_ptr, 8 * LinesPerPage> text_chunk_sprites;
         bn::vector<bn::sprite_ptr, 128> text_single_sprites;
         bool finished = false;
         bool hidden = true;
-
-    private:
-        bn::istring &_message_storage;
-        const bn::fixed_point _text_start_position;
-        const int _max_width;
-
-        text::parser<32> _text_parser;
-
+        int render_offset = 0;
         int next_render_cooldown = 0;
         unsigned char current_char_index = 0;
         unsigned char current_line_index = 0;
         unsigned char current_page_index = 0;
         bool waiting_for_input = false;
+
+    private:
+        const bn::fixed_point _text_start_position;
+        const int _max_width;
+        bool _infinite_render = false;
+
+        text::parser<32> _text_parser;
     };
 
-    class dialog_box_default : public dialog_box {
+    class dialog_box_default final : public dialog_box<3> {
     public:
-        dialog_box_default(bn::istring &message_storage,
-                           bn::sprite_text_generator &default_text_generator,
-                           bn::sprite_text_generator &bold_text_generator)
+        dialog_box_default(bn::istring* message_storage,
+                           bn::sprite_text_generator* default_text_generator,
+                           bn::sprite_text_generator* bold_text_generator)
             : dialog_box(message_storage,
                          default_text_generator,
                          bold_text_generator,
                          bn::fixed_point(-device::screen_width_half + 10, device::screen_height_half - 36),
-                         device::screen_width - 20) {
+                         device::screen_width - 20,
+                         false) {
         }
 
         void update() override;
@@ -176,23 +188,60 @@ namespace ks {
         bn::vector<unsigned short, 128> answer_sprite_indexes;
         bn::optional<bn::camera_ptr> answers_camera;
         bn::optional<bn::camera_move_loop_action> answers_camera_action;
-        unsigned short answers_camera_loop_duration;
-        unsigned char answer_selected;
-        unsigned short answer_loop_cycle_counter;
-        unsigned short answer_pause_cycle_counter;
+        unsigned short answers_camera_loop_duration = 0;
+        unsigned char answer_selected = 0;
+        unsigned short answer_loop_cycle_counter = 0;
+        unsigned short answer_pause_cycle_counter = 0;
     };
 
-    class dialog_box_doublespeak_window : public dialog_box {
+    class dialog_box_novel final : public dialog_box<12> {
     public:
-        dialog_box_doublespeak_window(bn::istring &message_storage,
-                                      bn::sprite_text_generator &default_text_generator,
-                                      bn::sprite_text_generator &bold_text_generator,
+        dialog_box_novel(bn::istring* message_storage,
+                           bn::sprite_text_generator* default_text_generator,
+                           bn::sprite_text_generator* bold_text_generator)
+            : dialog_box(message_storage,
+                         default_text_generator,
+                         bold_text_generator,
+                         bn::fixed_point(-device::screen_width_half + 6, -device::screen_height_half + 14),
+                         device::screen_width - 12,
+                         true) {
+        }
+
+        ~dialog_box_novel() override;
+
+        void update() override;
+
+        void add_tl_key(unsigned int tl_key);
+
+        void render_previous_line();
+
+        void show(bool blending) override;
+
+        void hide(bool blending) override;
+
+        void set_blending(bool boxes_blending_enabled, bool text_blending_enabled);
+
+        void clear_messages();
+
+    private:
+        bn::optional<bn::regular_bg_ptr> nvl_box;
+        bn::vector<unsigned int, 16> current_tl_indexes;
+        bn::vector<bn::sprite_ptr, 8 * 12> text_cache_sprites;
+        bn::optional<bn::camera_ptr> camera;
+    };
+
+    class dialog_box_doublespeak_window final : public dialog_box<3> {
+    public:
+        dialog_box_doublespeak_window(bn::istring* message_storage,
+                                      bn::sprite_text_generator* default_text_generator,
+                                      bn::sprite_text_generator* bold_text_generator,
                                       const bn::fixed_point text_start_position)
             : dialog_box(message_storage,
                          default_text_generator,
                          bold_text_generator,
                          text_start_position,
-                         device::screen_width_half - 16) {
+                         device::screen_width_half - 16,
+                         false) {
         }
 
         [[nodiscard]] const character_definition *get_actor() const {
@@ -211,10 +260,10 @@ namespace ks {
 
     class dialog_box_doublespeak {
     public:
-        dialog_box_doublespeak(bn::istring &message_storage_a,
-                               bn::istring &message_storage_b,
-                               bn::sprite_text_generator &default_text_generator,
-                               bn::sprite_text_generator &bold_text_generator)
+        dialog_box_doublespeak(bn::istring* message_storage_a,
+                               bn::istring* message_storage_b,
+                               bn::sprite_text_generator* default_text_generator,
+                               bn::sprite_text_generator* bold_text_generator)
             : _left_window(dialog_box_doublespeak_window(message_storage_a,
                                                          default_text_generator,
                                                          bold_text_generator,
@@ -259,11 +308,14 @@ namespace ks {
     private:
         dialog_box_doublespeak_window _left_window;
         dialog_box_doublespeak_window _right_window;
-        bn::sprite_text_generator &_bold_text_generator;
+        bn::sprite_text_generator* _bold_text_generator;
         bn::vector<bn::sprite_ptr, 4> text_boxes;
         bn::vector<bn::sprite_ptr, 8> actor_boxes;
         bn::vector<bn::sprite_ptr, 8> title_sprites;
     };
 }
+
+template class ks::dialog_box<3>;
+template class ks::dialog_box<12>;
 
 #endif //DIALOG_BOX_H

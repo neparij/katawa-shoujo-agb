@@ -19,6 +19,8 @@ class SequenceType(Enum):
     BACKGROUND_TRANSFORM = "background_transform"
     BACKGROUND_TRANSITION = "background_transition"
     HIDE = "hide"
+    NVL_CLEAR = "nvl_clear"
+    NVL_HIDE = "nvl_hide"
     PAUSE = "pause"
     UPDATE_VISUALS = "update_visuals"
     SHOW_VIDEO = "show_video"

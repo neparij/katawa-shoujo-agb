@@ -17,6 +17,7 @@ namespace ks {
     }
 
     void dialog_box_doublespeak::show(const bool blending) {
+        BN_ASSERT(_bold_text_generator != nullptr, "Bold text generator is null");
 
         BN_LOG("Left: ");
         _left_window.log();
@@ -59,7 +60,7 @@ namespace ks {
             const character_definition* _actor = actor_num == 0 ? _left_window.get_actor() : _right_window.get_actor();
             const int offset_x = actor_num == 0 ? 0 : device::screen_width_half - 2;
 
-            const int title_ends_x = -device::screen_width_half + 8 + _bold_text_generator.width(_actor->name()) + offset_x;
+            const int title_ends_x = -device::screen_width_half + 8 + _bold_text_generator->width(_actor->name()) + offset_x;
             actor_boxes.push_back(
                 bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16 + offset_x,
                                                                        ks::device::screen_height_half - 44));
@@ -76,9 +77,9 @@ namespace ks {
                 box.set_bg_priority(1);
             }
 
-            _bold_text_generator.set_left_alignment();
-            _bold_text_generator.set_palette_item(_actor->who_color);
-            _bold_text_generator.generate(-ks::device::screen_width_half + 8 + offset_x, ks::device::screen_height_half - 52,
+            _bold_text_generator->set_left_alignment();
+            _bold_text_generator->set_palette_item(_actor->who_color);
+            _bold_text_generator->generate(-ks::device::screen_width_half + 8 + offset_x, ks::device::screen_height_half - 52,
                                           _actor->name(), title_sprites);
         }
 

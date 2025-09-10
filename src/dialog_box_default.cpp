@@ -84,7 +84,7 @@ namespace ks {
         actor_boxes.clear();
         title_sprites.clear();
         if (*_actor != definitions::no_char) {
-            const int title_ends_x = -device::screen_width_half + 8 + _bold_text_generator.width(_actor->name());
+            const int title_ends_x = -device::screen_width_half + 8 + _bold_text_generator->width(_actor->name());
             actor_boxes.push_back(
                 bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16,
                                                                        ks::device::screen_height_half - 44));
@@ -99,9 +99,9 @@ namespace ks {
                 box.set_bg_priority(1);
             }
 
-            _bold_text_generator.set_left_alignment();
-            _bold_text_generator.set_palette_item(_actor->who_color);
-            _bold_text_generator.generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52,
+            _bold_text_generator->set_left_alignment();
+            _bold_text_generator->set_palette_item(_actor->who_color);
+            _bold_text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52,
                                           _actor->name(), title_sprites);
         }
 
@@ -124,6 +124,9 @@ namespace ks {
     }
 
     void dialog_box_default::show_answers(bn::ivector<bn::string<128> > &answers) {
+        BN_ASSERT(_default_text_generator != nullptr, "Default text generator is null");
+        BN_ASSERT(_bold_text_generator != nullptr, "Bold text generator is null");
+
         is_question = true;
         finished = false;
         answer_selected = 0;
@@ -153,19 +156,19 @@ namespace ks {
             answer_boxes.push_back(box_c);
             answer_boxes.push_back(box_r);
 
-            const int z_priority = _default_text_generator.z_order();
-            _default_text_generator.set_left_alignment();
-            _default_text_generator.set_z_order(-50);
-            const int answer_width = _default_text_generator.width(answers.at(i));
+            const int z_priority = _default_text_generator->z_order();
+            _default_text_generator->set_left_alignment();
+            _default_text_generator->set_z_order(-50);
+            const int answer_width = _default_text_generator->width(answers.at(i));
             answers_widths.push_back(answer_width);
             if (answer_width <= answers_width_max) {
-                _default_text_generator.set_one_sprite_per_character(false);
-                _default_text_generator.generate(-answer_width / 2, -56 + i * 20, answers.at(i), answer_sprites);
+                _default_text_generator->set_one_sprite_per_character(false);
+                _default_text_generator->generate(-answer_width / 2, -56 + i * 20, answers.at(i), answer_sprites);
             } else {
-                _default_text_generator.set_one_sprite_per_character(true);
-                _default_text_generator.generate(-answers_width_max / 2, -56 + i * 20, answers.at(i), answer_sprites);
+                _default_text_generator->set_one_sprite_per_character(true);
+                _default_text_generator->generate(-answers_width_max / 2, -56 + i * 20, answers.at(i), answer_sprites);
             }
-            _default_text_generator.set_z_order(z_priority);
+            _default_text_generator->set_z_order(z_priority);
 
             for (int answer_sprite_index = answer_sprite_indexes.size(); answer_sprite_index < answer_sprites.size();
                  answer_sprite_index++) {

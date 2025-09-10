@@ -53,8 +53,8 @@ namespace ks::text {
     template<int MaxLines>
     class parser {
     public:
-        explicit parser(bn::istring& text_ref, bn::sprite_text_generator &text_generator)
-            : _text(text_ref),
+        explicit parser(bn::istring* text_ptr, bn::sprite_text_generator* text_generator)
+            : _text(text_ptr),
               _text_generator(text_generator) {
         }
 
@@ -96,8 +96,8 @@ namespace ks::text {
         }
 
     private:
-        bn::istring &_text;
-        bn::sprite_text_generator &_text_generator;
+        bn::istring* _text;
+        bn::sprite_text_generator* _text_generator;
         bn::vector<bn::string_view, MaxLines> _lines;
         bn::vector<render_cmd, MaxLines * 4> _commands;
         bn::string<BUFFER_SIZE> buffer;

@@ -14,7 +14,9 @@ namespace ks::text {
     template<int MaxLines>
     void parser<MaxLines>::generate_lines(const int max_width) {
         _lines.clear();
-        BN_ASSERT(!_text.empty(), "Text should not be empty");
+        BN_ASSERT(_text != nullptr, "Text pointer should not be null");
+        BN_ASSERT(_text_generator != nullptr, "Text generator pointer should not be null");
+        BN_ASSERT(!_text->empty(), "Text should not be empty");
 
         buffer.clear();
         bn::istring_base istring(buffer);
@@ -24,7 +26,7 @@ namespace ks::text {
         bool done = false;
 
 
-        bn::string_view::pointer cursor = _text.data();
+        bn::string_view::pointer cursor = _text->data();
         bn::string_view::size_type cursor_end = 0;
 
         while (!done) {
@@ -34,7 +36,7 @@ namespace ks::text {
             bn::string<4> part = bn::string_view(cursor + cursor_i, ch_length);
             cursor_i += ch_length;
 
-            const bool is_eol = cursor + cursor_i == _text.end();
+            const bool is_eol = cursor + cursor_i == _text->end();
             const bool is_space = part.starts_with(32);
             const bool is_newline = part.starts_with(10);
             const bool is_control_char = part.starts_with(CTL_FAST) ||
@@ -48,7 +50,7 @@ namespace ks::text {
                                          part.starts_with(CTL_COLOR_END);
 
             if (is_eol || is_space || is_newline) {
-                const auto buffer_width = _text_generator.width(buffer_stream.view());
+                const auto buffer_width = _text_generator->width(buffer_stream.view());
 
                 if (buffer_width < max_width) {
                     // Save the possible line break
@@ -87,8 +89,8 @@ namespace ks::text {
             } else {
                 if (!is_control_char) {
                     if (cursor_end == 0) {
-                        const auto buffer_width = _text_generator.width(buffer_stream.view());
-                        const auto part_width = _text_generator.width(part);
+                        const auto buffer_width = _text_generator->width(buffer_stream.view());
+                        const auto part_width = _text_generator->width(part);
                         if (buffer_width + part_width < max_width) {
                             buffer_stream.append(part);
                         } else {
@@ -115,7 +117,8 @@ namespace ks::text {
     template<int MaxLines>
     void parser<MaxLines>::generate_commands() {
         _commands.clear();
-        BN_ASSERT(!_text.empty(), "Text should not be empty");
+        BN_ASSERT(_text != nullptr, "Text pointer should not be null");
+        BN_ASSERT(!_text->empty(), "Text should not be empty");
         BN_ASSERT(!_lines.empty(), "Text-referenced lines should not be empty");
 
         bool bold_flag = false;

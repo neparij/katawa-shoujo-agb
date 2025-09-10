@@ -18,6 +18,8 @@ from src.dto.doublespeak_item import DoubleSpeakItem
 from src.dto.hide_item import HideItem
 from src.dto.menu_item import MenuItem
 from src.dto.music_item import MusicItem, MusicAction, MusicEffect
+from src.dto.novel_clear_item import NovelClearItem
+from src.dto.novel_hide_item import NovelHideItem
 from src.dto.pause_item import PauseItem
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
@@ -293,9 +295,13 @@ class ScenarioWriter:
         elif sequence.type == SequenceType.CONDITION:
             return self.process_sequence_condition(group, cast(ConditionItem, sequence))
         elif sequence.type == SequenceType.DIALOG:
-            return self.precess_sequence_dialogue(group, cast(DialogItem, sequence))
+            return self.process_sequence_dialogue(group, cast(DialogItem, sequence))
         elif sequence.type == SequenceType.DOUBLESPEAK:
-            return self.precess_sequence_doublespeak(group, cast(DoubleSpeakItem, sequence))
+            return self.process_sequence_doublespeak(group, cast(DoubleSpeakItem, sequence))
+        elif sequence.type == SequenceType.NVL_CLEAR:
+            return self.process_sequence_nvl_clear(group, cast(NovelClearItem, sequence))
+        elif sequence.type == SequenceType.NVL_HIDE:
+            return self.process_sequence_nvl_hide(group, cast(NovelHideItem, sequence))
         elif sequence.type == SequenceType.MENU:
             return self.process_sequence_menu(group, cast(MenuItem, sequence))
         elif sequence.type == SequenceType.MUSIC:
@@ -389,7 +395,7 @@ class ScenarioWriter:
         code.append("\n")
         return code
 
-    def precess_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
+    def process_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
         # TODO: add character symbol to font
         for locale, text in dialog.message.items():
             dialog.message[locale] = text.replace("’", "'")
@@ -397,15 +403,20 @@ class ScenarioWriter:
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
-            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
-            # return [f'scene.add_dialog("{dialog.actor_ref}", \"{resulted_hash}\");']
+            if dialog.actor_ref == "n":
+                for locale, text in dialog.message.items():
+                    # Replace by regular expression ("{vspace=\d+}"):
+                    dialog.message[locale] = re.sub(r'^\{vspace=\d+\}', '', text)
+                return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::nvl_show({tl_index}));']
+            else:
+                return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
         elif dialog.actor:
             actor_tl_index = add_translations_optional(self.tl_dict, dialog.label_name, dialog.actor)
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog({actor_tl_index}, {tl_index}));']
         else:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
 
-    def precess_sequence_doublespeak(self, group: SequenceGroup, ds: DoubleSpeakItem) -> List[str]:
+    def process_sequence_doublespeak(self, group: SequenceGroup, ds: DoubleSpeakItem) -> List[str]:
         for locale, text in ds.message_left.items():
             ds.message_left[locale] = text.replace("’", "'")
         for locale, text in ds.message_right.items():
@@ -418,6 +429,12 @@ class ScenarioWriter:
             f'ks::SceneManager::set_line_hash(0x{hashed_id});',
             f'IF_NOT_EXIT(ks::SceneManager::show_doublespeak(ks::definitions::{ds.actor_left_ref}, {tl_index_left}, ks::definitions::{ds.actor_right_ref}, {tl_index_right}));'
         ]
+
+    def process_sequence_nvl_clear(self, group: SequenceGroup, nvl_clear: NovelClearItem) -> List[str]:
+        return [f'IF_NOT_EXIT(ks::SceneManager::nvl_clear());']
+
+    def process_sequence_nvl_hide(self, group: SequenceGroup, nvl_hide: NovelHideItem) -> List[str]:
+        return [f'IF_NOT_EXIT(ks::SceneManager::nvl_hide());']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
         return [

@@ -141,6 +141,9 @@ public:
                                  const ks::character_definition& actor_right, unsigned int tl_key_right);
     static void show_dialog_question(bn::vector<ks::answer_ptr, 5> answers);
     static int get_dialog_question_answer();
+    static void nvl_clear();
+    static void nvl_hide();
+    static void nvl_show(unsigned int tl_key);
     static void show_character(const character_t character,
                                const ks::character_sprite_meta& sprite_meta,
                                const bn::regular_bg_item& bg,
@@ -223,6 +226,7 @@ private:
 };
 
 extern bn::string<1024> message;
+extern bn::string<1024> message_nvl;
 extern bn::string<128> message_doublespeak_a;
 extern bn::string<128> message_doublespeak_b;
 extern bn::vector<bn::string<128>, 5> answers_messages;
@@ -233,6 +237,7 @@ extern bn::optional<bn::sprite_text_generator> text_generator_bold;
 extern bn::optional<bn::sprite_text_generator> text_generator_small;
 extern dialog_box_default* dialog_default;
 extern dialog_box_doublespeak* dialog_doublespeak;
+extern dialog_box_novel* dialog_novel;
 extern bn::optional<huge_bg> huge_background;
 extern bn::optional<bn::regular_bg_ptr> primary_background;
 extern bn::optional<bn::regular_bg_ptr> secondary_background;
