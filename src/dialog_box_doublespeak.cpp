@@ -83,21 +83,6 @@ namespace ks {
                                           _actor->name(), title_sprites);
         }
 
-
-
-        // if (blending && hidden) {
-        //     bn::blending::set_transparency_alpha(0);
-        //     auto alpha_action = bn::blending_transparency_alpha_to_action(10, globals::transparency_alpha());
-        //     while (!alpha_action.done()) {
-        //         update();
-        //         alpha_action.update();
-        //         set_blending(true, true);
-        //         globals::main_update();
-        //     }
-        //     alpha_action.reset();
-        //     bn::blending::set_transparency_alpha(globals::transparency_alpha());
-        // }
-
         bn::blending::set_transparency_alpha(globals::transparency_alpha());
         set_blending(true, false);
         _left_window.set_hidden(false);
@@ -105,18 +90,6 @@ namespace ks {
     }
 
     void dialog_box_doublespeak::hide(const bool blending) {
-        // if (blending && !hidden) {
-        //     bn::blending::set_transparency_alpha(globals::transparency_alpha());
-        //     auto alpha_action = bn::blending_transparency_alpha_to_action(10, 0.0);
-        //     while (!alpha_action.done()) {
-        //         update();
-        //         alpha_action.update();
-        //         set_blending(true, true);
-        //         globals::main_update();
-        //     }
-        //     alpha_action.reset();
-        // }
-        //
         text_boxes.clear();
         actor_boxes.clear();
         title_sprites.clear();
@@ -136,11 +109,5 @@ namespace ks {
         for (auto &sprite: title_sprites) {
             sprite.set_blending_enabled(text_blending_enabled);
         }
-        // for (auto &sprite: text_chunk_sprites) {
-        //     sprite.set_blending_enabled(text_blending_enabled);
-        // }
-        // for (auto &sprite: text_single_sprites) {
-        //     sprite.set_blending_enabled(text_blending_enabled);
-        // }
     }
 }

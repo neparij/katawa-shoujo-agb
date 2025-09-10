@@ -18,13 +18,6 @@ namespace bn {
 }
 
 namespace ks {
-    // enum class DialogState {
-    //     Idle,
-    //     Writing,
-    //     WaitingForInput,
-    //     QuestionActive,
-    // };
-
     template <int LinesPerPage>
     class dialog_box {
     public:

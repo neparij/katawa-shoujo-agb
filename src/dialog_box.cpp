@@ -4,11 +4,6 @@
 #include "bn_keypad.h"
 #include "bn_sprite_text_generator.h"
 
-#include "constants.h"
-#include "../../butano/butano/src/bn_display_manager.h"
-#include "../../butano/butano/src/bn_sprites_manager.h"
-#include "../../butano/butano/src/bn_sprite_tiles_manager.h"
-
 namespace ks {
     template<int LinesPerPage>
     void dialog_box<LinesPerPage>::update(const bool force_render) {
@@ -26,9 +21,6 @@ namespace ks {
                 if (current_line_index >= lines_count()) {
                     finished = true;
                     waiting_for_input = false;
-                    // if (_infinite_render) {
-                    //     render_offset += 12 * lines_count();
-                    // }
                     return;
                 }
 
@@ -51,9 +43,6 @@ namespace ks {
 
             text_chunk_sprites.clear();
             text_single_sprites.clear();
-            // if (_infinite_render) {
-                // globals::main_update(); // Force update to avoid tiles overusage.
-            // }
             current_char_index = 0;
 
             const int page_start = (current_page_index * LinesPerPage);
@@ -136,15 +125,12 @@ namespace ks {
                 }
                 if (cmd.command == RC_SET_FONT) {
                     if (cmd.param == 0) {
-                        BN_LOG("Set font: default");
                         tg = &_default_text_generator.value();
                     } else if (cmd.param == 1) {
-                        BN_LOG("Set font: BOLD");
                         tg = &_bold_text_generator.value();
                     }
                 }
                 if (cmd.command == RC_TEXT_OUT) {
-                    BN_LOG("X offset: ", x_offset);
                     tg->set_left_alignment();
                     tg->set_one_sprite_per_character(one_sprite_per_character);
                     tg->set_palette_item(globals::text_palettes::original);
@@ -181,7 +167,6 @@ namespace ks {
                         }
                     }
                     x_offset += tg->width(cmd.view);
-                    BN_LOG("Draw chunk: ", line_index, " '", cmd.view, "'");
                 }
             }
         }
