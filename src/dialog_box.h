@@ -8,6 +8,7 @@
 #include "bn_regular_bg_ptr.h"
 #include "bn_string.h"
 #include "bn_sprite_ptr.h"
+#include "bn_unordered_map.h"
 #include "bn_vector.h"
 #include "character.h"
 #include "constants.h"
@@ -99,6 +100,8 @@ namespace ks {
             current_line_index = 0;
             current_page_index = 0;
             finished = false;
+            nowait = _text_parser.is_nowait();
+            fast = _text_parser.is_fast();
             waiting_for_input = false;
         }
 
@@ -114,6 +117,8 @@ namespace ks {
         bn::optional<bn::sprite_text_generator> &_bold_text_generator;
         bn::vector<bn::sprite_ptr, 8 * LinesPerPage> text_chunk_sprites;
         bn::vector<bn::sprite_ptr, 128> text_single_sprites;
+        bn::unordered_map<int, unsigned int, 16> text_wait_map;
+        unsigned int text_wait_ticks = 0;
         bool finished = false;
         bool hidden = true;
         int render_offset = 0;
@@ -122,6 +127,8 @@ namespace ks {
         unsigned char current_line_index = 0;
         unsigned char current_page_index = 0;
         bool waiting_for_input = false;
+        bool nowait = false;
+        bool fast = false;
 
     private:
         const bn::fixed_point _text_start_position;

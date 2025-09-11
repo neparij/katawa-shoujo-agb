@@ -1,3 +1,4 @@
+import copy
 import hashlib
 import os
 import re
@@ -694,21 +695,65 @@ class ScenarioReader:
                 self.stack.current().add_sequence_item(self.linepack_events,
                     DialogItem(original_dialog_hash[-8:], actor, dialog, label_name=self.stack.current_label().name))
             elif dialog_match_ref:
-                for locale, match in matches.items():
-                    if match:
-                        actor_locale, dialog_locale = match.groups()
-                        actor[locale] = actor_locale
-                        dialog[locale] = dialog_locale.strip().replace("\\n", "\n")
-                    else:
-                        # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
-                        # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
-                        print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
-                        sleep(0.25)
-                        actor[locale] = actor[DEFAULT_LOCALE]
-                        dialog[locale] = dialog[DEFAULT_LOCALE]
-                self.stack.current().add_sequence_item(self.linepack_events,
-                    DialogItem(original_dialog_hash[-8:], None, dialog, actor[DEFAULT_LOCALE],
-                               label_name=self.stack.current_label().name))
+                dialog_extended = None
+
+                if dialog_match_ref.group(1) == "extend":
+                    previous_dialog = self.stack.current().get_last_item_with_type(SequenceType.DIALOG)
+                    if previous_dialog is None:
+                        raise Exception(
+                            f"Extend dialog found, but there is no previous dialog to extend: {stripped_line}")
+                    previous_dialog = cast(DialogItem, previous_dialog)
+                    dialog_extended = copy.deepcopy(previous_dialog)
+                    dialog_extended.id = original_dialog_hash[-8:]
+                    for locale, match in matches.items():
+                        if match:
+                            actor_locale, dialog_locale = match.groups()
+                            actor[locale] = actor_locale
+                            dialog[locale] = dialog_locale.replace("\\n", "\n")
+                            if actor[locale] != "extend":
+                                raise Exception(f"Extend dialog found, but actor is not 'extend' for locale {locale}: {stripped_line}")
+
+                            if locale in dialog_extended.message:
+                                new_message = previous_dialog.message[locale]
+                                new_message = new_message.replace("{fast}", "")
+                                new_message = new_message.replace("{w}", "")
+                                new_message = re.sub(r"\{w=(\d*\.*\d+)\}", "", new_message)
+                                new_message = new_message.removesuffix("{nw}")
+                                new_message = new_message + "{fast}" + dialog[locale].replace("{vspace=30}", "\n")
+                                dialog_extended.message[locale] = new_message
+                                print(f"[38;5;83m Extended: \"{dialog[locale]}\"⠀[33;0m")
+                                sleep(0.5)
+                            else:
+                                raise Exception(
+                                    f"Extend dialog found, but there is no previous dialog to extend for locale {locale}: {stripped_line}")
+                        else:
+                            raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
+                else:
+                    for locale, match in matches.items():
+                        if match:
+                            actor_locale, dialog_locale = match.groups()
+                            actor[locale] = actor_locale
+                            dialog[locale] = dialog_locale.strip().replace("\\n", "\n")
+                        else:
+                            # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
+                            # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
+                            print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
+                            sleep(0.25)
+                            actor[locale] = actor[DEFAULT_LOCALE]
+                            dialog[locale] = dialog[DEFAULT_LOCALE]
+                            self.stack.current().add_sequence_item(self.linepack_events,
+                                                                   DialogItem(original_dialog_hash[-8:], None, dialog,
+                                                                              actor[DEFAULT_LOCALE],
+                                                                              label_name=self.stack.current_label().name))
+
+                if dialog_extended is not None:
+                    self.stack.current().add_sequence_item(self.linepack_events, dialog_extended)
+                else:
+                    self.stack.current().add_sequence_item(self.linepack_events,
+                                                           DialogItem(original_dialog_hash[-8:], None, dialog,
+                                                                      actor[DEFAULT_LOCALE],
+                                                                      label_name=self.stack.current_label().name))
+
             elif narration_match:
                 for locale, match in matches.items():
                     if match:

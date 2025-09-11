@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import List, Dict
 
-from src.dto.sequence_item import SequenceItem
+from src.dto.sequence_item import SequenceItem, SequenceType
 
 
 class SequenceGroupType(Enum):
@@ -54,3 +54,9 @@ class SequenceGroup:
                 self.sequence.append(item)
         else:
             raise TypeError("item must be an instance of SequenceItem or its subclasses")
+
+    def get_last_item_with_type(self, t: SequenceType) -> SequenceItem|None:
+        for item in reversed(self.sequence):
+            if item.type == t:
+                return item
+        return None

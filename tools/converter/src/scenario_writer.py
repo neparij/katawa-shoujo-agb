@@ -31,7 +31,7 @@ from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
-    add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales
+    add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales, bytecode_format
 
 PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
 
@@ -188,7 +188,7 @@ class ScenarioWriter:
             sequences.append(f'bn::vector<ks::answer_ptr, 5> answers;')
             answer_index = 0
             for answer in menu.conditions:
-                tl_index = add_translations(self.tl_dict, answer.label_name, answer.answer)
+                tl_index = add_translations_optional(self.tl_dict, answer.label_name, answer.answer)
                 sequences.append(f'answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});') if not answer.condition else sequences.append(
                     f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({{{answer_index}, {tl_index}}});')
                 answer_index += 1
@@ -242,10 +242,11 @@ class ScenarioWriter:
 
             filename_base = f"tl_{get_tl_group_hash(tl_group)}"
 
+            # Calculate offsets
             for tl in self.tl_dict[tl_group]:
                 for locale in locales:
                     offsets[locale].append(current_offset[locale])
-                    current_offset[locale] += len(tl[locale].encode("utf-8")) + 1  # +1 for null terminator sequence
+                    current_offset[locale] += len(bytecode_format(tl[locale]))
                     if len(offsets) > 65535:
                         raise Exception(f"Too many translations in group '{tl_group}'")
 
@@ -258,11 +259,13 @@ class ScenarioWriter:
 
                     # Offset table
                     for offset in offsets[locale]:
+                        if offset >= 0xFFFF:
+                            raise Exception(f"Entry offset: {offset} (0x{offset:04X}) too large in group '{tl_group}'")
                         tl_file.write(offset.to_bytes(2, byteorder='little'))
 
                     # Translations itself
                     for value in self.tl_dict[tl_group]:
-                        tl_file.write(value[locale].encode("utf-8") + b'\0')
+                        tl_file.write(bytecode_format(value[locale]))
 
                 with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed", "rb") as f:
                     uncompressed_bytes = f.read()
@@ -399,7 +402,7 @@ class ScenarioWriter:
         # TODO: add character symbol to font
         for locale, text in dialog.message.items():
             dialog.message[locale] = text.replace("’", "'")
-        tl_index = add_translations(self.tl_dict, dialog.label_name, dialog.message)
+        tl_index = add_translations_optional(self.tl_dict, dialog.label_name, dialog.message)
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
@@ -421,8 +424,8 @@ class ScenarioWriter:
             ds.message_left[locale] = text.replace("’", "'")
         for locale, text in ds.message_right.items():
             ds.message_right[locale] = text.replace("’", "'")
-        tl_index_left = add_translations(self.tl_dict, ds.label_name, ds.message_left)
-        tl_index_right = add_translations(self.tl_dict, ds.label_name, ds.message_right)
+        tl_index_left = add_translations_optional(self.tl_dict, ds.label_name, ds.message_left)
+        tl_index_right = add_translations_optional(self.tl_dict, ds.label_name, ds.message_right)
 
         hashed_id = hashlib.md5(ds.id.encode()).hexdigest()[:8].upper()
         return [

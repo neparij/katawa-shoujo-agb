@@ -11,10 +11,8 @@ typedef unsigned char render_cmd_t;
 #define RC_TEXT_OUT ((render_cmd_t) 1)
 #define RC_SET_FONT ((render_cmd_t) 2)
 #define RC_SET_PALETTE ((render_cmd_t) 3)
-#define RC_IMMEDIATE_START ((render_cmd_t) 4)
-#define RC_IMMEDIATE_END ((render_cmd_t) 5)
-#define RC_WAIT ((render_cmd_t) 6)
-#define RC_NO_WAIT ((render_cmd_t) 7)
+#define RC_FAST ((render_cmd_t) 4)
+#define RC_WAIT ((render_cmd_t) 5)
 
 
 namespace ks::text {
@@ -28,11 +26,11 @@ namespace ks::text {
     static constexpr char CTL_STRIKE_START = 0x04;
     /// ENQ - ends strikethrough text (restore spritefont?)
     static constexpr char CTL_STRIKE_END = 0x05;
-    /// ACK - wait command (next byte is count of 1/10 seconds to wait)
+    /// ACK - wait command (next byte is count of 1/10 seconds to wait or 0xFF to wait for user input)
     static constexpr char CTL_WAIT = 0x06;
     /// BEL - do not wait for user input to continue dialogue
     static constexpr char CTL_NOWAIT = 0x07;
-    /// BS - sets the color (switch spritepalette, next byte is palette index)
+    /// BS - sets the color (switch spritepalette, next byte is palette index starting from 0x01)
     static constexpr char CTL_COLOR_START = 0x08;
     /// HT - restore color (switch spritepalette)
     static constexpr char CTL_COLOR_END = 0x09;
@@ -62,7 +60,17 @@ namespace ks::text {
 
         void generate_commands();
 
-        static unsigned char get_char_size(unsigned char c);
+        [[nodiscard]] bool is_fast() const {
+            return _fast;
+        }
+
+        [[nodiscard]] unsigned char fast_ends_on_line() const {
+            return _fast_ends_line;
+        }
+
+        [[nodiscard]] bool is_nowait() const {
+            return _nowait;
+        }
 
         [[nodiscard]] bn::vector<bn::string_view, MaxLines> &lines() {
             return _lines;
@@ -100,6 +108,9 @@ namespace ks::text {
         bn::optional<bn::sprite_text_generator>& _text_generator;
         bn::vector<bn::string_view, MaxLines> _lines;
         bn::vector<render_cmd, MaxLines * 4> _commands;
+        bool _nowait = false;
+        bool _fast = false;
+        unsigned char _fast_ends_line = 0;
         bn::string<BUFFER_SIZE> buffer;
     };
 }

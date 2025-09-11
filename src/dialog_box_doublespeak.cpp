@@ -2,10 +2,10 @@
 
 #include "bn_log.h"
 #include "bn_blending.h"
-#include "bn_sprite_items_ui_talkbox1.h"
+#include "bn_sprite_items_ui_talkbox1_actor.h"
 #include "bn_sprite_items_ui_talkbox2.h"
 #include "bn_sprite_items_ui_talkbox2_doublespeak.h"
-#include "bn_sprite_items_ui_talkbox4.h"
+#include "bn_sprite_items_ui_talkbox3.h"
 #include "bn_sprite_items_ui_talkbox_actor.h"
 #include "bn_sprite_items_ui_talkbox_actor_end.h"
 #include "bn_sprite_items_ui_talkbox_actor_start.h"
@@ -29,18 +29,18 @@ namespace ks {
         _right_window.show(blending);
 
         if (text_boxes.empty()) {
-            auto box_left = bn::sprite_items::ui_talkbox1.create_sprite(
+            auto box_left = bn::sprite_items::ui_talkbox1_actor.create_sprite(
                 -ks::device::screen_width_half + 32,
-                ks::device::screen_height_half - 32);
+                ks::device::screen_height_half - 13);
             auto box_left_end = bn::sprite_items::ui_talkbox2_doublespeak.create_sprite(
                 -ks::device::screen_width_half + 96,
-                ks::device::screen_height_half - 32);
+                ks::device::screen_height_half - 13);
             auto box_right = bn::sprite_items::ui_talkbox2.create_sprite(
                 -ks::device::screen_width_half + 160,
-                ks::device::screen_height_half - 32);
-            auto box_right_end = bn::sprite_items::ui_talkbox4.create_sprite(
+                ks::device::screen_height_half - 13);
+            auto box_right_end = bn::sprite_items::ui_talkbox3.create_sprite(
                 -ks::device::screen_width_half + 224,
-                ks::device::screen_height_half - 32);
+                ks::device::screen_height_half - 13);
 
             box_left.set_bg_priority(1);
             box_left_end.set_bg_priority(1);
@@ -63,16 +63,16 @@ namespace ks {
             const int title_ends_x = -device::screen_width_half + 8 + _bold_text_generator->width(_actor->name()) + offset_x;
             actor_boxes.push_back(
                 bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16 + offset_x,
-                                                                       ks::device::screen_height_half - 44));
+                                                                       ks::device::screen_height_half - 61));
 
             int add = 0;
             while (title_ends_x > -device::screen_width_half + (++add * 32) + offset_x) {
                 actor_boxes.push_back(bn::sprite_items::ui_talkbox_actor.create_sprite(
                     -ks::device::screen_width_half + 16 + add * 32 + offset_x,
-                    ks::device::screen_height_half - 44));
+                    ks::device::screen_height_half - 61));
             }
             actor_boxes.push_back(bn::sprite_items::ui_talkbox_actor_end.create_sprite(
-                -ks::device::screen_width_half + 16 + add * 32 + offset_x, ks::device::screen_height_half - 44));
+                -ks::device::screen_width_half + 16 + add * 32 + offset_x, ks::device::screen_height_half - 61));
             for (auto &box: actor_boxes) {
                 box.set_bg_priority(1);
             }

@@ -8,8 +8,9 @@
 #include "bn_sprite_items_ui_answerbox2.h"
 #include "bn_sprite_items_ui_answerbox3.h"
 #include "bn_sprite_items_ui_talkbox1.h"
+#include "bn_sprite_items_ui_talkbox1_actor.h"
 #include "bn_sprite_items_ui_talkbox2.h"
-#include "bn_sprite_items_ui_talkbox4.h"
+#include "bn_sprite_items_ui_talkbox3.h"
 #include "bn_sprite_items_ui_talkbox_actor.h"
 #include "bn_sprite_items_ui_talkbox_actor_end.h"
 #include "bn_sprite_items_ui_talkbox_actor_start.h"
@@ -59,27 +60,41 @@ namespace ks {
         is_question = false;
         dialog_box::show(blending);
         if (text_boxes.empty()) {
-            auto box_left = bn::sprite_items::ui_talkbox1.create_sprite(
-                -ks::device::screen_width_half + 32,
-                ks::device::screen_height_half - 32);
-            auto box_center = bn::sprite_items::ui_talkbox2.create_sprite(
-                -ks::device::screen_width_half + 128,
-                ks::device::screen_height_half - 32);
-            auto box_right = bn::sprite_items::ui_talkbox4.create_sprite(
+            auto box_center_left = bn::sprite_items::ui_talkbox2.create_sprite(
+                -ks::device::screen_width_half + 96,
+                ks::device::screen_height_half - 13);
+            auto box_center_right = bn::sprite_items::ui_talkbox2.create_sprite(
+                -ks::device::screen_width_half + 160,
+                ks::device::screen_height_half - 13);
+            auto box_right = bn::sprite_items::ui_talkbox3.create_sprite(
                 -ks::device::screen_width_half + 224,
-                ks::device::screen_height_half - 32);
+                ks::device::screen_height_half - 13);
 
-            box_left.set_bg_priority(1);
-            box_center.set_bg_priority(1);
+
+            box_center_left.set_bg_priority(1);
+            box_center_right.set_bg_priority(1);
             box_right.set_bg_priority(1);
 
-            box_center.set_horizontal_scale(bn::fixed(2.0));
-            box_center.set_double_size_mode(bn::sprite_double_size_mode::ENABLED);
-
-            text_boxes.push_back(bn::move(box_left));
-            text_boxes.push_back(bn::move(box_center));
+            text_boxes.push_back(bn::move(box_center_left));
+            text_boxes.push_back(bn::move(box_center_right));
             text_boxes.push_back(bn::move(box_right));
         }
+
+        if (text_boxes.size() == 4) {
+            text_boxes.pop_back();
+        }
+
+        if (*_actor != definitions::no_char) {
+            text_boxes.push_back(bn::sprite_items::ui_talkbox1_actor.create_sprite(
+                    -ks::device::screen_width_half + 32,
+                    ks::device::screen_height_half - 13));
+        } else {
+            text_boxes.push_back(bn::sprite_items::ui_talkbox1.create_sprite(
+                    -ks::device::screen_width_half + 32,
+                    ks::device::screen_height_half - 13));
+        }
+
+        text_boxes.back().set_bg_priority(1);
 
         actor_boxes.clear();
         title_sprites.clear();
@@ -87,14 +102,14 @@ namespace ks {
             const int title_ends_x = -device::screen_width_half + 8 + _bold_text_generator->width(_actor->name());
             actor_boxes.push_back(
                 bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16,
-                                                                       ks::device::screen_height_half - 44));
+                                                                       ks::device::screen_height_half - 61));
             while (title_ends_x > -device::screen_width_half + (actor_boxes.size() * 32)) {
                 actor_boxes.push_back(bn::sprite_items::ui_talkbox_actor.create_sprite(
                     -ks::device::screen_width_half + 16 + actor_boxes.size() * 32,
-                    ks::device::screen_height_half - 44));
+                    ks::device::screen_height_half - 61));
             }
             actor_boxes.push_back(bn::sprite_items::ui_talkbox_actor_end.create_sprite(
-                -ks::device::screen_width_half + 16 + actor_boxes.size() * 32, ks::device::screen_height_half - 44));
+                -ks::device::screen_width_half + 16 + actor_boxes.size() * 32, ks::device::screen_height_half - 61));
             for (auto &box: actor_boxes) {
                 box.set_bg_priority(1);
             }
