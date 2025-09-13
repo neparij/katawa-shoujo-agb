@@ -109,6 +109,10 @@ class CharacterNudeIf:
         return False
 
     @staticmethod
+    def eminude(basename: str) -> bool:
+        return True
+
+    @staticmethod
     def hanagown(basename: str) -> bool:
         return "stock" in basename
 
@@ -375,7 +379,7 @@ class CharacterSpritesReader:
 
         self._process_character("eminude",
                                 filename_replacements=lambda filename: CharacterDisplayableReplacements.eminude(filename),
-                                nude_if=lambda filename: True)
+                                nude_if=lambda filename: CharacterNudeIf.eminude(filename))
         return self.character_groups
 
     def process_emiwheel(self) -> List[CharacterSpritesGroup]:
