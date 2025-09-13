@@ -49,11 +49,6 @@ def main():
         required=True,
         help="Path to KS GBA sources"
     )
-    character_sprites_parser.add_argument(
-        "--character",
-        required=False,
-        help="Character sprites directory name (i.e. \"rinpan\")",
-    )
 
     definitions_parser = subparsers.add_parser("definitions", help="Definitions converter")
     definitions_parser.add_argument(
@@ -113,11 +108,7 @@ def main():
 
         print(f"Processing character sprites: {ksre_character_sprites_path}")
         reader = CharacterSpritesReader(ksre_character_sprites_path)
-        character_sprites_groups: List[CharacterSpritesGroup] = []
-        if not args.character:
-            character_sprites_groups = reader.process_all()
-        elif args.character == "shizu":
-            character_sprites_groups = reader.process_shizu()
+        character_sprites_groups = reader.process_all()
 
         group_counter = 1
         for group in character_sprites_groups:
