@@ -21,6 +21,8 @@
 #include "bn_regular_bg_items_hanako_bg_defarms.h"
 #include "bn_regular_bg_items_kenji_bg_basic.h"
 #include "bn_regular_bg_items_kenji_bg_rage.h"
+#include "bn_regular_bg_items_kenji_bg_basic_close.h"
+#include "bn_regular_bg_items_shizu_bg_basic_close.h"
 #include "bn_regular_bg_items_hanako_bg_emb.h"
 #include "background_metas/school_dormhisao.h"
 #include "background_metas/school_scienceroom.h"
@@ -90,7 +92,10 @@
 #include "bn_sprite_items_kenji_spr_basic_neutral.h"
 #include "bn_sprite_items_kenji_spr_basic_tsun.h"
 #include "bn_sprite_items_kenji_spr_rage_rage.h"
+#include "bn_sprite_items_kenji_spr_basic_tsun_close.h"
+#include "bn_sprite_items_kenji_spr_basic_happy_close.h"
 #include "bn_sprite_items_kenji_spr_basic_happy.h"
+#include "bn_sprite_items_shizu_spr_basic_normal2_close.h"
 #include "bn_sprite_items_shizu_spr_behind_frustrated.h"
 #include "bn_sprite_items_hanako_spr_emb_downtimid.h"
 #include "bn_sprite_items_hanako_spr_emb_sad.h"
@@ -112,6 +117,8 @@
 #include "hanako_defarms.h"
 #include "kenji_basic.h"
 #include "kenji_rage.h"
+#include "kenji_basic_close.h"
+#include "shizu_basic_close.h"
 #include "hanako_emb.h"
 namespace ks {
     class ScriptA1Tuesday {

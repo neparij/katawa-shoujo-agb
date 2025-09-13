@@ -666,10 +666,6 @@ class ScenarioWriter:
                 else:
                     raise TypeError("Unknown character: " + show.sprite)
 
-                # TODO: Support close for all characters
-                if not character.character_name in ["rin", "muto"]:
-                    character.close = False
-
                 character_bg_name = character.to_bg_name()
                 character_spr_name = character.to_sprite_name()
                 character_sprite_meta_name = character.to_group_name()
