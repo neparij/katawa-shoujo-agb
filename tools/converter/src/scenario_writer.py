@@ -548,6 +548,10 @@ class ScenarioWriter:
                     displayable = CharacterDisplayableReplacements.emi(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
+                elif show.sprite == "emicas":
+                    displayable = CharacterDisplayableReplacements.emicas(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
                 elif show.sprite == "misha":
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))

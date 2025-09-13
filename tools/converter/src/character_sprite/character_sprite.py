@@ -109,6 +109,10 @@ class CharacterNudeIf:
         return False
 
     @staticmethod
+    def hanagown(basename: str) -> bool:
+        return "stock" in basename
+
+    @staticmethod
     def kenji(basename: str) -> bool:
         return basename.endswith("naked")
 
@@ -128,6 +132,53 @@ class CharacterDisplayableReplacements:
         return (displayable_name
                 .replace("gymbounce", "basic_grin_gym")
                 .replace("annoyedbounce", "basic_annoyed")
+                )
+
+    @staticmethod
+    def emicas(displayable_name: str) -> str:
+        # TODO: check for _close notation
+        if displayable_name.removesuffix(".png").endswith("_up"):
+            displayable_name = (displayable_name
+                                .replace("_up", "")
+                                .replace("emicas_", "emicas_up_"))
+        else:
+            displayable_name = displayable_name.replace("emicas_", "emicas_basic_")
+        return displayable_name
+
+    @staticmethod
+    def eminude(displayable_name: str) -> str:
+        return displayable_name.replace("eminude_", "eminude_basic_")
+
+    @staticmethod
+    def emiwheel(displayable_name: str) -> str:
+        return displayable_name.replace("emiwheel_", "emiwheel_basic_")
+
+    @staticmethod
+    def hanagown(displayable_name: str) -> str:
+        if displayable_name.startswith("hanagown_stock"):
+            displayable_name = displayable_name.replace("hanagown_stock", "hanagown_stock_")
+        else:
+            displayable_name = displayable_name.replace("hanagown_", "hanagown_basic_")
+        displayable_name = displayable_name.replace("_blush", "blush")
+        return displayable_name
+
+    @staticmethod
+    def hideaki(displayable_name: str) -> str:
+        if displayable_name.removesuffix(".png").endswith("_up"):
+            displayable_name = (displayable_name
+                                .replace("_up", "")
+                                .replace("hideaki_", "hideaki_up_"))
+        else:
+            displayable_name = displayable_name.replace("hideaki_", "hideaki_basic_")
+        return displayable_name
+
+    @staticmethod
+    def jigoro(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("angry", "basic_angry")
+                .replace("laugh", "basic_laugh")
+                .replace("neutral", "basic_neutral")
+                .replace("smug", "basic_smug")
                 )
 
     @staticmethod
@@ -164,6 +215,14 @@ class CharacterDisplayableReplacements:
                 )
 
     @staticmethod
+    def meiko(displayable_name: str) -> str:
+        return displayable_name.replace("meiko", "meiko_basic")
+
+    @staticmethod
+    def miki(displayable_name: str) -> str:
+        return displayable_name.replace("miki", "miki_basic")
+
+    @staticmethod
     def muto(displayable_name: str) -> str:
         return (displayable_name
                 .replace("normal", "basic_normal")
@@ -172,10 +231,24 @@ class CharacterDisplayableReplacements:
                 )
 
     @staticmethod
+    def nomiya(displayable_name: str) -> str:
+        return displayable_name.replace("nomiya", "nomiya_basic")
+
+    @staticmethod
     def rin(displayable_name: str) -> str:
         return (displayable_name
                 .replace("silhouette", "relaxed_surprised_silhouette")
                 )
+
+    @staticmethod
+    def sae(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("sae", "sae_basic")
+                .replace("_smoke", "smoke"))
+
+    @staticmethod
+    def shopkeep(displayable_name: str) -> str:
+        return displayable_name.replace("shopkeep", "shopkeep_basic")
 
     @staticmethod
     def yuuko(displayable_name: str) -> str:
@@ -244,28 +317,28 @@ class CharacterSpritesReader:
     def process_all(self) -> List[CharacterSpritesGroup]:
         self.process_akira()
         self.process_emi()
-        # TODO: emicas
-        # TODO: eminude
-        # TODO: emiwheel
-        # TODO: hanagown
+        self.process_emicas()
+        self.process_eminude()
+        self.process_emiwheel()
+        self.process_hanagown()
         self.process_hanako()
-        # TODO: hideaki
-        # TODO: jigoro
+        self.process_hideaki()
+        self.process_jigoro()
         self.process_kenji()
         self.process_lilly()
-        # TODO: meiko
-        # TODO: miki
+        self.process_meiko()
+        self.process_miki()
         self.process_misha()
-        # TODO: mishashort
+        self.process_mishashort()
         self.process_muto()
-        # TODO: nomiya
+        self.process_nomiya()
         self.process_nurse()
         self.process_rin()
-        # TODO: rinpan
-        # TODO: sae
+        self.process_rinpan()
+        self.process_sae()
         self.process_shizu()
-        # TODO: shizuyu
-        # TODO: shopkeep
+        self.process_shizuyu()
+        self.process_shopkeep()
         self.process_yuuko()
         self.process_yuukoshang()
         return self.character_groups
@@ -288,6 +361,41 @@ class CharacterSpritesReader:
         self._process_character("emi", nude_if=lambda filename: CharacterNudeIf.default(filename))
         return self.character_groups
 
+    def process_emicas(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("emicas", "basic", None, "smile", (120, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emicas", "up", None, "smile", (120, 88)))
+
+        self._process_character("emicas",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.emicas(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
+    def process_eminude(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("eminude", "basic", None, "grin", (120, 88)))
+
+        self._process_character("eminude",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.eminude(filename),
+                                nude_if=lambda filename: True)
+        return self.character_groups
+
+    def process_emiwheel(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("emiwheel", "basic", None, "grin", (120, 112)))
+
+        self._process_character("emiwheel",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.emiwheel(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
+
+    def process_hanagown(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("hanagown", "basic", None, "normal", (116, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanagown", "stock", None, "normalblush", (116, 64)))
+
+        self._process_character("hanagown",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.hanagown(filename),
+                                nude_if=lambda filename: CharacterNudeIf.hanagown(filename))
+        return self.character_groups
+
     def process_hanako(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(CharacterSpritesGroup("hanako", "basic", "cas", "normal", (116, 64)))
         self.character_groups.append(CharacterSpritesGroup("hanako", "basic", None, "normal", (116, 64)))
@@ -302,6 +410,39 @@ class CharacterSpritesReader:
 
         self._process_character("hanako", nude_if=lambda filename: CharacterNudeIf.default(filename))
         return self.character_groups
+
+    def process_hideaki(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("hideaki", "basic", None, "normal", (108, 84)))
+        self.character_groups.append(CharacterSpritesGroup("hideaki", "up", None, "normal", (108, 84)))
+
+        self._process_character("hideaki",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.hideaki(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
+    def process_jigoro(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("jigoro", "basic", None, "neutral", (96, 56), base_origin_offset=-48)
+        )
+        self._process_character("jigoro",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.jigoro(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+    def process_meiko(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("meiko", "basic", None, "smile", (112, 64), base_origin_offset=-48)
+        )
+        self._process_character("meiko",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.meiko(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+    def process_miki(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("miki", "basic", None, "smile", (108, 72), base_origin_offset=-24)
+        )
+        self._process_character("miki",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.miki(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
 
     def process_kenji(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(CharacterSpritesGroup("kenji", "basic", None, "tsun", (118, 66)))
@@ -369,6 +510,18 @@ class CharacterSpritesReader:
         self._process_character("misha", nude_if=lambda filename: CharacterNudeIf.default(filename))
         return self.character_groups
 
+    def process_mishashort(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "hips", "cas", "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "cross", "cas", "grin", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "perky", "cas", "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "sign", "cas", "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "hips", None, "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "cross", None, "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "perky", None, "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "sign", None, "smile", (112, 76)))
+        self._process_character("mishashort", nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
     def process_muto(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(
             CharacterSpritesGroup("muto", "basic", None, "normal", (108, 52), base_origin_offset=-48)
@@ -384,6 +537,14 @@ class CharacterSpritesReader:
                                 filename_replacements=lambda filename: CharacterDisplayableReplacements.muto(filename),
                                 nude_if=lambda filename: CharacterNudeIf.default(filename),
                                 close=True)
+
+    def process_nomiya(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("nomiya", "basic", None, "smile", (108, 60), base_origin_offset=-48)
+        )
+        self._process_character("nomiya",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.nomiya(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
 
     def process_nurse(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(
@@ -424,6 +585,20 @@ class CharacterSpritesReader:
 
         return self.character_groups
 
+    def process_rinpan(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("rinpan", "basic", None, "absent", (108, 68)))
+        self.character_groups.append(CharacterSpritesGroup("rinpan", "relaxed", None, "doubt", (116, 68)))
+        self._process_character("rinpan", nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
+    def process_sae(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("sae", "basic", None, "neutral", (108, 64), base_origin_offset=-24)
+        )
+        self._process_character("sae",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.sae(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
     def process_shizu(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(CharacterSpritesGroup("shizu", "behind", "nak", "smile", (104, 80)))
         self.character_groups.append(CharacterSpritesGroup("shizu", "adjust", "cas", "happy", (104, 80)))
@@ -436,6 +611,20 @@ class CharacterSpritesReader:
         self.character_groups.append(CharacterSpritesGroup("shizu", "cross", None, "angry", (108, 80)))
         self._process_character("shizu", nude_if=lambda filename: CharacterNudeIf.default(filename))
         return self.character_groups
+
+    def process_shizuyu(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("shizuyu", "basic", None, "happy", (108, 76)))
+        self.character_groups.append(CharacterSpritesGroup("shizuyu", "cross", None, "happy", (108, 76)))
+        self._process_character("shizuyu", nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
+    def process_shopkeep(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("shopkeep", "basic", None, "neutral", (104, 64), base_origin_offset=-24)
+        )
+        self._process_character("shopkeep",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.shopkeep(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
 
     def process_yuuko(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(
