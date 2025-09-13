@@ -92,6 +92,7 @@ GRAPHICS    	:=  graphics \
 					graphics/characters/yuuko \
 					graphics/characters/yuukoshang \
 					graphics/characters/muto \
+					graphics/characters/akira \
 					../butano/common/graphics
 HUGE_GRAPHICS   :=  graphics/huge
 AUDIO       	:=  audio

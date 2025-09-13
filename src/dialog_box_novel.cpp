@@ -5,6 +5,7 @@
 #include "dialog_box.h"
 
 #include "bn_regular_bg_items_ui_nvl.h"
+#include "bn_regular_bg_items_ui_nvl_8bpp.h"
 #include "bn_regular_bg_position_hbe_ptr.h"
 #include "scenemanager.h"
 #include "utils/scenario_reader.h"
@@ -82,7 +83,10 @@ namespace ks {
         dialog_box::show(blending);
 
         if (!nvl_box.has_value()) {
-            nvl_box = bn::regular_bg_items::ui_nvl.create_bg(0, 0);
+            nvl_box = bn::regular_bg_items::ui_nvl.create_bg_optional(0, 0);
+            if (!nvl_box.has_value()) {
+                nvl_box = bn::regular_bg_items::ui_nvl_8bpp.create_bg(0, 0);
+            }
             nvl_box->set_priority(1);
         }
 
