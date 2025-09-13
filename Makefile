@@ -81,18 +81,32 @@ GRAPHICS    	:=  graphics \
 					graphics/event/custom \
 					graphics/huge/thumbs \
 					graphics/vfx \
-					graphics/characters/shizu \
-					graphics/characters/misha \
+					graphics/characters/akira \
 					graphics/characters/emi \
-					graphics/characters/rin \
-					graphics/characters/lilly \
+					graphics/characters/emicas \
+					graphics/characters/eminude \
+					graphics/characters/emiwheel \
+					graphics/characters/hanagown \
 					graphics/characters/hanako \
+					graphics/characters/hideaki \
+					graphics/characters/jigoro \
 					graphics/characters/kenji \
+					graphics/characters/lilly \
+					graphics/characters/meiko \
+					graphics/characters/miki \
+					graphics/characters/misha \
+					graphics/characters/mishashort \
+					graphics/characters/muto \
+					graphics/characters/nomiya \
 					graphics/characters/nurse \
+					graphics/characters/rin \
+					graphics/characters/rinpan \
+					graphics/characters/sae \
+					graphics/characters/shizu \
+					graphics/characters/shizuyu \
+					graphics/characters/shopkeep \
 					graphics/characters/yuuko \
 					graphics/characters/yuukoshang \
-					graphics/characters/muto \
-					graphics/characters/akira \
 					../butano/common/graphics
 HUGE_GRAPHICS   :=  graphics/huge
 AUDIO       	:=  audio

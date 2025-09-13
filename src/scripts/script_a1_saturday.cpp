@@ -279,7 +279,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi, 14));
             ks::SceneManager::set_line_hash(0x7DDDDDD9);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 15));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_excited, bn::regular_bg_items::emi_bg_excited, bn::sprite_items::emi_spr_excited_happy, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_excited_close, bn::regular_bg_items::emi_bg_excited_close, bn::sprite_items::emi_spr_excited_happy_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x63A2F431);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 16));
@@ -287,13 +287,13 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi, 17));
             ks::SceneManager::set_line_hash(0x7C95097D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 18));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_excited, bn::regular_bg_items::emi_bg_excited, bn::sprite_items::emi_spr_excited_laugh, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_excited_close, bn::regular_bg_items::emi_bg_excited_close, bn::sprite_items::emi_spr_excited_laugh_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x1A0B8BAD);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi, 19));
             ks::SceneManager::set_line_hash(0x10A88182);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 20));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_excited, bn::regular_bg_items::emi_bg_excited, bn::sprite_items::emi_spr_excited_proud, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_excited_close, bn::regular_bg_items::emi_bg_excited_close, bn::sprite_items::emi_spr_excited_proud_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4CE7317B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi, 21));
@@ -749,11 +749,11 @@ namespace ks {
             ks::SceneManager::set_line_hash(0xF0DAB8BE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 39));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormext_half, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB43139FF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 40));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_NOMIYA, -48, 0));
             IF_NOT_EXIT(ks::SceneManager::set_background_position(0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::sprite_metas::rin_basic, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, PALETTE_VARIANT_DEFAULT, 48, 0));
@@ -770,7 +770,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 45));
             ks::SceneManager::set_line_hash(0x40817FDC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 46));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF1D749E4);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 47));
@@ -778,7 +778,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 48));
             ks::SceneManager::set_line_hash(0x47A47700);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 49));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xE92265AD);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 50));
@@ -804,28 +804,28 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 58));
             ks::SceneManager::set_line_hash(0x9E28181C);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 59));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x45BBB649);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 60));
             ks::SceneManager::set_line_hash(0x24A805CE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 61));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_frown, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xE5887073);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 62));
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_birdstakeoff.8ad", SOUND_CHANNEL_SOUND));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xBB8E2DA0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 63));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x77A044B0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 64));
             ks::SceneManager::set_line_hash(0x20E9AB2E);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 65));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF60C0F11);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 66));
@@ -1386,7 +1386,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 47));
             ks::SceneManager::set_line_hash(0x4892A5F3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 48));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_behind, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_frown, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_behind_close, bn::regular_bg_items::shizu_bg_behind_close, bn::sprite_items::shizu_spr_behind_frown_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x6B6FA1A1);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 49));
@@ -1398,7 +1398,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 50));
             ks::SceneManager::set_line_hash(0x042DD507);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 51));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_behind, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_frustrated, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_behind_close, bn::regular_bg_items::shizu_bg_behind_close, bn::sprite_items::shizu_spr_behind_frustrated_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x177CF1A3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
@@ -1432,7 +1432,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xCEE5399F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 61));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_adjust, bn::regular_bg_items::shizu_bg_adjust, bn::sprite_items::shizu_spr_adjust_smug, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_adjust_close, bn::regular_bg_items::shizu_bg_adjust_close, bn::sprite_items::shizu_spr_adjust_smug_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x24DC95EC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
@@ -1455,7 +1455,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x4F7959AB);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 67));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, PALETTE_VARIANT_DEFAULT));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_behind, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_behind_close, bn::regular_bg_items::shizu_bg_behind_close, bn::sprite_items::shizu_spr_behind_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x8FADD1CA);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 68));
@@ -1640,7 +1640,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 118));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_behind, bn::regular_bg_items::shizu_bg_behind, bn::sprite_items::shizu_spr_behind_blank, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_SHIZU, -72, 0));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_MISHA, 72, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_SHIZU, -48, 0));
@@ -1662,11 +1662,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 124));
             ks::SceneManager::set_line_hash(0xB12F11F5);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 125));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF06C7BA1);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 126));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic_close, bn::regular_bg_items::shizu_bg_basic_close, bn::sprite_items::shizu_spr_basic_normal_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x13FC0955);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 127));
@@ -1676,11 +1676,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xE6DA77D8);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x8F0B7108);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 129));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign, bn::regular_bg_items::misha_bg_sign, bn::sprite_items::misha_spr_sign_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign_close, bn::regular_bg_items::misha_bg_sign_close, bn::sprite_items::misha_spr_sign_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x22895B16);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 130));
@@ -1690,16 +1690,16 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
             ks::SceneManager::set_line_hash(0x24C029C7);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 131));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x7583BD3A);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 132));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_laugh, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_laugh_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x59A7998E);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 133));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x0ADB4AE6);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 134));
@@ -1707,11 +1707,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x03ED79B4);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB25114B7);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 135));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_laugh, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_laugh_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xFFD46C1A);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 136));
@@ -1723,7 +1723,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9C3554DC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4DBD7626);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 139));
@@ -1731,7 +1731,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x3A613B66);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB532E8E1);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 140));
@@ -1739,7 +1739,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xDF493D82);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_confused, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_confused_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x13BDF4A4);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 141));
@@ -1757,7 +1757,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4465729B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x7F654E63);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 147));
@@ -1767,7 +1767,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF05BFCB0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xBEED84EE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 149));
@@ -1777,7 +1777,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4AC250D1);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x46849173);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 151));
@@ -1787,7 +1787,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 153));
             ks::SceneManager::set_line_hash(0xBE7F8409);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 154));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_laugh, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_laugh_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x20838B8B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 155));
@@ -1795,7 +1795,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x94D677BF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x8128B0B8);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 156));
@@ -1805,7 +1805,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xDC1DE9B3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign, bn::regular_bg_items::misha_bg_sign, bn::sprite_items::misha_spr_sign_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign_close, bn::regular_bg_items::misha_bg_sign_close, bn::sprite_items::misha_spr_sign_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x97E7C8F3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 158));
@@ -1823,13 +1823,13 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 164));
             ks::SceneManager::set_line_hash(0x1405A3EF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 165));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x355109DE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 166));
             ks::SceneManager::set_line_hash(0xEE04B8D1);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 167));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_confused, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_confused_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x1AEFDBC5);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 168));
@@ -1839,11 +1839,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xE222FAC3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xA4EE7018);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 170));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign, bn::regular_bg_items::misha_bg_sign, bn::sprite_items::misha_spr_sign_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign_close, bn::regular_bg_items::misha_bg_sign_close, bn::sprite_items::misha_spr_sign_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x30B6C221);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 171));
@@ -1853,7 +1853,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xA7A91C6C);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 173));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x77CE9C94);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 174));
@@ -1867,11 +1867,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xBC939F4D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x5DE534EB);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 178));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_laugh, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_laugh_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4D5DBADE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 35));
@@ -1879,7 +1879,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 179));
             ks::SceneManager::set_line_hash(0x477B27C5);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 180));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_grin_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x8054A26A);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 181));
@@ -1889,13 +1889,13 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 182));
             ks::SceneManager::set_line_hash(0xA76FB710);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 183));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign, bn::regular_bg_items::misha_bg_sign, bn::sprite_items::misha_spr_sign_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_sign_close, bn::regular_bg_items::misha_bg_sign_close, bn::sprite_items::misha_spr_sign_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xBD788A25);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 184));
             ks::SceneManager::set_line_hash(0x4AB30C3E);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 185));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_confused, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_confused_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4F3FBF58);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 186));
@@ -1911,7 +1911,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 191));
             ks::SceneManager::set_line_hash(0x575EDC88);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 192));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_smile_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB99F72C2);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 193));
@@ -1923,7 +1923,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF7A063BB);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 10));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_confused, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_confused_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x7863A7FE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 196));
@@ -2102,16 +2102,16 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips, bn::regular_bg_items::misha_bg_hips, bn::sprite_items::misha_spr_hips_grin, PALETTE_VARIANT_DEFAULT, -184, 0));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_cross, bn::regular_bg_items::shizu_bg_cross, bn::sprite_items::shizu_spr_cross_rage, PALETTE_VARIANT_DEFAULT, 184, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_smile, PALETTE_VARIANT_DEFAULT, -60, 0));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_cross, bn::regular_bg_items::shizu_bg_cross, bn::sprite_items::shizu_spr_cross_angry, PALETTE_VARIANT_DEFAULT, 60, 0));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_smile_close, PALETTE_VARIANT_DEFAULT, -60, 0));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_cross_close, bn::regular_bg_items::shizu_bg_cross_close, bn::sprite_items::shizu_spr_cross_angry_close, PALETTE_VARIANT_DEFAULT, 60, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x2F2A080F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 244));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross, bn::regular_bg_items::misha_bg_cross, bn::sprite_items::misha_spr_cross_laugh, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_cross_close, bn::regular_bg_items::misha_bg_cross_close, bn::sprite_items::misha_spr_cross_laugh_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x540D5526);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 245));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_angry, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic_close, bn::regular_bg_items::shizu_bg_basic_close, bn::sprite_items::shizu_spr_basic_angry_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x293EB0C2);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 173));
@@ -3065,23 +3065,23 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67709F"));
             ks::SceneManager::set_line_hash(0x0E89CFC3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x94D5940F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4E990297);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 2));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xCF9F607D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 3));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9530E5DC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 4));
-            // TODO: Hide nomiya
+            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_NOMIYA));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_stop(240));
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_RIN, 0, 0));
@@ -3108,7 +3108,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
             ks::SceneManager::set_line_hash(0x441F368B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x30C625A6);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 2));
@@ -3126,13 +3126,13 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 8));
             ks::SceneManager::set_line_hash(0xC7F4631F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 9));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x53730A64);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 10));
             ks::SceneManager::set_line_hash(0xCF50BD6D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 11));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_frown, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF2E6B0E9);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 12));
@@ -3140,26 +3140,26 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 13));
             ks::SceneManager::set_line_hash(0x08E441AF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 14));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x35406C05);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 15));
             ks::SceneManager::set_line_hash(0x43BD41F0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 16));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x56D4E667);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 17));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xCF9F607D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 18));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x7DE31057);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 19));
             IF_NOT_EXIT(ks::SceneManager::music_stop(360));
-            // TODO: Hide nomiya
+            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_NOMIYA));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_RIN, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));

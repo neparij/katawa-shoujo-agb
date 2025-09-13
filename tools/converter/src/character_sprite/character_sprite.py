@@ -91,6 +91,10 @@ class CharacterRegex:
         return regex.removesuffix('$') + r'\.png$'
 
     @staticmethod
+    def nurse() -> str:
+        return r'(?P<name>[^_]+)_(?P<emotion>[^_]+)$'
+
+    @staticmethod
     def yuuko() -> str:
         return r'(?P<name>[^_]+)_(?P<emotion>[^_]+)(_(?P<pose>[^_]+))?$'
 
@@ -98,9 +102,6 @@ class CharacterRegex:
     def yuukoshang() -> str:
         return r'(?P<name>[^_]+)_(?P<emotion>[^_]+)(_(?P<pose>[^_]+))?$'
 
-    @staticmethod
-    def nurse() -> str:
-        return r'(?P<name>[^_]+)_(?P<emotion>[^_]+)$'
 
 class CharacterNudeIf:
     @staticmethod
@@ -108,19 +109,92 @@ class CharacterNudeIf:
         return False
 
     @staticmethod
-    def shizu(basename: str) -> bool:
-        return basename.endswith("nak")
+    def eminude(basename: str) -> bool:
+        return True
+
+    @staticmethod
+    def hanagown(basename: str) -> bool:
+        return "stock" in basename
+
+    @staticmethod
+    def kenji(basename: str) -> bool:
+        return basename.endswith("naked")
 
     @staticmethod
     def lilly(basename: str) -> bool:
         return basename.endswith("nak")
 
     @staticmethod
-    def kenji(basename: str) -> bool:
-        return basename.endswith("naked")
+    def shizu(basename: str) -> bool:
+        return basename.endswith("nak")
 
 
 class CharacterDisplayableReplacements:
+    @staticmethod
+    def emi(displayable_name: str) -> str:
+        # TODO: remove gymbounce, its WORKAROUND for thursday script
+        return (displayable_name
+                .replace("gymbounce", "basic_grin_gym")
+                .replace("annoyedbounce", "basic_annoyed")
+                )
+
+    @staticmethod
+    def emicas(displayable_name: str) -> str:
+        # TODO: check for _close notation
+        if displayable_name.removesuffix(".png").endswith("_up") or displayable_name.removesuffix("_close.png").endswith("_up"):
+            displayable_name = (displayable_name
+                                .replace("_up", "")
+                                .replace("emicas_", "emicas_up_"))
+        else:
+            displayable_name = displayable_name.replace("emicas_", "emicas_basic_")
+        return displayable_name
+
+    @staticmethod
+    def eminude(displayable_name: str) -> str:
+        return displayable_name.replace("eminude_", "eminude_basic_")
+
+    @staticmethod
+    def emiwheel(displayable_name: str) -> str:
+        return displayable_name.replace("emiwheel_", "emiwheel_basic_")
+
+    @staticmethod
+    def hanagown(displayable_name: str) -> str:
+        if displayable_name.startswith("hanagown_stock"):
+            displayable_name = displayable_name.replace("hanagown_stock", "hanagown_stock_")
+        else:
+            displayable_name = displayable_name.replace("hanagown_", "hanagown_basic_")
+        displayable_name = displayable_name.replace("_blush", "blush")
+        return displayable_name
+
+    @staticmethod
+    def hideaki(displayable_name: str) -> str:
+        if displayable_name.removesuffix(".png").endswith("_up"):
+            displayable_name = (displayable_name
+                                .replace("_up", "")
+                                .replace("hideaki_", "hideaki_up_"))
+        else:
+            displayable_name = displayable_name.replace("hideaki_", "hideaki_basic_")
+        return displayable_name
+
+    @staticmethod
+    def jigoro(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("angry", "basic_angry")
+                .replace("laugh", "basic_laugh")
+                .replace("neutral", "basic_neutral")
+                .replace("smug", "basic_smug")
+                )
+
+    @staticmethod
+    def kenji(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("happy", "basic_happy")
+                .replace("neutral", "basic_neutral")
+                .replace("tsun", "basic_tsun")
+                .replace("rage", "rage_rage")
+                .replace("silhouette_naked", "basic_neutral_naked") # TODO: remove silhouette_naked, its WORKAROUND for kenji sprite
+                )
+
     @staticmethod
     def lilly(displayable_name: str) -> str:
         return (displayable_name
@@ -145,6 +219,42 @@ class CharacterDisplayableReplacements:
                 )
 
     @staticmethod
+    def meiko(displayable_name: str) -> str:
+        return displayable_name.replace("meiko", "meiko_basic")
+
+    @staticmethod
+    def miki(displayable_name: str) -> str:
+        return displayable_name.replace("miki", "miki_basic")
+
+    @staticmethod
+    def muto(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("normal", "basic_normal")
+                .replace("irritated", "basic_irritated")
+                .replace("smile", "basic_smile")
+                )
+
+    @staticmethod
+    def nomiya(displayable_name: str) -> str:
+        return displayable_name.replace("nomiya", "nomiya_basic")
+
+    @staticmethod
+    def rin(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("silhouette", "relaxed_surprised_silhouette")
+                )
+
+    @staticmethod
+    def sae(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("sae", "sae_basic")
+                .replace("_smoke", "smoke"))
+
+    @staticmethod
+    def shopkeep(displayable_name: str) -> str:
+        return displayable_name.replace("shopkeep", "shopkeep_basic")
+
+    @staticmethod
     def yuuko(displayable_name: str) -> str:
         # We should swap last two string
         # Example: "yuuko_first_second" -> "yuuko_second_first"
@@ -158,38 +268,6 @@ class CharacterDisplayableReplacements:
         parts = displayable_name.split('_')
         if len(parts) > 1:
             return '_'.join(parts[:-3] + [parts[-3], parts[-2], parts[-1]])
-
-    @staticmethod
-    def kenji(displayable_name: str) -> str:
-        return (displayable_name
-                .replace("happy", "basic_happy")
-                .replace("neutral", "basic_neutral")
-                .replace("tsun", "basic_tsun")
-                .replace("rage", "rage_rage")
-                .replace("silhouette_naked", "basic_neutral_naked") # TODO: remove silhouette_naked, its WORKAROUND for kenji sprite
-                )
-
-    @staticmethod
-    def muto(displayable_name: str) -> str:
-        return (displayable_name
-                .replace("normal", "basic_normal")
-                .replace("irritated", "basic_irritated")
-                .replace("smile", "basic_smile")
-                )
-
-    @staticmethod
-    def emi(displayable_name: str) -> str:
-        # TODO: remove gymbounce, its WORKAROUND for thursday script
-        return (displayable_name
-                .replace("gymbounce", "basic_grin_gym")
-                .replace("annoyedbounce", "basic_annoyed")
-                )
-
-    @staticmethod
-    def rin(displayable_name: str) -> str:
-        return (displayable_name
-                .replace("silhouette", "relaxed_surprised_silhouette")
-                )
 
 
 class CharacterSpritesGroup:
@@ -241,32 +319,252 @@ class CharacterSpritesReader:
         self.character_groups: List[CharacterSpritesGroup] = []
 
     def process_all(self) -> List[CharacterSpritesGroup]:
-        self.process_shizu()
-        self.process_misha()
+        self.process_akira()
         self.process_emi()
-        self.process_rin()
-        self.process_lilly()
+        self.process_emicas()
+        self.process_eminude()
+        self.process_emiwheel()
+        self.process_hanagown()
         self.process_hanako()
+        self.process_hideaki()
+        self.process_jigoro()
         self.process_kenji()
+        self.process_lilly()
+        self.process_meiko()
+        self.process_miki()
+        self.process_misha()
+        self.process_mishashort()
+        self.process_muto()
+        self.process_nomiya()
         self.process_nurse()
+        self.process_rin()
+        self.process_rinpan()
+        self.process_sae()
+        self.process_shizu()
+        self.process_shizuyu()
+        self.process_shopkeep()
         self.process_yuuko()
         self.process_yuukoshang()
-        self.process_muto()
-        self.process_akira()
         return self.character_groups
 
-    def process_shizu(self) -> List[CharacterSpritesGroup]:
-        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", "nak", "smile", (104, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "adjust", "cas", "happy", (104, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "basic", "cas", "normal", (128, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", "cas", "smile", (104, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "cross", "cas", "angry", (108, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "adjust", None, "happy", (104, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "basic", None, "normal", (128, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", None, "smile", (104, 80)))
-        self.character_groups.append(CharacterSpritesGroup("shizu", "cross", None, "angry", (108, 80)))
-        self._process_character("shizu", nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+    def process_akira(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("akira", "basic", None, "smile", (112, 64)))
+        self._process_character("akira", nude_if=lambda filename: CharacterNudeIf.default(filename))
+        self.character_groups.append(CharacterSpritesGroup("akira", "basic", None, "smile", (88, 48),
+                                                           base_emotion_size=(64, 64), close=True))
+        self._process_character("akira", nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
         return self.character_groups
+
+    def process_emi(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("emi", "basic", "gym", "smile", (110, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "basic", None, "smile", (110, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "excited", "gym", "smile", (112, 92)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "excited", None, "smile", (112, 92)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "sad", "gym", "shy", (106, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emi", "sad", None, "shy", (106, 88)))
+        self._process_character("emi", nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("emi", "basic", "gym", "smile", (88, 56), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("emi", "basic", None, "smile", (88, 56), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("emi", "excited", "gym", "smile", (88, 64), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("emi", "excited", None, "smile", (88, 64), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("emi", "sad", "gym", "shy", (88, 56), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("emi", "sad", None, "shy", (88, 56), base_emotion_size=(64, 64), close=True))
+        self._process_character("emi", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
+        return self.character_groups
+
+    def process_emicas(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("emicas", "basic", None, "smile", (120, 88)))
+        self.character_groups.append(CharacterSpritesGroup("emicas", "up", None, "smile", (120, 88)))
+        self._process_character("emicas",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.emicas(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("emicas", "basic", None, "smile", (104, 56), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("emicas", "up", None, "smile", (104, 56), base_emotion_size=(64, 64), close=True))
+        self._process_character("emicas",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.emicas(
+                                    filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
+        return self.character_groups
+
+    def process_eminude(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("eminude", "basic", None, "grin", (120, 88)))
+        self._process_character("eminude",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.eminude(filename),
+                                nude_if=lambda filename: CharacterNudeIf.eminude(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("eminude", "basic", None, "grin", (104, 56), base_emotion_size=(64, 64), close=True))
+        self._process_character("eminude",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.eminude(filename),
+                                nude_if=lambda filename: CharacterNudeIf.eminude(filename),
+                                close=True)
+        return self.character_groups
+
+    def process_emiwheel(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("emiwheel", "basic", None, "grin", (120, 112)))
+        self._process_character("emiwheel",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.emiwheel(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("emiwheel", "basic", None, "grin", (112, 72), base_emotion_size=(64, 64), close=True))
+        self._process_character("emiwheel",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.emiwheel(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
+        return self.character_groups
+
+
+    def process_hanagown(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("hanagown", "basic", None, "normal", (116, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanagown", "stock", None, "normalblush", (116, 64)))
+        self._process_character("hanagown",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.hanagown(filename),
+                                nude_if=lambda filename: CharacterNudeIf.hanagown(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("hanagown", "basic", None, "normal", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanagown", "stock", None, "normalblush", (104, 48), base_emotion_size=(64, 64), close=True))
+        self._process_character("hanagown",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.hanagown(filename),
+                                nude_if=lambda filename: CharacterNudeIf.hanagown(filename),
+                                close=True)
+        return self.character_groups
+
+    def process_hanako(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", "cas", "normal", (116, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", None, "normal", (116, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", "cas", "distant", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", None, "distant", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "def", "cas", "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "def", None, "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", "cas", "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", None, "worry", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", "cas", "timid", (112, 64)))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", None, "timid", (112, 64)))
+        self._process_character("hanako", nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", "cas", "normal", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", None, "normal", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", "cas", "distant", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", None, "distant", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "def", "cas", "worry", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "def", None, "worry", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", "cas", "worry", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", None, "worry", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", "cas", "timid", (104, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", None, "timid", (104, 48), base_emotion_size=(64, 64), close=True))
+        self._process_character("hanako", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
+        return self.character_groups
+
+    def process_hideaki(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("hideaki", "basic", None, "normal", (108, 84)))
+        self.character_groups.append(CharacterSpritesGroup("hideaki", "up", None, "normal", (108, 84)))
+
+        self._process_character("hideaki",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.hideaki(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
+
+    def process_jigoro(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("jigoro", "basic", None, "neutral", (96, 56), base_origin_offset=-48)
+        )
+        self._process_character("jigoro",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.jigoro(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+    def process_kenji(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("kenji", "basic", None, "tsun", (118, 66)))
+        self.character_groups.append(CharacterSpritesGroup("kenji", "basic", "naked", "tsun", (118, 69)))
+        self.character_groups.append(CharacterSpritesGroup("kenji", "rage", None, "rage", (128, 80)))
+        self._process_character("kenji",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.kenji(filename),
+                                nude_if=lambda filename: CharacterNudeIf.kenji(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("kenji", "basic", None, "tsun", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("kenji", "rage", None, "rage", (112, 64), base_emotion_size=(64, 64), close=True))
+        self._process_character("kenji",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.kenji(filename),
+                                nude_if=lambda filename: CharacterNudeIf.kenji(filename),
+                                close=True)
+        return self.character_groups
+
+    def process_lilly(self) -> List[CharacterSpritesGroup]:
+
+        # CUSTOM POSES FOR LILLY
+        # basic  — hands down (DEFAULT)
+        # basic1 — hands behind
+        # basic2 — hands joyful
+        # basic3 — hands breast
+
+        self.character_groups.append(CharacterSpritesGroup("lilly", "back", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "back", None, "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", "paj", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", None, "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic1", "paj", "ara", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic2", "cas", "ara", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic2", None, "ara", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic3", "cas", "listen", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic3", None, "listen", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "behind", "nak", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "behind", None, "cheerful", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "cane", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "cane", None, "smileclosed", (112, 64), base_origin_offset=-48))
+        self._process_character("lilly",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.lilly(filename),
+                                nude_if=lambda filename: CharacterNudeIf.lilly(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("lilly", "back", "cas", "smileclosed", (112, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "back", None, "smileclosed", (112, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", "cas", "smileclosed", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", "paj", "smileclosed", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", "che", "smileclosed", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic", None, "smileclosed", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic1", "paj", "ara", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic2", "cas", "ara", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic2", "che", "arablush", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic2", None, "ara", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic3", "cas", "listen", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic3", "che", "listen", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "basic3", None, "listen", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "behind", "nak", "smileclosed", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "behind", "che", "cheerful", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "behind", None, "cheerful", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "cane", "cas", "smileclosed", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self.character_groups.append(CharacterSpritesGroup("lilly", "cane", None, "smileclosed", (88, 48), base_emotion_size=(64, 64), base_origin_offset=-48, close=True))
+        self._process_character("lilly",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.lilly(filename),
+                                nude_if=lambda filename: CharacterNudeIf.lilly(filename),
+                                close=True)
+        return self.character_groups
+
+    def process_meiko(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("meiko", "basic", None, "smile", (112, 64), base_origin_offset=-48)
+        )
+        self._process_character("meiko",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.meiko(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+    def process_miki(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("miki", "basic", None, "smile", (108, 72), base_origin_offset=-24)
+        )
+        self._process_character("miki",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.miki(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(
+            CharacterSpritesGroup("miki", "basic", None, "smile", (92, 48), base_emotion_size=(64, 64), base_origin_offset=-24, close=True)
+        )
+        self._process_character("miki",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.miki(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
 
     def process_misha(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(CharacterSpritesGroup("misha", "hips", "cas", "smile", (112, 76)))
@@ -280,17 +578,83 @@ class CharacterSpritesReader:
         self.character_groups.append(CharacterSpritesGroup("misha", "perky", None, "smile", (112, 76)))
         self.character_groups.append(CharacterSpritesGroup("misha", "sign", None, "smile", (112, 76)))
         self._process_character("misha", nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("misha", "hips", "cas", "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("misha", "cross", "cas", "grin", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("misha", "perky", "cas", "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("misha", "hips", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("misha", "cross", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("misha", "perky", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("misha", "sign", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self._process_character("misha", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
         return self.character_groups
 
-    def process_emi(self) -> List[CharacterSpritesGroup]:
-        self.character_groups.append(CharacterSpritesGroup("emi", "basic", "gym", "smile", (110, 88)))
-        self.character_groups.append(CharacterSpritesGroup("emi", "basic", None, "smile", (110, 88)))
-        self.character_groups.append(CharacterSpritesGroup("emi", "excited", "gym", "smile", (112, 92)))
-        self.character_groups.append(CharacterSpritesGroup("emi", "excited", None, "smile", (112, 92)))
-        self.character_groups.append(CharacterSpritesGroup("emi", "sad", "gym", "shy", (106, 88)))
-        self.character_groups.append(CharacterSpritesGroup("emi", "sad", None, "shy", (106, 88)))
+    def process_mishashort(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "hips", "cas", "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "cross", "cas", "grin", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "perky", "cas", "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "sign", "cas", "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "hips", None, "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "cross", None, "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "perky", None, "smile", (112, 76)))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "sign", None, "smile", (112, 76)))
+        self._process_character("mishashort", nude_if=lambda filename: CharacterNudeIf.default(filename))
 
-        self._process_character("emi", nude_if=lambda filename: CharacterNudeIf.default(filename))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "hips", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "cross", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "perky", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("mishashort", "sign", None, "smile", (96, 48), base_emotion_size=(64, 64), close=True))
+        self._process_character("mishashort", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
+        return self.character_groups
+
+    def process_muto(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("muto", "basic", None, "normal", (108, 52), base_origin_offset=-48)
+        )
+        self._process_character("muto",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.muto(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(
+            CharacterSpritesGroup("muto", "basic", None, "normal", (108, 48), base_origin_offset=-48, close=True)
+        )
+        self._process_character("muto",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.muto(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
+
+    def process_nomiya(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("nomiya", "basic", None, "smile", (108, 60), base_origin_offset=-48)
+        )
+        self._process_character("nomiya",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.nomiya(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(
+            CharacterSpritesGroup("nomiya", "basic", None, "frown", (92, 48), base_emotion_size=(64, 64), base_origin_offset=-96, close=True)
+        )
+        self._process_character("nomiya",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.nomiya(
+                                    filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
+
+    def process_nurse(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("nurse", None, None, "neutral", (110, 64), base_origin_offset=-48))
+
+        self._process_character("nurse",
+                                regex=CharacterRegex.from_filename(CharacterRegex.nurse()),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(
+            CharacterSpritesGroup("nurse", None, None, "neutral", (92, 48), base_emotion_size=(64, 64), base_origin_offset=-96, close=True))
+
+        self._process_character("nurse",
+                                regex=CharacterRegex.from_filename(CharacterRegex.nurse()),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
         return self.character_groups
 
     def process_rin(self) -> List[CharacterSpritesGroup]:
@@ -323,91 +687,78 @@ class CharacterSpritesReader:
 
         return self.character_groups
 
-    def process_lilly(self) -> List[CharacterSpritesGroup]:
+    def process_rinpan(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("rinpan", "basic", None, "absent", (108, 68)))
+        self.character_groups.append(CharacterSpritesGroup("rinpan", "relaxed", None, "doubt", (116, 68)))
+        self._process_character("rinpan", nude_if=lambda filename: CharacterNudeIf.default(filename))
 
-        # CUSTOM POSES FOR LILLY
-        # basic  — hands down (DEFAULT)
-        # basic1 — hands behind
-        # basic2 — hands joyful
-        # basic3 — hands breast
-
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "back", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "back", None, "smileclosed", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic", "paj", "smileclosed", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic", None, "smileclosed", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic1", "paj", "ara", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic2", "cas", "ara", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic2", None, "ara", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic3", "cas", "listen", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "basic3", None, "listen", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "behind", "nak", "smileclosed", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "behind", None, "cheerful", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "cane", "cas", "smileclosed", (112, 64), base_origin_offset=-48))
-        self.character_groups.append(
-            CharacterSpritesGroup("lilly", "cane", None, "smileclosed", (112, 64), base_origin_offset=-48))
-
-        self._process_character("lilly",
-                                filename_replacements=lambda filename: CharacterDisplayableReplacements.lilly(filename),
-                                nude_if=lambda filename: CharacterNudeIf.lilly(filename))
+        self.character_groups.append(CharacterSpritesGroup("rinpan", "basic", None, "absent", (80, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("rinpan", "relaxed", None, "doubt", (104, 48), base_emotion_size=(64, 64), close=True))
+        self._process_character("rinpan", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
         return self.character_groups
 
-    def process_hanako(self) -> List[CharacterSpritesGroup]:
-        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", "cas", "normal", (116, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "basic", None, "normal", (116, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", "cas", "distant", (112, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "cover", None, "distant", (112, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "def", "cas", "worry", (112, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "def", None, "worry", (112, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", "cas", "worry", (112, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "defarms", None, "worry", (112, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", "cas", "timid", (112, 64)))
-        self.character_groups.append(CharacterSpritesGroup("hanako", "emb", None, "timid", (112, 64)))
-
-        self._process_character("hanako", nude_if=lambda filename: CharacterNudeIf.default(filename))
-        return self.character_groups
-
-    def process_kenji(self) -> List[CharacterSpritesGroup]:
-        self.character_groups.append(CharacterSpritesGroup("kenji", "basic", None, "tsun", (118, 66)))
-        self.character_groups.append(CharacterSpritesGroup("kenji", "basic", "naked", "tsun", (118, 69)))
-        self.character_groups.append(CharacterSpritesGroup("kenji", "rage", None, "rage", (128, 80)))
-
-        self._process_character("kenji",
-                                filename_replacements=lambda filename: CharacterDisplayableReplacements.kenji(filename),
-                                nude_if=lambda filename: CharacterNudeIf.kenji(filename))
-        return self.character_groups
-
-    def process_nurse(self) -> List[CharacterSpritesGroup]:
+    def process_sae(self) -> List[CharacterSpritesGroup]:
         self.character_groups.append(
-            CharacterSpritesGroup("nurse", None, None, "neutral", (110, 64), base_origin_offset=-48))
-
-        self._process_character("nurse",
-                                regex=CharacterRegex.from_filename(CharacterRegex.nurse()),
+            CharacterSpritesGroup("sae", "basic", None, "neutral", (108, 64), base_origin_offset=-24)
+        )
+        self._process_character("sae",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.sae(filename),
                                 nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+    def process_shizu(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("shizu", "adjust", "cas", "happy", (104, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "adjust", None, "happy", (104, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "basic", "cas", "normal", (128, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "basic", None, "normal", (128, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", "nak", "smile", (104, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", None, "smile", (104, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", "cas", "smile", (104, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "cross", "cas", "angry", (108, 80)))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "cross", None, "angry", (108, 80)))
+        self._process_character("shizu", nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("shizu", "adjust", "cas", "happy", (88, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "adjust", None, "happy", (88, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "basic", "cas", "normal", (112, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "basic", None, "normal", (112, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", None, "smile", (88, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "behind", "cas", "smile", (88, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "cross", None, "angry", (92, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizu", "out", None, "serious", (92, 48), base_emotion_size=(64, 64), close=True))
+        self._process_character("shizu", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
         return self.character_groups
+
+    def process_shizuyu(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("shizuyu", "basic", None, "happy", (108, 76)))
+        self.character_groups.append(CharacterSpritesGroup("shizuyu", "cross", None, "happy", (108, 76)))
+        self._process_character("shizuyu", nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("shizuyu", "basic", None, "happy", (96, 48), base_emotion_size=(64, 64), close=True))
+        self.character_groups.append(CharacterSpritesGroup("shizuyu", "cross", None, "happy", (96, 48), base_emotion_size=(64, 64), close=True))
+        self._process_character("shizuyu", nude_if=lambda filename: CharacterNudeIf.default(filename), close=True)
+        return self.character_groups
+
+    def process_shopkeep(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(
+            CharacterSpritesGroup("shopkeep", "basic", None, "neutral", (104, 64), base_origin_offset=-24)
+        )
+        self._process_character("shopkeep",
+                                filename_replacements=lambda filename: CharacterDisplayableReplacements.shopkeep(filename),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename))
 
     def process_yuuko(self) -> List[CharacterSpritesGroup]:
-        self.character_groups.append(
-            CharacterSpritesGroup("yuuko", "up", None, "smile", (96, 64), base_emotion_size=(64, 32)))
-        self.character_groups.append(
-            CharacterSpritesGroup("yuuko", "down", None, "smile", (96, 64), base_emotion_size=(64, 32)))
-
+        self.character_groups.append(CharacterSpritesGroup("yuuko", "up", None, "smile", (96, 64), base_emotion_size=(64, 32)))
+        self.character_groups.append(CharacterSpritesGroup("yuuko", "down", None, "smile", (96, 64), base_emotion_size=(64, 32)))
         self._process_character("yuuko",
                                 regex=CharacterRegex.from_filename(CharacterRegex.yuuko()),
                                 nude_if=lambda filename: CharacterNudeIf.default(filename))
+
+        self.character_groups.append(CharacterSpritesGroup("yuuko", "up", None, "smile", (96, 48), base_emotion_size=(64, 64), base_origin_offset=-96, close=True))
+        self.character_groups.append(CharacterSpritesGroup("yuuko", "down", None, "smile", (96, 48), base_emotion_size=(64, 64), base_origin_offset=-96, close=True))
+        self._process_character("yuuko",
+                                regex=CharacterRegex.from_filename(CharacterRegex.yuuko()),
+                                nude_if=lambda filename: CharacterNudeIf.default(filename),
+                                close=True)
         return self.character_groups
 
     def process_yuukoshang(self) -> List[CharacterSpritesGroup]:
@@ -419,28 +770,6 @@ class CharacterSpritesReader:
         self._process_character("yuukoshang",
                                 regex=CharacterRegex.from_filename(CharacterRegex.yuukoshang()),
                                 nude_if=lambda filename: CharacterNudeIf.default(filename))
-        return self.character_groups
-
-    def process_muto(self) -> List[CharacterSpritesGroup]:
-        self.character_groups.append(
-            CharacterSpritesGroup("muto", "basic", None, "normal", (108, 52), base_origin_offset=-48)
-        )
-        self._process_character("muto",
-                                filename_replacements=lambda filename: CharacterDisplayableReplacements.muto(filename),
-                                nude_if=lambda filename: CharacterNudeIf.default(filename))
-
-        self.character_groups.append(
-            CharacterSpritesGroup("muto", "basic", None, "normal", (108, 48), base_origin_offset=-48, close=True)
-        )
-        self._process_character("muto",
-                                filename_replacements=lambda filename: CharacterDisplayableReplacements.muto(filename),
-                                nude_if=lambda filename: CharacterNudeIf.default(filename),
-                                close=True)
-
-    def process_akira(self) -> List[CharacterSpritesGroup]:
-        self.character_groups.append(CharacterSpritesGroup("akira", "basic", None, "smile", (112, 64)))
-
-        self._process_character("akira", nude_if=lambda filename: CharacterNudeIf.default(filename))
         return self.character_groups
 
     def _process_character(self,
@@ -572,9 +901,6 @@ class CharacterSpritesWriter:
                                                    group.base_emotion_offset, group.base_emotion_size,
                                                    group.base_origin_offset,
                                                    tint = [group.silhouette_tint, group.silhouette_tint, group.silhouette_tint] if group.silhouette_tint is not None else None)
-        # # for tile in ImageTools.create_8x8_tiles(f'{output_filename}.bmp', f'{output_filename}.bmp'):
-        # #     self.write_character_sprite_tiles_metadata(tile.removesuffix('.bmp') + '.json')
-        # # os.remove(f'{output_filename}.bmp')
         self.write_character_sprite_metadata(f'{output_filename}.json')
 
     def write_character_sprite_tiles_metadata(self, json_filename):
@@ -609,14 +935,6 @@ class CharacterSpritesWriter:
             meta_file.write(f"#define KS_SPRITEMETA_{meta_name.upper()}\n\n")
             meta_file.write(f'#include "character_sprite_meta.h"\n\n')
             meta_file.write(f'#include "bn_sprite_items_{group.to_thumb_name()}.h"\n')
-            # meta_file.write(f'#include "bn_sprite_item.h"\n\n')
-            # meta_file.write(f'#include <bn_vector.h>\n\n')
-            # for sprite in group.sprites:
-            #     character_spr_name = f'{group.character_name}_spr_{group.pose}_{sprite.emotion}{f'_{sprite.outfit}' if sprite.outfit else ''}'
-            #     # group.base_emotion_size[0]
-            #     for yy in range(group.base_emotion_size[1] // 8):
-            #         for xx in range(group.base_emotion_size[0] // 8):
-            #             meta_file.write(f'#include "bn_sprite_items_{character_spr_name}_{xx:02X}_{yy:02X}.h"\n')
             meta_file.write(f'namespace ks::sprite_metas {{\n')
             meta_file.write(
                 f'    constexpr inline character_sprite_meta {meta_name}(\n'
@@ -624,18 +942,6 @@ class CharacterSpritesWriter:
                 f'                                           {group.base_emotion_offset[1] + group.base_emotion_size[1] // 2 - 128},\n'
                 f'                                           bn::sprite_items::{group.to_thumb_name()},\n'
                 f'                                           0x{group.to_thumb_hash()});\n')
-            # for sprite in group.sprites:
-            #     character_spr_name = f'{group.character_name}_spr_{group.pose}_{sprite.emotion}{f'_{sprite.outfit}' if sprite.outfit else ''}'
-            #     # group.base_emotion_size[0]
-            #     meta_file.write(
-            #         f'    constexpr inline unsigned BN_CODE_EWRAM int {character_spr_name}_tiles_x = {group.base_emotion_size[0] // 8};\n')
-            #     meta_file.write(
-            #         f'    constexpr inline unsigned BN_CODE_EWRAM int {character_spr_name}_tiles_y = {group.base_emotion_size[1] // 8};\n')
-            #     meta_file.write(f'    constexpr inline BN_CODE_EWRAM const bn::sprite_item* {character_spr_name}_tiles[] = {{\n')
-            #     for yy in range(group.base_emotion_size[1] // 8):
-            #         for xx in range(group.base_emotion_size[0] // 8):
-            #             meta_file.write(f'        &bn::sprite_items::{character_spr_name}_{xx:02X}_{yy:02X},\n')
-            #     meta_file.write(f'    }};\n')
             meta_file.write(f'}}\n\n')
             meta_file.write(f'#endif  // KS_SPRITEMETA_{meta_name.upper()}\n')
 

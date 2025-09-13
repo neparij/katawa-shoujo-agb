@@ -892,11 +892,6 @@ def scenario_rewrites(scenario_file, content):
             # WITH
             "\n" # TODO: Shizune Epic Transition
         ).replace(
-            "            show shizu out_serious_close_ni\n"
-            "            with charachange\n",
-            # WITH
-            "\n" # TODO: Shizune Epic Transition
-        ).replace(
             "play music sfx_crowd_outdoors",
             # WITH
             "play ambient sfx_crowd_outdoors"

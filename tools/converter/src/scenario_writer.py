@@ -33,7 +33,34 @@ from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, Condit
 from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
     add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales, bytecode_format
 
-PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto", "akira"]
+CHARACTERS = [
+    "akira",
+    "emi",
+    "emicas",
+    "eminude",
+    "emiwheel",
+    "hanagown",
+    "hanako",
+    "hideaki",
+    "jigoro",
+    "kenji",
+    "lilly",
+    "meiko",
+    "miki",
+    "misha",
+    "mishashort",
+    "muto",
+    "nomiya",
+    "nurse",
+    "rin",
+    "rinpan",
+    "sae",
+    "shizu",
+    "shizuyu",
+    "shopkeep",
+    "yuuko",
+    "yuukoshang"
+]
 
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup]):
@@ -498,7 +525,7 @@ class ScenarioWriter:
         if is_color_filled_bg(show.sprite):
             # TODO: show black behind bg
             return [f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{show.sprite.upper()}));']
-        elif show.sprite not in PROCESSED_CHARACTERS:
+        elif show.sprite not in CHARACTERS:
             return [f'// TODO: Show {show.sprite}']
         else:
             if show.position == ShowPosition.TWOLEFT:
@@ -539,26 +566,93 @@ class ScenarioWriter:
                 # show.sprite = show.sprite.replace("_ss", "").replace("_ni", "")
 
                 displayable = f"{show.sprite}_{show.variant}"
-                if show.sprite == "lilly":
-                    displayable = CharacterDisplayableReplacements.lilly(displayable)
+                if show.sprite == "akira":
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
-                                                                 CharacterNudeIf.lilly(displayable))
+                                                                 CharacterNudeIf.default(displayable))
                 elif show.sprite == "emi":
                     # TODO: remove this. That is WORKAROUND for Thursday script
                     displayable = CharacterDisplayableReplacements.emi(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
+                elif show.sprite == "emicas":
+                    displayable = CharacterDisplayableReplacements.emicas(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "eminude":
+                    displayable = CharacterDisplayableReplacements.eminude(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.eminude(displayable))
+                elif show.sprite == "emiwheel":
+                    displayable = CharacterDisplayableReplacements.emiwheel(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "hanagown":
+                    displayable = CharacterDisplayableReplacements.hanagown(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.hanagown(displayable))
+                elif show.sprite == "hanako":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "hideaki":
+                    displayable = CharacterDisplayableReplacements.hideaki(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "jigoro":
+                    displayable = CharacterDisplayableReplacements.jigoro(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "kenji":
+                    displayable = CharacterDisplayableReplacements.kenji(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.kenji(displayable))
+                elif show.sprite == "lilly":
+                    displayable = CharacterDisplayableReplacements.lilly(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.lilly(displayable))
+                elif show.sprite == "meiko":
+                    displayable = CharacterDisplayableReplacements.meiko(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "miki":
+                    displayable = CharacterDisplayableReplacements.miki(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
                 elif show.sprite == "misha":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "mishashort":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "muto":
+                    displayable = CharacterDisplayableReplacements.muto(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "nomiya":
+                    displayable = CharacterDisplayableReplacements.nomiya(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "nurse":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.nurse(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "rin":
+                    displayable = CharacterDisplayableReplacements.rin(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "rinpan":
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "sae":
+                    displayable = CharacterDisplayableReplacements.sae(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "shizu":
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.shizu(displayable))
-                elif show.sprite == "hanako":
+                elif show.sprite == "shizuyu":
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
-                elif show.sprite == "rin":
-                    displayable = CharacterDisplayableReplacements.rin(displayable)
+                elif show.sprite == "shopkeep":
+                    displayable = CharacterDisplayableReplacements.shopkeep(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "yuuko":
@@ -569,26 +663,8 @@ class ScenarioWriter:
                     displayable = CharacterDisplayableReplacements.yuukoshang(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.yuukoshang(),
                                                                  CharacterNudeIf.default(displayable))
-                elif show.sprite == "kenji":
-                    displayable = CharacterDisplayableReplacements.kenji(displayable)
-                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
-                                                                 CharacterNudeIf.kenji(displayable))
-                elif show.sprite == "nurse":
-                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.nurse(),
-                                                                 CharacterNudeIf.default(displayable))
-                elif show.sprite == "muto":
-                    displayable = CharacterDisplayableReplacements.muto(displayable)
-                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
-                                                                 CharacterNudeIf.default(displayable))
-                elif show.sprite == "akira":
-                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
-                                                                 CharacterNudeIf.default(displayable))
                 else:
                     raise TypeError("Unknown character: " + show.sprite)
-
-                # TODO: Support close for all characters
-                if not character.character_name in ["rin", "muto"]:
-                    character.close = False
 
                 character_bg_name = character.to_bg_name()
                 character_spr_name = character.to_sprite_name()
@@ -630,7 +706,7 @@ class ScenarioWriter:
         # if hide.sprite == "black":
         if is_color_filled_bg(hide.sprite):
             return [f'IF_NOT_EXIT(ks::SceneManager::disable_fill());']
-        elif hide.sprite not in PROCESSED_CHARACTERS:
+        elif hide.sprite not in CHARACTERS:
             return [f'// TODO: Hide {hide.sprite}']
         else:
             return [f'IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_{hide.sprite.upper()}));']
@@ -656,7 +732,7 @@ class ScenarioWriter:
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         print(show_transform)
-        if show_transform.sprite not in PROCESSED_CHARACTERS:
+        if show_transform.sprite not in CHARACTERS:
             return [f'// TODO: Show transform {show_transform.sprite} {show_transform.x}, 0']
         return [
             f'IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_{show_transform.sprite.upper()}, {show_transform.x}, 0));']

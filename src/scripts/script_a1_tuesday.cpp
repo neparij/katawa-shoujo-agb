@@ -1647,11 +1647,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x7751D0D6);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::ke, 27));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::sprite_metas::kenji_basic, bn::regular_bg_items::kenji_bg_basic, bn::sprite_items::kenji_spr_basic_tsun, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::sprite_metas::kenji_basic_close, bn::regular_bg_items::kenji_bg_basic_close, bn::sprite_items::kenji_spr_basic_tsun_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xFD975D68);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 28));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::sprite_metas::kenji_basic, bn::regular_bg_items::kenji_bg_basic, bn::sprite_items::kenji_spr_basic_happy, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::sprite_metas::kenji_basic_close, bn::regular_bg_items::kenji_bg_basic_close, bn::sprite_items::kenji_spr_basic_happy_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9FD23504);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::ke, 29));
@@ -1937,7 +1937,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 7));
             ks::SceneManager::set_line_hash(0xD2E51CE5);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 7));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic_close, bn::regular_bg_items::shizu_bg_basic_close, bn::sprite_items::shizu_spr_basic_normal2_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_stop(180));
             ks::SceneManager::set_line_hash(0xD858882C);
@@ -2036,7 +2036,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::mi, 11));
             ks::SceneManager::set_line_hash(0x53CC633C);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 12));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic_close, bn::regular_bg_items::shizu_bg_basic_close, bn::sprite_items::shizu_spr_basic_normal2_close, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x750E8DEF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::shi, 4));
