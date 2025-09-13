@@ -74,6 +74,7 @@
 #include "sprite_metas/yuukoshang_down.h"
 #include "sprite_metas/muto_basic.h"
 #include "sprite_metas/muto_basic_close.h"
+#include "sprite_metas/akira_basic.h"
 namespace ks::character_sprite_metas {
     inline const character_sprite_meta* get_by_hash(const unsigned int hash) {
         switch (hash) {
@@ -150,6 +151,7 @@ namespace ks::character_sprite_metas {
             case 0xE26A: return &sprite_metas::yuukoshang_down;
             case 0xB1B3: return &sprite_metas::muto_basic;
             case 0x2077: return &sprite_metas::muto_basic_close;
+            case 0x02D6: return &sprite_metas::akira_basic;
             default: return nullptr;
         }
     }

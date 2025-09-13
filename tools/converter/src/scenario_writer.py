@@ -33,7 +33,7 @@ from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, Condit
 from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
     add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales, bytecode_format
 
-PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto"]
+PROCESSED_CHARACTERS = ["shizu", "misha", "emi", "rin", "lilly", "hanako", "kenji", "nurse", "yuuko", "yuukoshang", "muto", "akira"]
 
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup]):
@@ -578,6 +578,9 @@ class ScenarioWriter:
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "muto":
                     displayable = CharacterDisplayableReplacements.muto(displayable)
+                    character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
+                                                                 CharacterNudeIf.default(displayable))
+                elif show.sprite == "akira":
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
                 else:

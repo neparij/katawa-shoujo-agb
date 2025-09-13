@@ -99,7 +99,7 @@ class ImageTools:
             paletted_image.paste(canvas)
             # paletted_image.putpalette(sample_palette_image.getpalette())
             paletted_image = paletted_image.quantize(palette=sample_palette_image, method=Image.Quantize.LIBIMAGEQUANT, dither=Image.Dither.NONE)
-            # paletted_image = paletted_image.quantize(palette=sample_palette_image, method=Image.Quantize.LIBIMAGEQUANT, dither=Image.Dither.FLOYDSTEINBERG)
+            # paletted_image = paletted_image.quantize(palette=sample_palette_image, colors=128, method=Image.Quantize.LIBIMAGEQUANT, dither=Image.Dither.FLOYDSTEINBERG)
             paletted_image.save(output_filename, format="BMP")
             print(f"Resized, Converted with sample palette and saved: {output_filename}")
         # else:
@@ -151,7 +151,7 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
                           remove_size=remove_size, remove_offset=remove_offset,
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
-                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp",
+                          use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
                           add_boundary_pixels=True, tint=tint)
 
     @staticmethod
@@ -161,7 +161,7 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
                           target_height=32, target_size=(32, 32),
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
-                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_bg_palette.bmp",
+                          use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
                           add_boundary_pixels=True, tint=tint)
 
     @staticmethod
@@ -173,5 +173,5 @@ class ImageTools:
                           dithering=0.0,
                           sprite_offset=sprite_offset, sprite_size=sprite_size,
                           num_color_cluster_passes=16, num_tile_cluster_passes=256,
-                          use_sample_palette="/Users/n.laptev/development/gba/katawa/tools/converter/assets/sample_character_spr_palette.bmp",
+                          use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
                           tint=tint)

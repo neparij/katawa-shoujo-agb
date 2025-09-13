@@ -252,6 +252,7 @@ class CharacterSpritesReader:
         self.process_yuuko()
         self.process_yuukoshang()
         self.process_muto()
+        self.process_akira()
         return self.character_groups
 
     def process_shizu(self) -> List[CharacterSpritesGroup]:
@@ -435,6 +436,12 @@ class CharacterSpritesReader:
                                 filename_replacements=lambda filename: CharacterDisplayableReplacements.muto(filename),
                                 nude_if=lambda filename: CharacterNudeIf.default(filename),
                                 close=True)
+
+    def process_akira(self) -> List[CharacterSpritesGroup]:
+        self.character_groups.append(CharacterSpritesGroup("akira", "basic", None, "smile", (112, 64)))
+
+        self._process_character("akira", nude_if=lambda filename: CharacterNudeIf.default(filename))
+        return self.character_groups
 
     def _process_character(self,
                            character_key: str,

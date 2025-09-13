@@ -3524,7 +3524,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0xDD12A69A);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 48));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_LILLY, ks::sprite_metas::lilly_basic, bn::regular_bg_items::lilly_bg_basic, bn::sprite_items::lilly_spr_basic_smileclosed, PALETTE_VARIANT_DEFAULT, -48, 0));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_lost, PALETTE_VARIANT_DEFAULT, 48, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xFDF30658);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 49));
@@ -3540,7 +3540,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 53));
             ks::SceneManager::set_line_hash(0x09FF9AFD);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 54));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB32ACB08);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 55));
@@ -3569,7 +3569,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x78602522);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 64));
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_LILLY, -80, 0));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_AKIRA, 80, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::sprite_metas::yuukoshang_down, bn::regular_bg_items::yuukoshang_bg_down, bn::sprite_items::yuukoshang_spr_down_neutral, PALETTE_VARIANT_DEFAULT, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -3578,7 +3578,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_YUUKOSHANG));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_LILLY, -48, 0));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_AKIRA, 48, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x7877AA62);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 66));
@@ -3588,7 +3588,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 68));
             ks::SceneManager::set_line_hash(0x58DB95B7);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 69));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_boo, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xEBFE06E0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 70));
@@ -3597,7 +3597,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x2C544A0A);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 72));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_LILLY, ks::sprite_metas::lilly_basic, bn::regular_bg_items::lilly_bg_basic, bn::sprite_items::lilly_spr_basic_smileclosed, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::set_background_transition(SCENE_TRANSITION_SHORTTIMESKIP));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4B24EA28);
@@ -3610,7 +3610,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 75));
             ks::SceneManager::set_line_hash(0xE7C8B15C);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 76));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_lost, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x58A81017);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 77));
@@ -3618,11 +3618,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x1F081FB3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 78));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_resigned, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x807B9A55);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 79));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_annoyed, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x13EF9557);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 80));
@@ -3630,30 +3630,30 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF0D5D37E);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 81));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_laugh, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xEB12F305);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 82));
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_LILLY, -80, 0));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_AKIRA, 80, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::sprite_metas::yuukoshang_up, bn::regular_bg_items::yuukoshang_bg_up, bn::sprite_items::yuukoshang_spr_up_neurotic, PALETTE_VARIANT_DEFAULT, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB8511C33);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::yu, 83));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_LILLY, ks::sprite_metas::lilly_basic, bn::regular_bg_items::lilly_bg_basic, bn::sprite_items::lilly_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_boo, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x823EBF71);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 84));
             IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_YUUKOSHANG));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_LILLY, -48, 0));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_AKIRA, 48, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB5C23492);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 85));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xCB9EE9D6);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 86));
@@ -3663,7 +3663,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 87));
             ks::SceneManager::set_line_hash(0xE925B027);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 88));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_resigned, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x760EC1D5);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 89));
@@ -3673,11 +3673,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9C74493F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 91));
-            // TODO: Show akira
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_AKIRA, ks::sprite_metas::akira_basic, bn::regular_bg_items::akira_bg_basic, bn::sprite_items::akira_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xFFC1F039);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::aki, 92));
-            // TODO: Hide akira
+            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_AKIRA));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x01D6EEB5);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 93));

@@ -738,13 +738,9 @@ class ScenarioReader:
                             # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
                             # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
                             print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
-                            sleep(0.25)
+                            sleep(0.05)
                             actor[locale] = actor[DEFAULT_LOCALE]
                             dialog[locale] = dialog[DEFAULT_LOCALE]
-                            self.stack.current().add_sequence_item(self.linepack_events,
-                                                                   DialogItem(original_dialog_hash[-8:], None, dialog,
-                                                                              actor[DEFAULT_LOCALE],
-                                                                              label_name=self.stack.current_label().name))
 
                 if dialog_extended is not None:
                     self.stack.current().add_sequence_item(self.linepack_events, dialog_extended)
