@@ -166,19 +166,22 @@ namespace ks {
             auto sprite = text_chunk_sprites.back();
             if (sprite.y() - camera->y() >= -80) {
                 sprite.set_camera(camera);
-                text_chunk_sprites.pop_back();
                 text_cache_sprites.push_back(bn::move(sprite));
             }
+            text_chunk_sprites.pop_back();
         }
 
         text_chunk_sprites.clear();
     }
 
     void dialog_box_novel::hide(const bool blending) {
-        left_window.restore_boundaries();
-        right_window.restore_boundaries();
-        left_window.set_show_sprites(true);
-        right_window.set_show_sprites(true);
+        if (!hidden) {
+            // Reset windows only once on the real hiding event
+            left_window.restore_boundaries();
+            right_window.restore_boundaries();
+            left_window.set_show_sprites(true);
+            right_window.set_show_sprites(true);
+        }
         nvl_box.reset();
         text_chunk_sprites.clear();
         text_single_sprites.clear();

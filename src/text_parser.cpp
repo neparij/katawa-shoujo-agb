@@ -5,6 +5,7 @@
 #include "bn_string_view.h"
 #include "bn_string.h"
 #include "constants.h"
+#include "utils/utf8.h"
 
 
 namespace ks::text {
@@ -32,7 +33,7 @@ namespace ks::text {
         while (!done) {
             BN_ASSERT(_lines.size() != MaxLines, "Too many lines");
 
-            const int ch_length = get_char_size(*(cursor + cursor_i));
+            const int ch_length = utf8::get_char_size(*(cursor + cursor_i));
             bn::string<4> part = bn::string_view(cursor + cursor_i, ch_length);
             cursor_i += ch_length;
 
@@ -117,6 +118,8 @@ namespace ks::text {
     template<int MaxLines>
     void parser<MaxLines>::generate_commands() {
         _commands.clear();
+        _fast = false;
+        _nowait = false;
         BN_ASSERT(_text != nullptr, "Text pointer should not be null");
         BN_ASSERT(!_text->empty(), "Text should not be empty");
         BN_ASSERT(!_lines.empty(), "Text-referenced lines should not be empty");
@@ -143,14 +146,18 @@ namespace ks::text {
                 int offset = 0;
                 for (int i = 0; i < line.size();) {
                     const auto first_byte = static_cast<unsigned char>(line.at(i));
-                    const int char_size = get_char_size(first_byte);
+                    const int char_size = utf8::get_char_size(first_byte);
 
                     if (first_byte <= MAX_CTL_CHAR) {
                         _commands.push_back({RC_TEXT_OUT, 0, bn::string_view(line.data() + offset, i - offset)});
                         offset += char_size;
                         if (first_byte == CTL_FAST) {
-                            _commands.insert(_commands.cbegin(), {RC_IMMEDIATE_START, 0, SV_NULL});
-                            _commands.push_back({RC_IMMEDIATE_END, 0, SV_NULL});
+                            _fast = true;
+                            _fast_ends_line = line_index;
+                            _commands.push_back({RC_FAST, 0, SV_NULL});
+                        }
+                        if (first_byte == CTL_NOWAIT) {
+                            _nowait = true;
                         }
                         if (first_byte == CTL_BOLD_START) {
                             _commands.push_back({RC_SET_FONT, 1, SV_NULL});
@@ -167,9 +174,6 @@ namespace ks::text {
                             BN_ASSERT(char_size == 2, "CTL_WAIT must be followed by a byte parameter");
                             const auto wait_time = static_cast<unsigned char>(line.at(i + 1));
                             _commands.push_back({RC_WAIT, wait_time, SV_NULL});
-                        }
-                        if (first_byte == CTL_NOWAIT) {
-                            _commands.push_back({RC_NO_WAIT, 0, SV_NULL});
                         }
                         if (first_byte == CTL_COLOR_START) {
                             BN_ASSERT(char_size == 2, "CTL_COLOR_START must be followed by a byte parameter");
@@ -191,39 +195,6 @@ namespace ks::text {
             }
             line_index++;
         }
-    }
-
-    /**
-     * @brief Determines the byte length of a UTF-8 encoded character.
-     *
-     * This function inspects the leading byte of a UTF-8 character
-     * and returns the number of bytes that character occupies.
-     *
-     * @param c The first byte of the UTF-8 character.
-     * @return unsigned char The size of the character in bytes (1 to 4).
-     *
-     * @note If the byte does not match any valid UTF-8 leading byte pattern,
-     *       an error is triggered via BN_ERROR and 1 is returned by default.
-     */
-    template<int MaxLines>
-    unsigned char BN_CODE_IWRAM parser<MaxLines>::get_char_size(const unsigned char c) {
-        if (c == CTL_WAIT || c == CTL_COLOR_START) {
-            return 2;
-        }
-        if ((c & 0x80) == 0) {
-            return 1;
-        }
-        if ((c & 0xE0) == 0xC0) {
-            return 2;
-        }
-        if ((c & 0xF0) == 0xE0) {
-            return 3;
-        }
-        if ((c & 0xF8) == 0xF0) {
-            return 4;
-        }
-        BN_ERROR("Unknown char size");
-        return 1;
     }
 
     template class parser<1>;

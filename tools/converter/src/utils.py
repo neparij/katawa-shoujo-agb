@@ -9,6 +9,35 @@ FILL_COLORS = [
     "darkgrey"
 ]
 
+#     /// SOH - sets cursor to render text by chars
+#     static constexpr char CTL_FAST = 0x01;
+#     /// STX - starts bold text (switch spritefont)
+#     static constexpr char CTL_BOLD_START = 0x02;
+#     /// ETX - ends bold text (restore spritefont)
+#     static constexpr char CTL_BOLD_END = 0x03;
+#     /// EOT - starts strikethrough text (switch spritefont?)
+#     static constexpr char CTL_STRIKE_START = 0x04;
+#     /// ENQ - ends strikethrough text (restore spritefont?)
+#     static constexpr char CTL_STRIKE_END = 0x05;
+#     /// ACK - wait command (next byte is count of 1/10 seconds to wait or 0xFF to wait for user input)
+#     static constexpr char CTL_WAIT = 0x06;
+#     /// BEL - do not wait for user input to continue dialogue
+#     static constexpr char CTL_NOWAIT = 0x07;
+#     /// BS - sets the color (switch spritepalette, next byte is palette index starting from 0x01)
+#     static constexpr char CTL_COLOR_START = 0x08;
+#     /// HT - restore color (switch spritepalette)
+#     static constexpr char CTL_COLOR_END = 0x09;
+
+CTL_FAST = b'\x01'
+CTL_BOLD_START = b'\x02'
+CTL_BOLD_END = b'\x03'
+CTL_STRIKE_START = b'\x04'
+CTL_STRIKE_END = b'\x05'
+CTL_WAIT = b'\x06'
+CTL_NOWAIT = b'\x07'
+CTL_COLOR_START = b'\x08'
+CTL_COLOR_END = b'\x09'
+
 def sanitize_function_name(text):
     return re.sub(r"[^a-zA-Z0-9_]", "", text.replace(" ", "_").lower())
 
@@ -115,3 +144,25 @@ def get_tl_group_locales(tl_group: List[Dict[str,str]]) -> List[str]:
             if locale not in locales:
                 locales.append(locale)
     return locales
+
+def bytecode_format(text: str) -> bytes:
+    """
+    :param text: The input text.
+    :return: The text formatted with control characters as bytes.
+    """
+    data = text.encode("utf-8")
+    data = data.replace(b"{fast}", CTL_FAST)
+    data = data.replace(b"{b}", CTL_BOLD_START)
+    data = data.replace(b"{/b}", CTL_BOLD_END)
+    data = data.replace(b"{s}", CTL_STRIKE_START)
+    data = data.replace(b"{/s}", CTL_STRIKE_END)
+    data = data.replace(b"{w}", CTL_WAIT + b"\xFF")
+    data = re.sub(
+        br"\{w=(\d*\.*\d+)\}",
+        lambda m: CTL_WAIT + bytes([min(255, max(1, int(float(m.group(1)) * 10)))]),
+        data
+    )
+    data = data.replace(b"{nw}", CTL_NOWAIT)
+    # TODO: Support colors
+
+    return data + b"\x00"

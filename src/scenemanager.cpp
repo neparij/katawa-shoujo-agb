@@ -797,6 +797,8 @@ void SceneManager::update_transitions() {
 
 void SceneManager::update_visuals() {
     if (is_loading) {
+        // Do not apply transitions while in loading
+        background_visual.transition = SCENE_TRANSITION_NONE;
         return;
     }
 

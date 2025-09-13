@@ -13,25 +13,10 @@
 
 class text_parser_tests : public test_suite {
 public:
-    text_parser_tests() : test_suite("text_render") {
+    text_parser_tests() : test_suite("text_parser") {
     }
 
     void run() {
-        test_case("get_char_size", [this] {
-            // Check UTF-8 character size detection
-            const auto s1 = reinterpret_cast<const unsigned char *>("A");
-            KS_ASSERT(renderer_inst.get_char_size(s1[0]) == 1, "A");
-
-            const auto s2 = reinterpret_cast<const unsigned char *>("ñ"); // UTF-8: 0xC3 0xB1
-            KS_ASSERT(renderer_inst.get_char_size(s2[0]) == 2, "ñ");
-
-            const auto s3 = reinterpret_cast<const unsigned char *>("あ"); // UTF-8: 0xE3 0x81 0x82
-            KS_ASSERT(renderer_inst.get_char_size(s3[0]) == 3, "あ");
-
-            const auto s4 = reinterpret_cast<const unsigned char *>("𐍈"); // UTF-8: 0xF0 0x90 0x8D 0x88
-            KS_ASSERT(renderer_inst.get_char_size(s4[0]) == 4, "𐍈");
-        });
-
         test_case("generate_lines, single line", [this] {
             text = "Single line";
             renderer_inst.generate_lines(max_width);
@@ -116,23 +101,23 @@ public:
             text = "It's nice to meet you, too! But~!""\x01"", I'm not Hakamichi, I'm Misha! This is Hakamichi. Shicchan~!";
             renderer_inst.generate_lines(max_width);
             renderer_inst.generate_commands();
-            KS_ASSERT(renderer_inst.commands().size() == 9, "parse_to_commands size");
-            KS_ASSERT(renderer_inst.commands().at(0).command == RC_IMMEDIATE_START, "parse_to_commands cmd 0");
-            KS_ASSERT(renderer_inst.commands().at(1).command == RC_START_LINE, "parse_to_commands cmd 1");
-            KS_ASSERT(renderer_inst.commands().at(1).param == 0, "parse_to_commands cmd 1 param");
-            KS_ASSERT(renderer_inst.commands().at(2).command == RC_TEXT_OUT, "parse_to_commands cmd 2");
-            KS_ASSERT(renderer_inst.commands().at(2).view == "It's nice to meet you, too! But~!", "parse_to_commands cmd 2 view");
-            KS_ASSERT(renderer_inst.commands().at(3).command == RC_IMMEDIATE_END, "parse_to_commands cmd 3");
-            KS_ASSERT(renderer_inst.commands().at(4).command == RC_TEXT_OUT, "parse_to_commands cmd 4");
-            KS_ASSERT(renderer_inst.commands().at(4).view == ", I'm not", "parse_to_commands cmd 4 view");
-            KS_ASSERT(renderer_inst.commands().at(5).command == RC_START_LINE, "parse_to_commands cmd 5");
-            KS_ASSERT(renderer_inst.commands().at(5).param == 1, "parse_to_commands cmd 5 param");
-            KS_ASSERT(renderer_inst.commands().at(6).command == RC_TEXT_OUT, "parse_to_commands cmd 6");
-            KS_ASSERT(renderer_inst.commands().at(6).view == "Hakamichi, I'm Misha! This is Hakamichi.", "parse_to_commands cmd 6 view");
-            KS_ASSERT(renderer_inst.commands().at(7).command == RC_START_LINE, "parse_to_commands cmd 7");
-            KS_ASSERT(renderer_inst.commands().at(7).param == 2, "parse_to_commands cmd 7 param");
-            KS_ASSERT(renderer_inst.commands().at(8).command == RC_TEXT_OUT, "parse_to_commands cmd 8");
-            KS_ASSERT(renderer_inst.commands().at(8).view == "Shicchan~!", "parse_to_commands cmd 8 view");
+            KS_ASSERT(renderer_inst.is_fast() == true, "fast flag set to true");
+            KS_ASSERT(renderer_inst.commands().size() == 8, "parse_to_commands size");
+            KS_ASSERT(renderer_inst.commands().at(0).command == RC_START_LINE, "parse_to_commands cmd 0");
+            KS_ASSERT(renderer_inst.commands().at(0).param == 0, "parse_to_commands cmd 0 param");
+            KS_ASSERT(renderer_inst.commands().at(1).command == RC_TEXT_OUT, "parse_to_commands cmd 1");
+            KS_ASSERT(renderer_inst.commands().at(1).view == "It's nice to meet you, too! But~!", "parse_to_commands cmd 1 view");
+            KS_ASSERT(renderer_inst.commands().at(2).command == RC_FAST, "parse_to_commands cmd 2");
+            KS_ASSERT(renderer_inst.commands().at(3).command == RC_TEXT_OUT, "parse_to_commands cmd 3");
+            KS_ASSERT(renderer_inst.commands().at(3).view == ", I'm not", "parse_to_commands cmd 3 view");
+            KS_ASSERT(renderer_inst.commands().at(4).command == RC_START_LINE, "parse_to_commands cmd 4");
+            KS_ASSERT(renderer_inst.commands().at(4).param == 1, "parse_to_commands cmd 4 param");
+            KS_ASSERT(renderer_inst.commands().at(5).command == RC_TEXT_OUT, "parse_to_commands cmd 5");
+            KS_ASSERT(renderer_inst.commands().at(5).view == "Hakamichi, I'm Misha! This is Hakamichi.", "parse_to_commands cmd 5 view");
+            KS_ASSERT(renderer_inst.commands().at(6).command == RC_START_LINE, "parse_to_commands cmd 6");
+            KS_ASSERT(renderer_inst.commands().at(6).param == 2, "parse_to_commands cmd 6 param");
+            KS_ASSERT(renderer_inst.commands().at(7).command == RC_TEXT_OUT, "parse_to_commands cmd 7");
+            KS_ASSERT(renderer_inst.commands().at(7).view == "Shicchan~!", "parse_to_commands cmd 7 view");
 
         });
     }
