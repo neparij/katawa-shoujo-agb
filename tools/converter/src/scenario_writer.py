@@ -33,6 +33,35 @@ from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, Condit
 from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
     add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales, bytecode_format
 
+CHARACTERS = [
+    "akira",
+    "emi",
+    "emicas",
+    "eminude",
+    "emiwheel",
+    "hanagown",
+    "hanako",
+    "hideaki",
+    "jigoro",
+    "kenji",
+    "lilly",
+    "meiko",
+    "miki",
+    "misha",
+    "mishashort",
+    "muto",
+    "nomiya",
+    "nurse",
+    "rin",
+    "rinpan",
+    "sae",
+    "shizu",
+    "shizuyu",
+    "shopkeep",
+    "yuuko",
+    "yuukoshang"
+]
+
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup]):
         self.filename = filename
@@ -496,6 +525,8 @@ class ScenarioWriter:
         if is_color_filled_bg(show.sprite):
             # TODO: show black behind bg
             return [f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{show.sprite.upper()}));']
+        elif show.sprite not in CHARACTERS:
+            return [f'// TODO: Show {show.sprite}']
         else:
             if show.position == ShowPosition.TWOLEFT:
                 # position = (-48, 0)
@@ -679,6 +710,8 @@ class ScenarioWriter:
         # if hide.sprite == "black":
         if is_color_filled_bg(hide.sprite):
             return [f'IF_NOT_EXIT(ks::SceneManager::disable_fill());']
+        elif hide.sprite not in CHARACTERS:
+            return [f'// TODO: Hide {hide.sprite}']
         else:
             return [f'IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_{hide.sprite.upper()}));']
 
@@ -703,6 +736,8 @@ class ScenarioWriter:
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         print(show_transform)
+        if show_transform.sprite not in CHARACTERS:
+            return [f'// TODO: Show transform {show_transform.sprite} {show_transform.x}, 0']
         return [
             f'IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_{show_transform.sprite.upper()}, {show_transform.x}, 0));']
 

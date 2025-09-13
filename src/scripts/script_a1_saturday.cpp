@@ -749,11 +749,11 @@ namespace ks {
             ks::SceneManager::set_line_hash(0xF0DAB8BE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 39));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormext_half, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB43139FF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 40));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_NOMIYA, -48, 0));
             IF_NOT_EXIT(ks::SceneManager::set_background_position(0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::sprite_metas::rin_basic, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_awayabsent, PALETTE_VARIANT_DEFAULT, 48, 0));
@@ -770,7 +770,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 45));
             ks::SceneManager::set_line_hash(0x40817FDC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 46));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF1D749E4);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 47));
@@ -778,7 +778,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 48));
             ks::SceneManager::set_line_hash(0x47A47700);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 49));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xE92265AD);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 50));
@@ -804,28 +804,28 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 58));
             ks::SceneManager::set_line_hash(0x9E28181C);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 59));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x45BBB649);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 60));
             ks::SceneManager::set_line_hash(0x24A805CE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 61));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_frown, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xE5887073);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 62));
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_birdstakeoff.8ad", SOUND_CHANNEL_SOUND));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xBB8E2DA0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 63));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x77A044B0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_, 64));
             ks::SceneManager::set_line_hash(0x20E9AB2E);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 65));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF60C0F11);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 66));
@@ -3065,23 +3065,23 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67709F"));
             ks::SceneManager::set_line_hash(0x0E89CFC3);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x94D5940F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4E990297);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 2));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xCF9F607D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 3));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9530E5DC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 4));
-            // TODO: Hide nomiya
+            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_NOMIYA));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_stop(240));
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_RIN, 0, 0));
@@ -3108,7 +3108,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
             ks::SceneManager::set_line_hash(0x441F368B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x30C625A6);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 2));
@@ -3126,13 +3126,13 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 8));
             ks::SceneManager::set_line_hash(0xC7F4631F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 9));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x53730A64);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 10));
             ks::SceneManager::set_line_hash(0xCF50BD6D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 11));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_frown, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF2E6B0E9);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 12));
@@ -3140,26 +3140,26 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 13));
             ks::SceneManager::set_line_hash(0x08E441AF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 14));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_veryhappy, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x35406C05);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 15));
             ks::SceneManager::set_line_hash(0x43BD41F0);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 16));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x56D4E667);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 17));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_talk, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xCF9F607D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 18));
-            // TODO: Show nomiya
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::sprite_metas::nomiya_basic, bn::regular_bg_items::nomiya_bg_basic, bn::sprite_items::nomiya_spr_basic_smile, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x7DE31057);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 19));
             IF_NOT_EXIT(ks::SceneManager::music_stop(360));
-            // TODO: Hide nomiya
+            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_NOMIYA));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_RIN, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::set_background_position(8, 0));
