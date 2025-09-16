@@ -32,7 +32,9 @@ IGNORE_IMAGES = [
     "emi_knockeddown_large",
     "emi_knockeddown",
     "lilly_shizu_showdown_full",
-    "lilly_shizu_showdown_large"
+    "lilly_shizu_showdown_large",
+    "hanako_fw",
+    "hanako_fw_flash"
 ]
 
 # Used for CustomEvents based on original images.

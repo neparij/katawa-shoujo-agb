@@ -165,10 +165,8 @@
 #include "background_metas/rin_wisp3.h"
 #include "background_metas/rin_eating.h"
 #include "background_metas/picnic_rain.h"
-#include "background_metas/hanako_fw_flash.h"
 #include "background_metas/rin_wisp2.h"
 #include "background_metas/hanako_crayon1.h"
-#include "background_metas/hanako_fw.h"
 #include "background_metas/hanako_dolls.h"
 #include "background_metas/emi_sleep_unsure.h"
 #include "background_metas/emitrack_blocks_close.h"
@@ -576,10 +574,8 @@ namespace ks::background_metas {
             case 0x4805F27F: return rin_wisp3.thumbnail;
             case 0xDB8E735B: return rin_eating.thumbnail;
             case 0x49D3D12B: return picnic_rain.thumbnail;
-            case 0xE13A5821: return hanako_fw_flash.thumbnail;
             case 0x6E4C0228: return rin_wisp2.thumbnail;
             case 0x89941D80: return hanako_crayon1.thumbnail;
-            case 0xA8133F97: return hanako_fw.thumbnail;
             case 0x22F9178F: return hanako_dolls.thumbnail;
             case 0x09B2DDB8: return emi_sleep_unsure.thumbnail;
             case 0xB5891CED: return emitrack_blocks_close.thumbnail;

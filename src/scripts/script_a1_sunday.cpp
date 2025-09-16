@@ -3019,18 +3019,10 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::yu, 140));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_LILLY, ks::sprite_metas::lilly_basic2, bn::regular_bg_items::lilly_bg_basic2, bn::sprite_items::lilly_spr_basic2_ara, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
-            // TODO: Show hanako_fw
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::hanako_fw, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x69A00054);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 141));
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_SERENE, 240));
-            // TODO: Hide fireshine
-            // TODO: Hide bg
-            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_HANAKO));
-            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_LILLY));
-            IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_YUUKOSHANG));
-            IF_NOT_EXIT(ks::SceneManager::set_background_transition(SCENE_TRANSITION_LOCATIONSKIP));
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::hanako_fw_base, HanakoFireworksEvent(), SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x88FB9371);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 142));

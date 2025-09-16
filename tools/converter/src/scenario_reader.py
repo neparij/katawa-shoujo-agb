@@ -787,7 +787,6 @@ def rewrite_motion_background(bg_name: str) -> str:
             .replace("mural_part", "mural")
             .replace("mural_ss", "mural") # TODO: Paletted variants for backgrounds
             .replace("suburb_shanghaiext_ss", "suburb_shanghaiext") # TODO: Paletted variants for backgrounds
-            .replace("hanako_shanghaiwindow", "hanako_fw") # TODO: Fireworks event
             .replace("kenji_rooftop_kenji", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop_large", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop", "kenji_rooftop") # TODO: Kenji alcotrip event
@@ -923,6 +922,24 @@ def scenario_rewrites(scenario_file, content):
             "            with Dissolve(1.0)\n"
             "\n"
             "            pause 0.2\n"
+        ).replace(
+            "            show hanako_fw behind bg:\n"
+            "                zoom 1.05 truecenter\n"
+            "                ease 22.0 zoom 1.0\n"
+            "            show ev hanako_shanghaiwindow behind hanako_fw:\n"
+            "                zoom 1.05 truecenter\n"
+            "                ease 22.0 zoom 1.0",
+            # WITH
+            ""
+        ).replace(
+            "            hide fireshine\n"
+            "            hide bg\n"
+            "            hide hanako\n"
+            "            hide lilly\n"
+            "            hide yuukoshang\n"
+            "            with locationskip",
+            # WITH
+            "            scene ev hanako_fw"
         )
 
     return content
@@ -971,6 +988,10 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     # DRUGS EVENT
     if bg_name == "drugs_event":
         return "event_drugs_en", "DrugsEvent"
+
+    # HANKO FIREWORKS
+    if bg_name == "hanako_fw":
+        return "hanako_fw_base", "HanakoFireworksEvent"
 
     return None, None
 
