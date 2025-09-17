@@ -15,13 +15,6 @@
 #include "bn_regular_bg_items_fireworks_b1.h"
 #include "bn_regular_bg_items_fireworks_b2.h"
 #include "bn_regular_bg_items_fireworks_b3.h"
-#include "bn_regular_bg_items_nightsky.h"
-#include "bn_regular_bg_items_hanako_fw_base.h"
-#include "bn_regular_bg_items_hanako_fw_flash_bright.h"
-#include "bn_regular_bg_items_hanako_fw_flash0.h"
-#include "bn_regular_bg_items_hanako_fw_flash1.h"
-#include "bn_regular_bg_items_hanako_fw_flash2.h"
-#include "bn_regular_bg_items_hanako_fw_flash3.h"
 
 namespace ks {
 
@@ -122,8 +115,6 @@ namespace ks {
                 auto palette = background_visual.visible_bg_item->regular_ptr().palette();
                 palette.set_fade(bn::color(31, 31, 31), main_layer_fade);
             }
-            // auto palette = background_visual.visible_bg_item->regular_ptr().palette();
-            // palette.set_fade(fw_colors[fw_color_index], fw_colorize_value);
 
             CustomEvent::update();
         }
