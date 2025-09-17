@@ -192,7 +192,10 @@ namespace ks {
         text_cache_sprites.clear();
         camera.reset();
         render_offset = 0;
-        hidden = true;
+        if (!hidden) {
+            hidden = true;
+            globals::main_update();
+        }
     }
 
     void dialog_box_novel::set_blending(const bool boxes_blending_enabled, const bool text_blending_enabled) {
