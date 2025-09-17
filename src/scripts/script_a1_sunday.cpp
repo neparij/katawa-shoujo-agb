@@ -2996,20 +2996,16 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xA48F8C55);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 136));
-            // TODO: Hide fireshine
-            // TODO: Show bg
-            // TODO: Show fireworks
-            IF_NOT_EXIT(ks::SceneManager::set_background_transition(SCENE_TRANSITION_LOCATIONCHANGE));
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::misc_sky_ni, NightskyFireworksEvent(), SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x0EF8A274);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 137));
             ks::SceneManager::set_line_hash(0x7D992F33);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 138));
-            // TODO: Hide fireworks
-            // TODO: Hide front
-            // TODO: Show fireshine
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::suburb_shanghaiint, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_LILLY, ks::sprite_metas::lilly_basic, bn::regular_bg_items::lilly_bg_basic, bn::sprite_items::lilly_spr_basic_weaksmile, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_HANAKO, ks::sprite_metas::hanako_emb, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_timid, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::sprite_metas::yuukoshang_down, bn::regular_bg_items::yuukoshang_bg_down, bn::sprite_items::yuukoshang_spr_down_happy, PALETTE_VARIANT_DEFAULT));
-            IF_NOT_EXIT(ks::SceneManager::set_background_transition(SCENE_TRANSITION_LOCATIONCHANGE));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4E60FBF5);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::yu, 139));

@@ -3,9 +3,8 @@
 
 #include <bn_log.h>
 #include <bn_random.h>
-#include <gba_interrupt.h>
 
-#include "bn_core.h"
+#include "bn_bg_palette_ptr.h"
 #include "custom_event.h"
 
 #include "bn_regular_bg_items_hanako_fw_base.h"
@@ -14,7 +13,6 @@
 #include "bn_regular_bg_items_hanako_fw_flash1.h"
 #include "bn_regular_bg_items_hanako_fw_flash2.h"
 #include "bn_regular_bg_items_hanako_fw_flash3.h"
-#include "../sound_manager.h"
 
 namespace ks {
 

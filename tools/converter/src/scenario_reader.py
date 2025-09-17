@@ -940,6 +940,25 @@ def scenario_rewrites(scenario_file, content):
             "            with locationskip",
             # WITH
             "            scene ev hanako_fw"
+        ).replace(
+            "            hide fireshine\n"
+            "            show bg misc_sky_ni as front\n"
+            "            show fireworks\n"
+            "            with locationchange",
+            # WITH
+            "            scene ev nightsky_fw"
+        ).replace(
+            "            hide fireworks\n"
+            "            hide front\n"
+            "            show fireshine\n"
+            "            show yuukoshang happy_down\n"
+            "            with locationchange",
+            # WITH
+            "            scene bg suburb_shanghaiint\n"
+            "            show lilly basic_weaksmile\n"
+            "            show hanako emb_timid\n"
+            "            show yuukoshang happy_down\n"
+            "            with locationchange"
         )
 
     return content
@@ -988,6 +1007,10 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     # DRUGS EVENT
     if bg_name == "drugs_event":
         return "event_drugs_en", "DrugsEvent"
+
+    # NIGHTSKY FIREWORKS
+    if bg_name == "nightsky_fw":
+        return "misc_sky_ni", "NightskyFireworksEvent"
 
     # HANKO FIREWORKS
     if bg_name == "hanako_fw":

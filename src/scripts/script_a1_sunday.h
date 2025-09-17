@@ -308,6 +308,7 @@
 #include "shizu_out_close.h"
 #include "kenji_rage_close.h"
 #include "kenji_basic_close.h"
+#include "../events/nightsky_fireworks.cpp.h"
 #include "../events/hanako_fireworks.cpp.h"
 namespace ks {
     class ScriptA1Sunday {
