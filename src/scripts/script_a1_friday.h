@@ -254,16 +254,16 @@ namespace ks {
             static void a1_friday();
             SCENE_INLINE void class_goes_lazily();
             SCENE_INLINE void mas_doesnt_bother();
-            SCENE_INLINE void choice_go_for_it();
-            SCENE_INLINE void choice_take_it_easy();
-            SCENE_INLINE void choice_dodge_subject();
-            SCENE_INLINE void choice_kick_shizu();
-            SCENE_INLINE void choice_fun_at_office();
-            SCENE_INLINE void choice_dont_want_talk();
-            SCENE_INLINE void choice_emi_lunch();
-            SCENE_INLINE void choice_shizune_lunch();
-            SCENE_INLINE void choice_not_good_condition();
-            SCENE_INLINE void choice_not_much_talking();
+            SCENE_INLINE void a1c9o1();
+            SCENE_INLINE void a1c9o2();
+            SCENE_INLINE void a1c10o1();
+            SCENE_INLINE void a1c10o2();
+            SCENE_INLINE void a1c11o1();
+            SCENE_INLINE void a1c11o2();
+            SCENE_INLINE void a1c12o1();
+            SCENE_INLINE void a1c12o2();
+            SCENE_INLINE void a1c13o1();
+            SCENE_INLINE void a1c13o2();
             // Choice functions
             SCENE_INLINE void a1_friday_exercise__menu_question_0();
             SCENE_INLINE void a1_friday_exercise__menu_question_0_go_for_it();
@@ -277,9 +277,9 @@ namespace ks {
             SCENE_INLINE void a1_friday_mind_your_step__menu_question_0();
             SCENE_INLINE void a1_friday_mind_your_step__menu_question_0_sorry_im_not_in_very_good_condition();
             SCENE_INLINE void a1_friday_mind_your_step__menu_question_0_i_dont_really_want_to_talk_about_it();
-            SCENE_INLINE void choice_dont_want_talk__menu_question_0();
-            SCENE_INLINE void choice_dont_want_talk__menu_question_0_ill_go_to_the_lunch_with_emi_and_her_friend();
-            SCENE_INLINE void choice_dont_want_talk__menu_question_0_ill_go_with_shizune_after_all_im_in_the_student_council_now();
+            SCENE_INLINE void a1c11o2__menu_question_0();
+            SCENE_INLINE void a1c11o2__menu_question_0_ill_go_to_the_lunch_with_emi_and_her_friend();
+            SCENE_INLINE void a1c11o2__menu_question_0_ill_go_with_shizune_after_all_im_in_the_student_council_now();
             // Conditions
             SCENE_INLINE void a1_friday_exercise__condition_0_0();
             SCENE_INLINE void a1_friday__condition_0_0();
@@ -301,16 +301,17 @@ namespace ks {
             SCENE_INLINE void a1_friday__condition_3_0();
             SCENE_INLINE void a1_friday_no_free_lunch__condition_0_0();
             SCENE_INLINE void a1_friday_no_free_lunch__condition_1_0();
-            SCENE_INLINE void a1_friday_foot_and_mouth__condition_0__condition_0_0();
             SCENE_INLINE void a1_friday_foot_and_mouth__condition_0_0();
-            SCENE_INLINE void a1_friday_foot_and_mouth__condition_0_1();
+            SCENE_INLINE void a1_friday_foot_and_mouth__condition_1__condition_0_0();
             SCENE_INLINE void a1_friday_foot_and_mouth__condition_1_0();
+            SCENE_INLINE void a1_friday_foot_and_mouth__condition_1_1();
             SCENE_INLINE void a1_friday_foot_and_mouth__condition_2_0();
+            SCENE_INLINE void a1_friday_foot_and_mouth__condition_3_0();
             SCENE_INLINE void a1_friday_mind_your_step__condition_0_0();
             SCENE_INLINE void a1_friday__condition_4__condition_0_0();
             SCENE_INLINE void a1_friday__condition_4_0();
             SCENE_INLINE void a1_friday__condition_4_1();
-            SCENE_INLINE void choice_not_good_condition__condition_0_0();
+            SCENE_INLINE void a1c13o1__condition_0_0();
     };
 }
 

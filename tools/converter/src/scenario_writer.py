@@ -176,9 +176,9 @@ class ScenarioWriter:
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
                 sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}"));')
-                sequences.append(f'if (!ks::in_replay) {{')
+                # sequences.append(f'if (!ks::in_replay) {{')
                 # sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
-                sequences.append(f'}}')
+                # sequences.append(f'}}')
             elif label.is_initial:
                 sequences.append(f'SKIP_IF_LOAD_ANOTHER_SCENE(SCRIPT_{label.name.upper()});')
                 sequences.append(f'ks::SceneManager::set_script(SCRIPT_{label.name.upper()});')

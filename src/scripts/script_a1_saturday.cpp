@@ -3,8 +3,6 @@ namespace ks {
         void ScriptA1Saturday::a1_saturday_support() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_SUPPORT);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("4C687FDF"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -222,8 +220,6 @@ namespace ks {
         void ScriptA1Saturday::a1_saturday_an_asethetics() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_AN_ASETHETICS);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("3DAB6F25"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_HANAKO, ks::sprite_metas::hanako_emb, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_downtimid, PALETTE_VARIANT_DEFAULT, 80, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -636,12 +632,11 @@ namespace ks {
         void ScriptA1Saturday::a1_saturday_creative_pain() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_CREATIVE_PAIN);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("4EF4D576"));
-            if (!ks::in_replay) {
-            }
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormext_half, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::sprite_metas::rin_basic, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, PALETTE_VARIANT_DEFAULT, 48, 0));
-            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_basic, bn::regular_bg_items::emi_bg_basic, bn::sprite_items::emi_spr_basic_annoyed, PALETTE_VARIANT_DEFAULT, -48, 0));
-            IF_NOT_EXIT(ks::SceneManager::update_visuals());
+            if (ks::in_replay) {
+                ScriptA1Saturday::a1_saturday_creative_pain__condition_0_0();
+            } 
+            
+        
             ks::SceneManager::set_line_hash(0x30B9F351);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 0));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_basic, bn::regular_bg_items::emi_bg_basic, bn::sprite_items::emi_spr_basic_closedsweat, PALETTE_VARIANT_DEFAULT));
@@ -831,7 +826,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no, 66));
             ScriptA1Saturday::a1_saturday_creative_pain__menu_question_0();
             if (ks::in_replay) {
-                ScriptA1Saturday::a1_saturday_creative_pain__condition_0_0();
+                ScriptA1Saturday::a1_saturday_creative_pain__condition_1_0();
             } 
             
         
@@ -839,8 +834,6 @@ namespace ks {
         void ScriptA1Saturday::a1_saturday_proper_exercise() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_PROPER_EXERCISE);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("5D6C79F7"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormext_half, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::sprite_metas::rin_basic, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, PALETTE_VARIANT_DEFAULT, 48, 0));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_basic, bn::regular_bg_items::emi_bg_basic, bn::sprite_items::emi_spr_basic_annoyed, PALETTE_VARIANT_DEFAULT, -48, 0));
@@ -1154,8 +1147,6 @@ namespace ks {
         void ScriptA1Saturday::a1_saturday_sip_p2() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_SIP_P2);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("B77B0D37"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_HANAKO, ks::sprite_metas::hanako_emb, bn::regular_bg_items::hanako_bg_emb, bn::sprite_items::hanako_spr_emb_downtimid, PALETTE_VARIANT_DEFAULT, 80, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -1193,8 +1184,6 @@ namespace ks {
         void ScriptA1Saturday::a1_saturday_shanghaied() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_SHANGHAIED);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("9F0608DA"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -2765,8 +2754,6 @@ namespace ks {
         void ScriptA1Saturday::a1_saturday_quiet() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_QUIET);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("CC05EA44"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF0F76D96);
@@ -3987,6 +3974,12 @@ namespace ks {
             IF_NOT_EXIT(a1_saturday_an_asethetics()); // INLINE CALL
         }
         void ScriptA1Saturday::a1_saturday_creative_pain__condition_0_0() {
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormext_half, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::sprite_metas::rin_basic, bn::regular_bg_items::rin_bg_basic, bn::sprite_items::rin_spr_basic_deadpan, PALETTE_VARIANT_DEFAULT, 48, 0));
+            IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_basic, bn::regular_bg_items::emi_bg_basic, bn::sprite_items::emi_spr_basic_annoyed, PALETTE_VARIANT_DEFAULT, -48, 0));
+            IF_NOT_EXIT(ks::SceneManager::update_visuals());
+        }
+        void ScriptA1Saturday::a1_saturday_creative_pain__condition_1_0() {
             return;
         }
         void ScriptA1Saturday::a1_saturday__condition_4_0() {

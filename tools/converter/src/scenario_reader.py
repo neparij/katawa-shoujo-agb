@@ -694,12 +694,8 @@ class ScenarioReader:
                         actor[locale] = actor_locale
                         dialog[locale] = dialog_locale.strip().replace("\\n", "\n")
                     else:
-                        # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
-                        # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
-                        print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
-                        sleep(0.25)
-                        actor[locale] = actor[DEFAULT_LOCALE]
-                        dialog[locale] = dialog[DEFAULT_LOCALE]
+                        raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
+
                 self.stack.current().add_sequence_item(self.linepack_events,
                     DialogItem(original_dialog_hash[-8:], actor, dialog, label_name=self.stack.current_label().name))
             elif dialog_match_ref:
@@ -852,13 +848,13 @@ def scenario_rewrites(scenario_file, content):
             "        show showdown_lilly_slice:\n"
             "            easein 0.2 xalign 0.0 yalign 0.0\n"
             "\n"
-            "        pause 0.2\n"
+            "        pause 0.4\n"
             "\n"
             "        play sound sfx_draw\n"
             "        show showdown_shizu_slice:\n"
             "            easein 0.2 xalign 1.0 yalign 1.0\n"
             "\n"
-            "        pause 0.2\n",
+            "        pause 0.4\n",
             # WITH
             "        scene ev showdown_slices\n"
         ).replace(
@@ -875,20 +871,24 @@ def scenario_rewrites(scenario_file, content):
             "        with showdown_thunder_short\n"
         ).replace(
             "        show ev showdown_large:\n"
-            "            size (1920, 1080) crop (0, 0, 5760, 3240)\n"
-            "            easeout 0.2 crop (672, 240, 1920, 1080)\n",
+            "            xysize (1920, 1080) crop (0, 0, 5760, 3240)\n"
+            "            easeout 0.2 crop (912, 240, 1920, 1080)\n",
             # WITH
             "        show ev showdown_lilly\n"
         ).replace(
             "        show ev showdown_large:\n"
-            "            ease 0.2 crop (672, 240, 1920, 1080)\n",
+            "            ease 0.2 crop (912, 240, 1920, 1080)\n",
             # WITH
             "        show ev showdown_lilly\n"
         ).replace(
             "        show ev showdown_large:\n"
-            "            ease 0.2 crop (3360, 384, 1920, 1080)\n",
+            "            ease 0.2 crop (3120, 384, 1920, 1080)\n",
             # WITH
             "        show ev showdown_shizu\n"
+        ).replace(
+            "        $ _window = False\n\n",
+            # WITH
+            ""
         )
 
     if scenario_name == "script-a1-sunday":
@@ -902,6 +902,11 @@ def scenario_rewrites(scenario_file, content):
             "play music sfx_crowd_outdoors",
             # WITH
             "play ambient sfx_crowd_outdoors"
+        ).replace(
+            "            hide ev\n"
+            "            show bg school_roof_ni:",
+            # WITH
+            "            scene bg school_roof_ni:"
         ).replace(
             "            show nightsky rotation",
             # WITH

@@ -3,8 +3,6 @@ namespace ks {
         void ScriptA1Monday::a1_monday_out_cold() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_OUT_COLD);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("5906962E"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::op_snowywoods, OpSnowywoodsEvent(), SCENE_TRANSITION_NONE, 60));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_SERENE, 120));
@@ -178,8 +176,6 @@ namespace ks {
         void ScriptA1Monday::a1_monday_bundle_of_hisao() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_BUNDLE_OF_HISAO);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("8A5E92DC"));
-            if (!ks::in_replay) {
-            }
             ks::SceneManager::set_line_hash(0x010658DE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::centered, 0));
             IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::hosp_room, HospRoomEvent(), SCENE_TRANSITION_NONE, 45));
@@ -409,9 +405,8 @@ namespace ks {
         void ScriptA1Monday::a1_monday_gateway_effect() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_GATEWAY_EFFECT);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("1AE3BA25"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_gate, 0, 0, SCENE_TRANSITION_NONE, 90, PALETTE_VARIANT_DEFAULT));
+            // ach("prologue_achieve"); TODO: unknown assignment
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_HAPPINESS));
             ks::SceneManager::set_line_hash(0x531A26DC);
@@ -534,8 +529,6 @@ namespace ks {
         void ScriptA1Monday::a1_monday_enter_stage_left() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_ENTER_STAGE_LEFT);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("70DD5068"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9B60DCE9);
@@ -894,8 +887,6 @@ namespace ks {
         void ScriptA1Monday::a1_monday_in_the_nursery() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_IN_THE_NURSERY);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("BC7A1E75"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_staircase2, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x128DC0F0);
@@ -1233,8 +1224,6 @@ namespace ks {
         void ScriptA1Monday::a1_monday_nobodys_room() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_NOBODYS_ROOM);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("C1236A43"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_PEARLY, 240));

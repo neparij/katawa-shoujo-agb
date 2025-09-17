@@ -3,8 +3,6 @@ namespace ks {
         void ScriptA1Friday::a1_friday_exercise() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_EXERCISE);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("586AD362"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -116,8 +114,6 @@ namespace ks {
         void ScriptA1Friday::a1_friday_invisible_hat() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_INVISIBLE_HAT);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("9BFD77BF"));
-            if (!ks::in_replay) {
-            }
             if (!ks::progress.promised || ks::in_replay) {
                 ScriptA1Friday::a1_friday_invisible_hat__condition_0_0();
             } 
@@ -254,8 +250,6 @@ namespace ks {
         void ScriptA1Friday::a1_friday_home_field_advantage() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_HOME_FIELD_ADVANTAGE);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("5697F250"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhallway, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::sprite_metas::kenji_basic_close, bn::regular_bg_items::kenji_bg_basic_close, bn::sprite_items::kenji_spr_basic_happy_close, PALETTE_VARIANT_DEFAULT, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -367,8 +361,6 @@ namespace ks {
         void ScriptA1Friday::a1_friday_slow_recovery() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_SLOW_RECOVERY);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("C8FC0CC9"));
-            if (!ks::in_replay) {
-            }
             if (ks::in_replay) {
                 ScriptA1Friday::a1_friday_slow_recovery__condition_0_0();
             } 
@@ -435,8 +427,6 @@ namespace ks {
         void ScriptA1Friday::a1_friday_no_recovery() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_NO_RECOVERY);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("C2A7D689"));
-            if (!ks::in_replay) {
-            }
             if (ks::progress.get_tired()) {
                 ScriptA1Friday::a1_friday_no_recovery__condition_0_0();
             } 
@@ -467,8 +457,6 @@ namespace ks {
         void ScriptA1Friday::a1_friday_no_free_lunch() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_NO_FREE_LUNCH);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("63FD258B"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_council, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky, bn::regular_bg_items::misha_bg_perky, bn::sprite_items::misha_spr_perky_smile, PALETTE_VARIANT_DEFAULT, -48, 0));
@@ -762,19 +750,16 @@ namespace ks {
         void ScriptA1Friday::a1_friday_foot_and_mouth() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_FOOT_AND_MOUTH);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("D29AF3D8"));
-            if (!ks::in_replay) {
-            }
-            IF_NOT_EXIT(ScriptA1Friday::class_goes_lazily()); // DIRECT CALL
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("D29AF3D8"));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
-            // TODO: Show crowd
-            IF_NOT_EXIT(ks::SceneManager::update_visuals());
-            IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 18));
-            if (ks::progress.promised && ks::progress.go_for_it && !ks::in_replay) {
+            if (ks::in_replay) {
                 ScriptA1Friday::a1_friday_foot_and_mouth__condition_0_0();
             } 
+            
+        
+            if (ks::progress.promised && ks::progress.go_for_it && !ks::in_replay) {
+                ScriptA1Friday::a1_friday_foot_and_mouth__condition_1_0();
+            } 
             else {
-                ScriptA1Friday::a1_friday_foot_and_mouth__condition_0_1();
+                ScriptA1Friday::a1_friday_foot_and_mouth__condition_1_1();
             } 
             
         
@@ -1250,12 +1235,12 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x320B7787);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 154));
             if (ks::progress.get_tired() || ks::in_replay) {
-                ScriptA1Friday::a1_friday_foot_and_mouth__condition_1_0();
+                ScriptA1Friday::a1_friday_foot_and_mouth__condition_2_0();
             } 
             
         
             if (ks::in_replay) {
-                ScriptA1Friday::a1_friday_foot_and_mouth__condition_2_0();
+                ScriptA1Friday::a1_friday_foot_and_mouth__condition_3_0();
             } 
             
         
@@ -1263,8 +1248,6 @@ namespace ks {
         void ScriptA1Friday::a1_friday_mind_your_step() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_MIND_YOUR_STEP);
             IF_NOT_EXIT(ks::SceneManager::set_textdb("03DA99B5"));
-            if (!ks::in_replay) {
-            }
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_courtyard_ss, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             // renpy.music.play(music_tranquil, fadein=3.0, if_changed=True); TODO: unknown assignment
@@ -1828,7 +1811,7 @@ namespace ks {
             } 
             
         
-            if ((ks::progress.go_for_it && ks::progress.are_student_council) || (!ks::progress.go_for_it && !ks::progress.kick_shizu)) {
+            if (ks::progress.go_through_shizu() && ((ks::progress.go_for_it && ks::progress.are_student_council) || (!ks::progress.go_for_it && !ks::progress.kick_shizu))) {
                 ScriptA1Friday::a1_friday__condition_4_0();
             } 
             else {
@@ -1900,8 +1883,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 2));
             return;
         }
-        void ScriptA1Friday::choice_go_for_it() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("2DC5D5B3"));
+        void ScriptA1Friday::a1c9o1() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EED1EEC1"));
             ks::SceneManager::set_line_hash(0x4DE413D8);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 0));
             ks::SceneManager::set_line_hash(0x4FC8D5CE);
@@ -2380,8 +2363,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 156));
             return;
         }
-        void ScriptA1Friday::choice_take_it_easy() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("890886E3"));
+        void ScriptA1Friday::a1c9o2() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EED1EEC2"));
             IF_NOT_EXIT(ks::SceneManager::music_stop(600));
             ks::SceneManager::set_line_hash(0x00673BAA);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 0));
@@ -2428,8 +2411,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 18));
             return;
         }
-        void ScriptA1Friday::choice_dodge_subject() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("4D2DCD5F"));
+        void ScriptA1Friday::a1c10o1() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67619B"));
             ks::SceneManager::set_line_hash(0x40DBE2EA);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_SHIZU, ks::sprite_metas::shizu_basic, bn::regular_bg_items::shizu_bg_basic, bn::sprite_items::shizu_spr_basic_normal2, PALETTE_VARIANT_DEFAULT));
@@ -2594,8 +2577,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 48));
             return;
         }
-        void ScriptA1Friday::choice_kick_shizu() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("6F488CFB"));
+        void ScriptA1Friday::a1c10o2() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67619C"));
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_RAIN, 240));
             ks::SceneManager::set_line_hash(0x5C214920);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 0));
@@ -2682,8 +2665,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 24));
             return;
         }
-        void ScriptA1Friday::choice_fun_at_office() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("8F650623"));
+        void ScriptA1Friday::a1c11o1() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67655C"));
             IF_NOT_EXIT(ks::SceneManager::music_stop(240));
             ks::SceneManager::set_line_hash(0x1B15BBEE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 0));
@@ -2736,8 +2719,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 17));
             return;
         }
-        void ScriptA1Friday::choice_dont_want_talk() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("BFCD6512"));
+        void ScriptA1Friday::a1c11o2() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67655D"));
             ks::SceneManager::set_line_hash(0xEE49DC24);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_grin_close, PALETTE_VARIANT_DEFAULT));
@@ -2784,11 +2767,11 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 13));
             ks::SceneManager::set_line_hash(0x57F885FF);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 14));
-            ScriptA1Friday::choice_dont_want_talk__menu_question_0();
+            ScriptA1Friday::a1c11o2__menu_question_0();
             return;
         }
-        void ScriptA1Friday::choice_emi_lunch() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("3A5E5047"));
+        void ScriptA1Friday::a1c12o1() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67691D"));
             ks::SceneManager::set_line_hash(0x4A868486);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_perky_close, bn::regular_bg_items::misha_bg_perky_close, bn::sprite_items::misha_spr_perky_confused_close, PALETTE_VARIANT_DEFAULT));
@@ -2837,10 +2820,12 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 15));
             ks::SceneManager::set_line_hash(0x92203673);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 16));
+            IF_NOT_EXIT(ScriptA1Friday::class_goes_lazily()); // DIRECT CALL
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67691D"));
             return;
         }
-        void ScriptA1Friday::choice_shizune_lunch() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("6BD34F2C"));
+        void ScriptA1Friday::a1c12o2() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67691E"));
             ks::SceneManager::set_line_hash(0x3ABCA0B4);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::sprite_metas::misha_hips_close, bn::regular_bg_items::misha_bg_hips_close, bn::sprite_items::misha_spr_hips_grin_close, PALETTE_VARIANT_DEFAULT));
@@ -2870,8 +2855,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60));
             return;
         }
-        void ScriptA1Friday::choice_not_good_condition() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("5116FB4A"));
+        void ScriptA1Friday::a1c13o1() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB676CDE"));
             // renpy.music.set_volume(0.1, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::set_line_hash(0x7D1317CC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 0));
@@ -2914,7 +2899,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x092812CB);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 15));
             if (ks::progress.talk_with_hanako) {
-                ScriptA1Friday::choice_not_good_condition__condition_0_0();
+                ScriptA1Friday::a1c13o1__condition_0_0();
             } 
             
         
@@ -3053,8 +3038,8 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             return;
         }
-        void ScriptA1Friday::choice_not_much_talking() {
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("EEACE0F5"));
+        void ScriptA1Friday::a1c13o2() {
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB676CDF"));
             // renpy.music.set_volume(0.1, 1.0, channel="ambient"); TODO: unknown assignment
             IF_NOT_EXIT(ks::SceneManager::music_stop(300));
             ks::SceneManager::set_line_hash(0x17E591DE);
@@ -3104,12 +3089,12 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_exercise__menu_question_0_go_for_it() {
             ks::progress.go_for_it = true;
-            IF_NOT_EXIT(ScriptA1Friday::choice_go_for_it()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c9o1()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("586AD362"));
         }
         void ScriptA1Friday::a1_friday_exercise__menu_question_0_take_it_easy() {
             ks::progress.go_for_it = false;
-            IF_NOT_EXIT(ScriptA1Friday::choice_take_it_easy()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c9o2()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("586AD362"));
         }
         void ScriptA1Friday::a1_friday_home_field_advantage__menu_question_0() {
@@ -3126,12 +3111,12 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_home_field_advantage__menu_question_0_try_to_dodge_the_subject() {
             ks::progress.kick_shizu = false;
-            IF_NOT_EXIT(ScriptA1Friday::choice_dodge_subject()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c10o1()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("5697F250"));
         }
         void ScriptA1Friday::a1_friday_home_field_advantage__menu_question_0_kick_them_out_of_my_room() {
             ks::progress.kick_shizu = true;
-            IF_NOT_EXIT(ScriptA1Friday::choice_kick_shizu()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c10o2()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("5697F250"));
         }
         void ScriptA1Friday::a1_friday_slow_recovery__menu_question_0() {
@@ -3150,14 +3135,14 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_slow_recovery__menu_question_0_yeah_i_sure_was_having_fun_fun_fun_at_the_nurses_office() {
             ks::progress.fun_fun_at_office = true;
-            IF_NOT_EXIT(ScriptA1Friday::choice_fun_at_office()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c11o1()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("C8FC0CC9"));
             IF_NOT_EXIT(ScriptA1Friday::mas_doesnt_bother()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("C8FC0CC9"));
         }
         void ScriptA1Friday::a1_friday_slow_recovery__menu_question_0_i_dont_want_to_talk_about_it_okay() {
             ks::progress.fun_fun_at_office = false;
-            IF_NOT_EXIT(ScriptA1Friday::choice_dont_want_talk()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c11o2()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("C8FC0CC9"));
         }
         void ScriptA1Friday::a1_friday_mind_your_step__menu_question_0() {
@@ -3174,35 +3159,35 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_mind_your_step__menu_question_0_sorry_im_not_in_very_good_condition() {
             ks::progress.not_much_talking = false;
-            IF_NOT_EXIT(ScriptA1Friday::choice_not_good_condition()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c13o1()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("03DA99B5"));
         }
         void ScriptA1Friday::a1_friday_mind_your_step__menu_question_0_i_dont_really_want_to_talk_about_it() {
             ks::progress.not_much_talking = true;
-            IF_NOT_EXIT(ScriptA1Friday::choice_not_much_talking()); // DIRECT CALL
+            IF_NOT_EXIT(ScriptA1Friday::a1c13o2()); // DIRECT CALL
             IF_NOT_EXIT(ks::SceneManager::set_textdb("03DA99B5"));
         }
-        void ScriptA1Friday::choice_dont_want_talk__menu_question_0() {
+        void ScriptA1Friday::a1c11o2__menu_question_0() {
             bn::vector<ks::answer_ptr, 5> answers;
             answers.push_back(ks::answer_ptr{0, 15});
             answers.push_back(ks::answer_ptr{1, 16});
             IF_NOT_EXIT(ks::SceneManager::show_dialog_question(answers));
             int answer = ks::SceneManager::get_dialog_question_answer();
             if (answer == 0) {
-                ScriptA1Friday::choice_dont_want_talk__menu_question_0_ill_go_to_the_lunch_with_emi_and_her_friend();
+                ScriptA1Friday::a1c11o2__menu_question_0_ill_go_to_the_lunch_with_emi_and_her_friend();
             } else if (answer == 1) {
-                ScriptA1Friday::choice_dont_want_talk__menu_question_0_ill_go_with_shizune_after_all_im_in_the_student_council_now();
+                ScriptA1Friday::a1c11o2__menu_question_0_ill_go_with_shizune_after_all_im_in_the_student_council_now();
             }
         }
-        void ScriptA1Friday::choice_dont_want_talk__menu_question_0_ill_go_to_the_lunch_with_emi_and_her_friend() {
+        void ScriptA1Friday::a1c11o2__menu_question_0_ill_go_to_the_lunch_with_emi_and_her_friend() {
             ks::progress.are_student_council = false;
-            IF_NOT_EXIT(ScriptA1Friday::choice_emi_lunch()); // DIRECT CALL
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("BFCD6512"));
+            IF_NOT_EXIT(ScriptA1Friday::a1c12o1()); // DIRECT CALL
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67655D"));
         }
-        void ScriptA1Friday::choice_dont_want_talk__menu_question_0_ill_go_with_shizune_after_all_im_in_the_student_council_now() {
+        void ScriptA1Friday::a1c11o2__menu_question_0_ill_go_with_shizune_after_all_im_in_the_student_council_now() {
             ks::progress.are_student_council = true;
-            IF_NOT_EXIT(ScriptA1Friday::choice_shizune_lunch()); // DIRECT CALL
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("BFCD6512"));
+            IF_NOT_EXIT(ScriptA1Friday::a1c12o2()); // DIRECT CALL
+            IF_NOT_EXIT(ks::SceneManager::set_textdb("EB67655D"));
         }
         void ScriptA1Friday::a1_friday_exercise__condition_0_0() {
             return;
@@ -3326,7 +3311,13 @@ namespace ks {
         void ScriptA1Friday::a1_friday_no_free_lunch__condition_1_0() {
             return;
         }
-        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_0__condition_0_0() {
+        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_0_0() {
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
+            // TODO: Show crowd
+            IF_NOT_EXIT(ks::SceneManager::update_visuals());
+            IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 18));
+        }
+        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_1__condition_0_0() {
             ks::SceneManager::set_line_hash(0x4DEA7EC9);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 155));
             ks::SceneManager::set_line_hash(0x7E66FD7F);
@@ -3336,7 +3327,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x5DEF68C2);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 158));
         }
-        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_0_0() {
+        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_1_0() {
             ks::SceneManager::set_line_hash(0xC153B829);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 159));
             ks::SceneManager::set_line_hash(0x4BA16437);
@@ -3362,7 +3353,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x31E7D8EC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::emi, 166));
         }
-        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_0_1() {
+        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_1_1() {
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_EMI, 18));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::sprite_metas::emi_basic, bn::regular_bg_items::emi_bg_basic, bn::sprite_items::emi_spr_basic_happy, PALETTE_VARIANT_DEFAULT, 0, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -3439,12 +3430,12 @@ namespace ks {
             ks::SceneManager::set_line_hash(0xEC0DACAA);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 192));
             if (ks::progress.go_through_shizu() && !ks::progress.got_kenji() || ks::in_replay) {
-                ScriptA1Friday::a1_friday_foot_and_mouth__condition_0__condition_0_0();
+                ScriptA1Friday::a1_friday_foot_and_mouth__condition_1__condition_0_0();
             } 
             
         
         }
-        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_1_0() {
+        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_2_0() {
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhisao_ss, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF05FD589);
@@ -3474,7 +3465,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
         }
-        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_2_0() {
+        void ScriptA1Friday::a1_friday_foot_and_mouth__condition_3_0() {
             return;
         }
         void ScriptA1Friday::a1_friday_mind_your_step__condition_0_0() {
@@ -3494,7 +3485,7 @@ namespace ks {
             
         
         }
-        void ScriptA1Friday::choice_not_good_condition__condition_0_0() {
+        void ScriptA1Friday::a1c13o1__condition_0_0() {
             ks::SceneManager::set_line_hash(0x8428E87D);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 55));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_LILLY, ks::sprite_metas::lilly_cane, bn::regular_bg_items::lilly_bg_cane, bn::sprite_items::lilly_spr_cane_oops, PALETTE_VARIANT_SPRITE_NIGHT));
