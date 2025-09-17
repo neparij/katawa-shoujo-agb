@@ -135,6 +135,8 @@ public:
                       scene_transition_t transition,
                       int dissolve_time);
 
+    static void set_event_state(int state);
+
     static void show_dialog(const ks::character_definition& actor, unsigned int tl_key);
     static void show_dialog(unsigned int actor_tl_key, unsigned int tl_key);
     static void show_doublespeak(const ks::character_definition& actor_left, unsigned int tl_key_left,

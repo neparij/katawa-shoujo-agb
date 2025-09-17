@@ -12,6 +12,7 @@ from src.dto.background_transform_item import BackgroundTransformItem
 from src.dto.background_transition_item import BackgroundTransitionItem
 from src.dto.condition_item import ConditionItem
 from src.dto.custom_event_item import CustomEventItem
+from src.dto.custom_event_state_item import CustomEventStateItem
 from src.dto.dialog_item import DialogItem
 from src.dto.doublespeak_item import DoubleSpeakItem
 from src.dto.hide_item import HideEvent, HideItem
@@ -409,6 +410,13 @@ class ScenarioReader:
             self._hack_latest_sprite_name = None # TODO: Remove after "Friday"-hack
             return
 
+        elif stripped_line.startswith("state ev"):
+            match = re.match(r'state ev\s+(\d+)$', stripped_line)
+            if not match:
+                raise Exception(f"Invalid state ev syntax: {stripped_line}")
+            event_state = int(match.group(1))
+            self.stack.current().add_sequence_item(self.linepack_events, CustomEventStateItem(event_state))
+
         elif stripped_line.startswith("show passoutOP1"):
             self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(BgTransition.PASSOUTOP1))
             return
@@ -787,7 +795,6 @@ def rewrite_motion_background(bg_name: str) -> str:
             .replace("mural_part", "mural")
             .replace("mural_ss", "mural") # TODO: Paletted variants for backgrounds
             .replace("suburb_shanghaiext_ss", "suburb_shanghaiext") # TODO: Paletted variants for backgrounds
-            .replace("hanako_shanghaiwindow", "hanako_fw") # TODO: Fireworks event
             .replace("kenji_rooftop_kenji", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop_large", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop", "kenji_rooftop") # TODO: Kenji alcotrip event
@@ -923,6 +930,49 @@ def scenario_rewrites(scenario_file, content):
             "            with Dissolve(1.0)\n"
             "\n"
             "            pause 0.2\n"
+        ).replace(
+            "            show hanako_fw behind bg:\n"
+            "                zoom 1.05 truecenter\n"
+            "                ease 22.0 zoom 1.0\n"
+            "            show ev hanako_shanghaiwindow behind hanako_fw:\n"
+            "                zoom 1.05 truecenter\n"
+            "                ease 22.0 zoom 1.0",
+            # WITH
+            ""
+        ).replace(
+            "            hide fireshine\n"
+            "            hide bg\n"
+            "            hide hanako\n"
+            "            hide lilly\n"
+            "            hide yuukoshang\n"
+            "            with locationskip",
+            # WITH
+            "            scene ev hanako_fw\n"
+            "            with locationskip"
+        ).replace(
+            "            hide fireshine\n"
+            "            show bg misc_sky_ni as front\n"
+            "            show fireworks\n"
+            "            with locationchange",
+            # WITH
+            "            scene ev nightsky_fw"
+        ).replace(
+            "            hide fireworks\n"
+            "            hide front\n"
+            "            show fireshine\n"
+            "            show yuukoshang happy_down\n"
+            "            with locationchange",
+            # WITH
+            "            scene bg suburb_shanghaiint\n"
+            "            show lilly basic_weaksmile\n"
+            "            show hanako emb_timid\n"
+            "            show yuukoshang happy_down\n"
+            "            with locationchange"
+        ).replace(
+            "            hide hanako_fw\n"
+            "            with Dissolve(1.0)",
+            # WITH
+            "            state ev 1"
         )
 
     return content
@@ -971,6 +1021,14 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     # DRUGS EVENT
     if bg_name == "drugs_event":
         return "event_drugs_en", "DrugsEvent"
+
+    # NIGHTSKY FIREWORKS
+    if bg_name == "nightsky_fw":
+        return "misc_sky_ni", "NightskyFireworksEvent"
+
+    # HANAKO FIREWORKS
+    if bg_name == "hanako_fw":
+        return "hanako_fw_base", "HanakoFireworksEvent"
 
     return None, None
 

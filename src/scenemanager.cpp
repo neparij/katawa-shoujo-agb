@@ -321,6 +321,11 @@ void SceneManager::set_event(const huge_background_meta& bg, const CustomEvent& 
     next_event = event.create();
 }
 
+void SceneManager::set_event_state(const int state) {
+    BN_ASSERT(background_visual.active_event.has_value(), "No active event to set state");
+    (*background_visual.active_event)->set_state(state);
+}
+
 void SceneManager::show_dialog(const character_definition& actor, const unsigned int tl_key) {
     if (is_loading) {
         return;

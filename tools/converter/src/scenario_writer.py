@@ -13,6 +13,7 @@ from src.dto.background_transform_item import BackgroundTransformItem
 from src.dto.background_transition_item import BackgroundTransitionItem
 from src.dto.condition_item import ConditionItem
 from src.dto.custom_event_item import CustomEventItem
+from src.dto.custom_event_state_item import CustomEventStateItem
 from src.dto.dialog_item import DialogItem
 from src.dto.doublespeak_item import DoubleSpeakItem
 from src.dto.hide_item import HideItem
@@ -322,6 +323,8 @@ class ScenarioWriter:
             return self.process_sequence_background(group, cast(BackgroundItem, sequence))
         elif sequence.type == SequenceType.CUSTOM_EVENT:
             return self.process_sequence_custom_event(group, cast(CustomEventItem, sequence))
+        elif sequence.type == SequenceType.CUSTOM_EVENT_STATE:
+            return self.process_sequence_custom_event_state(group, cast(CustomEventStateItem, sequence))
         elif sequence.type == SequenceType.CONDITION:
             return self.process_sequence_condition(group, cast(ConditionItem, sequence))
         elif sequence.type == SequenceType.DIALOG:
@@ -379,6 +382,9 @@ class ScenarioWriter:
         return [
             f'IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
             # f'IF_NOT_EXIT(ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
+
+    def process_sequence_custom_event_state(self, group: SequenceGroup, ev: CustomEventStateItem) -> List[str]:
+        return [f'IF_NOT_EXIT(ks::SceneManager::set_event_state({ev.state}));']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
         if not bg.background in self.backgrounds and not is_color_filled_bg(bg.background):

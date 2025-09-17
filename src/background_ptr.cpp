@@ -2,6 +2,12 @@
 #include "background_ptr.h"
 
 namespace ks {
+    void background_ptr::force_create_regular_ptr(const bn::regular_bg_item &create_bg) {
+        BN_ASSERT(!_huge_ptr.has_value(), "force_create_regular_ptr: Background pointer is huge, cannot emplace regular pointer");
+        BN_ASSERT(!_affine_ptr.has_value(), "force_create_regular_ptr: Background pointer is affine, cannot emplace regular pointer");
+        _regular_ptr.reset();
+        _regular_ptr = create_bg.create_bg();
+    }
 
     const ks::background_item& background_ptr::item() const {
         return _item;

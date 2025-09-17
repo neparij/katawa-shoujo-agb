@@ -80,7 +80,6 @@
 #include "background_metas/school_road_ss.h"
 #include "background_metas/suburb_shanghaiext.h"
 #include "background_metas/suburb_shanghaiint.h"
-#include "background_metas/hanako_fw.h"
 #include "background_metas/suburb_shanghaiext_ni.h"
 #include "background_metas/suburb_roadcenter_ni.h"
 #include "background_metas/school_stalls1_ss.h"
@@ -309,6 +308,8 @@
 #include "shizu_out_close.h"
 #include "kenji_rage_close.h"
 #include "kenji_basic_close.h"
+#include "../events/nightsky_fireworks.cpp.h"
+#include "../events/hanako_fireworks.cpp.h"
 namespace ks {
     class ScriptA1Sunday {
         public:

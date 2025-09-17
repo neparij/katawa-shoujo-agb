@@ -32,8 +32,14 @@ IGNORE_IMAGES = [
     "emi_knockeddown_large",
     "emi_knockeddown",
     "lilly_shizu_showdown_full",
-    "lilly_shizu_showdown_large"
+    "lilly_shizu_showdown_large",
+    "hanako_fw",
+    "hanako_fw_flash"
 ]
+
+CUSTOM_PALETTE_IMAGES = {
+    "misc_sky_ni": 6,
+}
 
 # Used for CustomEvents based on original images.
 IGNORE_METAS = [
@@ -73,6 +79,10 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
         if os.path.splitext(output_file_name)[0] in IGNORE_IMAGES:
             print(f"Skipping {image_file} as it is in the ignore list.")
             continue
+
+        if os.path.splitext(output_file_name)[0] in CUSTOM_PALETTE_IMAGES.keys():
+            quantize_palettes = CUSTOM_PALETTE_IMAGES[os.path.splitext(output_file_name)[0]]
+            print(f"Using custom palette count {quantize_palettes} for {image_file}")
 
         try:
             if quantize:

@@ -45,6 +45,8 @@ namespace ks {
         background_ptr(background_ptr&&) noexcept = default;
         background_ptr& operator=(background_ptr&&) noexcept = default;
 
+        void force_create_regular_ptr(const bn::regular_bg_item & create_bg);
+
         // Copy constructor and assignment
         background_ptr(const background_ptr&) = default;
         background_ptr& operator=(const background_ptr&) = default;

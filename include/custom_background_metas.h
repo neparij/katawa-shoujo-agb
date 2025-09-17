@@ -1,6 +1,7 @@
 #ifndef CUSTOM_BACKGROUND_METAS_H
 #define CUSTOM_BACKGROUND_METAS_H
 
+
 #include <bn_regular_bg_items_kslogo_heart.h>
 #include <bn_regular_bg_items_kslogo_words.h>
 
@@ -11,6 +12,7 @@
 #include "bn_regular_bg_items_thumb_emi_knockeddown.h"
 #include "bn_regular_bg_items_emi_knockeddown_facepullout.h"
 #include "bn_regular_bg_items_emi_knockeddown_legs.h"
+#include "bn_regular_bg_items_hanako_fw_base_reduced_pal.h"
 #include "bn_regular_bg_items_hosp_room.h"
 #include "ks_huge_bg_items_event_drugs_en.h"
 #include "bn_regular_bg_items_thumb_event_drugs.h"
@@ -20,6 +22,7 @@
 #include "bn_regular_bg_items_op_snowywoods.h"
 #include "bn_regular_bg_items_other_iwanako.h"
 #include "bn_regular_bg_items_other_iwanako_nosnow.h"
+#include "bn_regular_bg_items_thumb_hanako_fw_flash.h"
 #include "bn_regular_bg_items_thumb_hosp_room.h"
 #include "bn_regular_bg_items_thumb_lilly_shizu_showdown.h"
 #include "bn_regular_bg_items_thumb_op_snowywoods.h"
@@ -92,6 +95,11 @@ namespace ks::background_metas {
                  bn::regular_bg_items::thumb_hosp_room,
                  0x3E47FD6A);
 
+    constexpr inline background_meta hanako_fw_base(
+                bn::regular_bg_items::hanako_fw_base_reduced_pal,
+                bn::regular_bg_items::thumb_hanako_fw_flash,
+                0xE13A5821);
+
     constexpr inline background_meta kslogo_heart(
         bn::regular_bg_items::kslogo_heart,
         bn::regular_bg_items::thumb_event_missing,
@@ -116,6 +124,7 @@ namespace ks::background_metas {
             case 0xFFFF0009: return op_snowywoods.thumbnail;
             case 0xFFFF000A: return other_iwanako.thumbnail;
             case 0x3E47FD6A: return hosp_room.thumbnail;
+            case 0xE13A5821: return hanako_fw_base.thumbnail;
             default: return event_missing.thumbnail;
         }
     }
