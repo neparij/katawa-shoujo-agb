@@ -1,6 +1,7 @@
 #ifndef CUSTOM_BACKGROUND_METAS_H
 #define CUSTOM_BACKGROUND_METAS_H
 
+
 #include <bn_regular_bg_items_kslogo_heart.h>
 #include <bn_regular_bg_items_kslogo_words.h>
 
@@ -11,7 +12,7 @@
 #include "bn_regular_bg_items_thumb_emi_knockeddown.h"
 #include "bn_regular_bg_items_emi_knockeddown_facepullout.h"
 #include "bn_regular_bg_items_emi_knockeddown_legs.h"
-#include "bn_regular_bg_items_hanako_fw_base.h"
+#include "bn_regular_bg_items_hanako_fw_base_reduced_pal.h"
 #include "bn_regular_bg_items_hosp_room.h"
 #include "ks_huge_bg_items_event_drugs_en.h"
 #include "bn_regular_bg_items_thumb_event_drugs.h"
@@ -95,7 +96,7 @@ namespace ks::background_metas {
                  0x3E47FD6A);
 
     constexpr inline background_meta hanako_fw_base(
-                bn::regular_bg_items::hanako_fw_base,
+                bn::regular_bg_items::hanako_fw_base_reduced_pal,
                 bn::regular_bg_items::thumb_hanako_fw_flash,
                 0xE13A5821);
 

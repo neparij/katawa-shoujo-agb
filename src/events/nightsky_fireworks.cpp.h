@@ -18,6 +18,25 @@
 
 namespace ks {
 
+    namespace event_data::nightsky_fireworks {
+        constexpr auto layer_a_fireworks = bn::span(
+            (const bn::regular_bg_item[]){
+                bn::regular_bg_items::fireworks_a0,
+                bn::regular_bg_items::fireworks_a1,
+                bn::regular_bg_items::fireworks_a2
+            }, 3
+        );
+
+        constexpr auto layer_b_fireworks = bn::span(
+            (const bn::regular_bg_item[]){
+                bn::regular_bg_items::fireworks_b0,
+                bn::regular_bg_items::fireworks_b1,
+                bn::regular_bg_items::fireworks_b2,
+                bn::regular_bg_items::fireworks_b3
+            }, 4
+        );
+    }
+
     class NightskyFireworksEvent final : public CustomEvent {
     public:
         NightskyFireworksEvent() = default;
@@ -62,13 +81,13 @@ namespace ks {
                 layer_a_fade = 0;
                 main_layer_fade = 0.1;
                 layer_a_fw.reset();
-                layer_a_fw = layer_a_fireworks[layer_a_index].create_bg();
+                layer_a_fw = event_data::nightsky_fireworks::layer_a_fireworks[layer_a_index].create_bg();
                 layer_a_fw->set_priority(_bg_priority);
                 layer_a_fw->set_z_order(_bg_z_order - 2);
                 if (layer_b_fw.has_value()) {
                     layer_b_fw->set_z_order(_bg_z_order - 1);
                 }
-                if (++layer_a_index >= (int)layer_a_fireworks.size()) {
+                if (++layer_a_index >= event_data::nightsky_fireworks::layer_a_fireworks.size()) {
                     layer_a_index = 0;
                 }
             }
@@ -80,13 +99,13 @@ namespace ks {
                 layer_b_fade = 0;
                 main_layer_fade = 0.1;
                 layer_b_fw.reset();
-                layer_b_fw = layer_b_fireworks[layer_b_index].create_bg();
+                layer_b_fw = event_data::nightsky_fireworks::layer_b_fireworks[layer_b_index].create_bg();
                 layer_b_fw->set_priority(_bg_priority);
                 layer_b_fw->set_z_order(_bg_z_order - 2);
                 if (layer_a_fw.has_value()) {
                     layer_a_fw->set_z_order(_bg_z_order - 1);
                 }
-                if (++layer_b_index >= (int)layer_b_fireworks.size()) {
+                if (++layer_b_index >= event_data::nightsky_fireworks::layer_b_fireworks.size()) {
                     layer_b_index = 0;
                 }
             }
@@ -139,22 +158,6 @@ namespace ks {
         bn::fixed layer_a_fade = 0;
         bn::fixed layer_b_fade = 0;
         bn::fixed main_layer_fade = 0;
-
-        const bn::span<const bn::regular_bg_item> layer_a_fireworks = bn::span(
-            (const bn::regular_bg_item[]){
-                bn::regular_bg_items::fireworks_a0,
-                bn::regular_bg_items::fireworks_a1,
-                bn::regular_bg_items::fireworks_a2
-            }, 3
-        );
-        const bn::span<const bn::regular_bg_item> layer_b_fireworks = bn::span(
-            (const bn::regular_bg_item[]){
-                bn::regular_bg_items::fireworks_b0,
-                bn::regular_bg_items::fireworks_b1,
-                bn::regular_bg_items::fireworks_b2,
-                bn::regular_bg_items::fireworks_b3
-            }, 4
-        );
     };
 }
 #endif // NIGHTSKY_FIREWORKS_CPP_H

@@ -35,12 +35,21 @@ namespace ks
         virtual void after_show(void (*on_update)()) {
         }
 
+        virtual void set_state(const int state) {
+            _state = state;
+        }
+
+        int get_state() const {
+            return _state;
+        }
+
         bool is_initialized() const {
             return _initialized;
         }
 
     protected:
         bool _initialized = false;
+        int _state = 0;
     };
 }
 

@@ -143,8 +143,10 @@ namespace ks {
                     progress_icon_sprites.clear();
                     if (background_visual.active_event.has_value()) {
                         BN_LOG("Should dispose custom event");
+                        const int event_state = (*background_visual.active_event)->get_state();
                         (*background_visual.active_event)->destroy();
                         next_event = (*background_visual.active_event)->create();
+                        (*next_event)->set_state(event_state);
                         background_visual.active_event.reset();
                     }
                     menu_bg_sprites.clear();
@@ -180,6 +182,7 @@ namespace ks {
         }
 
         void show_dots_animation(const bool forward) {
+            dots_offset = forward ? 0 : 336;
             secondary_background = bn::regular_bg_items::ui_backdrop_dots.create_bg(0, 0);
             secondary_background->set_priority(3);
             secondary_background->set_z_order(9);

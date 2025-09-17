@@ -3018,7 +3018,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x69A00054);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::li, 141));
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_SERENE, 240));
-            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::hanako_fw_base, HanakoFireworksEvent(), SCENE_TRANSITION_NONE, 0));
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::hanako_fw_base, HanakoFireworksEvent(), SCENE_TRANSITION_LOCATIONSKIP, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x88FB9371);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 142));
@@ -3029,8 +3029,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0xB01ECF4F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 145));
             IF_NOT_EXIT(ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 180));
-            // TODO: Hide hanako_fw
-            IF_NOT_EXIT(ks::SceneManager::update_visuals());
+            IF_NOT_EXIT(ks::SceneManager::set_event_state(1));
             ks::SceneManager::set_line_hash(0x66591C1A);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 146));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::suburb_shanghaiint, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));

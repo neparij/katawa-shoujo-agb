@@ -12,6 +12,7 @@ from src.dto.background_transform_item import BackgroundTransformItem
 from src.dto.background_transition_item import BackgroundTransitionItem
 from src.dto.condition_item import ConditionItem
 from src.dto.custom_event_item import CustomEventItem
+from src.dto.custom_event_state_item import CustomEventStateItem
 from src.dto.dialog_item import DialogItem
 from src.dto.doublespeak_item import DoubleSpeakItem
 from src.dto.hide_item import HideEvent, HideItem
@@ -408,6 +409,13 @@ class ScenarioReader:
 
             self._hack_latest_sprite_name = None # TODO: Remove after "Friday"-hack
             return
+
+        elif stripped_line.startswith("state ev"):
+            match = re.match(r'state ev\s+(\d+)$', stripped_line)
+            if not match:
+                raise Exception(f"Invalid state ev syntax: {stripped_line}")
+            event_state = int(match.group(1))
+            self.stack.current().add_sequence_item(self.linepack_events, CustomEventStateItem(event_state))
 
         elif stripped_line.startswith("show passoutOP1"):
             self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(BgTransition.PASSOUTOP1))
@@ -939,7 +947,8 @@ def scenario_rewrites(scenario_file, content):
             "            hide yuukoshang\n"
             "            with locationskip",
             # WITH
-            "            scene ev hanako_fw"
+            "            scene ev hanako_fw\n"
+            "            with locationskip"
         ).replace(
             "            hide fireshine\n"
             "            show bg misc_sky_ni as front\n"
@@ -959,6 +968,11 @@ def scenario_rewrites(scenario_file, content):
             "            show hanako emb_timid\n"
             "            show yuukoshang happy_down\n"
             "            with locationchange"
+        ).replace(
+            "            hide hanako_fw\n"
+            "            with Dissolve(1.0)",
+            # WITH
+            "            state ev 1"
         )
 
     return content

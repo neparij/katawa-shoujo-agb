@@ -6,6 +6,7 @@ class SequenceType(Enum):
     ASSIGNMENT = "assignment"
     BACKGROUND = "background"
     CUSTOM_EVENT = "custom_event"
+    CUSTOM_EVENT_STATE = "custom_event_state"
     CONDITION = "condition"
     DIALOG = "dialog"
     DOUBLESPEAK = "doublespeak"
