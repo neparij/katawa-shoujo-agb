@@ -20,27 +20,27 @@ class TilePack:
         self.amount = amount
 
 SNOW_FG : List[TilePack] = [
-    TilePack("tiles/snow_bg_0.bmp", 64),
-    TilePack("tiles/snow_bg_1.bmp", 64),
-    TilePack("tiles/snow_fg_0.bmp", 64),
-    TilePack("tiles/snow_fg_1.bmp", 16),
+    TilePack("../tiles/snow_bg_0.bmp", 64),
+    TilePack("../tiles/snow_bg_1.bmp", 64),
+    TilePack("../tiles/snow_fg_0.bmp", 64),
+    TilePack("../tiles/snow_fg_1.bmp", 16),
 ]
 
 SNOW_BG : List[TilePack] = [
-    TilePack("tiles/snow_bg_0.bmp", 64),
-    TilePack("tiles/snow_bg_1.bmp", 64),
-    TilePack("tiles/snow_bg_2.bmp", 64),
-    TilePack("tiles/snow_bg_3.bmp", 8),
+    TilePack("../tiles/snow_bg_0.bmp", 64),
+    TilePack("../tiles/snow_bg_1.bmp", 64),
+    TilePack("../tiles/snow_bg_2.bmp", 64),
+    TilePack("../tiles/snow_bg_3.bmp", 8),
 ]
 
 SAKURA_LAYER_0 : List[TilePack] = [
-    TilePack("tiles/sakura_0.bmp", 48),
-    TilePack("tiles/sakura_1.bmp", 32),
+    TilePack("../tiles/sakura_0.bmp", 48),
+    TilePack("../tiles/sakura_1.bmp", 32),
 ]
 
 SAKURA_LAYER_1 : List[TilePack] = [
-    TilePack("tiles/sakura_0.bmp", 16),
-    TilePack("tiles/sakura_1.bmp", 24),
+    TilePack("../tiles/sakura_0.bmp", 16),
+    TilePack("../tiles/sakura_1.bmp", 24),
 ]
 
 def shared_palette(tile_packs: List[TilePack]) -> list[int] | None:
@@ -132,7 +132,7 @@ def create_tiles_json_metadata(image_path):
 
     print(f"Metadata saved: {json_path}")
 
-if __name__ == "__main__":
+def main():
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/vfx"
 
     # generate_with_array(SNOW_FG, (512, 512), output_directory, "snow_layer_0.bmp")
@@ -141,3 +141,7 @@ if __name__ == "__main__":
     generate_tiles(SAKURA_LAYER_0, output_directory, "sakura_tiles_{:d}.bmp")
     generate_with_array(SAKURA_LAYER_0, (256, 256), output_directory, "sakura_layer_0.bmp")
     generate_with_array(SAKURA_LAYER_1, (256, 256), output_directory, "sakura_layer_1.bmp")
+
+
+if __name__ == "__main__":
+    main()
