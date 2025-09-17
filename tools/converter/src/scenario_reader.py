@@ -1012,7 +1012,7 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     if bg_name == "nightsky_fw":
         return "misc_sky_ni", "NightskyFireworksEvent"
 
-    # HANKO FIREWORKS
+    # HANAKO FIREWORKS
     if bg_name == "hanako_fw":
         return "hanako_fw_base", "HanakoFireworksEvent"
 
