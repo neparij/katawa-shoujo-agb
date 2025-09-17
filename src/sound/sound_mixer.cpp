@@ -91,7 +91,7 @@ namespace sound_mixer {
             player8AD_init();
     }
 
-    INLINE void mix_audio_resampled_linear(const s8* in_buf, s8* out_buf, const int in_len, const int out_len, bn::fixed volume) {
+    BN_CODE_IWRAM inline void mix_audio_resampled_linear(const s8* in_buf, s8* out_buf, const int in_len, const int out_len, bn::fixed volume) {
         const u32 step = (in_len << 16) / out_len;  // 16.16 fixed-point
         u32 pos = 0;
 
@@ -112,7 +112,7 @@ namespace sound_mixer {
         }
     }
 
-    void mix_audio(const s8 *src_buffer, const int src_size, const bn::fixed volume = 1.0) {
+    BN_CODE_IWRAM void mix_audio(const s8 *src_buffer, const int src_size, const bn::fixed volume = 1.0) {
         if (src_buffer == nullptr) {
             return;
         }
