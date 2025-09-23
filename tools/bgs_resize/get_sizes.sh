@@ -4,13 +4,11 @@ DIR="${1:-.}"
 DIR="$(cd "$DIR" && pwd)"
 TMP=$(mktemp)
 
-# Один вызов identify для всех файлов
 find "$DIR" -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) \
     -print0 | xargs -0 identify -format "%wx%h %i\n" 2>/dev/null \
     | sed "s|$DIR/|./|" \
     | sort > "$TMP"
 
-# Группировка
 awk '
 {
     size=$1; $1=""; path=substr($0,2)
