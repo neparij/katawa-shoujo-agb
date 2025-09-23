@@ -29,7 +29,7 @@ public:
 
     virtual const char* menu_options_high_contrast() = 0;
     virtual const char* menu_options_hdisabled() = 0;
-    virtual bn::array<char*, 4> menu_options_disable_disturbing_content() = 0;
+    virtual bn::array<const char*, 4> menu_options_disable_disturbing_content() = 0;
     virtual const char* menu_options_language() = 0;
 
     virtual const char* menu_start() = 0;

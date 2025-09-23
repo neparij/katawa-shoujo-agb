@@ -29,10 +29,10 @@ namespace ks
             return false;
         }
 
-        virtual void before_hide(void (*on_update)()) {
+        virtual void before_hide([[maybe_unused]] void (*on_update)()) {
         }
 
-        virtual void after_show(void (*on_update)()) {
+        virtual void after_show([[maybe_unused]] void (*on_update)()) {
         }
 
         virtual void set_state(const int state) {

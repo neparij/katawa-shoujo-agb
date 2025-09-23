@@ -10,18 +10,7 @@ namespace ks {
     class ActOpening3Rin final : public ActOpening<2> {
     public:
         explicit ActOpening3Rin(): ActOpening(
-            (const opening_slide[2]){
-                opening_slide{
-                    bn::regular_bg_items::act_3_rin_left_slide,
-                    88,
-                    0
-                },
-                opening_slide{
-                    bn::regular_bg_items::act_3_rin_right_slide,
-                    -88,
-                    0
-                }
-            },
+            slides,
             {
                 124,
                 24,
@@ -32,6 +21,19 @@ namespace ks {
         opening_text get_text() override {
             return globals::i18n->opening_text_act3_rin();
         }
+    private:
+        static constexpr opening_slide slides[2] = {
+            {
+                bn::regular_bg_items::act_3_rin_left_slide,
+                88,
+                0
+            },
+            {
+                bn::regular_bg_items::act_3_rin_right_slide,
+                -88,
+                0
+            }
+        };
     };
 }
 #endif //KS_ACT_OPENING_3_RIN_H

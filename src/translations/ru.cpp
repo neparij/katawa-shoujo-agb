@@ -24,7 +24,7 @@ public:
 
     const char* menu_options_high_contrast() override {return "Повышенный контраст";}
     const char* menu_options_hdisabled() override {return "Отключить 18+ контент";}
-    bn::array<char*, 4> menu_options_disable_disturbing_content() override {
+    bn::array<const char*, 4> menu_options_disable_disturbing_content() override {
         return {"Пропуск сцен для взрослых,", "которые могут причинить", "боль",};
     }
     const char* menu_options_language() override {return "Язык";}

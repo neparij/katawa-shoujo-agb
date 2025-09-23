@@ -137,6 +137,7 @@ namespace ks {
 
         void after_show(void(*on_update)()) override {
             _allow_updates = true;
+            on_update();
         }
 
         void destroy() override {

@@ -85,7 +85,10 @@ namespace ks {
             on_update();
         }
 
-        virtual void on_navigate(const bool up, const bool down, const bool left, const bool right) {
+        virtual void on_navigate([[maybe_unused]] const bool up,
+                                 [[maybe_unused]] const bool down,
+                                 [[maybe_unused]] const bool left,
+                                 [[maybe_unused]] const bool right) {
             if (up || down) {
                 selection += up ? -1 : 1;
                 selection += items_count;
@@ -95,7 +98,7 @@ namespace ks {
             }
         }
 
-        virtual void on_select(const int option) {
+        virtual void on_select([[maybe_unused]] const int option) {
 
         }
 

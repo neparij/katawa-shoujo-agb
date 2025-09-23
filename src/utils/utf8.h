@@ -43,7 +43,7 @@ namespace ks {
         }
 
         [[nodiscard]] bn::string_view substr(const unsigned int pos, const unsigned int count) const {
-            int i = 0;
+            unsigned int i = 0;
             for (int cursor = 0; cursor < _view.size();) {
                 if (i == pos) {
                     const int start = cursor;

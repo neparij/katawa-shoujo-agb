@@ -34,13 +34,6 @@ namespace ks {
             // _huge_ptr = huge_ptr;
         }
 
-        explicit constexpr background_ptr(const ks::background_item &item, bn::nullopt_t null)
-            : _item(item),
-              _regular_ptr(bn::nullopt),
-              _affine_ptr(bn::nullopt),
-              _huge_ptr(bn::nullopt) {
-        }
-
         // Move constructor and assignment
         background_ptr(background_ptr&&) noexcept = default;
         background_ptr& operator=(background_ptr&&) noexcept = default;

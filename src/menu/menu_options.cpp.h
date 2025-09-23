@@ -67,6 +67,7 @@ namespace ks {
             selection_indexes.clear();
             checkboxes_ptrs.clear();
 
+            items_count = 0;
             static_text_sprites.clear();
             progress_icon_sprites.clear();
             globals::main_update();
