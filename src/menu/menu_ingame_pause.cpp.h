@@ -38,6 +38,7 @@ namespace ks {
                 // SceneManager::transition_fadeout(bn::affine_bg_items::test_dots_col, 16, true);
                 // bn::blending::set_transparency_alpha(1.0);
             } else {
+                primary_background.reset();
                 if (background_visual.bg_item.has_value()) {
                     background_visual.visible_bg_item = background_visual.bg_item->create_bg(
                         background_visual.position_x,
@@ -120,50 +121,36 @@ namespace ks {
         }
 
         void on_select(const int option) override {
+
+            if (option == 2 || option == 3) {
+                background_visual.visible_bg_item.reset();
+                primary_background.reset();
+                secondary_background.reset();
+                static_text_sprites.clear();
+                animated_text_sprites.clear();
+                progress_icon_sprites.clear();
+                if (background_visual.active_event.has_value()) {
+                    BN_LOG("Should dispose custom event");
+                    const int event_state = (*background_visual.active_event)->get_state();
+                    (*background_visual.active_event)->destroy();
+                    next_event = (*background_visual.active_event)->create();
+                    (*next_event)->set_state(event_state);
+                    background_visual.active_event.reset();
+                }
+                menu_bg_sprites.clear();
+            }
+
             switch (option) {
                 case 0:
                     on_back();
                     break;
-                // case 3:
-                //     slot_idx = saves::getUsedSaveSlots();
-                //     if (slot_idx < saves::getTotalSaveSlots()) {
-                //         BN_LOG("Save game to slot ", slot_idx);
-                //         SceneManager::save(slot_idx);
-                //     } else {
-                //         BN_ERROR("No more slots available");
-                //         break;
-                //     }
-                //     break;
+                case 2:
+                    globals::state = GS_GAME_MENU_OPTIONS;
+                    break;
                 case 3:
-                    background_visual.visible_bg_item.reset();
-                    primary_background.reset();
-                    secondary_background.reset();
-                    static_text_sprites.clear();
-                    animated_text_sprites.clear();
-                    progress_icon_sprites.clear();
-                    if (background_visual.active_event.has_value()) {
-                        BN_LOG("Should dispose custom event");
-                        const int event_state = (*background_visual.active_event)->get_state();
-                        (*background_visual.active_event)->destroy();
-                        next_event = (*background_visual.active_event)->create();
-                        (*next_event)->set_state(event_state);
-                        background_visual.active_event.reset();
-                    }
-                    menu_bg_sprites.clear();
                     globals::state = GS_GAME_MENU_SAVES;
                     break;
                 case 4:
-                    // ks::sound_manager::fadeout_stop_all();
-                    // globals::exit_scenario = true;
-                    // if (!in_replay) {
-                    //     SceneManager::autosave();
-                    // }
-                    //
-                    // for(int alpha = 16; alpha <= 32; ++alpha) {
-                    //     bn::bg_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
-                    //     bn::sprite_palettes::set_fade(globals::colors::BLACK, bn::fixed(alpha) / 32);
-                    //     ks::globals::main_update();
-                    // }
                     fade_out();
                     sound_manager::stop<SOUND_CHANNEL_MUSIC>();
                     sound_manager::stop<SOUND_CHANNEL_SOUND>();

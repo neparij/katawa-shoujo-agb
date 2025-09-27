@@ -13,7 +13,7 @@ namespace ks {
 
         const bool user_skip = bn::keypad::b_held();
         const bool user_advance = bn::keypad::a_pressed();
-        constexpr int render_speed = 1;
+        const int render_speed = (0xFF - globals::settings.text_speed) / 34;
 
         if (waiting_for_input) {
             if (text_wait_map.contains(current_char_index)) {

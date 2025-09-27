@@ -54,6 +54,9 @@
 #include "videoplayer/video_player.h"
 
 #include "menu/menu_ingame_pause.cpp.h"
+#include "menu/menu_options.cpp.h"
+#include "menu/menu_options_accessibility.cpp.h"
+#include "menu/menu_options_language.cpp.h"
 #include "menu/menu_saves.cpp.h"
 #include "openings/act1.cpp.h"
 #include "openings/act2_emi.cpp.h"
@@ -145,11 +148,15 @@ void SceneManager::set(const ks::SceneManager instance) {
 }
 
 void SceneManager::set_textdb(const char *db) {
-    textdb::set(db, scene->locale());
+    textdb::set(db, globals::i18n->locale());
     if (!is_loading) {
         textdb::free();
         textdb::allocate();
     }
+}
+
+void SceneManager::reload_textdb() {
+    set_textdb(textdb::get_chunk());
 }
 
 void SceneManager::init_savedata(ks::saves::SaveSlotProgressData &value) {
@@ -299,6 +306,28 @@ void SceneManager::disable_fill() {
     background_visual.fill_color.reset();
 }
 
+inline void SceneManager::process_menu_states(const gameState_t &state) {
+    switch (state) {
+        case GS_GAME_MENU:
+            ks::MenuIngamePause().run();
+            break;
+        case GS_GAME_MENU_SAVES:
+            ks::MenuSaves().run();
+            break;
+        case GS_GAME_MENU_OPTIONS:
+            ks::MenuOptions().run();
+            break;
+        case GS_GAME_MENU_OPTIONS_ACCESSIBILITY:
+            ks::MenuOptionsAccessibility().run();
+            break;
+        case GS_GAME_MENU_OPTIONS_LANGUAGE:
+            ks::MenuOptionsLanguage().run();
+            break;
+        default:
+            BN_ERROR("Wrong state: ", ks::globals::state);
+    }
+}
+
 
 void SceneManager::set_event(const background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
     set_background(bg, 0, 0, transition, dissolve_time, PALETTE_VARIANT_DEFAULT);
@@ -332,35 +361,27 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
     }
 
     while (!ks::globals::exit_scenario) {
-        switch (globals::state) {
-            case GS_GAME:
-                ks::textdb::get_tl<1024>(tl_key, message);
-                dialog_default.set_actor(actor);
-                dialog_default.proceed_message();
+        if (globals::state == GS_GAME) {
+            ks::textdb::get_tl<1024>(tl_key, message);
+            dialog_default.set_actor(actor);
+            dialog_default.proceed_message();
 
-                dialog_novel.hide(true);
-                dialog_doublespeak.hide(true);
-                dialog_default.show(true);
+            dialog_novel.hide(true);
+            dialog_doublespeak.hide(true);
+            dialog_default.show(true);
 
-                while (!dialog_default.is_finished() && !bn::keypad::start_pressed()) {
-                    dialog_default.update();
-                    ks::globals::main_update();
-                }
+            while (!dialog_default.is_finished() && !bn::keypad::start_pressed()) {
+                dialog_default.update();
+                ks::globals::main_update();
+            }
 
-                if (bn::keypad::start_pressed()) {
-                    globals::state = GS_GAME_MENU;
-                    is_paused = true;
-                    update_visuals();
-                }
-                break;
-            case GS_GAME_MENU:
-                ks::MenuIngamePause().run();
-                break;
-            case GS_GAME_MENU_SAVES:
-                ks::MenuSaves().run();
-                break;
-            default:
-                BN_ERROR("Wrong state: ", ks::globals::state);
+            if (bn::keypad::start_pressed()) {
+                globals::state = GS_GAME_MENU;
+                is_paused = true;
+                update_visuals();
+            }
+        } else {
+            process_menu_states(globals::state);
         }
         if (dialog_default.is_finished()) {
             break;
@@ -382,37 +403,29 @@ void SceneManager::show_doublespeak(const character_definition &actor_left, unsi
     }
 
     while (!ks::globals::exit_scenario) {
-        switch (globals::state) {
-            case GS_GAME:
-                ks::textdb::get_tl<128>(tl_key_left, message_doublespeak_a);
-                ks::textdb::get_tl<128>(tl_key_right, message_doublespeak_b);
+        if (globals::state ==  GS_GAME) {
+            ks::textdb::get_tl<128>(tl_key_left, message_doublespeak_a);
+            ks::textdb::get_tl<128>(tl_key_right, message_doublespeak_b);
 
-                dialog_doublespeak.set_actors(actor_left, actor_right);
-                dialog_doublespeak.proceed_messages();
+            dialog_doublespeak.set_actors(actor_left, actor_right);
+            dialog_doublespeak.proceed_messages();
 
-                dialog_novel.hide(true);
-                dialog_default.hide(true);
-                dialog_doublespeak.show(true);
+            dialog_novel.hide(true);
+            dialog_default.hide(true);
+            dialog_doublespeak.show(true);
 
-                while (!dialog_doublespeak.is_finished() && !bn::keypad::start_pressed()) {
-                    dialog_doublespeak.update();
-                    ks::globals::main_update();
-                }
+            while (!dialog_doublespeak.is_finished() && !bn::keypad::start_pressed()) {
+                dialog_doublespeak.update();
+                ks::globals::main_update();
+            }
 
-                if (bn::keypad::start_pressed()) {
-                    globals::state = GS_GAME_MENU;
-                    is_paused = true;
-                    update_visuals();
-                }
-                break;
-            case GS_GAME_MENU:
-                ks::MenuIngamePause().run();
-                break;
-            case GS_GAME_MENU_SAVES:
-                ks::MenuSaves().run();
-                break;
-            default:
-                BN_ERROR("Wrong state: ", ks::globals::state);
+            if (bn::keypad::start_pressed()) {
+                globals::state = GS_GAME_MENU;
+                is_paused = true;
+                update_visuals();
+            }
+        } else {
+            process_menu_states(globals::state);
         }
         if (dialog_doublespeak.is_finished()) {
             break;
@@ -420,7 +433,7 @@ void SceneManager::show_doublespeak(const character_definition &actor_left, unsi
     }
 }
 
-void SceneManager::show_dialog_question(bn::vector<ks::answer_ptr, 5> answers) {
+void SceneManager::show_dialog_question(const bn::vector<ks::answer_ptr, 5>& answers) {
     if (is_loading) {
         return;
     }
@@ -428,46 +441,38 @@ void SceneManager::show_dialog_question(bn::vector<ks::answer_ptr, 5> answers) {
     bool redisplay_dialog = false;  // Prevents re-showing dialog unnecessarily
 
     while (!ks::globals::exit_scenario) {
-        switch (globals::state) {
-            case GS_GAME:
-                // Phase 1: Redisplay the dialog box with the message (optional)
-                if (redisplay_dialog) {
-                    dialog_default.show(true);
-                    while (!dialog_default.is_finished() && !bn::keypad::start_pressed()) {
-                        dialog_default.update();
-                        globals::main_update();
-                    }
-                }
-
-                // Phase 2: Display the question dialog
-                answers_messages.clear();
-                for (const auto& answer : answers) {
-                    answers_messages.push_back(bn::string<128>(""));
-                    textdb::get_tl<128>(answer.tl_key, answers_messages.back());
-                }
-                dialog_default.show_answers(answers_messages);
-
+        if (globals::state == GS_GAME) {
+            // Phase 1: Redisplay the dialog box with the message (optional)
+            if (redisplay_dialog) {
+                dialog_default.show(true);
                 while (!dialog_default.is_finished() && !bn::keypad::start_pressed()) {
                     dialog_default.update();
                     globals::main_update();
                 }
-                dialog_default.reset_answers();
+            }
 
-                if (bn::keypad::start_pressed()) {
-                    redisplay_dialog = true;
-                    globals::state = GS_GAME_MENU;
-                    is_paused = true;
-                    update_visuals();
-                }
-                break;
-            case GS_GAME_MENU:
-                ks::MenuIngamePause().run();
-            break;
-            case GS_GAME_MENU_SAVES:
-                ks::MenuSaves().run();
-            break;
-            default:
-                BN_ERROR("Wrong state: ", ks::globals::state);
+            // Phase 2: Display the question dialog
+            answers_messages.clear();
+            for (const auto& answer : answers) {
+                answers_messages.push_back(bn::string<128>(""));
+                textdb::get_tl<128>(answer.tl_key, answers_messages.back());
+            }
+            dialog_default.show_answers(answers_messages);
+
+            while (!dialog_default.is_finished() && !bn::keypad::start_pressed()) {
+                dialog_default.update();
+                globals::main_update();
+            }
+            dialog_default.reset_answers();
+
+            if (bn::keypad::start_pressed()) {
+                redisplay_dialog = true;
+                globals::state = GS_GAME_MENU;
+                is_paused = true;
+                update_visuals();
+            }
+        } else {
+            process_menu_states(globals::state);
         }
         if (dialog_default.is_finished()) {
             break;
@@ -503,31 +508,23 @@ void SceneManager::nvl_show(const unsigned int tl_key) {
     dialog_novel.add_tl_key(tl_key);
 
     while (!ks::globals::exit_scenario) {
-        switch (globals::state) {
-            case GS_GAME:
-                dialog_default.hide(true);
-                dialog_doublespeak.hide(true);
-                dialog_novel.show(true);
+        if (globals::state == GS_GAME) {
+            dialog_default.hide(true);
+            dialog_doublespeak.hide(true);
+            dialog_novel.show(true);
 
-                while (!dialog_novel.is_finished() && !bn::keypad::start_pressed()) {
-                    dialog_novel.update();
-                    ks::globals::main_update();
-                }
+            while (!dialog_novel.is_finished() && !bn::keypad::start_pressed()) {
+                dialog_novel.update();
+                ks::globals::main_update();
+            }
 
-                if (bn::keypad::start_pressed()) {
-                    globals::state = GS_GAME_MENU;
-                    is_paused = true;
-                    update_visuals();
-                }
-                break;
-            case GS_GAME_MENU:
-                ks::MenuIngamePause().run();
-                break;
-            case GS_GAME_MENU_SAVES:
-                ks::MenuSaves().run();
-                break;
-            default:
-                BN_ERROR("Wrong state: ", ks::globals::state);
+            if (bn::keypad::start_pressed()) {
+                globals::state = GS_GAME_MENU;
+                is_paused = true;
+                update_visuals();
+            }
+        } else {
+            process_menu_states(globals::state);
         }
         if (dialog_novel.is_finished()) {
             break;

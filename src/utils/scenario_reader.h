@@ -19,6 +19,8 @@ namespace ks {
         extern const char *_chunk;
         extern const char *_locale;
 
+        [[nodiscard]] const char *get_chunk();
+
         void set(const char *chunk, const char *locale);
 
         void allocate();

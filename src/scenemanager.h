@@ -88,7 +88,7 @@ struct answer_ptr
 
 class SceneManager {
 public:
-    constexpr explicit SceneManager(const char* scenario) : _scenario(scenario), _locale(ks::globals::i18n->locale()) {
+    constexpr explicit SceneManager(const char* scenario) : _scenario(scenario) {
     }
     constexpr ~SceneManager() = default;
 
@@ -96,6 +96,7 @@ public:
     static void free_resources();
     static void set(const ks::SceneManager instance);
     static void set_textdb(const char* db);
+    static void reload_textdb();
     static void init_savedata(ks::saves::SaveSlotProgressData &value);
     static void set_script(const script_t script);
     static void set_label(const label_t label);
@@ -125,6 +126,8 @@ public:
     static void enable_fill(bn::color color);
     static void disable_fill();
 
+    static void process_menu_states(const gameState_t &state);
+
     static void set_event(const background_meta& bg,
                           const CustomEvent& event,
                           scene_transition_t transition,
@@ -141,7 +144,7 @@ public:
     static void show_dialog(unsigned int actor_tl_key, unsigned int tl_key);
     static void show_doublespeak(const ks::character_definition& actor_left, unsigned int tl_key_left,
                                  const ks::character_definition& actor_right, unsigned int tl_key_right);
-    static void show_dialog_question(bn::vector<ks::answer_ptr, 5> answers);
+    static void show_dialog_question(const bn::vector<ks::answer_ptr, 5>& answers);
     static int get_dialog_question_answer();
     static void nvl_clear();
     static void nvl_hide();
@@ -215,16 +218,12 @@ public:
     static void transition_fadein(const bn::affine_bg_item &transition_item, int speed, bool reverse);
     static void transition_fadeout(const bn::affine_bg_item &transition_item, int speed, bool reverse);
 
-    constexpr const char* scenario() const { return _scenario; }
-    constexpr const char* locale() const { return _locale; }
-
 private:
     static void perform_act_fadeout();
     static void perform_render_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear);
     static void perform_render_video(const uint8_t* dxtv_file, size_t dxtv_size, const char* audio_file, bn::color clear, bool force_white_end);
     static int get_character_visual_index(character_t character, bool create_if_not_found = true);
     const char* _scenario;
-    const char* _locale;
 };
 
 extern bn::string<1024> message;

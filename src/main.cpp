@@ -24,6 +24,8 @@
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
+#include "menu/menu_options_accessibility.cpp.h"
+#include "menu/menu_options_language.cpp.h"
 #include "openings/act1.cpp.h"
 #include "openings/act2_emi.cpp.h"
 #include "openings/act3_emi.cpp.h"
@@ -313,6 +315,12 @@ int main() {
                 break;
             case GS_MENU_OPTIONS:
                 ks::MenuOptions().run();
+                break;
+            case GS_MENU_OPTIONS_LANGUAGE:
+                ks::MenuOptionsLanguage().run();
+                break;
+            case GS_MENU_OPTIONS_ACCESSIBILITY:
+                ks::MenuOptionsAccessibility().run();
                 break;
             case GS_MENU_EXTRAS_JUKEBOX:
                 ks::MenuExtrasJukebox().run();

@@ -10,7 +10,7 @@
 #include "save_migrations.h"
 #include "../globals.h"
 
-#define INTEGRITY_VERSION INTEGRITY_VERSION_V1
+#define INTEGRITY_VERSION INTEGRITY_VERSION_V2
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
 
 extern FlashInfo gFlashInfo;
@@ -77,6 +77,7 @@ bool ks::saves::initialize() {
     if (save_data->integrity_begin.tag == getIntegrityTag() &&
         save_data->integrity_begin.version != INTEGRITY_VERSION) {
         migrate(save_data);
+        save(save_data);
     }
 
     if (!isValid(save_data)) {
@@ -351,9 +352,11 @@ void ks::saves::log_settings(SaveSettingsData &settings) {
     BN_LOG("Settings:");
     BN_LOG("  language: ", settings.language);
     BN_LOG("  hdisabled: ", settings.hdisabled);
-    BN_LOG("  disable_disturbing_content: ", settings.disable_disturbing_content);
+    BN_LOG("  music_volume: ", settings.music_volume);
+    BN_LOG("  sfx_volume: ", settings.sfx_volume);
     BN_LOG("  text_speed: ", settings.text_speed);
     BN_LOG("  high_contrast: ", settings.high_contrast);
+    BN_LOG("  disable_disturbing_content: ", settings.disable_disturbing_content);
     BN_LOG("  adult_warning_shown: ", settings.adult_warning_shown);
 }
 

@@ -9,7 +9,7 @@ public:
         return LANG_ENGLISH;
     }
     const char* locale() override {return "en";}
-    const char* language() override {return screens_english();}
+    const char* language() override {return language_en();}
 
     const char* menu_author() override {return "port by NeParij";}
     const char* menu_play_a0_test_scene() override {return "Test Scene";}
@@ -23,17 +23,29 @@ public:
     const char* menu_play_all() override {return "Play all available";}
     const char* menu_video_test() override {return "Video tests";}
 
-    const char* menu_options_high_contrast() override {return "High contrast";}
-    const char* menu_options_hdisabled() override {return "Disable adult content";}
-    bn::array<const char*, 4> menu_options_disable_disturbing_content() override {
-        return {"Skip hurtful adult scenes"};
-    }
-    const char* menu_options_language() override {return "Language";}
-
     const char* menu_start() override {return "Start";}
     const char* menu_saves() override {return "Saves";}
     const char* menu_extras() override {return "Extras";}
     const char* menu_options() override {return "Options";}
+    const char* menu_language() override {return "Language";}
+    const char* menu_accessibility() override {return "Accessibility";}
+
+    const char* menu_options_general() override {return "General";}
+    const char* menu_options_sound() override {return "Sound";}
+    const char* menu_options_hdisabled() override {return "Disable adult content";}
+    const char* menu_options_language() override {return "Language selection…";}
+    const char* menu_options_accessibility() override {return "Accessibility…";}
+    const char* menu_options_music_volume() override {return "Music volume";}
+    const char* menu_options_sfx_volume() override {return "SFX volume";}
+
+    const char* menu_options_accessibility_display() override {return "Display";}
+    const char* menu_options_accessibility_text_speed() override {return "Text speed";}
+    const char* menu_options_accessibility_brightness() override {return "Brightness";}
+    const char* menu_options_accessibility_high_contrast() override {return "High contrast";}
+    const char* menu_options_accessibility_mental() override {return "Mental";}
+    bn::array<const char*, 4> menu_options_accessibility_disable_disturbing_content() override {
+        return {"Skip hurtful adult scenes"};
+    }
 
     const char* menu_extras_jukebox() override {return "Jukebox";}
     const char* menu_extras_gallery() override {return "Gallery";}
@@ -48,12 +60,18 @@ public:
 
     const char* menu_back() override {return "Back";}
 
-    const char* screens_english() override {return "English";}
-    const char* screens_russian() override {return "Russian";}
+    const char* language_en() override {return "English";}
+    const char* language_ru() override {return "Russian";}
+    const char* language_fr() override {return "French";}
+    const char* language_it() override {return "Italian";}
+    const char* language_es() override {return "Spanish";}
+    const char* language_de() override {return "German";}
+    const char* language_jp() override {return "Japanese";}
+    const char* language_zh_hans() override {return "Simplified Chinese";}
 
     const char* screens_return() override {return "Return";}
     const char* screens_history() override {return "History (n/a)";}
-    const char* screens_options() override {return "Options (n/a)";}
+    const char* screens_options() override {return "Options";}
     const char* screens_saves_menu() override {return "Saves";}
     const char* screens_main_menu() override {return "Main menu";}
 
