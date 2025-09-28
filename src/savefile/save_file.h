@@ -40,12 +40,16 @@ namespace ks {
             // User Settings
             language_t language;
             bool hdisabled;
-            bool disable_disturbing_content;
 
-            unsigned char text_speed;
+            // Sound settings
+            unsigned char music_volume = 0xCC; // Music volume (ULC), default is 80%
+            unsigned char sfx_volume = 0xCC;   // SFX volume (8ad), default is 80%
 
             // Accessibility
+            unsigned char text_speed = 0xCC; // Text rendering speed, default is 80%
+            unsigned char brightness = 0x00; // Additional brightness, default is 0%
             bool high_contrast;
+            bool disable_disturbing_content;
 
             // States
             bool adult_warning_shown;
@@ -53,9 +57,11 @@ namespace ks {
             bool operator==(const SaveSettingsData &other) const {
                 return language == other.language &&
                        hdisabled == other.hdisabled &&
-                       disable_disturbing_content == other.disable_disturbing_content &&
+                       music_volume == other.music_volume &&
+                       sfx_volume == other.sfx_volume &&
                        text_speed == other.text_speed &&
                        high_contrast == other.high_contrast &&
+                       disable_disturbing_content == other.disable_disturbing_content &&
                        adult_warning_shown == other.adult_warning_shown;
             }
         };

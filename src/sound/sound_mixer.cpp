@@ -138,9 +138,9 @@ namespace sound_mixer {
         if (is_muted) {
             return;
         }
-        mix_audio(playerULC_get_buffer(), BUFFER_SIZE_ULC, ks::sound_manager::get_mixed_volume<SOUND_CHANNEL_MUSIC>());
-        mix_audio(player8AD_get_buffer(0), BUFFER_SIZE_8AD, ks::sound_manager::get_mixed_volume<SOUND_CHANNEL_SOUND>());
-        mix_audio(player8AD_get_buffer(1), BUFFER_SIZE_8AD, ks::sound_manager::get_mixed_volume<SOUND_CHANNEL_AMBIENT>());
+        mix_audio(playerULC_get_buffer(), BUFFER_SIZE_ULC, ks::sound_manager::get_mixed_volume<SOUND_CHANNEL_MUSIC>() * ks::globals::settings.music_volume / 255);
+        mix_audio(player8AD_get_buffer(0), BUFFER_SIZE_8AD, ks::sound_manager::get_mixed_volume<SOUND_CHANNEL_SOUND>() * ks::globals::settings.sfx_volume / 255);
+        mix_audio(player8AD_get_buffer(1), BUFFER_SIZE_8AD, ks::sound_manager::get_mixed_volume<SOUND_CHANNEL_AMBIENT>() * ks::globals::settings.sfx_volume / 255);
     }
 
     void update() {

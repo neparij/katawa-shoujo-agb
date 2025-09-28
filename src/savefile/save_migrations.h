@@ -36,6 +36,9 @@ namespace ks {
                 migrate_v1_to_v2(v1, save_data);
                 bn::memory::ewram_free(v1);
             }
+
+            save_data->integrity_end.tag = save_data->integrity_begin.tag;
+            save_data->integrity_end.version = save_data->integrity_begin.version;
         }
     }
 }

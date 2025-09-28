@@ -101,13 +101,15 @@ namespace ks::globals {
         } else if (settings.language == LANG_RUSSIAN) {
             i18n = bn::make_unique<TranslationRu>(TranslationRu());
         } else {
-            BN_ERROR("Unkown language");
+            BN_ERROR("Language is not implemented");
         }
     }
 
     void accessibility_apply() {
-        bn::bg_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
-        bn::sprite_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.2 : 0));
+        bn::bg_palettes::set_brightness(bn::fixed(settings.brightness).division(1023));
+        bn::sprite_palettes::set_brightness(bn::fixed(settings.brightness).division(1023));
+        bn::bg_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.1 : 0));
+        bn::sprite_palettes::set_contrast(bn::fixed(settings.high_contrast ? 0.1 : 0));
     }
 
     [[nodiscard]] bn::fixed transparency_alpha() {

@@ -73,12 +73,12 @@ namespace ks {
 
         void on_back() override {
             BN_LOG("on back, state = ", globals::state);
-            if (globals::state == GS_MENU_SAVES) {
+            if (globals::state == GS_GAME_MENU_SAVES) {
+                globals::state = GS_GAME_MENU;
+                menu::set_initial_selection(3);
+            } else {
                 globals::state = GS_MENU_MAIN;
                 menu::set_initial_selection(1);
-            } else if (globals::state == GS_GAME_MENU_SAVES) {
-                globals::state = GS_GAME_MENU;
-                menu::set_initial_selection(4);
             }
         }
 

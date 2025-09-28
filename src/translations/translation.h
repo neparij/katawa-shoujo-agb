@@ -27,15 +27,27 @@ public:
     virtual const char* menu_play_all() = 0;
     virtual const char* menu_video_test() = 0;
 
-    virtual const char* menu_options_high_contrast() = 0;
-    virtual const char* menu_options_hdisabled() = 0;
-    virtual bn::array<const char*, 4> menu_options_disable_disturbing_content() = 0;
-    virtual const char* menu_options_language() = 0;
-
     virtual const char* menu_start() = 0;
     virtual const char* menu_saves() = 0;
     virtual const char* menu_extras() = 0;
     virtual const char* menu_options() = 0;
+    virtual const char* menu_language() = 0;
+    virtual const char* menu_accessibility() = 0;
+
+    virtual const char* menu_options_general() = 0;
+    virtual const char* menu_options_sound() = 0;
+    virtual const char* menu_options_hdisabled() = 0;
+    virtual const char* menu_options_language() = 0;
+    virtual const char* menu_options_accessibility() = 0;
+    virtual const char* menu_options_music_volume() = 0;
+    virtual const char* menu_options_sfx_volume() = 0;
+
+    virtual const char* menu_options_accessibility_display() = 0;
+    virtual const char* menu_options_accessibility_text_speed() = 0;
+    virtual const char* menu_options_accessibility_brightness() = 0;
+    virtual const char* menu_options_accessibility_high_contrast() = 0;
+    virtual const char* menu_options_accessibility_mental() = 0;
+    virtual bn::array<const char*, 4> menu_options_accessibility_disable_disturbing_content() = 0;
 
     virtual const char* menu_extras_jukebox() = 0;
     virtual const char* menu_extras_gallery() = 0;
@@ -50,8 +62,14 @@ public:
 
     virtual const char* menu_back() = 0;
 
-    virtual const char* screens_english() = 0;
-    virtual const char* screens_russian() = 0;
+    virtual const char* language_en() = 0;
+    virtual const char* language_ru() = 0;
+    virtual const char* language_fr() = 0;
+    virtual const char* language_it() = 0;
+    virtual const char* language_es() = 0;
+    virtual const char* language_de() = 0;
+    virtual const char* language_jp() = 0;
+    virtual const char* language_zh_hans() = 0;
 
     virtual const char* screens_return() = 0;
     virtual const char* screens_history() = 0;

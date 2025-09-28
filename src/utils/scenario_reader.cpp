@@ -16,6 +16,10 @@ namespace ks::textdb {
     const char *_chunk = nullptr;
     const char *_locale = nullptr;
 
+    const char *get_chunk() {
+        return _chunk;
+    }
+
     void set(const char *chunk, const char *locale) {
         _chunk = chunk;
         _locale = locale;

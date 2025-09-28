@@ -11,13 +11,18 @@ typedef unsigned char gameState_t;
 #define GS_MENU_SAVES ((gameState_t)2)
 #define GS_MENU_EXTRAS ((gameState_t)3)
 #define GS_MENU_OPTIONS ((gameState_t)4)
-#define GS_MENU_EXTRAS_JUKEBOX ((gameState_t)5)
-#define GS_MENU_EXTRAS_CINEMA ((gameState_t)6)
-#define GS_START_GAME ((gameState_t)7)
-#define GS_LOAD_GAME ((gameState_t)8)
-#define GS_GAME ((gameState_t)9)
-#define GS_GAME_MENU ((gameState_t)10)
-#define GS_GAME_MENU_SAVES ((gameState_t)11)
+#define GS_MENU_OPTIONS_ACCESSIBILITY ((gameState_t)5)
+#define GS_MENU_OPTIONS_LANGUAGE ((gameState_t)6)
+#define GS_MENU_EXTRAS_JUKEBOX ((gameState_t)7)
+#define GS_MENU_EXTRAS_CINEMA ((gameState_t)8)
+#define GS_START_GAME ((gameState_t)9)
+#define GS_LOAD_GAME ((gameState_t)10)
+#define GS_GAME ((gameState_t)11)
+#define GS_GAME_MENU ((gameState_t)12)
+#define GS_GAME_MENU_SAVES ((gameState_t)13)
+#define GS_GAME_MENU_OPTIONS ((gameState_t)14)
+#define GS_GAME_MENU_OPTIONS_ACCESSIBILITY ((gameState_t)15)
+#define GS_GAME_MENU_OPTIONS_LANGUAGE ((gameState_t)16)
 #define GS_RESET ((gameState_t)100)
 
 typedef unsigned char forceRoute_t;
@@ -32,6 +37,12 @@ typedef unsigned char forceRoute_t;
 typedef unsigned char language_t;
 #define LANG_ENGLISH ((language_t)0)
 #define LANG_RUSSIAN ((language_t)1)
+#define LANG_FRENCH ((language_t)2)
+#define LANG_ITALIAN ((language_t)3)
+#define LANG_SPANISH ((language_t)4)
+#define LANG_GERMAN ((language_t)5)
+#define LANG_JAPAN ((language_t)6)
+#define LANG_CHINESE_SIMPLIFIED ((language_t)7)
 
 typedef unsigned char sound_channel_t;
 #define SOUND_CHANNEL_MUSIC ((sound_channel_t)0)

@@ -8,7 +8,7 @@ public:
         return LANG_RUSSIAN;
     }
     const char* locale() override {return "ru";}
-    const char* language() override {return screens_russian();}
+    const char* language() override {return language_ru();}
 
     const char* menu_author() override {return "порт от NeParij";}
     const char* menu_play_a0_test_scene() override {return "Тестовая сцена";}
@@ -22,17 +22,29 @@ public:
     const char* menu_play_all() override {return "Играть все доступные";}
     const char* menu_video_test() override {return "Тест видео";}
 
-    const char* menu_options_high_contrast() override {return "Повышенный контраст";}
-    const char* menu_options_hdisabled() override {return "Отключить 18+ контент";}
-    bn::array<const char*, 4> menu_options_disable_disturbing_content() override {
-        return {"Пропуск сцен для взрослых,", "которые могут причинить", "боль",};
-    }
-    const char* menu_options_language() override {return "Язык";}
-
     const char* menu_start() override {return "Старт";}
     const char* menu_saves() override {return "Сохранения";}
     const char* menu_extras() override {return "Дополнительное";}
     const char* menu_options() override {return "Настройки";}
+    const char* menu_language() override {return "Язык";}
+    const char* menu_accessibility() override {return "Доступность";}
+
+    const char* menu_options_general() override {return "Основные";}
+    const char* menu_options_sound() override {return "Звук";}
+    const char* menu_options_hdisabled() override {return "Отключить 18+ контент";}
+    const char* menu_options_language() override {return "Выбор языка…";}
+    const char* menu_options_accessibility() override {return "Доступность…";}
+    const char* menu_options_music_volume() override {return "Громкость музыки";}
+    const char* menu_options_sfx_volume() override {return "Громкость звука";}
+
+    const char* menu_options_accessibility_display() override {return "Экран";}
+    const char* menu_options_accessibility_text_speed() override {return "Скорость текста";}
+    const char* menu_options_accessibility_brightness() override {return "Яркость";}
+    const char* menu_options_accessibility_high_contrast() override {return "Повышенный контраст";}
+    const char* menu_options_accessibility_mental() override {return "Психическое здоровье";}
+    bn::array<const char*, 4> menu_options_accessibility_disable_disturbing_content() override {
+        return {"Пропуск сцен для взрослых, которые", "могут причинить боль",};
+    }
 
     const char* menu_extras_jukebox() override {return "Музыка";}
     const char* menu_extras_gallery() override {return "Галерея";}
@@ -47,12 +59,18 @@ public:
 
     const char* menu_back() override {return "Назад";}
 
-    const char* screens_english() override {return "Английский";}
-    const char* screens_russian() override {return "Русский";}
+    const char* language_en() override {return "Английский";}
+    const char* language_ru() override {return "Русский";}
+    const char* language_fr() override {return "Французский";}
+    const char* language_it() override {return "Итальянский";}
+    const char* language_es() override {return "Испанский";}
+    const char* language_de() override {return "Немецкий";}
+    const char* language_jp() override {return "Японский";}
+    const char* language_zh_hans() override {return "Упрощённый китайский";}
 
     const char* screens_return() override {return "Назад";}
     const char* screens_history() override {return "История (н/д)";}
-    const char* screens_options() override {return "Настройки (н/д)";}
+    const char* screens_options() override {return "Настройки";}
     const char* screens_saves_menu() override {return "Сохранения";}
     const char* screens_main_menu() override {return "Главное меню";}
 
