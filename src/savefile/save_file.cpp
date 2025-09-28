@@ -7,15 +7,14 @@
 #include <bn_memory.h>
 #include <gba_types.h>
 
+#include "save_migrations.h"
 #include "../globals.h"
 
-#define INTEGRITY_VERSION 2121210001
+#define INTEGRITY_VERSION INTEGRITY_VERSION_V1
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
 
 extern FlashInfo gFlashInfo;
 extern bool faked = false; // For testing purposes, to fake flash memory
-
-// BN_DATA_EWRAM static u8 flash_buffer[FLASH_SECTOR_SIZE_4KB];  // Temporary buffer in RAM
 
 inline bn::array<char, 16> getIntegrityTag() {
     bn::array<char, 16> expected_format_tag{};
@@ -26,7 +25,8 @@ inline bn::array<char, 16> getIntegrityTag() {
     return expected_format_tag;
 }
 
-void ks::saves::load(SaveFileData *data_ptr) {
+template <typename Type>
+void ks::saves::load(Type *data_ptr) {
     BN_LOG("Load save data to ptr ", data_ptr);
     BN_ASSERT(data_ptr != nullptr, "Unable to load. Data pointer is null.");
 
@@ -54,7 +54,6 @@ void ks::saves::save(SaveFileData *data_ptr) {
 }
 
 bool ks::saves::initialize() {
-    bool valid = false;
     BN_LOG("Initializing saves...");
 
     auto *save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
@@ -72,12 +71,15 @@ bool ks::saves::initialize() {
         }
     }
 
-    load(save_data);
+    load<SaveFileData>(save_data);
     log_settings(save_data->settings);
-    valid = isValid(save_data);
-    bn::memory::ewram_free(save_data);
 
-    if (!valid) {
+    if (save_data->integrity_begin.tag == getIntegrityTag() &&
+        save_data->integrity_begin.version != INTEGRITY_VERSION) {
+        migrate(save_data);
+    }
+
+    if (!isValid(save_data)) {
         save_data = new SaveFileData();
         save_data->integrity_begin.tag = getIntegrityTag();
         save_data->integrity_end.tag = getIntegrityTag();
@@ -97,6 +99,7 @@ bool ks::saves::initialize() {
         return true;
     }
 
+    bn::memory::ewram_free(save_data);
     return false;
 }
 
@@ -349,8 +352,8 @@ void ks::saves::log_settings(SaveSettingsData &settings) {
     BN_LOG("  language: ", settings.language);
     BN_LOG("  hdisabled: ", settings.hdisabled);
     BN_LOG("  disable_disturbing_content: ", settings.disable_disturbing_content);
-    BN_LOG("  high_contrasrt: ", settings.high_contrast);
     BN_LOG("  text_speed: ", settings.text_speed);
+    BN_LOG("  high_contrast: ", settings.high_contrast);
     BN_LOG("  adult_warning_shown: ", settings.adult_warning_shown);
 }
 

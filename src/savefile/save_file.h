@@ -34,15 +34,18 @@ namespace ks {
         struct alignas(4) SaveIntegrityData {
             bn::array<char, 16> tag;
             unsigned version;
-        } ;
+        };
 
         struct alignas(4) SaveSettingsData {
             // User Settings
             language_t language;
             bool hdisabled;
             bool disable_disturbing_content;
-            bool high_contrast;
+
             unsigned char text_speed;
+
+            // Accessibility
+            bool high_contrast;
 
             // States
             bool adult_warning_shown;
@@ -51,8 +54,8 @@ namespace ks {
                 return language == other.language &&
                        hdisabled == other.hdisabled &&
                        disable_disturbing_content == other.disable_disturbing_content &&
-                       high_contrast == other.high_contrast &&
                        text_speed == other.text_speed &&
+                       high_contrast == other.high_contrast &&
                        adult_warning_shown == other.adult_warning_shown;
             }
         };
@@ -237,7 +240,6 @@ namespace ks {
             SaveIntegrityData integrity_end;
         };
 
-        // extern SaveFileData data;
 
         void log_progress_metadata(SaveSlotMetadata &metadata);
 
@@ -245,7 +247,8 @@ namespace ks {
 
         void log_settings(SaveSettingsData &settings);
 
-        void load(SaveFileData *data_ptr);
+        template<typename Type>
+        void load(Type *data_ptr);
 
         void save(SaveFileData *data_ptr);
 
