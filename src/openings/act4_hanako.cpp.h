@@ -9,13 +9,7 @@ namespace ks {
     class ActOpening4Hanako final : public ActOpening<1> {
     public:
         explicit ActOpening4Hanako(): ActOpening(
-            (const opening_slide[1]){
-                opening_slide{
-                    bn::regular_bg_items::act_4_hanako_slide,
-                    88,
-                    0
-                }
-            },
+            slides,
             {
                 50,
                 24,
@@ -26,6 +20,14 @@ namespace ks {
         opening_text get_text() override {
             return globals::i18n->opening_text_act4_hanako();
         }
+    private:
+        static constexpr opening_slide slides[1] = {
+            {
+                bn::regular_bg_items::act_4_hanako_slide,
+                88,
+                0
+            }
+        };
     };
 }
 #endif //KS_ACT_OPENING_4_HANAKO_H

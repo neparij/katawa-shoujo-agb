@@ -4,3 +4,5 @@ out/
 tiled/
 venv/
 venv-3.12/
+*.egg-info/
+__pycache__/

@@ -29,13 +29,13 @@ namespace ks {
                    const int max_width,
                    const bool infinite_render)
             : _message_storage(message_storage),
+              _actor(&definitions::no_char),
               _default_text_generator(default_text_generator),
               _bold_text_generator(bold_text_generator),
               _text_start_position(text_start_position),
               _max_width(max_width),
-              _text_parser(message_storage, default_text_generator),
-              _actor(&definitions::no_char),
-              _infinite_render(infinite_render) {
+              _infinite_render(infinite_render),
+              _text_parser(message_storage, default_text_generator) {
         }
 
         virtual ~dialog_box() = default;
@@ -89,12 +89,12 @@ namespace ks {
             return hidden;
         }
 
-        virtual void update(bool force_render);
+        void update(bool force_render);
         virtual void update() {
             update(false);
         }
 
-        virtual void show(bool blending) {
+        virtual void show([[maybe_unused]] bool blending) {
             next_render_cooldown = 0;
             current_char_index = 0;
             current_line_index = 0;
@@ -105,7 +105,7 @@ namespace ks {
             waiting_for_input = false;
         }
 
-        virtual void hide(bool blending) {
+        virtual void hide([[maybe_unused]] bool blending) {
         }
 
     protected:

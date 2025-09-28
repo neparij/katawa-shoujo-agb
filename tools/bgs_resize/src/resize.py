@@ -341,7 +341,7 @@ def resize_events():
 
     ### HERE AND AFTER EVENTS (LILLY)
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/event"
-    input_directory = "/Users/n.laptev/development/ksre/game/event/Lilly_supercg"
+    input_directory = "/Users/n.laptev/development/ksre-2/game/event/Lilly_supercg"
 
     image_files = [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     resize_images(image_files, output_directory, quantize_palettes=8)
@@ -353,8 +353,8 @@ def resize_events():
 def resize_backgrounds():
     ## HERE AND AFTER BACKGROUNDS
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/bgs"
-    bgs_directory = "/Users/n.laptev/development/ksre/game/bgs"
-    vfx_directory = "/Users/n.laptev/development/ksre/game/vfx"
+    bgs_directory = "/Users/n.laptev/development/ksre-2/game/bgs"
+    vfx_directory = "/Users/n.laptev/development/ksre-2/game/vfx"
 
     image_files = []
     image_files += [f"{bgs_directory}/{f}" for f in os.listdir(bgs_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
@@ -364,7 +364,10 @@ def resize_backgrounds():
     # resize_images_in_directory(input_directory, quantize=False, unquant_colors=16 * 8)
     # resize_images_in_directory(input_directory)
 
-if __name__ == "__main__":
+def main():
     resize_backgrounds()
     resize_events()
     write_background_metadata_store()
+
+if __name__ == "__main__":
+    main()

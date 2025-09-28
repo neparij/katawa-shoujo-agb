@@ -28,11 +28,6 @@
 #
 # All directories are specified relative to the project directory where the makefile is found.
 #---------------------------------------------------------------------------------------------------------------------
-#DEBUGUSERFLAGS := -g
-#DEBUGUSERCXXFLAGS := -ggdb
-
-#DEBUGUSERFLAGS :=
-#DEBUGUSERCXXFLAGS :=
 
 ifndef LIBSAVGBAABS
 	export LIBSAVGBAABS	:=	$(realpath ../libsavgba)
@@ -70,7 +65,6 @@ INCLUDES    	:=  include \
 					../butano/common/include \
 					../butano/butano/include
 DATA        	:=  video
-VIDEO			:=  video
 GRAPHICS    	:=  graphics \
 					graphics/common_palettes \
 					graphics/fonts \
@@ -113,10 +107,10 @@ AUDIO       	:=  audio
 DMGAUDIO    	:=  dmg_audio
 ROMTITLE    	:=  KATAWASHOUJO
 ROMCODE     	:=  NPKS
-USERFLAGS   	:=  -std=gnu11 -DBN_CFG_SPRITES_MAX_ITEMS=256 -DRUN_TESTS#-DBN_STACKTRACE # -Ofast -DBN_CFG_BGS_MAX_ITEMS=4 # -Ofast -Wno-unused-parameter -g0 -ffunction-sections -fdata-sections
-USERCXXFLAGS	:=  # -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections
+USERFLAGS   	:=  -std=gnu11 -DBN_CFG_SPRITES_MAX_ITEMS=256 -DRUN_TESTS
+USERCXXFLAGS	:=
 USERASFLAGS 	:=  
-USERLDFLAGS 	:=  -Wl,--print-memory-usage #-Wl,--gc-sections -Wl,--print-memory-usage
+USERLDFLAGS 	:=  -Wl,--print-memory-usage
 USERLIBDIRS 	:=  $(DEVKITPRO)/libgba
 USERLIBS    	:=  -lmm -lgba
 DEFAULTLIBS 	:=  false
@@ -132,8 +126,6 @@ ifndef LIBBUTANOABS
 	export LIBBUTANOABS	:=	$(realpath $(LIBBUTANO))
 endif
 
-VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
-
 #---------------------------------------------------------------------------------
 # This rule links in binary data with the .dxtv extension
 #---------------------------------------------------------------------------------
@@ -142,13 +134,10 @@ VIDEOBINFILES	:=	$(foreach dir,$(VIDEO),$(notdir $(wildcard $(dir)/*.*)))
 		@echo $(notdir $<)
 		@$(bin2o)
 
-
 #---------------------------------------------------------------------------------------------------------------------
 # Include main makefile:
 #---------------------------------------------------------------------------------------------------------------------
 include $(LIBBUTANOABS)/butano.mak
-# export OFILES := $(OFILES_BIN) $(OFILES)
-# export OFILES := $(OFILES_BIN) $(OFILES)
 
 HUGEGRAPHICSFILES	:=	$(foreach dir,	$(HUGE_GRAPHICS),	$(notdir $(wildcard $(dir)/*.bmp)))
 export OFILES_HUGEGRAPHICS	:=  $(HUGEGRAPHICSFILES:.bmp=_bn_gfx.o)

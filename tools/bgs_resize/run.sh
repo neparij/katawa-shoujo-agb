@@ -1,13 +1,17 @@
 #!/bin/sh
+set -e
 
-rm  ../../graphics/video/temp_emi/*.png
-rm  ../../graphics/video/temp_emi_imgs/*.png
-rm  ../../graphics/video/temp_emi_imgs/positive/*
-rm  ../../graphics/video/temp_emi_imgs/saturated/*
-rm  ../../graphics/video/temp_emi_imgs/converted/*
+# Create or reuse virtual environment
+if [ ! -d "venv-3.12" ]; then
+    python -m venv venv-3.12
+fi
 
-#python3.12 ./fast_video_conv.py
+# Activate the virtual environment
+source venv-3.12/bin/activate
 
+# Install the package in editable mode (if needed)
+pip install -e . --verbose
 
-#python3.12 ./quantize_gbc.py
-python ./resize.py
+ksre_bgs_resize
+#ksre_drugs_gen
+#ksre_random_fill

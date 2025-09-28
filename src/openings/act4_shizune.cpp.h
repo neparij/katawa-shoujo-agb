@@ -9,13 +9,7 @@ namespace ks {
     class ActOpening4Shizune final : public ActOpening<1> {
     public:
         explicit ActOpening4Shizune(): ActOpening(
-            (const opening_slide[1]){
-                opening_slide{
-                    bn::regular_bg_items::act_4_shizune_slide,
-                    -88,
-                    0
-                }
-            },
+            slides,
             {
                 76,
                 24,
@@ -26,6 +20,14 @@ namespace ks {
         opening_text get_text() override {
             return globals::i18n->opening_text_act4_shizune();
         }
+    private:
+        static constexpr opening_slide slides[1] = {
+            {
+                bn::regular_bg_items::act_4_shizune_slide,
+                -88,
+                0
+            }
+        };
     };
 }
 #endif //KS_ACT_OPENING_4_SHIZUNE_H

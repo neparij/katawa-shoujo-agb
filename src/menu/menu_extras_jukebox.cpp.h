@@ -94,7 +94,10 @@ namespace ks {
             need_repalette = true;
         }
 
-        void on_navigate(const bool up, const bool down, const bool left, const bool right) override {
+        void on_navigate(const bool up,
+                         const bool down,
+                         [[maybe_unused]] const bool left,
+                         [[maybe_unused]] const bool right) override {
             if (up) {
                 if (selection > 0) {
                     selection--;

@@ -275,6 +275,7 @@ namespace ks {
             SCENE_INLINE void a1_saturday_an_asethetics__condition_1_0();
             SCENE_INLINE void a1_saturday__condition_3_0();
             SCENE_INLINE void a1_saturday_creative_pain__condition_0_0();
+            SCENE_INLINE void a1_saturday_creative_pain__condition_1_0();
             SCENE_INLINE void a1_saturday__condition_4_0();
             SCENE_INLINE void a1_saturday_proper_exercise__condition_0_0();
             SCENE_INLINE void a1_saturday__condition_5_0();

@@ -9,13 +9,7 @@ namespace ks {
     class ActOpening3Emi final : public ActOpening<1> {
     public:
         explicit ActOpening3Emi(): ActOpening(
-            (const opening_slide[1]){
-                opening_slide{
-                    bn::regular_bg_items::act_3_emi_slide,
-                    88,
-                    0
-                }
-            },
+            slides,
             {
                 188,
                 104,
@@ -26,6 +20,14 @@ namespace ks {
         opening_text get_text() override {
             return globals::i18n->opening_text_act3_emi();
         }
+    private:
+        static constexpr opening_slide slides[1] = {
+            {
+                bn::regular_bg_items::act_3_emi_slide,
+                88,
+                0
+            }
+        };
     };
 }
 #endif //KS_ACT_OPENING_3_EMI_H

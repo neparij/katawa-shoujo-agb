@@ -13,7 +13,7 @@ PINK_COLOR = (255, 0, 255)  # Pink background color
 STEPS = 63
 COLORS = 64
 
-FONT_PATH = "/Users/n.laptev/development/ksre/game/font/gentium.ttf"
+FONT_PATH = "/Users/n.laptev/development/ksre-2/game/font/gentium.ttf"
 
 DRUGS_EN = [
     "Disopyramide",
@@ -163,14 +163,17 @@ def create_thumbnail_json_metadata(image_path):
 
     print(f"Metadata saved: {json_path}")
 
-if __name__ == "__main__":
-    ImageDraw.fontmode = "1" # Don't use antialiasing for better look (yes, as it would be re-paletted by GBA runtime)
+def main():
+    ImageDraw.fontmode = "1"  # Don't use antialiasing for better look (yes, as it would be re-paletted by GBA runtime)
     assert STEPS < COLORS
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/huge"
 
     # generate_with_array(DRUGS_EN, output_directory, "event_drugs_en.bmp")
 
-    generate_with_array(DRUGS_EN, "./", "event_drugs.bmp", canvas=(255, 255, 255))
+    generate_with_array(DRUGS_EN, "../", "event_drugs.bmp", canvas=(255, 255, 255))
     output_meta_path = os.path.join(output_directory, "thumbs", f"thumb_event_drugs.bmp")
-    create_thumbnail("./event_drugs.bmp", output_meta_path)
+    create_thumbnail("../event_drugs.bmp", output_meta_path)
     create_thumbnail_json_metadata(output_meta_path)
+
+if __name__ == "__main__":
+    main()

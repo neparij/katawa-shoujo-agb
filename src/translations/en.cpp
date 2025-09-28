@@ -25,8 +25,8 @@ public:
 
     const char* menu_options_high_contrast() override {return "High contrast";}
     const char* menu_options_hdisabled() override {return "Disable adult content";}
-    bn::array<char*, 4> menu_options_disable_disturbing_content() override {
-        return {"Skip hurtful adult scenes",};
+    bn::array<const char*, 4> menu_options_disable_disturbing_content() override {
+        return {"Skip hurtful adult scenes"};
     }
     const char* menu_options_language() override {return "Language";}
 

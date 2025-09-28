@@ -64,9 +64,11 @@ namespace ks {
         void before_hide(void(*on_update)()) override {
             layer_a_fw.reset();
             layer_b_fw.reset();
+            on_update();
         }
 
         void after_show(void(*on_update)()) override {
+            on_update();
         }
 
         void update() override {

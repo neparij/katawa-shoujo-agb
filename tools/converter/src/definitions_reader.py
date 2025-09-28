@@ -19,7 +19,7 @@ class DefinitionsReader:
     def extract_replays_block(self):
         with open(self.definitions_file, 'r', encoding="utf-8") as f:
             text = f.read()
-        pattern = r'define\s+replays\s*=\s*(\[[\s\S]*?\])\s*\n\s*define'
+        pattern = r'define\s+replays\s*=\s*(\[[\s\S]*?\])\s*\n\s*init'
         match = re.search(pattern, text)
         if not match:
             raise ValueError("Could not find replays block.")
