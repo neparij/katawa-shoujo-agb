@@ -12,7 +12,7 @@ source venv-3.12/bin/activate
 # Install the package in editable mode (if needed)
 pip install -e . --verbose
 
-#ksre_bgs_resize
-#ksre_drugs_gen
-#ksre_random_fill
+ksre_bgs_resize
+ksre_drugs_gen
+ksre_random_fill
 ksre_gallery_thumbs

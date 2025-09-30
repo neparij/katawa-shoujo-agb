@@ -359,7 +359,7 @@ def resize_events():
 
     image_files = []
     for input_directory in input_directories:
-        image_files += [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        image_files += [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith('.png')]
 
     resize_images(image_files, output_directory, quantize_palettes=8)
 

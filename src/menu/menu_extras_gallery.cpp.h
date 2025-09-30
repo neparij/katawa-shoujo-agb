@@ -4,13 +4,17 @@
 #include "bn_format.h"
 #include "bn_keypad.h"
 #include <bn_regular_bg_items_ui_bg_menu_extras_gallery.h>
-#include <bn_regular_bg_items_ui_bg_menu_extras_gallery_page_0.h>
-#include <bn_regular_bg_items_ui_bg_menu_extras_gallery_page_1.h>
-#include <bn_regular_bg_items_ui_bg_menu_extras_gallery_page_2.h>
+
+#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_0.h"
+#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_1.h"
+#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_2.h"
+#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_3.h"
+#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_4.h"
+#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_5.h"
 #include "menu_base.h"
 #include "menu_extras_gallery_images.h"
 
-#define MENU_EXTRAS_GALLERY_MAX_PAGE_INDEX 2
+#define MENU_EXTRAS_GALLERY_MAX_PAGE_INDEX 8
 
 namespace ks {
     class MenuExtrasGallery final : public MenuBase {
@@ -61,6 +65,10 @@ namespace ks {
         }
 
         void on_tab_change(bool is_next) override {
+            thumbnail_bg.reset();
+            selection = 0;
+            globals::main_update();
+
             if (is_next) {
                 if (current_page < MENU_EXTRAS_GALLERY_MAX_PAGE_INDEX) {
                     current_page++;
@@ -76,8 +84,6 @@ namespace ks {
             }
 
             create(current_page);
-            selection = 0;
-            need_repalette = true;
             show_selected();
         }
 
@@ -109,22 +115,16 @@ namespace ks {
             current_page = page;
             selection_indexes.clear();
             items_count = 0;
-            items = menu::get_gallery_images(page);
             blend_action.reset();
             primary_background = bn::regular_bg_items::ui_bg_menu_extras_gallery.create_bg(0, 0);
+            secondary_background.reset();
             static_text_sprites.clear();
             progress_icon_sprites.clear();
             globals::main_update();
 
-            if (page == 0) {
-                secondary_background = bn::regular_bg_items::ui_bg_menu_extras_gallery_page_0.create_bg(0, 0);
-            } else if (page == 1) {
-                secondary_background = bn::regular_bg_items::ui_bg_menu_extras_gallery_page_1.create_bg(0, 0);
-            } else if (page == 2) {
-                secondary_background = bn::regular_bg_items::ui_bg_menu_extras_gallery_page_2.create_bg(0, 0);
-            } else {
-                BN_ERROR("Invalid gallery page: ", page);
-            }
+            const auto page_contents = menu::get_gallery_page(page);
+            items = page_contents.images;
+            secondary_background = page_contents.bg_item->create_bg(0, 0);
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_left_alignment();
@@ -136,7 +136,7 @@ namespace ks {
                     bn::format<64>("{} > {}", globals::i18n->menu_extras(), globals::i18n->menu_extras_gallery()), -1);
 
             int idx = 0;
-            for (auto &item : items) {
+            for (const auto &item : items) {
                 if (item.thumbnail != nullptr) {
                     idx++;
                 }
@@ -150,12 +150,16 @@ namespace ks {
                            device::screen_height_half - 14, globals::i18n->menu_back(), idx);
 
             items_count = idx + 1;
+            need_repalette = true;
+            repalette();
         }
 
         void show_selected() {
             thumbnail_bg.reset();
+            globals::main_update(); // Update to prevent VRAM fragmentation
             if (selection < gallery_items_count()) {
-                thumbnail_bg = items.at(selection).thumbnail->thumbnail.create_bg(
+                const auto& image = items.at(selection);
+                thumbnail_bg = image.thumbnail->thumbnail.create_bg(
                     -84 + (selection % 4) * 56,
                     -39 + (selection / 4) * 38
                 );
@@ -165,17 +169,11 @@ namespace ks {
     private:
         bn::optional<bn::blending_transparency_alpha_to_action> blend_action;
         bn::optional<bn::regular_bg_ptr> thumbnail_bg;
-        bn::array<menu::gallery_image, 12> items;
+        bn::span<const menu::gallery_image> items;
         int current_page;
 
-        int gallery_items_count() {
-            int count = 0;
-            for (const auto &item : items) {
-                if (item.thumbnail != nullptr) {
-                    count++;
-                }
-            }
-            return count;
+        [[nodiscard]] int gallery_items_count() const {
+            return items.size();
         }
     };
 }

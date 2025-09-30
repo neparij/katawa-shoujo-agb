@@ -158,215 +158,280 @@
 #include "background_metas/mural_start.h"
 #include "background_metas/mural.h"
 #include "background_metas/mural_unfinished.h"
-#include "background_metas/hanako_park_look.h"
-#include "background_metas/hanako_missionary_underwear.h"
 #include "background_metas/lilly_airport.h"
+#include "background_metas/hanako_missionary_underwear.h"
+#include "background_metas/hanako_park_look.h"
 #include "background_metas/rin_nap_close_tears.h"
-#include "background_metas/rin_wisp3.h"
-#include "background_metas/rin_eating.h"
 #include "background_metas/picnic_rain.h"
+#include "background_metas/rin_eating.h"
+#include "background_metas/rin_wisp3.h"
 #include "background_metas/rin_wisp2.h"
-#include "background_metas/hanako_crayon1.h"
-#include "background_metas/hanako_dolls.h"
 #include "background_metas/emi_sleep_unsure.h"
+#include "background_metas/hanako_dolls.h"
+#include "background_metas/hanako_crayon1.h"
 #include "background_metas/emitrack_blocks_close.h"
+#include "background_metas/rin_wisp1.h"
 #include "background_metas/hanako_billiards_serious.h"
 #include "background_metas/hisao_teacup.h"
-#include "background_metas/rin_wisp1.h"
-#include "background_metas/hana_library_gasp.h"
+#include "background_metas/rin_rain_towards.h"
 #include "background_metas/hanako_crayon2.h"
 #include "background_metas/rin_relief_up_large.h"
-#include "background_metas/rin_rain_towards.h"
-#include "background_metas/emi_bed_happy.h"
+#include "background_metas/hana_library_gasp.h"
 #include "background_metas/busride.h"
+#include "background_metas/emi_bed_happy.h"
+#include "background_metas/shizu_pushdown.h"
+#include "background_metas/rin_relief_up.h"
 #include "background_metas/rin_wisp5.h"
 #include "background_metas/hanako_missionary_clench.h"
-#include "background_metas/rin_relief_up.h"
-#include "background_metas/shizu_pushdown.h"
-#include "background_metas/lilly_goodend.h"
-#include "background_metas/lilly_goodend_fg.h"
 #include "background_metas/rin_wisp4.h"
 #include "background_metas/kenji_rooftop.h"
+#include "background_metas/lilly_goodend.h"
+#include "background_metas/lilly_goodend_fg.h"
+#include "background_metas/misha_roof_closed.h"
 #include "background_metas/rin_masturbate_away.h"
 #include "background_metas/rin_masturbate_surprise.h"
-#include "background_metas/misha_roof_closed.h"
-#include "background_metas/lilly_crane.h"
-#include "background_metas/shizune_car.h"
+#include "background_metas/hisao_scar_large.h"
 #include "background_metas/hanako_cry_closed.h"
 #include "background_metas/rin_high_grinwide.h"
-#include "background_metas/hisao_scar_large.h"
-#include "background_metas/emi_bed_frown.h"
-#include "background_metas/lilly_airport_end.h"
+#include "background_metas/lilly_crane.h"
+#include "background_metas/shizune_car.h"
 #include "background_metas/lilly_restaurant_listen.h"
+#include "background_metas/lilly_airport_end.h"
+#include "background_metas/emi_bed_frown.h"
+#include "background_metas/hanako_park_away.h"
+#include "background_metas/lilly_sheets.h"
 #include "background_metas/rin_galleryskylight.h"
 #include "background_metas/hanako_billiards_distant.h"
-#include "background_metas/lilly_sheets.h"
-#include "background_metas/hanako_park_away.h"
-#include "background_metas/shizu_straddle_open.h"
-#include "background_metas/kenji_rooftop_large.h"
-#include "background_metas/shizu_table_comeclosed.h"
 #include "background_metas/hanako_bed_crotch_glance.h"
-#include "background_metas/rin_nap_total_wind.h"
-#include "background_metas/picnic_normal.h"
-#include "background_metas/lilly_restaurant_chew.h"
+#include "background_metas/shizu_table_comeclosed.h"
+#include "background_metas/kenji_rooftop_large.h"
+#include "background_metas/shizu_straddle_open.h"
 #include "background_metas/lilly_sleeping_smile.h"
-#include "background_metas/emi_sleep_weep.h"
-#include "background_metas/lilly_kissing.h"
+#include "background_metas/lilly_restaurant_chew.h"
+#include "background_metas/picnic_normal.h"
+#include "background_metas/rin_nap_total_wind.h"
 #include "background_metas/rin_nap_close_hand.h"
+#include "background_metas/lilly_kissing.h"
+#include "background_metas/emi_sleep_weep.h"
 #include "background_metas/hanako_cry_open.h"
+#include "background_metas/hisao_letter_open.h"
+#include "background_metas/lilly_sleeping.h"
+#include "background_metas/rin_nap_close_wind.h"
+#include "background_metas/emi_run_face.h"
 #include "background_metas/hisao_mirror.h"
 #include "background_metas/lilly_tearoom_open.h"
 #include "background_metas/misha_nightclass.h"
-#include "background_metas/rin_nap_close_wind.h"
-#include "background_metas/lilly_sleeping.h"
-#include "background_metas/emi_run_face.h"
-#include "background_metas/hisao_letter_open.h"
-#include "background_metas/lilly_restaurant_wine.h"
-#include "background_metas/lilly_masturbate_come.h"
-#include "background_metas/shizu_straddle_come.h"
-#include "background_metas/rin_rain_away_close.h"
 #include "background_metas/completionbonus.h"
 #include "background_metas/emi_sleep_cry.h"
-#include "background_metas/emi_bed_normal.h"
+#include "background_metas/shizu_straddle_come.h"
+#include "background_metas/rin_rain_away_close.h"
+#include "background_metas/lilly_masturbate_come.h"
+#include "background_metas/lilly_restaurant_wine.h"
+#include "background_metas/rin_high_smile.h"
+#include "background_metas/lilly_touch_cheong.h"
 #include "background_metas/hanako_billiards_smile_close.h"
 #include "background_metas/lilly_sunsetwalk_bg.h"
 #include "background_metas/rin_high_oneeye.h"
-#include "background_metas/rin_high_smile.h"
-#include "background_metas/lilly_touch_cheong.h"
-#include "background_metas/hanako_rage_sad.h"
+#include "background_metas/emi_bed_normal.h"
 #include "background_metas/emi_ending_glad.h"
 #include "background_metas/lilly_hospitalwindow.h"
+#include "background_metas/hanako_rage_sad.h"
 #include "background_metas/lilly_touch_cas.h"
-#include "background_metas/lilly_shizu_showdown.h"
 #include "background_metas/hanako_bed_boobs_blush.h"
+#include "background_metas/lilly_shizu_showdown.h"
 #include "background_metas/emi_sleepy_face.h"
-#include "background_metas/rin_wisp_smoke_blurred.h"
 #include "background_metas/rin_relief_down.h"
-#include "background_metas/rin_orange_large.h"
+#include "background_metas/rin_wisp_smoke_blurred.h"
 #include "background_metas/watch_black.h"
 #include "background_metas/hanako_emptyclassroom_bg.h"
-#include "background_metas/emitrack_finish.h"
-#include "background_metas/hana_library.h"
+#include "background_metas/rin_orange_large.h"
 #include "background_metas/emitrack_blocks_close_grin.h"
 #include "background_metas/rin_painting_faceconcerned.h"
+#include "background_metas/emitrack_finish.h"
+#include "background_metas/hana_library.h"
 #include "background_metas/shizu_hands.h"
 #include "background_metas/rin_wisp_blurred.h"
-#include "background_metas/lilly_hanako_hug.h"
-#include "background_metas/rin_nap_close.h"
-#include "background_metas/shizu_table_normal.h"
 #include "background_metas/hisao_scar.h"
+#include "background_metas/shizu_table_normal.h"
+#include "background_metas/lilly_hanako_hug.h"
 #include "background_metas/rin_nap_total_tears.h"
-#include "background_metas/emi_ending_serious.h"
-#include "background_metas/lilly_wheat_foreground.h"
+#include "background_metas/rin_nap_close.h"
 #include "background_metas/rin_high_grin.h"
-#include "background_metas/hanako_after_worry.h"
-#include "background_metas/lilly_restaurant_sheepish.h"
-#include "background_metas/shizu_table_comeopen.h"
+#include "background_metas/lilly_wheat_foreground.h"
+#include "background_metas/emi_ending_serious.h"
 #include "background_metas/hanako_scars_large.h"
 #include "background_metas/akira_park.h"
-#include "background_metas/lilly_tearoom.h"
-#include "background_metas/emi_sleepy.h"
-#include "background_metas/misha_sex_closed.h"
+#include "background_metas/shizu_table_comeopen.h"
+#include "background_metas/hanako_after_worry.h"
+#include "background_metas/lilly_restaurant_sheepish.h"
 #include "background_metas/emi_parkback.h"
-#include "background_metas/emi_sleepy_legs.h"
+#include "background_metas/misha_sex_closed.h"
+#include "background_metas/emi_sleepy.h"
+#include "background_metas/lilly_tearoom.h"
 #include "background_metas/shizu_goodend.h"
+#include "background_metas/emi_sleepy_legs.h"
+#include "background_metas/hanako_cry_away.h"
+#include "background_metas/emitrack_running.h"
+#include "background_metas/lilly_hospitalclosed.h"
 #include "background_metas/lilly_restaurant_eat.h"
 #include "background_metas/emi_firstkiss.h"
-#include "background_metas/lilly_hospitalclosed.h"
-#include "background_metas/emitrack_running.h"
-#include "background_metas/hanako_cry_away.h"
+#include "background_metas/rin_masturbate_doubt.h"
 #include "background_metas/hanako_billiards_break.h"
 #include "background_metas/emi_sleep_normal.h"
-#include "background_metas/rin_masturbate_doubt.h"
-#include "background_metas/rin_rain_away.h"
-#include "background_metas/rin_high_sleep.h"
-#include "background_metas/shizu_flashback.h"
 #include "background_metas/lilly_wheat_large.h"
 #include "background_metas/hanako_goodend.h"
+#include "background_metas/rin_high_sleep.h"
+#include "background_metas/shizu_flashback.h"
+#include "background_metas/rin_rain_away.h"
+#include "background_metas/shizu_shanghai_smirklaugh.h"
+#include "background_metas/rin_masturbate_frown.h"
+#include "background_metas/rin_painting_concerned.h"
 #include "background_metas/shizu_shanghai_normallaugh.h"
 #include "background_metas/lilly_masturbate.h"
 #include "background_metas/shizu_shanghai_smirknormal.h"
-#include "background_metas/rin_painting_concerned.h"
-#include "background_metas/shizu_shanghai_smirklaugh.h"
-#include "background_metas/rin_masturbate_frown.h"
-#include "background_metas/lilly_wheat_small.h"
 #include "background_metas/hanako_billiards_smile.h"
-#include "background_metas/shizu_couch.h"
+#include "background_metas/lilly_wheat_small.h"
 #include "background_metas/misha_sad.h"
-#include "background_metas/hanako_bed_boobs_glance.h"
+#include "background_metas/shizu_couch.h"
 #include "background_metas/event_missing.h"
 #include "background_metas/lilly_hospital.h"
-#include "background_metas/shizu_straddle_closed.h"
-#include "background_metas/hanako_scars.h"
-#include "background_metas/hanako_park_alone.h"
+#include "background_metas/hanako_bed_boobs_glance.h"
 #include "background_metas/lilly_bedroom.h"
-#include "background_metas/rin_high_frown.h"
-#include "background_metas/shizu_badend.h"
+#include "background_metas/hanako_park_alone.h"
+#include "background_metas/hanako_scars.h"
+#include "background_metas/shizu_straddle_closed.h"
 #include "background_metas/emi_bed_legs.h"
 #include "background_metas/lilly_goodend_bg.h"
-#include "background_metas/shizu_shanghai_boredlaugh.h"
+#include "background_metas/rin_high_frown.h"
+#include "background_metas/shizu_badend.h"
 #include "background_metas/hanako_missionary_open.h"
-#include "background_metas/hanako_goodend_close.h"
-#include "background_metas/emi_parkback_frown.h"
-#include "background_metas/emi_forehead.h"
-#include "background_metas/shizu_straddle_smile.h"
-#include "background_metas/rin_wisp_smoke_focused.h"
+#include "background_metas/shizu_shanghai_boredlaugh.h"
 #include "background_metas/shizu_fishing_sl.h"
 #include "background_metas/emi_ending_smile.h"
-#include "background_metas/emitrack_finishtop.h"
-#include "background_metas/shizu_shanghai_borednormal.h"
-#include "background_metas/shizu_straddle_tease.h"
+#include "background_metas/shizu_straddle_smile.h"
+#include "background_metas/emi_forehead.h"
+#include "background_metas/emi_parkback_frown.h"
+#include "background_metas/rin_wisp_smoke_focused.h"
+#include "background_metas/hanako_goodend_close.h"
 #include "background_metas/hanako_billiards_timid.h"
+#include "background_metas/shizu_straddle_tease.h"
 #include "background_metas/emi_bed_unsure.h"
+#include "background_metas/shizu_shanghai_borednormal.h"
+#include "background_metas/emitrack_finishtop.h"
+#include "background_metas/hana_library_smile.h"
 #include "background_metas/hana_library_read.h"
 #include "background_metas/emi_grave.h"
-#include "background_metas/hana_library_smile.h"
-#include "background_metas/emitrack_blocks.h"
-#include "background_metas/misha_roof_normal.h"
-#include "background_metas/rin_nap_close_nohand.h"
+#include "background_metas/rin_kiss.h"
+#include "background_metas/rin_gallery.h"
 #include "background_metas/hanako_bed_crotch_blush.h"
 #include "background_metas/misha_sex_aside.h"
-#include "background_metas/rin_gallery.h"
-#include "background_metas/rin_kiss.h"
 #include "background_metas/lilly_sunsetwalk_fg.h"
+#include "background_metas/misha_roof_normal.h"
+#include "background_metas/emitrack_blocks.h"
+#include "background_metas/rin_nap_close_nohand.h"
 #include "background_metas/hisao_letter_closed.h"
-#include "background_metas/shizu_table_smile.h"
-#include "background_metas/lilly_masturbate_come_face.h"
 #include "background_metas/emi_miss_open.h"
-#include "background_metas/lilly_bedroom_large.h"
-#include "background_metas/emi_cry_down.h"
+#include "background_metas/lilly_masturbate_come_face.h"
+#include "background_metas/shizu_table_smile.h"
 #include "background_metas/emi_bed_smile.h"
 #include "background_metas/hisao_letter_open_2.h"
-#include "background_metas/rin_artclass4.h"
+#include "background_metas/emi_cry_down.h"
+#include "background_metas/lilly_bedroom_large.h"
 #include "background_metas/hanako_after_smile.h"
 #include "background_metas/shizu_shanghai.h"
-#include "background_metas/rin_high_open.h"
-#include "background_metas/misha_naked.h"
+#include "background_metas/rin_artclass4.h"
 #include "background_metas/rin_rain_towards_close.h"
-#include "background_metas/rin_painting_reply.h"
 #include "background_metas/shizu_fishing_ah.h"
-#include "background_metas/misha_roof_angry.h"
+#include "background_metas/rin_painting_reply.h"
+#include "background_metas/misha_naked.h"
+#include "background_metas/rin_high_open.h"
 #include "background_metas/rin_masturbate_hug.h"
-#include "background_metas/rin_artclass1.h"
-#include "background_metas/hanako_park_closed.h"
-#include "background_metas/lilly_touch_uni.h"
+#include "background_metas/misha_roof_angry.h"
 #include "background_metas/rin_painting_base.h"
+#include "background_metas/lilly_touch_uni.h"
+#include "background_metas/hanako_park_closed.h"
+#include "background_metas/rin_artclass1.h"
 #include "background_metas/hanako_presents2.h"
 #include "background_metas/rin_nap_total.h"
-#include "background_metas/emi_bed_normal_f.h"
 #include "background_metas/rin_relief_down_large.h"
+#include "background_metas/emi_bed_normal_f.h"
 #include "background_metas/hanako_emptyclassroom_fg.h"
-#include "background_metas/rin_orange.h"
-#include "background_metas/misha_roof_sad.h"
 #include "background_metas/rin_artclass3.h"
-#include "background_metas/rin_artclass2.h"
-#include "background_metas/busride_ni.h"
+#include "background_metas/misha_roof_sad.h"
+#include "background_metas/rin_orange.h"
 #include "background_metas/hanako_goodend_muffin.h"
 #include "background_metas/rin_painting_foot.h"
-#include "background_metas/hanako_rage.h"
-#include "background_metas/emi_miss_closed.h"
-#include "background_metas/hanako_missionary_closed.h"
+#include "background_metas/rin_artclass2.h"
+#include "background_metas/busride_ni.h"
 #include "background_metas/hanako_presents1.h"
+#include "background_metas/emi_miss_closed.h"
+#include "background_metas/hanako_rage.h"
+#include "background_metas/hanako_missionary_closed.h"
+#include "background_metas/emi_grinding_off_end.h"
+#include "background_metas/emi_grinding_off_closearoused.h"
+#include "background_metas/emi_grinding_grin.h"
+#include "background_metas/emi_grinding_half_undress.h"
+#include "background_metas/emi_grinding_wink.h"
+#include "background_metas/emi_grinding_off_yawn.h"
+#include "background_metas/emi_grinding_victory.h"
+#include "background_metas/emi_grinding_victorytall.h"
+#include "background_metas/emi_grinding_off_come.h"
+#include "background_metas/emi_grinding_off_closesurprise.h"
+#include "background_metas/emi_grinding_half_grin.h"
+#include "background_metas/emi_grinding_off_aroused.h"
+#include "background_metas/emi_grinding_off_arousedclosed.h"
+#include "background_metas/emi_shed_hisao_sweat.h"
+#include "background_metas/emi_shed_rhand_up.h"
+#include "background_metas/emi_shed_lhand_up.h"
+#include "background_metas/emi_shed_base1.h"
+#include "background_metas/emi_shed_base3.h"
+#include "background_metas/emi_shed_emi_hesitant.h"
+#include "background_metas/emi_shed_emi_closed.h"
+#include "background_metas/emi_shed_base2.h"
+#include "background_metas/emi_shed_hisao_neutral.h"
+#include "background_metas/emi_shed_base4.h"
+#include "background_metas/emi_shed_rhand_down.h"
+#include "background_metas/emi_shed_hisao_closed.h"
+#include "background_metas/emi_shed_emi_shock.h"
+#include "background_metas/emi_shed_emi_grin.h"
+#include "background_metas/emi_shed_lhand_down.h"
+#include "background_metas/hanako_breakdown_closed.h"
+#include "background_metas/hanako_breakdown_up.h"
+#include "background_metas/hanako_breakdown_bg.h"
+#include "background_metas/hanako_breakdown_down.h"
+#include "background_metas/bird_9.h"
+#include "background_metas/bird_8.h"
+#include "background_metas/bird_5.h"
+#include "background_metas/bird_4.h"
+#include "background_metas/bird_6.h"
+#include "background_metas/bird_7.h"
+#include "background_metas/bird_3.h"
+#include "background_metas/bird_2.h"
+#include "background_metas/bird_0.h"
+#include "background_metas/bird_1.h"
+#include "background_metas/kenji_glasses_mg.h"
+#include "background_metas/kenji_glasses_fg.h"
+#include "background_metas/kenji_glasses_frown.h"
+#include "background_metas/kenji_glasses_bg.h"
+#include "background_metas/kenji_glasses_closed.h"
+#include "background_metas/lilly_hcg_afterbath_open_small.h"
+#include "background_metas/lilly_hcg_afterbath_shut_small.h"
+#include "background_metas/lilly_hcg_bath_moan_small.h"
+#include "background_metas/lilly_hcg_bath_emb_small.h"
+#include "background_metas/lilly_hcg_bath_open_small.h"
+#include "background_metas/lilly_hcg_bath_smile_small.h"
+#include "background_metas/lilly_hcg_bath_grab_small.h"
+#include "background_metas/lilly_hcg_cowgirl_strain_small.h"
+#include "background_metas/lilly_hcg_cowgirl_weaksmile_small.h"
+#include "background_metas/lilly_hcg_cowgirl_smile_small.h"
+#include "background_metas/lilly_hcg_cowgirl_cry_small.h"
+#include "background_metas/lilly_hcg_cowgirl_frown_small.h"
+#include "background_metas/lilly_hcg_handjob_stroke_normshut_small.h"
+#include "background_metas/lilly_hcg_handjob_chest_frown.h"
+#include "background_metas/lilly_hcg_handjob_chest_normal.h"
+#include "background_metas/lilly_hcg_handjob_stroke_normopen_small.h"
+#include "background_metas/lilly_hcg_handjob_stroke_normopen.h"
+#include "background_metas/lilly_hcg_handjob_stroke_flustopen_small.h"
 #include "background_metas/tearoom_hisao_unsure.h"
 #include "background_metas/tearoom_hanae_sad.h"
 #include "background_metas/tearoom_hisaoe_hsmile.h"
@@ -409,6 +474,107 @@
 #include "background_metas/tearoom_hisao_thinkclosed.h"
 #include "background_metas/tearoom_hisaoe_sigh.h"
 #include "background_metas/tearoom_hisaoe_hunsure.h"
+#include "background_metas/train_scenery_fg_ni.h"
+#include "background_metas/lilly_trainride_ni_smile.h"
+#include "background_metas/lilly_trainride_smiles.h"
+#include "background_metas/lilly_trainride_ni.h"
+#include "background_metas/train_scenery.h"
+#include "background_metas/lilly_trainride_ni_pout.h"
+#include "background_metas/lilly_trainride_ni_ara.h"
+#include "background_metas/lilly_trainride_ni_opensmile.h"
+#include "background_metas/train_scenery_fg.h"
+#include "background_metas/lilly_trainride_ni_norm.h"
+#include "background_metas/lilly_trainride_smile.h"
+#include "background_metas/lilly_trainride_ni_weaksmile.h"
+#include "background_metas/lilly_trainride.h"
+#include "background_metas/train_scenery_ni.h"
+#include "background_metas/lilly_trainride_hanasmile.h"
+#include "background_metas/rin_goodend_1b.h"
+#include "background_metas/rin_goodend_1.h"
+#include "background_metas/rin_goodend_2.h"
+#include "background_metas/rin_goodend_fg.h"
+#include "background_metas/rin_goodend_base.h"
+#include "background_metas/rin_goodend_2_hires.h"
+#include "background_metas/rin_h_closed_close.h"
+#include "background_metas/rin_h_normal.h"
+#include "background_metas/rin_h_strain_close.h"
+#include "background_metas/rin_h_strain.h"
+#include "background_metas/rin_h_left_close.h"
+#include "background_metas/rin_h_normal_close.h"
+#include "background_metas/rin_h_right.h"
+#include "background_metas/rin_h_right_close.h"
+#include "background_metas/rin_h_left.h"
+#include "background_metas/rin_h_closed.h"
+#include "background_metas/rin_h2_u_surprise.h"
+#include "background_metas/rin_h2_l_hisao.h"
+#include "background_metas/rin_h2_u_away.h"
+#include "background_metas/rin_h2_l_pan.h"
+#include "background_metas/rin_h2_u_closed.h"
+#include "background_metas/rin_h2_l_nopan.h"
+#include "background_metas/rin_pair_rin_talk.h"
+#include "background_metas/rin_pair_hisao_smile.h"
+#include "background_metas/rin_pair_hisao_clothes.h"
+#include "background_metas/rin_pair_base.h"
+#include "background_metas/rin_pair_rin_frown.h"
+#include "background_metas/rin_pair_rin_smile.h"
+#include "background_metas/rin_pair_hisao_frown.h"
+#include "background_metas/rin_pair_rin_closed.h"
+#include "background_metas/hisao_shadow.h"
+#include "background_metas/rin_roof_nonchalant.h"
+#include "background_metas/rin_roof_disgust.h"
+#include "background_metas/rin_roof_boredom.h"
+#include "background_metas/rin_roof_doubt.h"
+#include "background_metas/rin_roof_surprised.h"
+#include "background_metas/emi_shadow.h"
+#include "background_metas/rin_trueend_weaksmile.h"
+#include "background_metas/rin_trueend_normal.h"
+#include "background_metas/rin_trueend_smile.h"
+#include "background_metas/rin_trueend_gone.h"
+#include "background_metas/rin_trueend_sad.h"
+#include "background_metas/rin_trueend_hug.h"
+#include "background_metas/rin_trueend_closed.h"
+#include "background_metas/rin_trueend_hugclosed.h"
+#include "background_metas/rin_wet_towel_touch.h"
+#include "background_metas/rin_wet_arms.h"
+#include "background_metas/rin_wet_pan_down.h"
+#include "background_metas/rin_wet_face_up.h"
+#include "background_metas/rin_wet_towel_down.h"
+#include "background_metas/rin_wet_face_down.h"
+#include "background_metas/rin_wet_towel_up.h"
+#include "background_metas/shizu_roof_hisao2.h"
+#include "background_metas/shizu_roof_towardsangry.h"
+#include "background_metas/shizu_roof_towardsnormal.h"
+#include "background_metas/shizu_roof_smile.h"
+#include "background_metas/shizu_roof.h"
+#include "background_metas/shizu_chess_large.h"
+#include "background_metas/shizu_chess_base3.h"
+#include "background_metas/shizu_chess_base2.h"
+#include "background_metas/shizu_chess_base.h"
+#include "background_metas/shizu_undressing_clothed_kiss.h"
+#include "background_metas/shizu_undressing_unclothed_blush.h"
+#include "background_metas/shizu_undressing_unclothed_kiss.h"
+#include "background_metas/shizu_undressing_clothed_stare.h"
+#include "background_metas/shizu_undressing_clothed_blush.h"
+#include "background_metas/shizu_undressing_unclothed_talk.h"
+#include "background_metas/shizu_undressing_unclothed_closed.h"
+#include "background_metas/shizuconfess_normal.h"
+#include "background_metas/shizutanabata.h"
+#include "background_metas/shizuconfess_smile.h"
+#include "background_metas/shizuconfess_closed.h"
+#include "background_metas/shizune_hcg_tied_smile_small.h"
+#include "background_metas/shizune_hcg_tied_kinky1_small.h"
+#include "background_metas/shizune_hcg_tied_close_small.h"
+#include "background_metas/shizune_hcg_tied_hisao2_small.h"
+#include "background_metas/shizune_hcg_tied_blush.h"
+#include "background_metas/shizune_hcg_tied_kinky2.h"
+#include "background_metas/shizune_hcg_tied_stare_small.h"
+#include "background_metas/shizune_hcg_tied_kinky3_small.h"
+#include "background_metas/shizune_hcg_tied_close.h"
+#include "background_metas/shizune_hcg_tied_kinky2_small.h"
+#include "background_metas/shizune_hcg_tied_small.h"
+#include "background_metas/shizune_hcg_tied_blush_small.h"
+#include "background_metas/shizune_hcg_tied_hisao2.h"
+#include "background_metas/shizune_hcg_tied_stare.h"
 namespace ks::background_metas {
     inline const bn::regular_bg_item& get_thumbnail_by_hash(const unsigned int hash) {
         switch (hash) {
@@ -567,215 +733,280 @@ namespace ks::background_metas {
             case 0x8201EF9B: return mural_start.thumbnail;
             case 0x739D14E0: return mural.thumbnail;
             case 0x7E2E975F: return mural_unfinished.thumbnail;
-            case 0xFFA32A75: return hanako_park_look.thumbnail;
-            case 0xF70B4944: return hanako_missionary_underwear.thumbnail;
             case 0x5272ECA0: return lilly_airport.thumbnail;
+            case 0xF70B4944: return hanako_missionary_underwear.thumbnail;
+            case 0xFFA32A75: return hanako_park_look.thumbnail;
             case 0x2D94B0A4: return rin_nap_close_tears.thumbnail;
-            case 0x4805F27F: return rin_wisp3.thumbnail;
-            case 0xDB8E735B: return rin_eating.thumbnail;
             case 0x49D3D12B: return picnic_rain.thumbnail;
+            case 0xDB8E735B: return rin_eating.thumbnail;
+            case 0x4805F27F: return rin_wisp3.thumbnail;
             case 0x6E4C0228: return rin_wisp2.thumbnail;
-            case 0x89941D80: return hanako_crayon1.thumbnail;
-            case 0x22F9178F: return hanako_dolls.thumbnail;
             case 0x09B2DDB8: return emi_sleep_unsure.thumbnail;
+            case 0x22F9178F: return hanako_dolls.thumbnail;
+            case 0x89941D80: return hanako_crayon1.thumbnail;
             case 0xB5891CED: return emitrack_blocks_close.thumbnail;
+            case 0x471A96DF: return rin_wisp1.thumbnail;
             case 0xD8C540D7: return hanako_billiards_serious.thumbnail;
             case 0x743D816E: return hisao_teacup.thumbnail;
-            case 0x471A96DF: return rin_wisp1.thumbnail;
-            case 0xCF7F47FE: return hana_library_gasp.thumbnail;
+            case 0xB0964F97: return rin_rain_towards.thumbnail;
             case 0xB41BC914: return hanako_crayon2.thumbnail;
             case 0xC378B782: return rin_relief_up_large.thumbnail;
-            case 0xB0964F97: return rin_rain_towards.thumbnail;
-            case 0xA88DD10E: return emi_bed_happy.thumbnail;
+            case 0xCF7F47FE: return hana_library_gasp.thumbnail;
             case 0x8F2AB0B8: return busride.thumbnail;
+            case 0xA88DD10E: return emi_bed_happy.thumbnail;
+            case 0x81990706: return shizu_pushdown.thumbnail;
+            case 0x602E8E6D: return rin_relief_up.thumbnail;
             case 0x83C97501: return rin_wisp5.thumbnail;
             case 0xFDC595C1: return hanako_missionary_clench.thumbnail;
-            case 0x602E8E6D: return rin_relief_up.thumbnail;
-            case 0x81990706: return shizu_pushdown.thumbnail;
-            case 0xE11350BA: return lilly_goodend.thumbnail;
-            case 0x3F43D527: return lilly_goodend_fg.thumbnail;
             case 0x8A5F1091: return rin_wisp4.thumbnail;
             case 0x5DD2D87C: return kenji_rooftop.thumbnail;
+            case 0xE11350BA: return lilly_goodend.thumbnail;
+            case 0x3F43D527: return lilly_goodend_fg.thumbnail;
+            case 0x34C16FF3: return misha_roof_closed.thumbnail;
             case 0xA9DA740E: return rin_masturbate_away.thumbnail;
             case 0xDDE4415D: return rin_masturbate_surprise.thumbnail;
-            case 0x34C16FF3: return misha_roof_closed.thumbnail;
-            case 0x53910A15: return lilly_crane.thumbnail;
-            case 0xF038B62A: return shizune_car.thumbnail;
+            case 0x967ABFB3: return hisao_scar_large.thumbnail;
             case 0x5FB37273: return hanako_cry_closed.thumbnail;
             case 0xAD6C8B17: return rin_high_grinwide.thumbnail;
-            case 0x967ABFB3: return hisao_scar_large.thumbnail;
-            case 0x18384747: return emi_bed_frown.thumbnail;
-            case 0xF37FFCC2: return lilly_airport_end.thumbnail;
+            case 0x53910A15: return lilly_crane.thumbnail;
+            case 0xF038B62A: return shizune_car.thumbnail;
             case 0x48786F43: return lilly_restaurant_listen.thumbnail;
+            case 0xF37FFCC2: return lilly_airport_end.thumbnail;
+            case 0x18384747: return emi_bed_frown.thumbnail;
+            case 0x2819D271: return hanako_park_away.thumbnail;
+            case 0x1C283C8A: return lilly_sheets.thumbnail;
             case 0xC18B5048: return rin_galleryskylight.thumbnail;
             case 0x8A155188: return hanako_billiards_distant.thumbnail;
-            case 0x1C283C8A: return lilly_sheets.thumbnail;
-            case 0x2819D271: return hanako_park_away.thumbnail;
-            case 0x609E25BC: return shizu_straddle_open.thumbnail;
-            case 0x24E43576: return kenji_rooftop_large.thumbnail;
-            case 0x61A6CAD8: return shizu_table_comeclosed.thumbnail;
             case 0x37493D30: return hanako_bed_crotch_glance.thumbnail;
-            case 0x77050DAA: return rin_nap_total_wind.thumbnail;
-            case 0xA4EF2B3D: return picnic_normal.thumbnail;
-            case 0x33DC7F5B: return lilly_restaurant_chew.thumbnail;
+            case 0x61A6CAD8: return shizu_table_comeclosed.thumbnail;
+            case 0x24E43576: return kenji_rooftop_large.thumbnail;
+            case 0x609E25BC: return shizu_straddle_open.thumbnail;
             case 0x5DC02E79: return lilly_sleeping_smile.thumbnail;
-            case 0xD9BD6EF2: return emi_sleep_weep.thumbnail;
-            case 0xC1541F93: return lilly_kissing.thumbnail;
+            case 0x33DC7F5B: return lilly_restaurant_chew.thumbnail;
+            case 0xA4EF2B3D: return picnic_normal.thumbnail;
+            case 0x77050DAA: return rin_nap_total_wind.thumbnail;
             case 0x7FDEA9A2: return rin_nap_close_hand.thumbnail;
+            case 0xC1541F93: return lilly_kissing.thumbnail;
+            case 0xD9BD6EF2: return emi_sleep_weep.thumbnail;
             case 0xB79ACBCD: return hanako_cry_open.thumbnail;
+            case 0x6A54E202: return hisao_letter_open.thumbnail;
+            case 0x3D8906BE: return lilly_sleeping.thumbnail;
+            case 0x1DCF09FD: return rin_nap_close_wind.thumbnail;
+            case 0xAAB9C69C: return emi_run_face.thumbnail;
             case 0x547CFC6E: return hisao_mirror.thumbnail;
             case 0x34797320: return lilly_tearoom_open.thumbnail;
             case 0x518AA5F6: return misha_nightclass.thumbnail;
-            case 0x1DCF09FD: return rin_nap_close_wind.thumbnail;
-            case 0x3D8906BE: return lilly_sleeping.thumbnail;
-            case 0xAAB9C69C: return emi_run_face.thumbnail;
-            case 0x6A54E202: return hisao_letter_open.thumbnail;
-            case 0xB26429F9: return lilly_restaurant_wine.thumbnail;
-            case 0x032E12D7: return lilly_masturbate_come.thumbnail;
-            case 0xEC59D299: return shizu_straddle_come.thumbnail;
-            case 0x331B8BB4: return rin_rain_away_close.thumbnail;
             case 0x9ADEBFF5: return completionbonus.thumbnail;
             case 0x515384F8: return emi_sleep_cry.thumbnail;
-            case 0x460F927F: return emi_bed_normal.thumbnail;
+            case 0xEC59D299: return shizu_straddle_come.thumbnail;
+            case 0x331B8BB4: return rin_rain_away_close.thumbnail;
+            case 0x032E12D7: return lilly_masturbate_come.thumbnail;
+            case 0xB26429F9: return lilly_restaurant_wine.thumbnail;
+            case 0x13699534: return rin_high_smile.thumbnail;
+            case 0x528C0FC3: return lilly_touch_cheong.thumbnail;
             case 0x51814D15: return hanako_billiards_smile_close.thumbnail;
             case 0x9C9CDCEF: return lilly_sunsetwalk_bg.thumbnail;
             case 0xA8091838: return rin_high_oneeye.thumbnail;
-            case 0x13699534: return rin_high_smile.thumbnail;
-            case 0x528C0FC3: return lilly_touch_cheong.thumbnail;
-            case 0xC9613A6C: return hanako_rage_sad.thumbnail;
+            case 0x460F927F: return emi_bed_normal.thumbnail;
             case 0xE5EF35E4: return emi_ending_glad.thumbnail;
             case 0x405C850A: return lilly_hospitalwindow.thumbnail;
+            case 0xC9613A6C: return hanako_rage_sad.thumbnail;
             case 0xB669E997: return lilly_touch_cas.thumbnail;
-            case 0x2860C8FD: return lilly_shizu_showdown.thumbnail;
             case 0x24AB74C0: return hanako_bed_boobs_blush.thumbnail;
+            case 0x2860C8FD: return lilly_shizu_showdown.thumbnail;
             case 0x9B1DCAFC: return emi_sleepy_face.thumbnail;
-            case 0x33B80C6C: return rin_wisp_smoke_blurred.thumbnail;
             case 0x4BCEB262: return rin_relief_down.thumbnail;
-            case 0x807EAB94: return rin_orange_large.thumbnail;
+            case 0x33B80C6C: return rin_wisp_smoke_blurred.thumbnail;
             case 0xAB1455ED: return watch_black.thumbnail;
             case 0xD01F588E: return hanako_emptyclassroom_bg.thumbnail;
-            case 0x9E664026: return emitrack_finish.thumbnail;
-            case 0x092915A0: return hana_library.thumbnail;
+            case 0x807EAB94: return rin_orange_large.thumbnail;
             case 0x763F3A63: return emitrack_blocks_close_grin.thumbnail;
             case 0x3A4B836F: return rin_painting_faceconcerned.thumbnail;
+            case 0x9E664026: return emitrack_finish.thumbnail;
+            case 0x092915A0: return hana_library.thumbnail;
             case 0xA66DC48B: return shizu_hands.thumbnail;
             case 0x8FF6095C: return rin_wisp_blurred.thumbnail;
-            case 0x77B68FD5: return lilly_hanako_hug.thumbnail;
-            case 0x78FB19B7: return rin_nap_close.thumbnail;
-            case 0x7A90048B: return shizu_table_normal.thumbnail;
             case 0x2CB5780D: return hisao_scar.thumbnail;
+            case 0x7A90048B: return shizu_table_normal.thumbnail;
+            case 0x77B68FD5: return lilly_hanako_hug.thumbnail;
             case 0x3DCDB592: return rin_nap_total_tears.thumbnail;
-            case 0xAEDF59DE: return emi_ending_serious.thumbnail;
-            case 0x676BB280: return lilly_wheat_foreground.thumbnail;
+            case 0x78FB19B7: return rin_nap_close.thumbnail;
             case 0x80DAD74B: return rin_high_grin.thumbnail;
-            case 0x6BD13424: return hanako_after_worry.thumbnail;
-            case 0x64E71B29: return lilly_restaurant_sheepish.thumbnail;
-            case 0x0EECAABD: return shizu_table_comeopen.thumbnail;
+            case 0x676BB280: return lilly_wheat_foreground.thumbnail;
+            case 0xAEDF59DE: return emi_ending_serious.thumbnail;
             case 0x227FCED9: return hanako_scars_large.thumbnail;
             case 0xF2A998EF: return akira_park.thumbnail;
-            case 0x0009C48D: return lilly_tearoom.thumbnail;
-            case 0x034B8298: return emi_sleepy.thumbnail;
-            case 0xBDD53EC9: return misha_sex_closed.thumbnail;
+            case 0x0EECAABD: return shizu_table_comeopen.thumbnail;
+            case 0x6BD13424: return hanako_after_worry.thumbnail;
+            case 0x64E71B29: return lilly_restaurant_sheepish.thumbnail;
             case 0x6A474550: return emi_parkback.thumbnail;
-            case 0xC78A8F36: return emi_sleepy_legs.thumbnail;
+            case 0xBDD53EC9: return misha_sex_closed.thumbnail;
+            case 0x034B8298: return emi_sleepy.thumbnail;
+            case 0x0009C48D: return lilly_tearoom.thumbnail;
             case 0x7D5E8FA4: return shizu_goodend.thumbnail;
+            case 0xC78A8F36: return emi_sleepy_legs.thumbnail;
+            case 0x23549EC2: return hanako_cry_away.thumbnail;
+            case 0xACAA4418: return emitrack_running.thumbnail;
+            case 0xD5D5CC32: return lilly_hospitalclosed.thumbnail;
             case 0x25B9B316: return lilly_restaurant_eat.thumbnail;
             case 0xD653D334: return emi_firstkiss.thumbnail;
-            case 0xD5D5CC32: return lilly_hospitalclosed.thumbnail;
-            case 0xACAA4418: return emitrack_running.thumbnail;
-            case 0x23549EC2: return hanako_cry_away.thumbnail;
+            case 0x0ECD2F43: return rin_masturbate_doubt.thumbnail;
             case 0x7ABD1B49: return hanako_billiards_break.thumbnail;
             case 0x4D12722B: return emi_sleep_normal.thumbnail;
-            case 0x0ECD2F43: return rin_masturbate_doubt.thumbnail;
-            case 0xC9D2304D: return rin_rain_away.thumbnail;
-            case 0x4E6BB0F8: return rin_high_sleep.thumbnail;
-            case 0xE60A7454: return shizu_flashback.thumbnail;
             case 0x4EA9321A: return lilly_wheat_large.thumbnail;
             case 0x21A2B6B3: return hanako_goodend.thumbnail;
+            case 0x4E6BB0F8: return rin_high_sleep.thumbnail;
+            case 0xE60A7454: return shizu_flashback.thumbnail;
+            case 0xC9D2304D: return rin_rain_away.thumbnail;
+            case 0xE49E0B6C: return shizu_shanghai_smirklaugh.thumbnail;
+            case 0x6C0CC11F: return rin_masturbate_frown.thumbnail;
+            case 0x3CB22317: return rin_painting_concerned.thumbnail;
             case 0xE24226CA: return shizu_shanghai_normallaugh.thumbnail;
             case 0xE14A9A70: return lilly_masturbate.thumbnail;
             case 0x0CFEBE5E: return shizu_shanghai_smirknormal.thumbnail;
-            case 0x3CB22317: return rin_painting_concerned.thumbnail;
-            case 0xE49E0B6C: return shizu_shanghai_smirklaugh.thumbnail;
-            case 0x6C0CC11F: return rin_masturbate_frown.thumbnail;
-            case 0xFA43A51D: return lilly_wheat_small.thumbnail;
             case 0x2478C96C: return hanako_billiards_smile.thumbnail;
-            case 0x9F1F9498: return shizu_couch.thumbnail;
+            case 0xFA43A51D: return lilly_wheat_small.thumbnail;
             case 0xD1FD7178: return misha_sad.thumbnail;
-            case 0x25068E0C: return hanako_bed_boobs_glance.thumbnail;
+            case 0x9F1F9498: return shizu_couch.thumbnail;
             case 0xBE6EDDE7: return event_missing.thumbnail;
             case 0xE02C5A39: return lilly_hospital.thumbnail;
-            case 0x50DFADCB: return shizu_straddle_closed.thumbnail;
-            case 0x7BA4233D: return hanako_scars.thumbnail;
-            case 0xACC8B413: return hanako_park_alone.thumbnail;
+            case 0x25068E0C: return hanako_bed_boobs_glance.thumbnail;
             case 0x48E6DE0D: return lilly_bedroom.thumbnail;
-            case 0x48E6FB77: return rin_high_frown.thumbnail;
-            case 0xB7E328D4: return shizu_badend.thumbnail;
+            case 0xACC8B413: return hanako_park_alone.thumbnail;
+            case 0x7BA4233D: return hanako_scars.thumbnail;
+            case 0x50DFADCB: return shizu_straddle_closed.thumbnail;
             case 0xB21B7779: return emi_bed_legs.thumbnail;
             case 0x671EE4F6: return lilly_goodend_bg.thumbnail;
-            case 0x8E491684: return shizu_shanghai_boredlaugh.thumbnail;
+            case 0x48E6FB77: return rin_high_frown.thumbnail;
+            case 0xB7E328D4: return shizu_badend.thumbnail;
             case 0xD4432212: return hanako_missionary_open.thumbnail;
-            case 0x58CFD750: return hanako_goodend_close.thumbnail;
-            case 0x2DA83628: return emi_parkback_frown.thumbnail;
-            case 0xB59737BF: return emi_forehead.thumbnail;
-            case 0xB6BB09FC: return shizu_straddle_smile.thumbnail;
-            case 0x845E9600: return rin_wisp_smoke_focused.thumbnail;
+            case 0x8E491684: return shizu_shanghai_boredlaugh.thumbnail;
             case 0x17B746CF: return shizu_fishing_sl.thumbnail;
             case 0x9D218F70: return emi_ending_smile.thumbnail;
-            case 0x026C5C13: return emitrack_finishtop.thumbnail;
-            case 0xA2ABB1B8: return shizu_shanghai_borednormal.thumbnail;
-            case 0x9666EA8A: return shizu_straddle_tease.thumbnail;
+            case 0xB6BB09FC: return shizu_straddle_smile.thumbnail;
+            case 0xB59737BF: return emi_forehead.thumbnail;
+            case 0x2DA83628: return emi_parkback_frown.thumbnail;
+            case 0x845E9600: return rin_wisp_smoke_focused.thumbnail;
+            case 0x58CFD750: return hanako_goodend_close.thumbnail;
             case 0xC5DE1E57: return hanako_billiards_timid.thumbnail;
+            case 0x9666EA8A: return shizu_straddle_tease.thumbnail;
             case 0x5A7A3D0C: return emi_bed_unsure.thumbnail;
+            case 0xA2ABB1B8: return shizu_shanghai_borednormal.thumbnail;
+            case 0x026C5C13: return emitrack_finishtop.thumbnail;
+            case 0x28FC69DE: return hana_library_smile.thumbnail;
             case 0x3BADDF80: return hana_library_read.thumbnail;
             case 0x0F191AF0: return emi_grave.thumbnail;
-            case 0x28FC69DE: return hana_library_smile.thumbnail;
-            case 0xDF65B386: return emitrack_blocks.thumbnail;
-            case 0x7D431D45: return misha_roof_normal.thumbnail;
-            case 0xF4B26548: return rin_nap_close_nohand.thumbnail;
+            case 0xB38F977E: return rin_kiss.thumbnail;
+            case 0x66B27C52: return rin_gallery.thumbnail;
             case 0x6484FE06: return hanako_bed_crotch_blush.thumbnail;
             case 0x8F4C304F: return misha_sex_aside.thumbnail;
-            case 0x66B27C52: return rin_gallery.thumbnail;
-            case 0xB38F977E: return rin_kiss.thumbnail;
             case 0x108DA3E5: return lilly_sunsetwalk_fg.thumbnail;
+            case 0x7D431D45: return misha_roof_normal.thumbnail;
+            case 0xDF65B386: return emitrack_blocks.thumbnail;
+            case 0xF4B26548: return rin_nap_close_nohand.thumbnail;
             case 0xEE5BAAF9: return hisao_letter_closed.thumbnail;
-            case 0x93E8189C: return shizu_table_smile.thumbnail;
-            case 0x889989F2: return lilly_masturbate_come_face.thumbnail;
             case 0xB7A22937: return emi_miss_open.thumbnail;
-            case 0xB8EC87DF: return lilly_bedroom_large.thumbnail;
-            case 0x604528B2: return emi_cry_down.thumbnail;
+            case 0x889989F2: return lilly_masturbate_come_face.thumbnail;
+            case 0x93E8189C: return shizu_table_smile.thumbnail;
             case 0x0D3575CD: return emi_bed_smile.thumbnail;
             case 0x1977644F: return hisao_letter_open_2.thumbnail;
-            case 0x52378501: return rin_artclass4.thumbnail;
+            case 0x604528B2: return emi_cry_down.thumbnail;
+            case 0xB8EC87DF: return lilly_bedroom_large.thumbnail;
             case 0x3F2F9C97: return hanako_after_smile.thumbnail;
             case 0x9425AC62: return shizu_shanghai.thumbnail;
-            case 0x7ED9A3A0: return rin_high_open.thumbnail;
-            case 0x2847FDAA: return misha_naked.thumbnail;
+            case 0x52378501: return rin_artclass4.thumbnail;
             case 0xE9512F30: return rin_rain_towards_close.thumbnail;
-            case 0x8AA4D415: return rin_painting_reply.thumbnail;
             case 0x3865EE55: return shizu_fishing_ah.thumbnail;
-            case 0x63F3D965: return misha_roof_angry.thumbnail;
+            case 0x8AA4D415: return rin_painting_reply.thumbnail;
+            case 0x2847FDAA: return misha_naked.thumbnail;
+            case 0x7ED9A3A0: return rin_high_open.thumbnail;
             case 0xB654144D: return rin_masturbate_hug.thumbnail;
-            case 0xC7C5D0FC: return rin_artclass1.thumbnail;
-            case 0xF80ABB41: return hanako_park_closed.thumbnail;
-            case 0xA8A1DFD7: return lilly_touch_uni.thumbnail;
+            case 0x63F3D965: return misha_roof_angry.thumbnail;
             case 0xC084B788: return rin_painting_base.thumbnail;
+            case 0xA8A1DFD7: return lilly_touch_uni.thumbnail;
+            case 0xF80ABB41: return hanako_park_closed.thumbnail;
+            case 0xC7C5D0FC: return rin_artclass1.thumbnail;
             case 0xF68FAE25: return hanako_presents2.thumbnail;
             case 0x2055F4C1: return rin_nap_total.thumbnail;
-            case 0x89E294F3: return emi_bed_normal_f.thumbnail;
             case 0xE20A7B72: return rin_relief_down_large.thumbnail;
+            case 0x89E294F3: return emi_bed_normal_f.thumbnail;
             case 0x99BBCF63: return hanako_emptyclassroom_fg.thumbnail;
-            case 0x9E4BD137: return rin_orange.thumbnail;
-            case 0xCD6B56C9: return misha_roof_sad.thumbnail;
             case 0x1113465E: return rin_artclass3.thumbnail;
-            case 0x0708DB55: return rin_artclass2.thumbnail;
-            case 0x95D51400: return busride_ni.thumbnail;
+            case 0xCD6B56C9: return misha_roof_sad.thumbnail;
+            case 0x9E4BD137: return rin_orange.thumbnail;
             case 0x5FA2E9E8: return hanako_goodend_muffin.thumbnail;
             case 0x1308E649: return rin_painting_foot.thumbnail;
-            case 0xC3E49D7A: return hanako_rage.thumbnail;
-            case 0x30481238: return emi_miss_closed.thumbnail;
-            case 0x352CCD1E: return hanako_missionary_closed.thumbnail;
+            case 0x0708DB55: return rin_artclass2.thumbnail;
+            case 0x95D51400: return busride_ni.thumbnail;
             case 0x5B30CD77: return hanako_presents1.thumbnail;
+            case 0x30481238: return emi_miss_closed.thumbnail;
+            case 0xC3E49D7A: return hanako_rage.thumbnail;
+            case 0x352CCD1E: return hanako_missionary_closed.thumbnail;
+            case 0x585FBB0E: return emi_grinding_off_end.thumbnail;
+            case 0x8C6D0D83: return emi_grinding_off_closearoused.thumbnail;
+            case 0x457C3082: return emi_grinding_grin.thumbnail;
+            case 0x858555F8: return emi_grinding_half_undress.thumbnail;
+            case 0xC20E9287: return emi_grinding_wink.thumbnail;
+            case 0x9D9ABED8: return emi_grinding_off_yawn.thumbnail;
+            case 0x7221106C: return emi_grinding_victory.thumbnail;
+            case 0x0A567173: return emi_grinding_victorytall.thumbnail;
+            case 0x8A0ED8DE: return emi_grinding_off_come.thumbnail;
+            case 0xE5CF9FCE: return emi_grinding_off_closesurprise.thumbnail;
+            case 0x47801904: return emi_grinding_half_grin.thumbnail;
+            case 0x6BC4B340: return emi_grinding_off_aroused.thumbnail;
+            case 0x7A573FB7: return emi_grinding_off_arousedclosed.thumbnail;
+            case 0x4DBA0B0B: return emi_shed_hisao_sweat.thumbnail;
+            case 0xC7644AC7: return emi_shed_rhand_up.thumbnail;
+            case 0x447BE73F: return emi_shed_lhand_up.thumbnail;
+            case 0x98B05860: return emi_shed_base1.thumbnail;
+            case 0x184E3629: return emi_shed_base3.thumbnail;
+            case 0xF8E73B47: return emi_shed_emi_hesitant.thumbnail;
+            case 0xF08D73F9: return emi_shed_emi_closed.thumbnail;
+            case 0xC494075B: return emi_shed_base2.thumbnail;
+            case 0x1F81304F: return emi_shed_hisao_neutral.thumbnail;
+            case 0x588E6FD1: return emi_shed_base4.thumbnail;
+            case 0x67B9CB89: return emi_shed_rhand_down.thumbnail;
+            case 0xDEDB651F: return emi_shed_hisao_closed.thumbnail;
+            case 0x04A7F033: return emi_shed_emi_shock.thumbnail;
+            case 0xB65EE4FF: return emi_shed_emi_grin.thumbnail;
+            case 0xED86234E: return emi_shed_lhand_down.thumbnail;
+            case 0x04C4DE04: return hanako_breakdown_closed.thumbnail;
+            case 0xE9714B93: return hanako_breakdown_up.thumbnail;
+            case 0xBDDDB5AB: return hanako_breakdown_bg.thumbnail;
+            case 0xABF77E72: return hanako_breakdown_down.thumbnail;
+            case 0xD2B2370B: return bird_9.thumbnail;
+            case 0x2A454BF6: return bird_8.thumbnail;
+            case 0xB2EFF370: return bird_5.thumbnail;
+            case 0xB52CDED8: return bird_4.thumbnail;
+            case 0x5531A579: return bird_6.thumbnail;
+            case 0x7FCDB335: return bird_7.thumbnail;
+            case 0x99653F29: return bird_3.thumbnail;
+            case 0x6BDB5D28: return bird_2.thumbnail;
+            case 0xC49EE349: return bird_0.thumbnail;
+            case 0x956E62AC: return bird_1.thumbnail;
+            case 0xCCC25B1D: return kenji_glasses_mg.thumbnail;
+            case 0x62D1D216: return kenji_glasses_fg.thumbnail;
+            case 0x6EA51E11: return kenji_glasses_frown.thumbnail;
+            case 0xAA1B99D1: return kenji_glasses_bg.thumbnail;
+            case 0xFC5B75BE: return kenji_glasses_closed.thumbnail;
+            case 0xC1458EAF: return lilly_hcg_afterbath_open_small.thumbnail;
+            case 0x88CBBD5E: return lilly_hcg_afterbath_shut_small.thumbnail;
+            case 0x7E1E4D58: return lilly_hcg_bath_moan_small.thumbnail;
+            case 0xA3967782: return lilly_hcg_bath_emb_small.thumbnail;
+            case 0x8FCEC6A8: return lilly_hcg_bath_open_small.thumbnail;
+            case 0x956B671D: return lilly_hcg_bath_smile_small.thumbnail;
+            case 0x3B0501C6: return lilly_hcg_bath_grab_small.thumbnail;
+            case 0x2B186168: return lilly_hcg_cowgirl_strain_small.thumbnail;
+            case 0xEBD20494: return lilly_hcg_cowgirl_weaksmile_small.thumbnail;
+            case 0xEFCD2DAC: return lilly_hcg_cowgirl_smile_small.thumbnail;
+            case 0x61B6B8D7: return lilly_hcg_cowgirl_cry_small.thumbnail;
+            case 0x78E19F7F: return lilly_hcg_cowgirl_frown_small.thumbnail;
+            case 0xD4D9C4EF: return lilly_hcg_handjob_stroke_normshut_small.thumbnail;
+            case 0x7BA49D65: return lilly_hcg_handjob_chest_frown.thumbnail;
+            case 0xFD70D062: return lilly_hcg_handjob_chest_normal.thumbnail;
+            case 0x4045F0EE: return lilly_hcg_handjob_stroke_normopen_small.thumbnail;
+            case 0x3A4F621A: return lilly_hcg_handjob_stroke_normopen.thumbnail;
+            case 0x4EB93F21: return lilly_hcg_handjob_stroke_flustopen_small.thumbnail;
             case 0xF56603F3: return tearoom_hisao_unsure.thumbnail;
             case 0xE3A57DBC: return tearoom_hanae_sad.thumbnail;
             case 0x5B7C35ED: return tearoom_hisaoe_hsmile.thumbnail;
@@ -818,6 +1049,107 @@ namespace ks::background_metas {
             case 0xD7BF88E4: return tearoom_hisao_thinkclosed.thumbnail;
             case 0x0856A073: return tearoom_hisaoe_sigh.thumbnail;
             case 0x0DA1A116: return tearoom_hisaoe_hunsure.thumbnail;
+            case 0x21A69878: return train_scenery_fg_ni.thumbnail;
+            case 0xB2779A5C: return lilly_trainride_ni_smile.thumbnail;
+            case 0xDD67CF48: return lilly_trainride_smiles.thumbnail;
+            case 0x26BAA666: return lilly_trainride_ni.thumbnail;
+            case 0x0D463A0D: return train_scenery.thumbnail;
+            case 0xC67F7A32: return lilly_trainride_ni_pout.thumbnail;
+            case 0xFC42EF1F: return lilly_trainride_ni_ara.thumbnail;
+            case 0x6CA8681C: return lilly_trainride_ni_opensmile.thumbnail;
+            case 0x08982A5B: return train_scenery_fg.thumbnail;
+            case 0x41EDCF16: return lilly_trainride_ni_norm.thumbnail;
+            case 0xF66074CA: return lilly_trainride_smile.thumbnail;
+            case 0xBB8B1E43: return lilly_trainride_ni_weaksmile.thumbnail;
+            case 0x74A4DA22: return lilly_trainride.thumbnail;
+            case 0x3630053F: return train_scenery_ni.thumbnail;
+            case 0x2CD8FD4F: return lilly_trainride_hanasmile.thumbnail;
+            case 0x6DFB6768: return rin_goodend_1b.thumbnail;
+            case 0x8AB58058: return rin_goodend_1.thumbnail;
+            case 0x222FA88A: return rin_goodend_2.thumbnail;
+            case 0xDFA80E3C: return rin_goodend_fg.thumbnail;
+            case 0xE3B01A2D: return rin_goodend_base.thumbnail;
+            case 0xE65AAFD6: return rin_goodend_2_hires.thumbnail;
+            case 0x6D8C5931: return rin_h_closed_close.thumbnail;
+            case 0xB783FCC3: return rin_h_normal.thumbnail;
+            case 0x21AACB6F: return rin_h_strain_close.thumbnail;
+            case 0x9DFC70B0: return rin_h_strain.thumbnail;
+            case 0xBE664BFD: return rin_h_left_close.thumbnail;
+            case 0x6BF21BE8: return rin_h_normal_close.thumbnail;
+            case 0x823E033F: return rin_h_right.thumbnail;
+            case 0x2713A330: return rin_h_right_close.thumbnail;
+            case 0xB2A237FA: return rin_h_left.thumbnail;
+            case 0xD0FE448D: return rin_h_closed.thumbnail;
+            case 0xB4E12CFF: return rin_h2_u_surprise.thumbnail;
+            case 0x7DDB5F0A: return rin_h2_l_hisao.thumbnail;
+            case 0x2AED8B87: return rin_h2_u_away.thumbnail;
+            case 0x82D4A5C9: return rin_h2_l_pan.thumbnail;
+            case 0x05D3D33D: return rin_h2_u_closed.thumbnail;
+            case 0x5CD67806: return rin_h2_l_nopan.thumbnail;
+            case 0x57B2B5E6: return rin_pair_rin_talk.thumbnail;
+            case 0x7C4AF34D: return rin_pair_hisao_smile.thumbnail;
+            case 0x7277E428: return rin_pair_hisao_clothes.thumbnail;
+            case 0x79429E5D: return rin_pair_base.thumbnail;
+            case 0xFB9E7335: return rin_pair_rin_frown.thumbnail;
+            case 0x6423A5D4: return rin_pair_rin_smile.thumbnail;
+            case 0x91F425E8: return rin_pair_hisao_frown.thumbnail;
+            case 0xBA673F7F: return rin_pair_rin_closed.thumbnail;
+            case 0x9941DF30: return hisao_shadow.thumbnail;
+            case 0xD192FE62: return rin_roof_nonchalant.thumbnail;
+            case 0x0D7EB224: return rin_roof_disgust.thumbnail;
+            case 0x5243A214: return rin_roof_boredom.thumbnail;
+            case 0x7B7967A7: return rin_roof_doubt.thumbnail;
+            case 0xD09A263D: return rin_roof_surprised.thumbnail;
+            case 0x99CAF325: return emi_shadow.thumbnail;
+            case 0x6819D3F3: return rin_trueend_weaksmile.thumbnail;
+            case 0x32D4F683: return rin_trueend_normal.thumbnail;
+            case 0x478B5C07: return rin_trueend_smile.thumbnail;
+            case 0x71785621: return rin_trueend_gone.thumbnail;
+            case 0x855B2D31: return rin_trueend_sad.thumbnail;
+            case 0x86436BEC: return rin_trueend_hug.thumbnail;
+            case 0x26500FF4: return rin_trueend_closed.thumbnail;
+            case 0x515638A2: return rin_trueend_hugclosed.thumbnail;
+            case 0xC861606F: return rin_wet_towel_touch.thumbnail;
+            case 0x7FBD8C8C: return rin_wet_arms.thumbnail;
+            case 0x101E4A44: return rin_wet_pan_down.thumbnail;
+            case 0x820FC466: return rin_wet_face_up.thumbnail;
+            case 0xBEB276E6: return rin_wet_towel_down.thumbnail;
+            case 0x5EB03D45: return rin_wet_face_down.thumbnail;
+            case 0x506C456E: return rin_wet_towel_up.thumbnail;
+            case 0xF7F27B8D: return shizu_roof_hisao2.thumbnail;
+            case 0x5B2DA046: return shizu_roof_towardsangry.thumbnail;
+            case 0x5F87312D: return shizu_roof_towardsnormal.thumbnail;
+            case 0x196CDBD5: return shizu_roof_smile.thumbnail;
+            case 0x34879154: return shizu_roof.thumbnail;
+            case 0x23205C2A: return shizu_chess_large.thumbnail;
+            case 0x7DB631A9: return shizu_chess_base3.thumbnail;
+            case 0x532DB4FC: return shizu_chess_base2.thumbnail;
+            case 0x6A6B70F4: return shizu_chess_base.thumbnail;
+            case 0xC4C2CC63: return shizu_undressing_clothed_kiss.thumbnail;
+            case 0x6EBB3CBA: return shizu_undressing_unclothed_blush.thumbnail;
+            case 0x1F3F9121: return shizu_undressing_unclothed_kiss.thumbnail;
+            case 0xC44FE6B4: return shizu_undressing_clothed_stare.thumbnail;
+            case 0x3A073DCC: return shizu_undressing_clothed_blush.thumbnail;
+            case 0x497161B3: return shizu_undressing_unclothed_talk.thumbnail;
+            case 0x072E261D: return shizu_undressing_unclothed_closed.thumbnail;
+            case 0x2FC4A125: return shizuconfess_normal.thumbnail;
+            case 0xD87F820B: return shizutanabata.thumbnail;
+            case 0x84DC109A: return shizuconfess_smile.thumbnail;
+            case 0x4898D882: return shizuconfess_closed.thumbnail;
+            case 0xEA7DA516: return shizune_hcg_tied_smile_small.thumbnail;
+            case 0xEC815210: return shizune_hcg_tied_kinky1_small.thumbnail;
+            case 0x2EE9AAC0: return shizune_hcg_tied_close_small.thumbnail;
+            case 0xB9629D84: return shizune_hcg_tied_hisao2_small.thumbnail;
+            case 0x79997E98: return shizune_hcg_tied_blush.thumbnail;
+            case 0xC6B36DB0: return shizune_hcg_tied_kinky2.thumbnail;
+            case 0x9D02A3DE: return shizune_hcg_tied_stare_small.thumbnail;
+            case 0xCAAA6F67: return shizune_hcg_tied_kinky3_small.thumbnail;
+            case 0xB0780A17: return shizune_hcg_tied_close.thumbnail;
+            case 0x0E394C83: return shizune_hcg_tied_kinky2_small.thumbnail;
+            case 0x5DE6845A: return shizune_hcg_tied_small.thumbnail;
+            case 0xB5D68A89: return shizune_hcg_tied_blush_small.thumbnail;
+            case 0xBB33756F: return shizune_hcg_tied_hisao2.thumbnail;
+            case 0xEF3CB195: return shizune_hcg_tied_stare.thumbnail;
             default: return get_custom_thumbnail_by_hash(hash);
         }
     }
