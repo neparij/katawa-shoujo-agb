@@ -112,6 +112,10 @@ namespace ks {
             items = menu::get_gallery_images(page);
             blend_action.reset();
             primary_background = bn::regular_bg_items::ui_bg_menu_extras_gallery.create_bg(0, 0);
+            static_text_sprites.clear();
+            progress_icon_sprites.clear();
+            globals::main_update();
+
             if (page == 0) {
                 secondary_background = bn::regular_bg_items::ui_bg_menu_extras_gallery_page_0.create_bg(0, 0);
             } else if (page == 1) {
@@ -121,10 +125,6 @@ namespace ks {
             } else {
                 BN_ERROR("Invalid gallery page: ", page);
             }
-
-            static_text_sprites.clear();
-            progress_icon_sprites.clear();
-            globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_left_alignment();

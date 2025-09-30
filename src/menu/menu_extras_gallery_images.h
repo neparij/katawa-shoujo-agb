@@ -38,6 +38,14 @@ namespace ks::menu {
             SceneManager::set_background(bg, 0, 0, SCENE_TRANSITION_NONE, GALLERY_DISSOLVE_TIME, PALETTE_VARIANT_DEFAULT);
         }
 
+        /** Placeholder for not implemented scripts
+         *
+         * TODO: Remove this method after all scripts are implemented
+         */
+        static void not_implemented() {
+            BN_ERROR("Gallery script is not implemented yet.");
+        }
+
         static void other_iwanako() {
             prepare_scene_manager();
             SceneManager::set_event(background_metas::other_iwanako, OtherIwanakoEvent(), SCENE_TRANSITION_NONE, GALLERY_DISSOLVE_TIME);
