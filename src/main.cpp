@@ -15,17 +15,18 @@
 #include "sound_manager.h"
 #include "translations/en.cpp"
 #include "video_4ls_dxtv.h"
+#include "menu/menu_main.cpp.h"
 #include "menu/menu_extras.cpp.h"
 #include "menu/menu_extras_cinema.cpp.h"
 #include "menu/menu_extras_jukebox.cpp.h"
-#include "menu/menu_main.cpp.h"
+#include "menu/menu_extras_gallery.cpp.h"
 #include "menu/menu_options.cpp.h"
+#include "menu/menu_options_accessibility.cpp.h"
+#include "menu/menu_options_language.cpp.h"
 #include "menu/menu_saves.cpp.h"
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
-#include "menu/menu_options_accessibility.cpp.h"
-#include "menu/menu_options_language.cpp.h"
 #include "openings/act1.cpp.h"
 #include "openings/act2_emi.cpp.h"
 #include "openings/act3_emi.cpp.h"
@@ -327,6 +328,9 @@ int main() {
                 break;
             case GS_MENU_EXTRAS_CINEMA:
                 ks::MenuExtrasCinema().run();
+                break;
+            case GS_MENU_EXTRAS_GALLERY:
+                ks::MenuExtrasGallery().run();
                 break;
             case GS_LOAD_GAME:
                 ks::timer::reset();

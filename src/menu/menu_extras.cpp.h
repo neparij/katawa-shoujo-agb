@@ -56,6 +56,9 @@ namespace ks {
                 case 0:
                     globals::state = GS_MENU_EXTRAS_JUKEBOX;
                     break;
+                case 1:
+                    globals::state = GS_MENU_EXTRAS_GALLERY;
+                    break;
                 case 3:
                     globals::state = GS_MENU_EXTRAS_CINEMA;
                     break;

@@ -13,6 +13,7 @@ setup(
             "ksre_bgs_resize=src.resize:main",
             "ksre_drugs_gen=src.drugs_event_generator:main",
             "ksre_random_fill=src.random_fill_generator:main",
+            "ksre_gallery_thumbs=src.gallery_thumbsbg_generator:main",
         ],
     },
 )

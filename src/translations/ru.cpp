@@ -58,6 +58,7 @@ public:
     unsigned int menu_extras_return_xoffset() override {return 0;}
 
     const char* menu_back() override {return "Назад";}
+    const char* menu_page() override {return "Страница";}
 
     const char* language_en() override {return "Английский";}
     const char* language_ru() override {return "Русский";}

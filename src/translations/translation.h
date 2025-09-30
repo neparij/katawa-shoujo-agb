@@ -61,6 +61,7 @@ public:
     virtual unsigned int menu_extras_return_xoffset() = 0;
 
     virtual const char* menu_back() = 0;
+    virtual const char* menu_page() = 0;
 
     virtual const char* language_en() = 0;
     virtual const char* language_ru() = 0;

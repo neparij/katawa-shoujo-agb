@@ -330,7 +330,7 @@ def write_background_metadata_store():
 def resize_events():
     ### HERE AND AFTER EVENTS
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/event"
-    input_directory = "/Users/n.laptev/development/ksre/game/event"
+    input_directory = "/Users/n.laptev/development/ksre-2/game/event"
 
     image_files = [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     # resize_images_in_directory(input_directory, quantize_palettes=8)
