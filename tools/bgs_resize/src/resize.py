@@ -330,25 +330,38 @@ def write_background_metadata_store():
 def resize_events():
     ### HERE AND AFTER EVENTS
     output_directory = "/Users/n.laptev/development/gba/katawa/graphics/event"
-    input_directory = "/Users/n.laptev/development/ksre-2/game/event"
+    input_directories = [
+        "/Users/n.laptev/development/ksre-2/game/event",
+        "/Users/n.laptev/development/ksre-2/game/event/emi_grinding",
+        "/Users/n.laptev/development/ksre-2/game/event/emi_shed",
+        "/Users/n.laptev/development/ksre-2/game/event/hanako_breakdown",
+        "/Users/n.laptev/development/ksre-2/game/event/hisaobird",
+        "/Users/n.laptev/development/ksre-2/game/event/kenji_glasses",
+        "/Users/n.laptev/development/ksre-2/game/event/lilly_afterbath",
+        "/Users/n.laptev/development/ksre-2/game/event/lilly_bath",
+        "/Users/n.laptev/development/ksre-2/game/event/lilly_cowgirl",
+        "/Users/n.laptev/development/ksre-2/game/event/lilly_handjob",
+        "/Users/n.laptev/development/ksre-2/game/event/Lilly_supercg",
+        "/Users/n.laptev/development/ksre-2/game/event/lilly_train",
+        "/Users/n.laptev/development/ksre-2/game/event/rin_goodend",
+        "/Users/n.laptev/development/ksre-2/game/event/rin_h",
+        "/Users/n.laptev/development/ksre-2/game/event/rin_h2",
+        "/Users/n.laptev/development/ksre-2/game/event/rin_pair",
+        "/Users/n.laptev/development/ksre-2/game/event/rin_roof",
+        "/Users/n.laptev/development/ksre-2/game/event/rin_trueend",
+        "/Users/n.laptev/development/ksre-2/game/event/rin_wet",
+        "/Users/n.laptev/development/ksre-2/game/event/shizu_roof",
+        "/Users/n.laptev/development/ksre-2/game/event/shizu_supercg",
+        "/Users/n.laptev/development/ksre-2/game/event/shizu_undressing",
+        "/Users/n.laptev/development/ksre-2/game/event/shizu_yukata",
+        "/Users/n.laptev/development/ksre-2/game/event/shizune_hcg_tied",
+    ]
 
-    image_files = [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-    # resize_images_in_directory(input_directory, quantize_palettes=8)
-    # # resize_images_in_directory(input_directory, quantize=True, quantize_palettes=14)
-    # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*14)
-    # TODO: WAS: resize_images(image_files, output_directory, quantize=False, unquant_colors=16 * 8)
+    image_files = []
+    for input_directory in input_directories:
+        image_files += [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+
     resize_images(image_files, output_directory, quantize_palettes=8)
-
-    ### HERE AND AFTER EVENTS (LILLY)
-    output_directory = "/Users/n.laptev/development/gba/katawa/graphics/event"
-    input_directory = "/Users/n.laptev/development/ksre-2/game/event/Lilly_supercg"
-
-    image_files = [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-    resize_images(image_files, output_directory, quantize_palettes=8)
-    # # resize_images_in_directory(input_directory, quantize=True, quantize_palettes=14)
-    # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*14)
-    # resize_images_in_directory(input_directory, quantize=False, unquant_colors = 16*8)
-
 
 def resize_backgrounds():
     ## HERE AND AFTER BACKGROUNDS
