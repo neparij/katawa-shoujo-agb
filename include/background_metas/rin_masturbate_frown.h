@@ -2,12 +2,14 @@
 #define KS_BGMETA_RIN_MASTURBATE_FROWN
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_rin_masturbate_frown.h"
 #include "bn_regular_bg_items_thumb_rin_masturbate_frown.h"
 namespace ks::background_metas {
     constexpr inline background_meta rin_masturbate_frown(
                      bn::regular_bg_items::rin_masturbate_frown,
                      bn::regular_bg_items::thumb_rin_masturbate_frown,
+                     DISPLAYABLE_BITMASK_RIN_MASTURBATE_FROWN,
                      0x6C0CC11F);
 
 }

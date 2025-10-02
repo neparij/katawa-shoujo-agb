@@ -60,6 +60,7 @@ SOURCES     	:=  ../butano/common/src \
 INCLUDES    	:=  include \
 					include/definitions \
 					include/background_metas \
+					include/vfx_metas \
 					include/sprite_metas \
 					../libsavgba/include \
 					../butano/common/include \

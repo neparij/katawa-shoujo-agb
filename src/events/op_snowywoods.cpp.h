@@ -13,7 +13,7 @@
 namespace ks {
     class OpSnowywoodsEvent final : public CustomEvent {
     public:
-        OpSnowywoodsEvent() = default;
+        OpSnowywoodsEvent() : CustomEvent(DISPLAYABLE_BITMASK_NONE) {};
         ~OpSnowywoodsEvent() override {
             // _background.reset();
         };

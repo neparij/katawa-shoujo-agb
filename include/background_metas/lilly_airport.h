@@ -2,12 +2,14 @@
 #define KS_BGMETA_LILLY_AIRPORT
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_lilly_airport.h"
 #include "bn_regular_bg_items_thumb_lilly_airport.h"
 namespace ks::background_metas {
     constexpr inline background_meta lilly_airport(
                      bn::regular_bg_items::lilly_airport,
                      bn::regular_bg_items::thumb_lilly_airport,
+                     DISPLAYABLE_BITMASK_LILLY_AIRPORT,
                      0x5272ECA0);
 
 }

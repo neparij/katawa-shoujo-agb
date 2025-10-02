@@ -2,12 +2,14 @@
 #define KS_BGMETA_SHIZU_SHANGHAI_SMIRKLAUGH
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_shizu_shanghai_smirklaugh.h"
 #include "bn_regular_bg_items_thumb_shizu_shanghai_smirklaugh.h"
 namespace ks::background_metas {
     constexpr inline background_meta shizu_shanghai_smirklaugh(
                      bn::regular_bg_items::shizu_shanghai_smirklaugh,
                      bn::regular_bg_items::thumb_shizu_shanghai_smirklaugh,
+                     DISPLAYABLE_BITMASK_SHIZU_SHANGHAI_SMIRKLAUGH,
                      0xE49E0B6C);
 
 }

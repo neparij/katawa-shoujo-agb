@@ -2,12 +2,14 @@
 #define KS_BGMETA_SUBURB_SHANGHAIEXT
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_suburb_shanghaiext.h"
 #include "bn_regular_bg_items_thumb_suburb_shanghaiext.h"
 namespace ks::background_metas {
     constexpr inline background_meta suburb_shanghaiext(
                      bn::regular_bg_items::suburb_shanghaiext,
                      bn::regular_bg_items::thumb_suburb_shanghaiext,
+                     DISPLAYABLE_BITMASK_NONE,
                      0xF57ECAC1);
 
 }

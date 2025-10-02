@@ -2,12 +2,14 @@
 #define KS_BGMETA_SCHOOL_GARDENS2
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_school_gardens2.h"
 #include "bn_regular_bg_items_thumb_school_gardens2.h"
 namespace ks::background_metas {
     constexpr inline background_meta school_gardens2(
                      bn::regular_bg_items::school_gardens2,
                      bn::regular_bg_items::thumb_school_gardens2,
+                     DISPLAYABLE_BITMASK_NONE,
                      0x15B764E8);
 
 }

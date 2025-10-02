@@ -2,12 +2,14 @@
 #define KS_BGMETA_EMI_ENDING_SERIOUS
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_emi_ending_serious.h"
 #include "bn_regular_bg_items_thumb_emi_ending_serious.h"
 namespace ks::background_metas {
     constexpr inline background_meta emi_ending_serious(
                      bn::regular_bg_items::emi_ending_serious,
                      bn::regular_bg_items::thumb_emi_ending_serious,
+                     DISPLAYABLE_BITMASK_EMI_ENDING_SERIOUS,
                      0xAEDF59DE);
 
 }

@@ -27,13 +27,13 @@ namespace ks {
             SaveIntegrityData integrity_end;
         };
 
-        void migrate_v1_to_v2(SaveFileDataV1 *v1, SaveFileData *v2);
+        void migrate_from_v1(const SaveFileDataV1 *v1, SaveFileData *latest);
 
         inline void migrate(SaveFileData *save_data) {
             if (save_data->integrity_begin.version == INTEGRITY_VERSION_V1) {
                 auto *v1 = static_cast<SaveFileDataV1 *>(bn::memory::ewram_alloc(sizeof(SaveFileDataV1)));
                 load<SaveFileDataV1>(v1);
-                migrate_v1_to_v2(v1, save_data);
+                migrate_from_v1(v1, save_data);
                 bn::memory::ewram_free(v1);
             }
 

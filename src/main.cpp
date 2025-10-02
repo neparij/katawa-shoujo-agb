@@ -156,6 +156,10 @@ inline void game(const bool is_new_game) {
         // KENJI ENDING
     }
 
+    if (!ks::is_loading) {
+        ks::saves::writeStates(ks::globals::states);
+    }
+
     if (ks::is_loading) {
         BN_ERROR("Unable to load savegame.");
     }
@@ -255,6 +259,7 @@ int main() {
     }
 
     ks::globals::settings = ks::saves::readSettings();
+    ks::globals::states = ks::saves::readStates();
     ks::timer::init();
 
     ks::SceneManager::fade_out(ks::globals::colors::BLACK, 30);

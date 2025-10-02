@@ -7,6 +7,7 @@
 #include <bn_memory.h>
 #include <gba_types.h>
 
+#include "gba_flash.h"
 #include "save_migrations.h"
 #include "../globals.h"
 
@@ -169,14 +170,21 @@ int ks::saves::getSettingsDataOffset() {
     return sizeof(SaveIntegrityData);
 }
 
-int ks::saves::getAutosaveDataOffset() {
+int ks::saves::getStatesDataOffset() {
     return sizeof(SaveIntegrityData) +
            sizeof(SaveSettingsData);
+}
+
+int ks::saves::getAutosaveDataOffset() {
+    return sizeof(SaveIntegrityData) +
+           sizeof(SaveSettingsData) +
+           sizeof(SaveStatesData);
 }
 
 int ks::saves::getSaveSlotDataOffset(const unsigned int slot) {
     return sizeof(SaveIntegrityData) +
            sizeof(SaveSettingsData) +
+           sizeof(SaveStatesData) +
            sizeof(SaveSlotProgressData) +
            sizeof(SaveSlotProgressData) * slot;
 }
@@ -196,6 +204,22 @@ void ks::saves::writeSettings(const SaveSettingsData settings) {
 
     const SaveSettingsData saved_settings = readSettings();
     BN_ASSERT(settings == saved_settings, "Writing settings failed. SRAM data does not match.");
+}
+
+ks::saves::SaveStatesData ks::saves::readStates() {
+    BN_LOG("Read States");
+    SaveStatesData states;
+    read_offset(states, getStatesDataOffset());
+
+    return states;
+}
+
+void ks::saves::writeStates(const SaveStatesData &states) {
+    BN_LOG("Write States");
+    write_offset(states, getStatesDataOffset());
+
+    const SaveStatesData saved_states = readStates();
+    BN_ASSERT(states == saved_states, "Writing states failed. SRAM data does not match.");
 }
 
 ks::saves::SaveSlotMetadata ks::saves::readAutosaveMetadata() {
@@ -357,7 +381,6 @@ void ks::saves::log_settings(SaveSettingsData &settings) {
     BN_LOG("  text_speed: ", settings.text_speed);
     BN_LOG("  high_contrast: ", settings.high_contrast);
     BN_LOG("  disable_disturbing_content: ", settings.disable_disturbing_content);
-    BN_LOG("  adult_warning_shown: ", settings.adult_warning_shown);
 }
 
 template<typename Type>

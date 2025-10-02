@@ -13,7 +13,7 @@
 namespace ks {
     class OtherIwanakoEvent final : public CustomEvent {
     public:
-        OtherIwanakoEvent() = default;
+        OtherIwanakoEvent() : CustomEvent(DISPLAYABLE_BITMASK_OTHER_IWANAKO_START) {};
         ~OtherIwanakoEvent() override {
             // _background.reset();
         };

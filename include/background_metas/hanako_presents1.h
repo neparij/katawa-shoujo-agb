@@ -2,12 +2,14 @@
 #define KS_BGMETA_HANAKO_PRESENTS1
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hanako_presents1.h"
 #include "bn_regular_bg_items_thumb_hanako_presents1.h"
 namespace ks::background_metas {
     constexpr inline background_meta hanako_presents1(
                      bn::regular_bg_items::hanako_presents1,
                      bn::regular_bg_items::thumb_hanako_presents1,
+                     DISPLAYABLE_BITMASK_HANAKO_PRESENTS1,
                      0x5B30CD77);
 
 }

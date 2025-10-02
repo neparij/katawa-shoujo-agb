@@ -2,12 +2,14 @@
 #define KS_BGMETA_EMI_ENDING_GLAD
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_emi_ending_glad.h"
 #include "bn_regular_bg_items_thumb_emi_ending_glad.h"
 namespace ks::background_metas {
     constexpr inline background_meta emi_ending_glad(
                      bn::regular_bg_items::emi_ending_glad,
                      bn::regular_bg_items::thumb_emi_ending_glad,
+                     DISPLAYABLE_BITMASK_EMI_ENDING_GLAD,
                      0xE5EF35E4);
 
 }

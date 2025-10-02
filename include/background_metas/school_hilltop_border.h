@@ -2,12 +2,14 @@
 #define KS_BGMETA_SCHOOL_HILLTOP_BORDER
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_school_hilltop_border.h"
 #include "bn_regular_bg_items_thumb_school_hilltop_border.h"
 namespace ks::background_metas {
     constexpr inline background_meta school_hilltop_border(
                      bn::regular_bg_items::school_hilltop_border,
                      bn::regular_bg_items::thumb_school_hilltop_border,
+                     DISPLAYABLE_BITMASK_NONE,
                      0x45C9703E);
 
 }

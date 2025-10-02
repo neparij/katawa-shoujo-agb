@@ -2,12 +2,14 @@
 #define KS_BGMETA_HANAKO_CRAYON1
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hanako_crayon1.h"
 #include "bn_regular_bg_items_thumb_hanako_crayon1.h"
 namespace ks::background_metas {
     constexpr inline background_meta hanako_crayon1(
                      bn::regular_bg_items::hanako_crayon1,
                      bn::regular_bg_items::thumb_hanako_crayon1,
+                     DISPLAYABLE_BITMASK_HANAKO_CRAYON1,
                      0x89941D80);
 
 }

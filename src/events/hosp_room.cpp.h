@@ -21,7 +21,7 @@
 namespace ks {
     class HospRoomEvent final : public CustomEvent {
     public:
-        HospRoomEvent() = default;
+        HospRoomEvent() : CustomEvent(DISPLAYABLE_BITMASK_NONE) {};
         ~HospRoomEvent() override {
             // _background.reset();
         };

@@ -2,12 +2,14 @@
 #define KS_BGMETA_SHIZU_GARDEN
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_shizu_garden.h"
 #include "bn_regular_bg_items_thumb_shizu_garden.h"
 namespace ks::background_metas {
     constexpr inline background_meta shizu_garden(
                      bn::regular_bg_items::shizu_garden,
                      bn::regular_bg_items::thumb_shizu_garden,
+                     DISPLAYABLE_BITMASK_NONE,
                      0xD1CC0F9C);
 
 }

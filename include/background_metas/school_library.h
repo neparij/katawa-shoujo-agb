@@ -2,12 +2,14 @@
 #define KS_BGMETA_SCHOOL_LIBRARY
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_school_library.h"
 #include "bn_regular_bg_items_thumb_school_library.h"
 namespace ks::background_metas {
     constexpr inline background_meta school_library(
                      bn::regular_bg_items::school_library,
                      bn::regular_bg_items::thumb_school_library,
+                     DISPLAYABLE_BITMASK_NONE,
                      0xF8378F6E);
 
 }

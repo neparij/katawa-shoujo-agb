@@ -2,12 +2,14 @@
 #define KS_BGMETA_HANAKO_BREAKDOWN_CLOSED
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hanako_breakdown_closed.h"
 #include "bn_regular_bg_items_thumb_hanako_breakdown_closed.h"
 namespace ks::background_metas {
     constexpr inline background_meta hanako_breakdown_closed(
                      bn::regular_bg_items::hanako_breakdown_closed,
                      bn::regular_bg_items::thumb_hanako_breakdown_closed,
+                     DISPLAYABLE_BITMASK_HANAKO_BREAKDOWN_CLOSED,
                      0x04C4DE04);
 
 }

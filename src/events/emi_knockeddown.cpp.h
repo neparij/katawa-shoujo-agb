@@ -8,7 +8,7 @@ namespace ks {
 
     class EmiKnockeddownEvent final : public CustomEvent {
     public:
-        EmiKnockeddownEvent() = default;
+        EmiKnockeddownEvent() : CustomEvent(DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN) {};
         ~EmiKnockeddownEvent() override {
             // _background.reset();
         };

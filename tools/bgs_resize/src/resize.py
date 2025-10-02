@@ -1,11 +1,19 @@
+import argparse
 import hashlib
 import os
 import json
 import subprocess
+from typing import List
 
+import numpy as np
 from PIL import Image, ImageOps
 from tilequant import Tilequant
 from tilequant.image_converter import DitheringMode
+
+from src.definition_reader import DefinitionsReader, GalleryImageDefinition
+
+ONLY_METADATA = False
+GALLERY_IMAGES : List[GalleryImageDefinition] = []
 
 PINK_COLOR = (255, 0, 255)  # Pink background color
 
@@ -24,8 +32,8 @@ DISPLAY_WIDTH = 240
 DISPLAY_HEIGHT = 160
 DISPLAY_BOTTOM_MARGIN = 0
 
-QUALETIZE_PASSES_COLOUR = (2 ** 10) * QUALETIZE_PALETTES_COUNT
-QUALETIZE_PASSES_TILES = (2 ** 10) * QUALETIZE_PALETTES_COUNT
+QUALETIZE_PASSES_COLOUR = (2 ** 12) * QUALETIZE_PALETTES_COUNT
+QUALETIZE_PASSES_TILES = (2 ** 12) * QUALETIZE_PALETTES_COUNT
 
 IGNORE_IMAGES = [
     "hisao_class",
@@ -55,12 +63,64 @@ BG_INCLUDE_VFX_IMAGES = [
     "mural_unfinished"
 ]
 
+EVENTS_INCLUDE_THUMB_IMAGES = [
+    "mural_start",
+    "mural",
+    "mural_unfinished"
+]
+
+DISPLAYABLE_BITMASK_MAP = {
+    # VFX items
+    "musicbox closed": "musicbox_closed",
+    "musicbox open": "musicbox_open",
+    "insert startpistol": "startpistol",
+    # EVENTS
+    "lilly_handjob_chest_frown_small": "lilly_hcg_handjob_chest_frown",
+    "lilly_handjob_chest_normal_small": "lilly_hcg_handjob_chest_normal",
+    "lilly_handjob_stroke_flustopen_small": "lilly_hcg_handjob_stroke_flustopen_small",
+    "lilly_handjob_stroke_normopen_small": "lilly_hcg_handjob_stroke_normopen_small",
+    "lilly_handjob_stroke_normshut_small": "lilly_hcg_handjob_stroke_normshut_small",
+    "lilly_cowgirl_cry_small": "lilly_hcg_cowgirl_cry_small",
+    "lilly_cowgirl_frown_small": "lilly_hcg_cowgirl_frown_small",
+    "lilly_cowgirl_smile_small": "lilly_hcg_cowgirl_smile_small",
+    "lilly_cowgirl_strain_small": "lilly_hcg_cowgirl_strain_small",
+    "lilly_cowgirl_weaksmile_small": "lilly_hcg_cowgirl_weaksmile_small",
+    "lilly_bath_emb_small": "lilly_hcg_bath_emb_small",
+    "lilly_bath_grab_small": "lilly_hcg_bath_grab_small",
+    "lilly_bath_moan_small": "lilly_hcg_bath_moan_small",
+    "lilly_bath_open_small": "lilly_hcg_bath_open_small",
+    "lilly_bath_smile_small": "lilly_hcg_bath_smile_small",
+    "lilly_afterbath_open_small": "lilly_hcg_afterbath_open_small",
+    "lilly_afterbath_shut_small": "lilly_hcg_afterbath_shut_small",
+    "showdown": "lilly_shizu_showdown",
+}
+
 HEADERS_DIR = "/Users/n.laptev/development/gba/katawa/include"
 BG_META_HEADERS_DIR = os.path.join(HEADERS_DIR, "background_metas")
+VFX_META_HEADERS_DIR = os.path.join(HEADERS_DIR, "vfx_metas")
 
 BG_META_STORAGE = []
 
-def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, unquant_colors : int = 256):
+def displayable_in_gallery_def(bg_name : str):
+    for img in GALLERY_IMAGES:
+        if bg_name in img.images:
+            return True
+    return False
+
+def displayable_bitmask_name(bg_name : str):
+    displayable = bg_name
+    for displayable_name in DISPLAYABLE_BITMASK_MAP:
+        if bg_name in DISPLAYABLE_BITMASK_MAP[displayable_name]:
+            displayable = displayable_name
+    if displayable_in_gallery_def(displayable):
+        return f"DISPLAYABLE_BITMASK_{displayable.upper().replace(" " , "_")}"
+    return "DISPLAYABLE_BITMASK_NONE"
+
+def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, unquant_colors : int = 256,
+                  only_metadata=False, metadata_type=None):
+    if not metadata_type in [None, "bg", "vfx"]:
+        raise Exception(f"Unknown storage type: {metadata_type}")
+
     if not image_files:
         print("No image files found in the specified directory.")
         return
@@ -73,8 +133,10 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
         output_path = os.path.join(output_dir, output_file_name)
         output_meta_path = os.path.join(output_dir, "thumbs", f"thumb_{output_file_name}")
 
-        process_image_savefile_thumbnail(image_file, output_meta_path)
-        create_thumbnail_json_metadata(os.path.join(output_dir, "thumbs", "thumb_" + output_file_name))
+        if metadata_type in ["bg"]:
+            if not only_metadata:
+                process_image_savefile_thumbnail(image_file, output_meta_path)
+            create_thumbnail_json_metadata(os.path.join(output_dir, "thumbs", "thumb_" + output_file_name))
 
         if os.path.splitext(output_file_name)[0] in IGNORE_IMAGES:
             print(f"Skipping {image_file} as it is in the ignore list.")
@@ -86,14 +148,19 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
 
         try:
             if quantize:
-                process_image_quantized(image_file, output_path, quantize_palettes)
+                if not only_metadata:
+                    process_image_quantized(image_file, output_path, quantize_palettes)
                 create_json_metadata(output_path, quantize, unquant_colors)
             else:
-                process_image(image_file, output_path, unquant_colors)
+                if not only_metadata:
+                    process_image(image_file, output_path, unquant_colors)
                 create_json_metadata(output_path, quantize, unquant_colors)
 
-            if os.path.splitext(output_file_name)[0] not in IGNORE_METAS:
-                write_background_metadata(os.path.splitext(output_file_name)[0])
+            if os.path.splitext(output_file_name)[0] not in IGNORE_METAS and metadata_type is not None:
+                if metadata_type == "bg":
+                    write_background_metadata(os.path.splitext(output_file_name)[0])
+                elif metadata_type == "vfx":
+                    write_vfx_metadata(os.path.splitext(output_file_name)[0])
         except Exception as e:
             print(f"Error processing {image_file}: {e}")
 
@@ -139,11 +206,20 @@ def process_image_quantized(input_path, output_path, quantize_palettes: int):
         crop_y = source_height_resized.height - (DISPLAY_HEIGHT)
 
     source_cropped = ImageOps.crop(source_height_resized, (crop_x // 2, crop_y // 2, crop_x // 2, crop_y // 2))
+
     canvas.paste(source_cropped, ((256 - source_cropped.width) // 2, (256 - source_cropped.height - DISPLAY_BOTTOM_MARGIN) // 2), source_cropped)
+    # Remove Semi-transparent pixels:
+    arr = np.array(canvas)  # shape (h, w, 4)
+    mask = arr[:, :, 3] > 127  # visible mask
+    # Visible → force alpha=255
+    arr[mask, 3] = 255
+    # Invisible → set to (0,0,0,0)
+    arr[~mask] = (0, 0, 0, 0)
+    result = Image.fromarray(arr, "RGBA")
 
     input_filename_path_png = output_path.replace(".bmp", "_input.png")
     input_filename_path_bmp = output_path.replace(".bmp", "_input.bmp")
-    canvas.save(input_filename_path_png, format="PNG")
+    result.save(input_filename_path_png, format="PNG")
 
     # Convert PNG to BMP with alpha using ImageMagick
     command = [IMAGEMAGICK, input_filename_path_png, "-define", "bmp:format=bmp4", input_filename_path_bmp]
@@ -182,45 +258,46 @@ def process_image_quantized(input_path, output_path, quantize_palettes: int):
 
 def process_image(input_path, output_path, colors : int = 256):
     """Process an image: resize, add pink background, remap palette, and save as BMP."""
-    # Create a 256x256 image filled with pink
-    pink_background = Image.new("RGB", (256, 256), PINK_COLOR)
-
-    # Open the source image
-    source_image = Image.open(input_path).convert("RGB")
-
-    # Resize the source image to fit within 240x160 while maintaining aspect ratio
-    source_resized = ImageOps.fit(source_image, (256, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
-    # pink_background.paste(source_resized, (8, 48))  # Center 240x160 on 256x256
-    pink_background.paste(source_resized, (0, 48))  # Center 256x160 on 256x256
-
-    # Convert to 255-color palette
-    palette_image = pink_background.convert("P", palette=Image.Palette.ADAPTIVE, colors=colors)
-
-    # # Convert to 63-color palette
-    # palette_image = pink_background.convert("P", palette=Image.ADAPTIVE, colors=63)
-
-    # Get the current palette data
-    palette = palette_image.getpalette()
-    palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
-
-    # Ensure pink is explicitly the first color in the palette
-    if PINK_COLOR not in palette_colors:
-        print(f"Warning: Pink color {PINK_COLOR} is not in the palette!")
-        return
-
-    first_color_index = palette_colors.index(PINK_COLOR)
-    remap = list(range(len(palette_colors)))
-    if first_color_index != 0:
-        # Swap pink with the first palette color
-        remap[0], remap[first_color_index] = remap[first_color_index], remap[0]
-
-    # Remap the palette to make pink the first color
-    img_remapped = palette_image.remap_palette(remap)
-    # img_remapped = palette_image
-
-    # Save the result as BMP
-    img_remapped.save(output_path, format="BMP")
-    print(f"Resized and saved: {output_path}")
+    raise Exception("process_image - Not used anymore, use quantized version!")
+    # # Create a 256x256 image filled with pink
+    # pink_background = Image.new("RGB", (256, 256), PINK_COLOR)
+    #
+    # # Open the source image
+    # source_image = Image.open(input_path).convert("RGB")
+    #
+    # # Resize the source image to fit within 240x160 while maintaining aspect ratio
+    # source_resized = ImageOps.fit(source_image, (256, 160), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
+    # # pink_background.paste(source_resized, (8, 48))  # Center 240x160 on 256x256
+    # pink_background.paste(source_resized, (0, 48))  # Center 256x160 on 256x256
+    #
+    # # Convert to 255-color palette
+    # palette_image = pink_background.convert("P", palette=Image.Palette.ADAPTIVE, colors=colors)
+    #
+    # # # Convert to 63-color palette
+    # # palette_image = pink_background.convert("P", palette=Image.ADAPTIVE, colors=63)
+    #
+    # # Get the current palette data
+    # palette = palette_image.getpalette()
+    # palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
+    #
+    # # Ensure pink is explicitly the first color in the palette
+    # if PINK_COLOR not in palette_colors:
+    #     print(f"Warning: Pink color {PINK_COLOR} is not in the palette!")
+    #     return
+    #
+    # first_color_index = palette_colors.index(PINK_COLOR)
+    # remap = list(range(len(palette_colors)))
+    # if first_color_index != 0:
+    #     # Swap pink with the first palette color
+    #     remap[0], remap[first_color_index] = remap[first_color_index], remap[0]
+    #
+    # # Remap the palette to make pink the first color
+    # img_remapped = palette_image.remap_palette(remap)
+    # # img_remapped = palette_image
+    #
+    # # Save the result as BMP
+    # img_remapped.save(output_path, format="BMP")
+    # print(f"Resized and saved: {output_path}")
 
 def process_image_savefile_thumbnail(input_path, output_path):
     background = Image.new("RGB", (256, 256), PINK_COLOR)
@@ -293,6 +370,7 @@ def write_background_metadata(background_name):
         meta_file.write(f"#ifndef KS_BGMETA_{background_name.upper()}\n")
         meta_file.write(f"#define KS_BGMETA_{background_name.upper()}\n\n")
         meta_file.write(f'#include "background_meta.h"\n')
+        meta_file.write(f'#include "definitions/seen_bitmask.h"\n')
         meta_file.write(f'#include "bn_regular_bg_items_{background_name}.h"\n')
         meta_file.write(f'#include "bn_regular_bg_items_thumb_{background_name}.h"\n')
         meta_file.write(f'namespace ks::background_metas {{\n')
@@ -300,9 +378,28 @@ def write_background_metadata(background_name):
             f'    constexpr inline background_meta {background_name}(\n'
             f'                     bn::regular_bg_items::{background_name},\n'
             f'                     bn::regular_bg_items::thumb_{background_name},\n'
+            f'                     {displayable_bitmask_name(background_name)},\n'
             f'                     0x{hashed_id});\n\n')
         meta_file.write(f'}}\n\n')
         meta_file.write(f'#endif  // KS_BGMETA_{background_name.upper()}\n')
+
+def write_vfx_metadata(vfx_name):
+    meta_filename = os.path.join(VFX_META_HEADERS_DIR, f"{vfx_name}.h")
+
+    os.makedirs(BG_META_HEADERS_DIR, exist_ok=True)
+    with open(meta_filename, "w", encoding="utf-8") as meta_file:
+        meta_file.write(f"#ifndef KS_VFXMETA_{vfx_name.upper()}\n")
+        meta_file.write(f"#define KS_VFXMETA_{vfx_name.upper()}\n\n")
+        meta_file.write(f'#include "vfx_meta.h"\n')
+        meta_file.write(f'#include "definitions/seen_bitmask.h"\n')
+        meta_file.write(f'#include "bn_regular_bg_items_{vfx_name}.h"\n')
+        meta_file.write(f'namespace ks::vfx_metas {{\n')
+        meta_file.write(
+            f'    constexpr inline vfx_meta {vfx_name}(\n'
+            f'                     bn::regular_bg_items::{vfx_name},\n'
+            f'                     {displayable_bitmask_name(vfx_name)});\n\n')
+        meta_file.write(f'}}\n\n')
+        meta_file.write(f'#endif  // KS_VFXMETA_{vfx_name.upper()}\n')
 
 def write_background_metadata_store():
     metas_filename = os.path.join(HEADERS_DIR, "background_metas.h")
@@ -361,7 +458,41 @@ def resize_events():
     for input_directory in input_directories:
         image_files += [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith('.png')]
 
-    resize_images(image_files, output_directory, quantize_palettes=8)
+    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, metadata_type="bg")
+
+def resize_items():
+    ### HERE AND AFTER EVENTS
+    output_directory = "/Users/n.laptev/development/gba/katawa/graphics/vfx"
+    input_directory = "/Users/n.laptev/development/ksre-2/game/vfx"
+    items = [
+        "pills",
+        "stuffedcat",
+        "teaset",
+        "shangpai",
+        "wine",
+        "musicbox_closed",
+        "musicbox_open",
+        "hanaphone",
+        "phonestrap",
+        "hanaphonestrap",
+        "startpistol",
+        "invite",
+        "sc_comp",
+        "brailler",
+        "chessboard",
+        "kenjibox",
+        "jigorocard",
+        "letter_insert",
+        "letter_open_insert",
+        "letter_open_insert_2",
+        "stallphoto_insert"
+    ]
+
+    image_files = []
+    for item in items:
+        image_files.append(f"{input_directory}/{item}.png")
+
+    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, metadata_type="vfx")
 
 def resize_backgrounds():
     ## HERE AND AFTER BACKGROUNDS
@@ -373,13 +504,33 @@ def resize_backgrounds():
     image_files += [f"{bgs_directory}/{f}" for f in os.listdir(bgs_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     image_files += [f"{vfx_directory}/{f}.jpg" for f in BG_INCLUDE_VFX_IMAGES]
 
-    resize_images(image_files, output_directory, quantize_palettes=8)
+    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, metadata_type="bg")
     # resize_images_in_directory(input_directory, quantize=False, unquant_colors=16 * 8)
     # resize_images_in_directory(input_directory)
 
 def main():
+    parser = argparse.ArgumentParser(description="Katawa Shoujo GBA: BGS Resizer (Deprecated)")
+    parser.add_argument(
+        "--only-metadata",
+        required=False,
+        default=False,
+        action="store_true"
+    )
+
+    args = parser.parse_args()
+    global ONLY_METADATA
+    global GALLERY_IMAGES
+    ONLY_METADATA = args.only_metadata
+
+
+    definitions_reader = DefinitionsReader(os.path.join("/Users/n.laptev/development/ksre-2", "game", "definitions.rpy"))
+    gallery_images_ast = definitions_reader.extract_gallery_images_block()
+    gallery_images = definitions_reader.parse_gallery_images_structure(gallery_images_ast)
+    GALLERY_IMAGES = gallery_images
+
     resize_backgrounds()
     resize_events()
+    resize_items()
     write_background_metadata_store()
 
 if __name__ == "__main__":

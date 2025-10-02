@@ -2,12 +2,14 @@
 #define KS_BGMETA_HISAO_LETTER_OPEN
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hisao_letter_open.h"
 #include "bn_regular_bg_items_thumb_hisao_letter_open.h"
 namespace ks::background_metas {
     constexpr inline background_meta hisao_letter_open(
                      bn::regular_bg_items::hisao_letter_open,
                      bn::regular_bg_items::thumb_hisao_letter_open,
+                     DISPLAYABLE_BITMASK_HISAO_LETTER_OPEN,
                      0x6A54E202);
 
 }

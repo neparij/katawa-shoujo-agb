@@ -8,7 +8,7 @@
 namespace ks {
     class HisaoClassEndEvent final : public CustomEvent {
     public:
-        HisaoClassEndEvent() = default;
+        HisaoClassEndEvent() : CustomEvent(DISPLAYABLE_BITMASK_HISAO_CLASS_END) {};
         ~HisaoClassEndEvent() override {
             // _background.reset();
         };

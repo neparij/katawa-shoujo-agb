@@ -8,6 +8,7 @@
 #include <gba_types.h>
 
 #include "definitions.h"
+#include "seen_bitmask.h"
 
 extern "C" {
 #include "gba_flash.h"
@@ -51,9 +52,6 @@ namespace ks {
             bool high_contrast;
             bool disable_disturbing_content;
 
-            // States
-            bool adult_warning_shown;
-
             bool operator==(const SaveSettingsData &other) const {
                 return language == other.language &&
                        hdisabled == other.hdisabled &&
@@ -61,8 +59,47 @@ namespace ks {
                        sfx_volume == other.sfx_volume &&
                        text_speed == other.text_speed &&
                        high_contrast == other.high_contrast &&
-                       disable_disturbing_content == other.disable_disturbing_content &&
-                       adult_warning_shown == other.adult_warning_shown;
+                       disable_disturbing_content == other.disable_disturbing_content;
+            }
+        };
+
+        struct alignas(4) SaveStatesData {
+            // States
+            bool adult_warning_shown;
+            uint8_t seen_displayables[64]; // Bitmask for seen CGs and backgrounds (64 bytes, 512 entries)
+
+            void set_seen_displayable(const displayable_bitmask_t index, const bool value) {
+                if (index >= 512) {
+                    BN_ERROR("Displayable index out of range: ", index);
+                }
+                const unsigned int array_index = index / 8;
+                const unsigned int bit_index = index % 8;
+                if (value) {
+                    seen_displayables[array_index] |= (1u << bit_index);
+                } else {
+                    seen_displayables[array_index] &= ~(1u << bit_index);
+                }
+            }
+
+            [[nodiscard]] bool is_seen_displayable(const displayable_bitmask_t index) const {
+                if (index >= 512) {
+                    BN_ERROR("Displayable index out of range: ", index);
+                }
+                const unsigned int array_index = index / 8;
+                const unsigned int bit_index = index % 8;
+                return (seen_displayables[array_index] & (1u << bit_index)) != 0;
+            }
+
+            bool operator==(const SaveStatesData &other) const {
+                if(adult_warning_shown != other.adult_warning_shown) {
+                    return false;
+                }
+                for(int i = 0; i < 64; i++) {
+                    if(seen_displayables[i] != other.seen_displayables[i]) {
+                        return false;
+                    }
+                }
+                return true;
             }
         };
 
@@ -241,6 +278,7 @@ namespace ks {
         struct alignas(4) SaveFileData {
             SaveIntegrityData integrity_begin;
             SaveSettingsData settings;
+            SaveStatesData states;
             SaveSlotProgressData autosave;
             SaveSlotProgressData slot[TOTAL_SAVE_SLOTS];
             SaveIntegrityData integrity_end;
@@ -268,6 +306,8 @@ namespace ks {
 
         int getSettingsDataOffset();
 
+        int getStatesDataOffset();
+
         int getAutosaveDataOffset();
 
         int getSaveSlotDataOffset(unsigned int slot);
@@ -277,6 +317,10 @@ namespace ks {
         SaveSettingsData readSettings();
 
         void writeSettings(SaveSettingsData settings);
+
+        SaveStatesData readStates();
+
+        void writeStates(const SaveStatesData &states);
 
         SaveSlotMetadata readAutosaveMetadata();
 

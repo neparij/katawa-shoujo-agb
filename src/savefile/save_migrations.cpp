@@ -3,32 +3,36 @@
 #include "bn_log.h"
 #include "definitions.h"
 
-void ks::saves::migrate_v1_to_v2(SaveFileDataV1 *v1, SaveFileData *v2) {
+void ks::saves::migrate_from_v1(const SaveFileDataV1 *v1, SaveFileData *latest) {
     BN_ASSERT(v1 != nullptr, "Unable to migrate. V1 Data pointer is null.");
-    BN_ASSERT(v2 != nullptr, "Unable to migrate. V2 Data pointer is null.");
-    BN_LOG("Migrating save data from v1 to v2...");
+    BN_ASSERT(latest != nullptr, "Unable to migrate. LATEST Data pointer is null.");
+    BN_LOG("Migrating save data from v1...");
 
-    v2->settings.language = v1->settings.language;
-    v2->settings.hdisabled = v1->settings.hdisabled;
-    v2->settings.music_volume = 0xCC;
-    v2->settings.sfx_volume = 0xCC;
-    v2->settings.text_speed = 0xCC;
-    v2->settings.brightness = 0x00;
-    v2->settings.high_contrast = v1->settings.high_contrast;
-    v2->settings.disable_disturbing_content = v1->settings.disable_disturbing_content;
-    v2->settings.adult_warning_shown = v1->settings.adult_warning_shown;
+    latest->settings.language = v1->settings.language;
+    latest->settings.hdisabled = v1->settings.hdisabled;
+    latest->settings.music_volume = 0xCC;
+    latest->settings.sfx_volume = 0xCC;
+    latest->settings.text_speed = 0xCC;
+    latest->settings.brightness = 0x00;
+    latest->settings.high_contrast = v1->settings.high_contrast;
+    latest->settings.disable_disturbing_content = v1->settings.disable_disturbing_content;
+    BN_LOG("Migrated settings from v1");
 
-    BN_LOG("Migrated settings from v1 to v2");
+    latest->states.adult_warning_shown = v1->settings.adult_warning_shown;
+    for (int i = 0; i < 64; i++) {
+        latest->states.seen_displayables[i] = 0;
+    }
+    BN_LOG("Migrated states from v1");
 
-    v2->autosave = v1->autosave;
-    BN_LOG("Migrated autosave from v1 to v2");
+    latest->autosave = v1->autosave;
+    BN_LOG("Migrated autosave from v1");
 
     for (int i = 0; i < 400; i++) {
-        v2->slot[i] = v1->slot[i];
+        latest->slot[i] = v1->slot[i];
     }
-    BN_LOG("Migrated save slots from v1 to v2");
+    BN_LOG("Migrated save slots from v1");
 
-    v2->integrity_begin.version = INTEGRITY_VERSION_V2;
-    v2->integrity_end.version = INTEGRITY_VERSION_V2;
-    BN_LOG("Migration to v2 complete.");
+    latest->integrity_begin.version = INTEGRITY_VERSION_V2;
+    latest->integrity_end.version = INTEGRITY_VERSION_V2;
+    BN_LOG("Migration complete.");
 }

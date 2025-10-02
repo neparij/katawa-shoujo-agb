@@ -2,12 +2,14 @@
 #define KS_BGMETA_EMITRACK_FINISH
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_emitrack_finish.h"
 #include "bn_regular_bg_items_thumb_emitrack_finish.h"
 namespace ks::background_metas {
     constexpr inline background_meta emitrack_finish(
                      bn::regular_bg_items::emitrack_finish,
                      bn::regular_bg_items::thumb_emitrack_finish,
+                     DISPLAYABLE_BITMASK_EMITRACK_FINISH,
                      0x9E664026);
 
 }

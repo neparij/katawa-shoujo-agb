@@ -2,15 +2,10 @@
 #define MENU_EXTRAS_GALLERY_CPP_H
 
 #include "bn_format.h"
-#include "bn_keypad.h"
-#include <bn_regular_bg_items_ui_bg_menu_extras_gallery.h>
-
-#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_0.h"
-#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_1.h"
-#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_2.h"
-#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_3.h"
-#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_4.h"
-#include "bn_regular_bg_items_ui_bg_menu_extras_gallery_page_5.h"
+// #include <bn_regular_bg_items_ui_bg_menu_extras_gallery.h>
+#include <bn_regular_bg_items_ui_bg_menu_inner.h>
+#include "bn_sprite_items_ui_cg_corners.h"
+#include "bn_sprite_items_ui_cg_gallery_locked.h"
 #include "menu_base.h"
 #include "menu_extras_gallery_images.h"
 
@@ -29,6 +24,8 @@ namespace ks {
 
         void on_back() override {
             thumbnail_bg.reset();
+            cg_corners_sprites.clear();
+            cg_locked_sprites.clear();
             secondary_background.reset();
             globals::state = GS_MENU_EXTRAS;
             menu::set_initial_selection(1);
@@ -92,6 +89,8 @@ namespace ks {
                 primary_background.reset();
                 secondary_background.reset();
                 thumbnail_bg.reset();
+                cg_locked_sprites.clear();
+                cg_corners_sprites.clear();
                 static_text_sprites.clear();
                 progress_icon_sprites.clear();
                 bn::bg_palettes::set_transparent_color(globals::colors::BLACK);
@@ -104,19 +103,21 @@ namespace ks {
                 secondary_background.reset();
                 create(current_page);
                 need_repalette = true;
+                show_selected();
             } else {
                 on_back();
             }
-            show_selected();
         }
 
         void create(const int page) {
             text_item_palette = globals::text_palettes::beige;
             current_page = page;
             selection_indexes.clear();
+            cg_corners_sprites.clear();
+            cg_locked_sprites.clear();
             items_count = 0;
             blend_action.reset();
-            primary_background = bn::regular_bg_items::ui_bg_menu_extras_gallery.create_bg(0, 0);
+            primary_background = bn::regular_bg_items::ui_bg_menu_inner.create_bg(0, 0);
             secondary_background.reset();
             static_text_sprites.clear();
             progress_icon_sprites.clear();
@@ -125,6 +126,7 @@ namespace ks {
             const auto page_contents = menu::get_gallery_page(page);
             items = page_contents.images;
             secondary_background = page_contents.bg_item->create_bg(0, 0);
+            secondary_background->set_priority(primary_background->priority() - 1);
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_left_alignment();
@@ -137,9 +139,16 @@ namespace ks {
 
             int idx = 0;
             for (const auto &item : items) {
-                if (item.thumbnail != nullptr) {
-                    idx++;
+                cg_locked_sprites.push_back(bn::sprite_items::ui_cg_gallery_locked.create_sprite(
+                    -84 + (idx % 4) * 56,
+                    -39 + (idx / 4) * 38
+                ));
+                if (item.is_unlocked()) {
+                    cg_locked_sprites.back().set_bg_priority(secondary_background->priority() + 1);
+                } else {
+                    cg_locked_sprites.back().set_bg_priority(secondary_background->priority());
                 }
+                idx++;
             }
 
             add_text_entry(-device::screen_width_half + 10, device::screen_height_half - 14,
@@ -156,19 +165,42 @@ namespace ks {
 
         void show_selected() {
             thumbnail_bg.reset();
+            cg_corners_sprites.clear();
             globals::main_update(); // Update to prevent VRAM fragmentation
             if (selection < gallery_items_count()) {
                 const auto& image = items.at(selection);
-                thumbnail_bg = image.thumbnail->thumbnail.create_bg(
-                    -84 + (selection % 4) * 56,
-                    -39 + (selection / 4) * 38
-                );
-                thumbnail_bg->set_priority(secondary_background->priority() - 1);
+                if (image.is_unlocked()) {
+                    thumbnail_bg = image.thumbnail->thumbnail.create_bg(
+                        -84 + (selection % 4) * 56,
+                        -39 + (selection / 4) * 38
+                    );
+                    thumbnail_bg->set_priority(secondary_background->priority() - 1);
+                }
+
+                for (int corner = 0; corner < 4; corner++) {
+                    cg_corners_sprites.push_back(bn::sprite_items::ui_cg_corners.create_sprite(
+                        -108 + (selection % 4) * 56 + (corner % 2) * 48,
+                        -55 + (selection / 4) * 38 + (corner / 2) * 32,
+                        corner
+                    ));
+                    cg_corners_sprites.back().set_bg_priority(secondary_background->priority() - 1);
+                }
+                if (!image.is_unlocked()) {
+                // if (true) {
+                    cg_corners_sprites.push_back(bn::sprite_items::ui_cg_corners.create_sprite(
+                        -84 + (selection % 4) * 56,
+                        -39 + (selection / 4) * 38,
+                        5
+                    ));
+                    cg_corners_sprites.back().set_bg_priority(secondary_background->priority() - 1);
+                }
             }
         }
     private:
         bn::optional<bn::blending_transparency_alpha_to_action> blend_action;
         bn::optional<bn::regular_bg_ptr> thumbnail_bg;
+        bn::vector<bn::sprite_ptr, 12> cg_locked_sprites;
+        bn::vector<bn::sprite_ptr, 5> cg_corners_sprites;
         bn::span<const menu::gallery_image> items;
         int current_page;
 

@@ -2,12 +2,14 @@
 #define KS_BGMETA_HISAO_MIRROR
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hisao_mirror.h"
 #include "bn_regular_bg_items_thumb_hisao_mirror.h"
 namespace ks::background_metas {
     constexpr inline background_meta hisao_mirror(
                      bn::regular_bg_items::hisao_mirror,
                      bn::regular_bg_items::thumb_hisao_mirror,
+                     DISPLAYABLE_BITMASK_HISAO_MIRROR,
                      0x547CFC6E);
 
 }
