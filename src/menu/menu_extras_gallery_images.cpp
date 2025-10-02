@@ -628,7 +628,7 @@ namespace ks::menu {
             show_bg(background_metas::shizune_hcg_tied_kinky1_small);
             show_bg(background_metas::shizune_hcg_tied_kinky2_small);
             show_bg(background_metas::shizune_hcg_tied_kinky3_small);
-            show_bg(background_metas::shizune_hcg_tied_hisao2_small);
+            // show_bg(background_metas::shizune_hcg_tied_hisao2_small);
         }
 
         static void misha_sad() {
