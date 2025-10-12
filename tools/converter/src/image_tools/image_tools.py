@@ -1,5 +1,7 @@
 import os
 import json
+import subprocess
+import tempfile
 from typing import List
 
 from PIL import Image, ImageOps
@@ -7,6 +9,12 @@ from PIL import Image, ImageOps
 from tilequant import Tilequant
 from tilequant.image_converter import DitheringMode
 
+IMAGEMAGICK = "magick"
+IMGDITHER = "/Users/n.laptev/development/gba/imgdither/release/imgdither"
+IMGDITHER_COLOURSPACE = "ycbcr-psy"
+IMGDITHER_DITHER_METHOD = "floyd"
+IMGDITHER_DITHER_LEVEL = 0.5
+IMGDITHER_COLOR_0_IS_CLEAR = True
 
 class ImageTools:
     TRANSPARENT_COLOR = (255, 0, 253)
@@ -27,10 +35,6 @@ class ImageTools:
                target_height: int = 160,
                target_size: tuple[int, int] = (256, 256),
                tint: tuple[int, int, int] | None = None):
-
-        if use_sample_palette:
-            sample_palette_image = Image.open(use_sample_palette)
-            # ImageTools.TRANSPARENT_COLOR = tuple(sample_palette_image.getpalette()[:3])
 
         canvas = Image.new("RGB", target_size, ImageTools.TRANSPARENT_COLOR)
 
@@ -73,17 +77,6 @@ class ImageTools:
             remove = Image.new("RGBA", remove_size, ImageTools.TRANSPARENT_COLOR)
             canvas.paste(remove, remove_offset)
 
-        # if add_boundary_pixels:
-        #     if not use_sample_palette:
-        #         raise Exception("Boundary pixels can only be added when using a sample palette.")
-        #     index = 2
-        #     sample_palette_data = sample_palette_image.palette.palette  # Raw palette data as bytes
-        #     non_transparent_color = tuple(sample_palette_data[index * 3:index * 3 + 3])  # Get RGB values
-        #     canvas.putpixel((0, 0), non_transparent_color)
-        #     canvas.putpixel((511, 0), non_transparent_color)
-        #     canvas.putpixel((0, 255), non_transparent_color)
-        #     canvas.putpixel((511, 255), non_transparent_color)
-
         if not use_sample_palette:
             print(f"Quantizing: {output_filename}")
             converter = Tilequant(canvas, ImageTools.TRANSPARENT_COLOR)
@@ -94,30 +87,41 @@ class ImageTools:
             quantized.save(output_filename, format="BMP")
             print(f"Resized, Quantized and saved: {output_filename}")
         else:
-            print(f"Open sample pallette image: {use_sample_palette}")
-            paletted_image = Image.new('RGB', canvas.size)
-            paletted_image.paste(canvas)
-            # paletted_image.putpalette(sample_palette_image.getpalette())
-            paletted_image = paletted_image.quantize(palette=sample_palette_image, method=Image.Quantize.LIBIMAGEQUANT, dither=Image.Dither.NONE)
-            # paletted_image = paletted_image.quantize(palette=sample_palette_image, colors=128, method=Image.Quantize.LIBIMAGEQUANT, dither=Image.Dither.FLOYDSTEINBERG)
-            paletted_image.save(output_filename, format="BMP")
-            print(f"Resized, Converted with sample palette and saved: {output_filename}")
-        # else:
-        #     print(f"Convert to {colors} colors palette.")
-        #     palette_image = canvas.convert("P", palette=Image.Palette.ADAPTIVE, colors=colors, dither=Image.Dither.FLOYDSTEINBERG if dithering > 0 else Image.Dither.NONE)
-        #     palette = palette_image.getpalette()
-        #     num_colors = len(palette) // 3
-        #     palette[(num_colors - 1) * 3:(num_colors - 1) * 3 + 3] = ImageTools.TRANSPARENT_COLOR
-        #     palette_colors = [tuple(palette[i:i + 3]) for i in range(0, len(palette), 3)]
-        #     palette_image.putpalette(palette)
-        #
-        #     remap = list(range(len(palette_colors)))
-        #     remap[0], remap[num_colors - 1] = remap[num_colors - 1], remap[0]
-        #
-        #     # Remap the palette to make pink the first color
-        #     img_remapped = palette_image.remap_palette(remap)
-        #     img_remapped.save(output_filename, format="BMP")
-        #     print(f"Resized, Converted and saved: {output_filename}")
+            palette_file = os.path.abspath(use_sample_palette)
+            print(f"Dithering using sample palette: {palette_file}")
+            input_filename_path_png = tempfile.mktemp(suffix="-ksgba.png")
+            input_filename_path_bmp = tempfile.mktemp(suffix="-ksgba.bmp")
+            canvas.save(input_filename_path_png, format="PNG")
+
+            # Convert PNG to BMP with alpha using ImageMagick
+            command = [IMAGEMAGICK, input_filename_path_png, "-define", "bmp:format=bmp4", input_filename_path_bmp]
+            try:
+                subprocess.check_output(" ".join(command), shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                print(f"Command failed with exit code {e.returncode}")
+                print(f"Output: {e.output.decode()}")
+                raise
+
+            # Delete the PNG file after conversion
+            os.remove(input_filename_path_png)
+
+            # Remap and dither the image
+            command = [IMGDITHER, input_filename_path_bmp, palette_file, output_filename]
+            command.append(f"-col0isclear:{"y" if IMGDITHER_COLOR_0_IS_CLEAR else "n"}")
+            command.append(f"-colspace:{IMGDITHER_COLOURSPACE}")
+            command.append(f"-dither:{IMGDITHER_DITHER_METHOD},{IMGDITHER_DITHER_LEVEL}")
+            print(f"Running command: {' '.join(command)}")
+
+            try:
+                subprocess.check_output(" ".join(command), shell=True, stderr=subprocess.STDOUT)
+            except subprocess.CalledProcessError as e:
+                print(f"Command failed with exit code {e.returncode}")
+                print(f"Output: {e.output.decode()}")
+                raise
+
+            # Delete the BMP file after conversion
+            os.remove(input_filename_path_bmp)
+            print(f"Resized, Converted with sample palette, dithered({IMGDITHER_DITHER_METHOD},{IMGDITHER_DITHER_LEVEL}) and saved: {output_filename}")
 
     @staticmethod
     def create_8x8_tiles(input_filename: str, output_filename: str) -> List[str]:
