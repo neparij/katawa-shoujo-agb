@@ -5,7 +5,7 @@
 #include "bn_utf8_characters_map.h"
 
 constexpr bn::utf8_character latin_utf8_characters[] = {
-    "é", "ê", "—", "…"
+    "¡", "¿", "É", "Ú", "à", "á", "é", "ê", "í", "ñ", "ó", "ú", "ü", "ō", "—", "“", "”", "…"
 };
 constexpr bn::span<const bn::utf8_character> latin_utf8_characters_span(latin_utf8_characters);
 constexpr auto latin_utf8_characters_map = bn::utf8_characters_map<latin_utf8_characters_span>();

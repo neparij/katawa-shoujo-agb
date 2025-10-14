@@ -6,6 +6,7 @@
 #include "fonts/fonts_cyrillic.h"
 #include "fonts/fonts_latin.h"
 #include "translations/en.cpp"
+#include "translations/es.cpp"
 #include "translations/ru.cpp"
 #include "bn_sprite_palettes.h"
 #include "ingametimer.h"
@@ -89,6 +90,8 @@ namespace ks::globals {
         if (settings.language == LANG_ENGLISH) {
             // i18n = new(translation_buffer) TranslationEn();
             i18n = bn::make_unique<TranslationEn>(TranslationEn());
+        } else if (settings.language == LANG_SPANISH) {
+            i18n = bn::make_unique<TranslationEs>(TranslationEs());
         } else if (settings.language == LANG_RUSSIAN) {
             i18n = bn::make_unique<TranslationRu>(TranslationRu());
         } else {

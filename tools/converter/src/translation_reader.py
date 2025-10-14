@@ -1,3 +1,4 @@
+import os
 import re
 from enum import Enum
 from typing import List
@@ -10,9 +11,10 @@ class TranslationReaderMode(Enum):
     STRINGS = "strings"
     NONE = "none"
 
+
 class TranslationReader:
-    def __init__(self, language, translation_file):
-        self.translation_file = translation_file
+    def __init__(self, language, source_dir):
+        self.source_dir = source_dir
         self.current_indent = 0
         self.current_mode = TranslationReaderMode.NONE
         self.language = language
@@ -20,18 +22,23 @@ class TranslationReader:
         self._key = None
 
     def read(self) -> TranslationContainer:
-        with open(self.translation_file, 'r', encoding="utf-8-sig") as f:
-            lines = f.readlines()
+        for filename in os.listdir(self.source_dir):
+            if filename.endswith(".rpy"):
+                translation_file = os.path.join(self.source_dir, filename)
+                with open(translation_file, 'r', encoding="utf-8-sig") as f:
+                    lines = f.readlines()
 
-        line_pack = []
-        for line in lines:
-            if line.strip():
-                current_indent = (len(line) - len(line.lstrip())) // 4
-                line_pack.append((line, current_indent))
-            else:
-                self.process_line_pack(line_pack)
-        if line_pack:
-            self.process_line_pack(line_pack)
+                line_pack = []
+                self.current_indent = 0
+                self.current_mode = TranslationReaderMode.NONE
+                for line in lines:
+                    if line.strip():
+                        current_indent = (len(line) - len(line.lstrip())) // 4
+                        line_pack.append((line, current_indent))
+                    else:
+                        self.process_line_pack(line_pack)
+                if line_pack:
+                    self.process_line_pack(line_pack)
         return self.pack
 
     def process_line_pack(self, line_pack):

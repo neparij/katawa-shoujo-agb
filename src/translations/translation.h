@@ -15,18 +15,6 @@ public:
     virtual const char* locale() = 0;
     virtual const char* language() = 0;
 
-    virtual const char* menu_author() = 0;
-    virtual const char* menu_play_a0_test_scene() = 0;
-    virtual const char* menu_play_a1_monday() = 0;
-    virtual const char* menu_play_a1_tuesday() = 0;
-    virtual const char* menu_play_a1_wednesday() = 0;
-    virtual const char* menu_play_a1_thursday() = 0;
-    virtual const char* menu_play_a1_friday() = 0;
-    virtual const char* menu_play_a1_saturday() = 0;
-    virtual const char* menu_play_a1_sunday() = 0;
-    virtual const char* menu_play_all() = 0;
-    virtual const char* menu_video_test() = 0;
-
     virtual const char* menu_start() = 0;
     virtual const char* menu_saves() = 0;
     virtual const char* menu_extras() = 0;
@@ -79,6 +67,7 @@ public:
     virtual const char* screens_main_menu() = 0;
 
     virtual const char* textbutton_save() = 0;
+    virtual const char* saves_auto_suffix() = 0;
 
     virtual const char* screens_playtime() = 0;
     virtual const char* screens_current_scene() = 0;
@@ -90,7 +79,6 @@ public:
 
     virtual const char* definitions_no_scene() = 0;
     virtual const char* definitions_nothing() = 0;
-    virtual const char* definitions_autosave() = 0;
 
     virtual const char* definitions_hi() = 0;
     virtual const char* definitions_ha() = 0;

@@ -1,12 +1,78 @@
+from datetime import datetime, UTC
 from typing import List
 
 from src.dto.definitions import RouteDefinition, GalleryImageDefinition
+from src.translation.translation_container import TranslationContainer
+
+
+COMMON_DEFINITIONS_MAP = {
+    "no_scene": "No scene",
+    "nothing": "Nothing",
+
+    "hi": "Hisao",
+    "ha": "Hanako",
+    "emi": "Emi",
+    "rin": "Rin",
+    "li": "Lilly",
+    "shi": "Shizune",
+    "mi": "Misha",
+    "ke": "Kenji",
+    "mu": "Mutou",
+    "nk": "Nurse",
+    "no": "Nomiya",
+    "yu": "Yuuko",
+    "sa": "Sae",
+    "aki": "Akira",
+    "hh": "Hideaki",
+    "hx": "Jigoro",
+    "emm": "Meiko",
+    "sk": "Shopkeep",
+    "mk": "Miki",
+
+    "mi_shi": "Shizune",
+    "mi_not_shi": "{s}Shizune{/s} Misha",
+    "mystery": "???",
+
+    "ha_": "Purple-haired girl",
+    "emi_": "Twintails girl",
+    "rin_": "Strange girl",
+    "li_": "Wavy-haired girl",
+    "mi_": "Laughing girl",
+    "ke_": "Bespectacled hallmate",
+    "mu_": "Tall man",
+    "yu_": "Librarian",
+    "no_": "Silver-haired man",
+    "sa_": "Gallery owner",
+    "aki_": "Well-dressed person",
+    "nk_": "Smiling man",
+    "hx_": "Huge man",
+    "hh_": "Slim girl",
+    "emm_": "Woman with braid",
+}
 
 
 class DefinitionsWriter:
     def __init__(self, include_dir: str, source_dir: str):
         self.include_dir = include_dir
         self.source_dir = source_dir
+
+    def write_common_definitions(self, tl: TranslationContainer):
+        language = tl.language if tl is not None else "en"
+        with open(f"{self.source_dir}/translations/{language}_definitions_commons.inc", "w") as f:
+            f.write(f'// Generated code, do not edit\n')
+            f.write(f'// Generated at {datetime.now(UTC).isoformat(timespec='seconds')}\n')
+            f.write(f'#pragma once\n')
+            f.write(f'#define KSDEF(name, value) \\\n')
+            f.write(f'    const char* definitions_##name() override {{ return value; }}\n\n')
+            for key, value in COMMON_DEFINITIONS_MAP.items():
+                if tl is None:
+                    f.write(f'KSDEF({key}, "{value}")\n')
+                else:
+                    if value in tl.strings:
+                        f.write(f'KSDEF({key}, "{tl.strings[value]}")\n')
+                    else:
+                        f.write(f'KSDEF({key}, "{value}")\n')
+            f.write(f'#undef KSDEF\n\n')
 
     def write_scripts_definitions(self, routes: List[RouteDefinition]):
         """

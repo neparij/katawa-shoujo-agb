@@ -104,9 +104,10 @@ def main():
             if locale == "en":
                 # Skip the default locale
                 continue
-            rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, f"{script_name}.rpy")
-            print(f"Processing translation file: {rpy_translation_file}")
-            reader = TranslationReader(locale, rpy_translation_file)
+
+            print(f"Processing translation files for locale: {locale}")
+            rpy_translation_dir = os.path.join(ksre_path, "game", "tl", locale)
+            reader = TranslationReader(locale, rpy_translation_dir)
             translations[locale] = reader.read()
 
         print(f"Processing scenario file: {rpy_scenario_file}")
@@ -148,12 +149,12 @@ def main():
 
         for locale in locales:
             print(f"Processing definitions for locale: {locale}")
-            rpy_translation_file = os.path.join(ksre_path, "game", "tl", locale, "definitions.rpy") if locale != "en" else None
 
             tl = None
-            if rpy_translation_file:
-                print(f"Processing translation file: {rpy_translation_file}")
-                reader = TranslationReader(locale, rpy_translation_file)
+            if locale != "en":
+                print(f"Processing translation files for locale: {locale}")
+                rpy_translation_dir = os.path.join(ksre_path, "game", "tl", locale)
+                reader = TranslationReader(locale, rpy_translation_dir)
                 tl = reader.read()
 
             definitions_reader = DefinitionsReader(os.path.join(ksre_path, "game", "definitions.rpy"), tl)
@@ -168,6 +169,7 @@ def main():
             gallery_images_ast = definitions_reader.extract_gallery_images_block()
             gallery_images = definitions_reader.parse_gallery_images_structure(gallery_images_ast)
 
+            definitions_writer.write_common_definitions(tl)
             definitions_writer.write_scripts_definitions(routes)
             definitions_writer.write_labels_definitions(routes)
             definitions_writer.write_labels_translations(routes, locale)
@@ -197,6 +199,7 @@ def main():
                                        languages,
                                        [
                                            "src/translations/{}.cpp",
+                                           "src/translations/{}_definitions_commons.inc",
                                            "src/translations/{}_definitions_labels.h"
                                        ])
             chars_reader.read_definitions()
