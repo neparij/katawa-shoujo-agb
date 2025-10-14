@@ -4,6 +4,8 @@ from typing import List, Dict
 
 from src.definitions_reader import DefinitionsReader
 from src.definitions_writer import DefinitionsWriter
+from src.font.chars_reader import CharsReader
+from src.fonts_writer import FontsWriter
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
 from src.translation.translation_container import TranslationContainer
@@ -65,6 +67,23 @@ def main():
         "--locales",
         required=False,
         help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
+    )
+
+    fonts_parser = subparsers.add_parser("fonts", help="Fonts converter")
+    fonts_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to KS:RE sources"
+    )
+    fonts_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources"
+    )
+    fonts_parser.add_argument(
+        "--locale-pairs",
+        required=False,
+        help="Locale pairs (lang:group), comma separated. Example: en:latin,de:latin,es:latin,fr:latin,ru:cyrillic,jp:j,zh_hans:c"
     )
 
     args = parser.parse_args()
@@ -153,6 +172,44 @@ def main():
             definitions_writer.write_labels_definitions(routes)
             definitions_writer.write_labels_translations(routes, locale)
             definitions_writer.write_seen_bitmask_definitions(gallery_images)
+
+    if args.command == "fonts":
+        ksre_path = args.source
+        ksagb_path = args.outdir
+        locale_pairs = args.locale_pairs.split(",") if args.locale_pairs else []
+        groups = {}
+
+        if not os.environ.get('DEVKITARM'):
+            raise EnvironmentError("DEVKITARM environment variable is not set. Please set up devkitARM.")
+
+        for locale_pair in locale_pairs:
+            lang, group = locale_pair.split(":")
+            if not (lang and group):
+                raise ValueError(f"Invalid locale pair: {locale_pair}")
+            if group not in groups:
+                groups[group] = []
+            groups[group].append(lang)
+
+        for group, languages in groups.items():
+            print(f"Processing font group: {group} for languages: {', '.join(languages)}")
+            chars_reader = CharsReader(ksagb_path,
+                                       "gbfs_files",
+                                       languages,
+                                       [
+                                           "src/translations/{}.cpp",
+                                           "src/translations/{}_definitions_labels.h"
+                                       ])
+            chars_reader.read_definitions()
+            chars_reader.read_tl_files()
+            chars_reader.sort_char_tables()
+
+            writer = FontsWriter(ksre_path, ksagb_path, group,
+                                 chars_reader.get_common(),
+                                 chars_reader.get_additional())
+            writer.generate_fonts()
+
+        writer = FontsWriter(ksre_path, ksagb_path, "default", [], [])
+        writer.generate_palettes()
 
 
 if __name__ == "__main__":

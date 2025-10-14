@@ -38,6 +38,10 @@ namespace ks::globals {
 
     extern void set_language(language_t tl);
 
+    extern void init_text_generators(language_t tl);
+
+    extern void init_text_generators();
+
     extern void main_update();
 
     extern void ISR_VBlank();

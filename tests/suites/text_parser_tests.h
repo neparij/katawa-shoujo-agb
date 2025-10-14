@@ -7,7 +7,6 @@
 #include "testing/suite.h"
 
 #include "../src/text_parser.h"
-#include "fonts_info.h"
 #include "../../src/constants.h"
 #include "../../src/scenemanager.h"
 
@@ -18,6 +17,7 @@ public:
 
     void run() {
         test_case("generate_lines, single line", [this] {
+            ks::globals::init_text_generators(LANG_ENGLISH);
             text = "Single line";
             renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 1, "single line should have one line");
@@ -25,6 +25,7 @@ public:
         });
 
         test_case("generate_lines, multiple lines", [this] {
+            ks::globals::init_text_generators(LANG_ENGLISH);
             text = "Multiple\nbeautiful lines";
             renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 2, "string with newline should have two lines");
@@ -33,6 +34,7 @@ public:
         });
 
         test_case("generate_lines, newline character", [this] {
+            ks::globals::init_text_generators(LANG_ENGLISH);
             text = "\nMiddle";
             renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 2, "string starting with newline should have two lines");
@@ -41,6 +43,7 @@ public:
         });
 
         test_case("generate_lines, word wrapping", [this] {
+            ks::globals::init_text_generators(LANG_RUSSIAN);
             text = "Лёгкий ветерок колышет голые ветви над головой, заставляя их шуметь, словно деревянные колокольчики.";
             renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 3, "long text should be broken into several lines");
@@ -50,6 +53,7 @@ public:
         });
 
         test_case("generate_lines, word chopping", [this] {
+            ks::globals::init_text_generators(LANG_ENGLISH);
             text = "Aaaaaaaaaaaaaaahhhhhhhhhhhhhhhhhhhhhhhhggggggggggghhhhhhhh……";
             renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 2, "long unbroken text should be split");
@@ -58,6 +62,7 @@ public:
         });
 
         test_case("generate_lines, control characters", [this] {
+            ks::globals::init_text_generators(LANG_ENGLISH);
             text = "Text with ""\x02""bold""\x03"".""\x06""\x05""Wait 0.5 sec";
             renderer_inst.generate_lines(max_width);
             KS_ASSERT(renderer_inst.lines().size() == 1, "break_to_lines size");
@@ -66,6 +71,7 @@ public:
 
         // TODO: rewrite it. Bad test design.
         test_case("generate_commands", [this] {
+            ks::globals::init_text_generators(LANG_ENGLISH);
             text = "Text with ""\x02""bold""\x03"".""\x06""\x05""Wait 0.5 sec";
             renderer_inst.generate_lines(max_width);
             renderer_inst.generate_commands();
@@ -124,8 +130,7 @@ public:
 
 private:
     bn::istring& text = ks::message;
-    bn::optional<bn::sprite_text_generator> text_generator{bn::sprite_text_generator(font_playtime_sprite_font)};
-    ks::text::parser<32> renderer_inst{&text, text_generator};
+    ks::text::parser<32> renderer_inst{&text, ks::text_generator};
     const int max_width = ks::device::screen_width - 20;
 };
 

@@ -3,13 +3,14 @@
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_memory.h"
+#include "fonts/fonts_cyrillic.h"
+#include "fonts/fonts_latin.h"
 #include "translations/en.cpp"
 #include "translations/ru.cpp"
 #include "bn_sprite_palettes.h"
 #include "ingametimer.h"
 #include "scenemanager.h"
 #include "sound_manager.h"
-#include "fonts_info.h"
 #include "ks_huge_bgs_manager.h"
 #include "sound/sound_mixer.h"
 
@@ -56,16 +57,6 @@ namespace ks::globals {
         ks::progress_icon_sprites.clear();
         ks::static_text_sprites.clear();
         ks::animated_text_sprites.clear();
-        ks::text_generator = bn::sprite_text_generator(font_playtime_sprite_font);
-        ks::text_generator_bold = bn::sprite_text_generator(font_playtime_bold_sprite_font);
-        ks::text_generator_small = bn::sprite_text_generator(font_playtime_small_sprite_font);
-        text_generator->set_bg_priority(1);
-        text_generator->set_z_order(-10);
-        text_generator_bold->set_bg_priority(1);
-        text_generator_bold->set_z_order(-10);
-        text_generator_small->set_bg_priority(1);
-        text_generator_small->set_z_order(-10);
-
         ks::globals::accessibility_apply();
     }
 
@@ -103,6 +94,36 @@ namespace ks::globals {
         } else {
             BN_ERROR("Language is not implemented");
         }
+        init_text_generators();
+    }
+
+    void init_text_generators(const language_t tl) {
+        text_generator.reset();
+        text_generator_bold.reset();
+        text_generator_small.reset();
+
+        if (tl == LANG_RUSSIAN) {
+            // Cyrillic fonts
+            text_generator = bn::sprite_text_generator(font_default_cyrillic_sprite_font);
+            text_generator_bold = bn::sprite_text_generator(font_bold_cyrillic_sprite_font);
+            text_generator_small = bn::sprite_text_generator(font_small_cyrillic_sprite_font);
+        } else {
+            // Latin fonts
+            text_generator = bn::sprite_text_generator(font_default_latin_sprite_font);
+            text_generator_bold = bn::sprite_text_generator(font_bold_latin_sprite_font);
+            text_generator_small = bn::sprite_text_generator(font_small_latin_sprite_font);
+        }
+
+        text_generator->set_bg_priority(1);
+        text_generator->set_z_order(-10);
+        text_generator_bold->set_bg_priority(1);
+        text_generator_bold->set_z_order(-10);
+        text_generator_small->set_bg_priority(1);
+        text_generator_small->set_z_order(-10);
+    }
+
+    void init_text_generators() {
+        init_text_generators(i18n->type());
     }
 
     void accessibility_apply() {
