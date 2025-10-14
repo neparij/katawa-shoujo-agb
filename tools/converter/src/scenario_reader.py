@@ -78,9 +78,9 @@ class ScenarioReader:
 
         return self.scenario.copy()
 
-    def calculate_tl_hash(self, line):
+    def calculate_tl_hash(self, line, nointeract=False):
         md5 = hashlib.md5()
-        md5.update((line + "\r\n").encode("utf-8"))
+        md5.update((f"{line}{" nointeract" if nointeract else ""}" + "\r\n").encode("utf-8"))
         label = self.stack.current_label()
         if label:
             tl_fixed_name = label.name
@@ -334,14 +334,19 @@ class ScenarioReader:
             }
 
             for locale, translation in self.translations.items():
+                key_left, key_right = dialogs[0], dialogs[1]
                 if dialogs[0].startswith("_(") and dialogs[0].endswith(")"):
-                    dialogs[0] = re.match(r"^_\(\"(.*)\"\)$", dialogs[0]).group(1)
-                    dialog_left[locale] = translation.strings[dialogs[0]] if dialogs[0] in translation.strings else dialogs[0]
-                else:
-                    dialog_left[locale] = dialog_left[DEFAULT_LOCALE]
+                    key_left = re.match(r"^_\(\"(.*)\"\)$", dialogs[0]).group(1)
                 if dialogs[1].startswith("_(") and dialogs[1].endswith(")"):
-                    dialogs[1] = re.match(r"^_\(\"(.*)\"\)$", dialogs[1]).group(1)
-                    dialog_right[locale] = translation.strings[dialogs[1]] if dialogs[1] in translation.strings else dialogs[1]
+                    key_right = re.match(r"^_\(\"(.*)\"\)$", dialogs[1]).group(1)
+
+                if key_left not in translation.strings:
+                    raise Exception(f"Missing translation for key: {key_left} in locale {locale}")
+                if key_right not in translation.strings:
+                    raise Exception(f"Missing translation for key: {key_right} in locale {locale}")
+
+                dialog_left[locale] = translation.strings[key_left]
+                dialog_right[locale] = translation.strings[key_right]
 
             self.stack.current().add_sequence_item(self.linepack_events,
                                                    DoubleSpeakItem(original_dialog_hash[-8:],
@@ -647,6 +652,7 @@ class ScenarioReader:
             narration_match = re.match(r"^\"(.*)\"(?:| nointeract| with vpunch)$", stripped_line)
 
             original_dialog_hash = self.calculate_tl_hash(hashing_contents)
+            original_dialog_hash_nointeract = self.calculate_tl_hash(hashing_contents, nointeract=True)
 
             matches : Dict[str, re.Match] = {}
             if dialog_match_str or dialog_match_ref or narration_match:
@@ -662,7 +668,7 @@ class ScenarioReader:
                         continue
                     dialog_hash = original_dialog_hash
                     if dialog_hash not in translation.translations:
-                        dialog_hash = self.calculate_tl_hash(f"{hashing_contents} nointeract")
+                        dialog_hash = original_dialog_hash_nointeract
                     if dialog_hash not in translation.translations:
                         # Hack: there is a case where the dialog hash label contains unclosed previous label.
                         # So we need to find a key by remaining part of hash
@@ -673,6 +679,8 @@ class ScenarioReader:
                                 dialog_hash = key
                                 break
                     if dialog_hash not in translation.translations:
+                        for key, value in translation.translations.items():
+                            print(f"    - {key}: {value}")
                         raise Exception(f"Missing translation for hash {dialog_hash} in locale {locale} for line: {stripped_line}")
                     translated_stripped_line = translation.translations[dialog_hash]
 

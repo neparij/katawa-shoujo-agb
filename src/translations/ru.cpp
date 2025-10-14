@@ -9,18 +9,7 @@ public:
     }
     const char* locale() override {return "ru";}
     const char* language() override {return language_ru();}
-
-    const char* menu_author() override {return "порт от NeParij";}
-    const char* menu_play_a0_test_scene() override {return "Тестовая сцена";}
-    const char* menu_play_a1_monday() override {return "Акт 1. Понедельник";}
-    const char* menu_play_a1_tuesday() override {return "Акт 1. Вторник";}
-    const char* menu_play_a1_wednesday() override {return "Акт 1. Среда";}
-    const char* menu_play_a1_thursday() override {return "Акт 1. Четверг (beta)";}
-    const char* menu_play_a1_friday() override {return "Акт 1. Пятница (beta)";}
-    const char* menu_play_a1_saturday() override {return "Акт 1. Суббота (beta)";}
-    const char* menu_play_a1_sunday() override {return "Акт 1. Воскресенье (beta)";}
-    const char* menu_play_all() override {return "Играть все доступные";}
-    const char* menu_video_test() override {return "Тест видео";}
+    #include "ru_definitions_commons.inc"
 
     const char* menu_start() override {return "Старт";}
     const char* menu_saves() override {return "Сохранения";}
@@ -60,15 +49,6 @@ public:
     const char* menu_back() override {return "Назад";}
     const char* menu_page() override {return "Страница";}
 
-    const char* language_en() override {return "Английский";}
-    const char* language_ru() override {return "Русский";}
-    const char* language_fr() override {return "Французский";}
-    const char* language_it() override {return "Итальянский";}
-    const char* language_es() override {return "Испанский";}
-    const char* language_de() override {return "Немецкий";}
-    const char* language_jp() override {return "Японский";}
-    const char* language_zh_hans() override {return "Упрощённый китайский";}
-
     const char* screens_return() override {return "Назад";}
     const char* screens_history() override {return "История (н/д)";}
     const char* screens_options() override {return "Настройки";}
@@ -76,6 +56,7 @@ public:
     const char* screens_main_menu() override {return "Главное меню";}
 
     const char* textbutton_save() override {return "Сохранить";}
+    const char* saves_auto_suffix() override {return "(авто)";}
 
     const char* screens_playtime() override {return "Наиграно";}
     const char* screens_current_scene() override {return "Сцена";}
@@ -88,51 +69,6 @@ public:
         }
         return definitions_no_scene();
     }
-
-    const char* definitions_no_scene() override {return "Нет сцены";}
-    const char* definitions_nothing() override {return "Ничего";}
-    const char* definitions_autosave() override {return "(авто)";}
-
-    const char* definitions_hi() override {return "Хисао";}
-    const char* definitions_ha() override {return "Ханако";}
-    const char* definitions_emi() override {return "Эми";}
-    const char* definitions_rin() override {return "Рин";}
-    const char* definitions_li() override {return "Лилли";}
-    const char* definitions_shi() override {return "Сидзунэ";}
-    const char* definitions_mi() override {return "Миша";}
-    const char* definitions_ke() override {return "Кендзи";}
-    const char* definitions_mu() override {return "Муто";}
-    const char* definitions_nk() override {return "Фельдшер";}
-    const char* definitions_no() override {return "Номия";}
-    const char* definitions_yu() override {return "Юко";}
-    const char* definitions_sa() override {return "Саэ";}
-    const char* definitions_aki() override {return "Акира";}
-    const char* definitions_hh() override {return "Хидэаки";}
-    const char* definitions_hx() override {return "Дзигоро";}
-    const char* definitions_emm() override {return "Меэко";}
-    const char* definitions_sk() override {return "Продавец";}
-    const char* definitions_mk() override {return "Мики";}
-
-    const char* definitions_mi_shi() override {return "Сидзунэ";}
-    const char* definitions_mi_not_shi() override {return "{s}Сидзунэ{/s} Миша";}
-
-    const char* definitions_mystery() override {return "???";}
-
-    const char* definitions_ha_() override {return "Фиолето-волосая";}
-    const char* definitions_emi_() override {return "Хвостичка";}
-    const char* definitions_rin_() override {return "Странная";}
-    const char* definitions_li_() override {return "Светло-волосая";}
-    const char* definitions_mi_() override {return "Весёлая";}
-    const char* definitions_ke_() override {return "Сосед в очках";}
-    const char* definitions_mu_() override {return "Высокий";}
-    const char* definitions_yu_() override {return "Библиотекарь";}
-    const char* definitions_no_() override {return "Седовласый";}
-    const char* definitions_sa_() override {return "Владелица галереи";}
-    const char* definitions_aki_() override {return "Хорошо одетая";}
-    const char* definitions_nk_() override {return "Улыбающийся";}
-    const char* definitions_hx_() override {return "Огромный";}
-    const char* definitions_hh_() override {return "Стройная";}
-    const char* definitions_emm_() override {return "Женщина с косой";}
 
     opening_text opening_text_act1() override {return {"Акт 1:", "Продолжительность", "жизни"};}
     opening_text opening_text_act2_emi() override {return {"Акт 2:", "Приходим в форму", " "};}

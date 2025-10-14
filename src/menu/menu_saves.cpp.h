@@ -216,7 +216,7 @@ namespace ks {
                                        slot.hours_played,
                                        bn::format<2>(slot.minutes_played < 10 ? "0{}" : "{}", slot.minutes_played),
                                        bn::format<2>(slot.seconds_played < 10 ? "0{}" : "{}", slot.seconds_played),
-                                       additional_slot ? globals::i18n->definitions_autosave() : ""),
+                                       additional_slot ? globals::i18n->saves_auto_suffix() : ""),
                                    selection_index);
                 } else {
                     add_menu_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index + 10,

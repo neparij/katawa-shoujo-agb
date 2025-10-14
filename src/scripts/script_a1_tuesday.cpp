@@ -2386,9 +2386,9 @@ namespace ks {
             ks::SceneManager::set_line_hash(0xB2B96A0B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::hi, 69));
             ks::SceneManager::set_line_hash(0xB8403D97);
-            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::yu, 70));
+            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::yu, 78));
             ks::SceneManager::set_line_hash(0xA5DF955F);
-            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 78));
+            IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 79));
             ks::SceneManager::set_line_hash(0x9CAE86BC);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 72));
         }
