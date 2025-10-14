@@ -41,7 +41,7 @@ public:
     const char* menu_extras_library() override {return "Biblioteca";}
     const char* menu_extras_cinema() override {return "Cine";}
 
-    unsigned int menu_extras_jukebox_xoffset() override {return 0;}
+    unsigned int menu_extras_jukebox_xoffset() override {return 4;}
     unsigned int menu_extras_gallery_xoffset() override {return 0;}
     unsigned int menu_extras_library_xoffset() override {return 0;}
     unsigned int menu_extras_cinema_xoffset() override {return 0;}
