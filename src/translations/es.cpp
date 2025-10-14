@@ -15,8 +15,8 @@ public:
     const char* menu_start() override {return "Inicio";}
     const char* menu_saves() override {return "Cargar";}
     const char* menu_extras() override {return "Extras";}
-    const char* menu_options() override {return "Options";}
-    const char* menu_language() override {return "Opciones";}
+    const char* menu_options() override {return "Opciones";}
+    const char* menu_language() override {return "Idioma";}
     const char* menu_accessibility() override {return "Accesibilidad";}
 
     const char* menu_options_general() override {return "General";}

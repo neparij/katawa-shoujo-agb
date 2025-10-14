@@ -225,7 +225,7 @@ namespace ks {
         bn::optional<bn::regular_bg_ptr> nvl_box;
         bn::vector<unsigned int, 16> current_tl_indexes;
         bn::vector<unsigned int, 16> tl_index_lines_count;
-        bn::vector<bn::sprite_ptr, 8 * 13> text_cache_sprites;
+        bn::vector<bn::sprite_ptr, 8 * 14> text_cache_sprites; // +2 additional lines
         bn::optional<bn::camera_ptr> camera;
     };
 
