@@ -39,7 +39,7 @@ namespace ks {
 
     class NightskyFireworksEvent final : public CustomEvent {
     public:
-        NightskyFireworksEvent() = default;
+        NightskyFireworksEvent() : CustomEvent(DISPLAYABLE_BITMASK_NONE) {};
         ~NightskyFireworksEvent() override {
             // _background.reset();
         };

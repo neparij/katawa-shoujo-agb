@@ -145,9 +145,14 @@ def main():
 
             replays_ast = definitions_reader.extract_replays_block()
             routes = definitions_reader.parse_routes_structure(replays_ast)
+
+            gallery_images_ast = definitions_reader.extract_gallery_images_block()
+            gallery_images = definitions_reader.parse_gallery_images_structure(gallery_images_ast)
+
             definitions_writer.write_scripts_definitions(routes)
             definitions_writer.write_labels_definitions(routes)
             definitions_writer.write_labels_translations(routes, locale)
+            definitions_writer.write_seen_bitmask_definitions(gallery_images)
 
 
 if __name__ == "__main__":

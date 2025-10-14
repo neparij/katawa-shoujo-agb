@@ -2,12 +2,14 @@
 #define KS_BGMETA_HANAKO_CRY_OPEN
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hanako_cry_open.h"
 #include "bn_regular_bg_items_thumb_hanako_cry_open.h"
 namespace ks::background_metas {
     constexpr inline background_meta hanako_cry_open(
                      bn::regular_bg_items::hanako_cry_open,
                      bn::regular_bg_items::thumb_hanako_cry_open,
+                     DISPLAYABLE_BITMASK_HANAKO_CRY_OPEN,
                      0xB79ACBCD);
 
 }

@@ -2,12 +2,14 @@
 #define KS_BGMETA_SCHOOL_DORMBATHROOM
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_school_dormbathroom.h"
 #include "bn_regular_bg_items_thumb_school_dormbathroom.h"
 namespace ks::background_metas {
     constexpr inline background_meta school_dormbathroom(
                      bn::regular_bg_items::school_dormbathroom,
                      bn::regular_bg_items::thumb_school_dormbathroom,
+                     DISPLAYABLE_BITMASK_NONE,
                      0x112DFE77);
 
 }

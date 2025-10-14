@@ -10,7 +10,7 @@ namespace ks {
 
     class LillyShizuShowdownLillyEvent final : public CustomEvent {
     public:
-        LillyShizuShowdownLillyEvent() = default;
+        LillyShizuShowdownLillyEvent() : CustomEvent(DISPLAYABLE_BITMASK_SHOWDOWN) {};
         ~LillyShizuShowdownLillyEvent() override {
             // _background.reset();
             _move_action.reset();

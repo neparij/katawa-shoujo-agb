@@ -2,12 +2,14 @@
 #define KS_BGMETA_SCHOOL_DORMEXT_HALF
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_school_dormext_half.h"
 #include "bn_regular_bg_items_thumb_school_dormext_half.h"
 namespace ks::background_metas {
     constexpr inline background_meta school_dormext_half(
                      bn::regular_bg_items::school_dormext_half,
                      bn::regular_bg_items::thumb_school_dormext_half,
+                     DISPLAYABLE_BITMASK_NONE,
                      0xB4098BF3);
 
 }

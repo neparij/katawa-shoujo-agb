@@ -10,7 +10,7 @@ namespace ks {
 
     class EmiKnockeddownLegsEvent final : public CustomEvent {
     public:
-        EmiKnockeddownLegsEvent() = default;
+        EmiKnockeddownLegsEvent() : CustomEvent(DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN) {};
         ~EmiKnockeddownLegsEvent() override {
             _move_action.reset();
             // _background.reset();

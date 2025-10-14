@@ -2,12 +2,14 @@
 #define KS_BGMETA_RIN_ARTCLASS2
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_rin_artclass2.h"
 #include "bn_regular_bg_items_thumb_rin_artclass2.h"
 namespace ks::background_metas {
     constexpr inline background_meta rin_artclass2(
                      bn::regular_bg_items::rin_artclass2,
                      bn::regular_bg_items::thumb_rin_artclass2,
+                     DISPLAYABLE_BITMASK_RIN_ARTCLASS2,
                      0x0708DB55);
 
 }

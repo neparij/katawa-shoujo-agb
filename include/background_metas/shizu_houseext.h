@@ -2,12 +2,14 @@
 #define KS_BGMETA_SHIZU_HOUSEEXT
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_shizu_houseext.h"
 #include "bn_regular_bg_items_thumb_shizu_houseext.h"
 namespace ks::background_metas {
     constexpr inline background_meta shizu_houseext(
                      bn::regular_bg_items::shizu_houseext,
                      bn::regular_bg_items::thumb_shizu_houseext,
+                     DISPLAYABLE_BITMASK_NONE,
                      0x8D6631B6);
 
 }

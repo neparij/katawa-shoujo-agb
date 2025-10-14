@@ -1,6 +1,6 @@
 from typing import List
 
-from src.dto.definitions import RouteDefinition
+from src.dto.definitions import RouteDefinition, GalleryImageDefinition
 
 
 class DefinitionsWriter:
@@ -70,3 +70,27 @@ class DefinitionsWriter:
             f.write("    }\n")
             f.write("}\n\n")
             f.write(f"\n#endif // {tl_key.upper()}_DEFINITIONS_LABELS_H\n")
+
+    def write_seen_bitmask_definitions(self, gallery_images : List[GalleryImageDefinition]):
+        """
+        Write the definitions of the gallery images to a file.
+        """
+        definitions = []
+
+        with open(f"{self.include_dir}/definitions/seen_bitmask.h", "w") as f:
+            f.write("#ifndef SEEN_BITMASK_DEFINITIONS_H\n")
+            f.write("#define SEEN_BITMASK_DEFINITIONS_H\n\n")
+
+            f.write("typedef unsigned int displayable_bitmask_t;\n")
+            f.write("#define DISPLAYABLE_BITMASK_NONE ((displayable_bitmask_t)0x00000000)\n")
+
+            bit_idx = 1
+            for entry in gallery_images:
+                for image in entry.images:
+                    image_name = image.replace(" ", "_").upper()
+                    if not image_name in definitions:
+                        definitions.append(image_name)
+                        f.write(f"#define DISPLAYABLE_BITMASK_{image_name} ((displayable_bitmask_t)0x{bit_idx:08X})\n")
+                        bit_idx += 1
+
+            f.write(f"\n#endif // SEEN_BITMASK_DEFINITIONS_H\n")

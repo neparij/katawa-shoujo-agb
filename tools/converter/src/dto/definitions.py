@@ -27,3 +27,11 @@ class RouteDefinition:
 
     def __str__(self):
         return f"RouteDefinition(route_name={self.route_name}, acts={self.acts})"
+
+class GalleryImageDefinition:
+    def __init__(self, thumbnail: str, images: List[str]):
+        self.thumbnail = thumbnail
+        self.images = images
+
+    def __str__(self):
+        return f"GalleryImageDefinition(thumbnail={self.thumbnail}, images={self.images})"

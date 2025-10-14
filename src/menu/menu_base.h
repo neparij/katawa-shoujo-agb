@@ -1,6 +1,7 @@
 #ifndef MENU_BASE_H
 #define MENU_BASE_H
 
+#include "bn_keypad.h"
 #include "../globals.h"
 
 namespace ks {
@@ -64,6 +65,9 @@ namespace ks {
                     }
                     on_navigate(bn::keypad::up_held(), bn::keypad::down_held(), bn::keypad::left_held(), bn::keypad::right_held());
                 }
+                else if (menu::_navigation_timer == 0 && (bn::keypad::l_pressed() || bn::keypad::r_pressed())) {
+                    on_tab_change(bn::keypad::r_pressed());
+                }
                 if (bn::keypad::any_released()) {
                     menu::_navigation_timer = 0;
                 }
@@ -96,6 +100,9 @@ namespace ks {
 
                 need_repalette = true;
             }
+        }
+
+        virtual void on_tab_change(bool is_next) {
         }
 
         virtual void on_select([[maybe_unused]] const int option) {

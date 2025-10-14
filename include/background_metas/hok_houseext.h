@@ -2,12 +2,14 @@
 #define KS_BGMETA_HOK_HOUSEEXT
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hok_houseext.h"
 #include "bn_regular_bg_items_thumb_hok_houseext.h"
 namespace ks::background_metas {
     constexpr inline background_meta hok_houseext(
                      bn::regular_bg_items::hok_houseext,
                      bn::regular_bg_items::thumb_hok_houseext,
+                     DISPLAYABLE_BITMASK_NONE,
                      0x485FC76A);
 
 }

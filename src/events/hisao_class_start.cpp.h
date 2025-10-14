@@ -9,7 +9,7 @@
 namespace ks {
     class HisaoClassStartEvent final : public CustomEvent {
     public:
-        HisaoClassStartEvent() = default;
+        HisaoClassStartEvent() : CustomEvent(DISPLAYABLE_BITMASK_HISAO_CLASS_START) {};
         ~HisaoClassStartEvent() override {
             // _background.reset();
         };

@@ -32,7 +32,7 @@ namespace ks {
 
     class HanakoFireworksEvent final : public CustomEvent {
     public:
-        HanakoFireworksEvent() = default;
+        HanakoFireworksEvent() : CustomEvent(DISPLAYABLE_BITMASK_HANAKO_SHANGHAIWINDOW) {};
         ~HanakoFireworksEvent() override {
             // _background.reset();
         };

@@ -20,6 +20,7 @@
 #include "gba_types.h"
 #include "savefile/save_file.h"
 #include "ext_bg_blocks_manager.h"
+#include "vfx_meta.h"
 #include "events/custom_event.h"
 #include "shaders/vram_dma_shader.h"
 
@@ -103,6 +104,7 @@ public:
     static void set_line_hash(const unsigned int line_hash);
     static void autosave();
     static void save(unsigned short slot_index);
+    static void save_states();
 
     // Acions
 
@@ -125,6 +127,13 @@ public:
     static void set_background_transition(scene_transition_t transition);
     static void enable_fill(bn::color color);
     static void disable_fill();
+
+    static void set_foreground(const vfx_meta& fg,
+                           const int position_x,
+                           const int position_y,
+                           const int dissolve_time);
+
+    static void hide_foreground(int dissolve_time);
 
     static void process_menu_states(const gameState_t &state);
 

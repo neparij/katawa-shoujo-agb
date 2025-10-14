@@ -2,12 +2,14 @@
 #define KS_BGMETA_HANAKO_EMPTYCLASSROOM_FG
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_hanako_emptyclassroom_fg.h"
 #include "bn_regular_bg_items_thumb_hanako_emptyclassroom_fg.h"
 namespace ks::background_metas {
     constexpr inline background_meta hanako_emptyclassroom_fg(
                      bn::regular_bg_items::hanako_emptyclassroom_fg,
                      bn::regular_bg_items::thumb_hanako_emptyclassroom_fg,
+                     DISPLAYABLE_BITMASK_NONE,
                      0x99BBCF63);
 
 }

@@ -38,76 +38,91 @@ namespace ks::background_metas {
     constexpr inline background_meta hisao_class(
         bn::regular_bg_items::hisao_class,
         bn::regular_bg_items::thumb_hisao_class,
+        DISPLAYABLE_BITMASK_HISAO_CLASS_START,
         0xFFFF0000);
 
     constexpr inline background_meta emi_knockeddown(
         bn::regular_bg_items::emi_knockeddown_largepullout,
         bn::regular_bg_items::thumb_emi_knockeddown,
+        DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN,
         0xFFFF0001);
 
     constexpr inline background_meta emi_knockeddown_facepullout(
         bn::regular_bg_items::emi_knockeddown_facepullout,
         bn::regular_bg_items::thumb_emi_knockeddown,
+        DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN,
         0xFFFF0002);
 
     constexpr inline background_meta emi_knockeddown_largepullout(
         bn::regular_bg_items::emi_knockeddown_largepullout,
         bn::regular_bg_items::thumb_emi_knockeddown,
+        DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN,
         0xFFFF0003);
 
     constexpr inline background_meta emi_knockeddown_legs(
         bn::regular_bg_items::emi_knockeddown_legs,
         bn::regular_bg_items::thumb_emi_knockeddown,
+        DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN,
         0xFFFF0004);
 
     constexpr inline background_meta lilly_shizu_showdown_slices_lilly(
         bn::regular_bg_items::lilly_shizu_showdown_slices_lilly,
         bn::regular_bg_items::thumb_lilly_shizu_showdown,
+        DISPLAYABLE_BITMASK_SHOWDOWN,
         0xFFFF0005);
 
     constexpr inline background_meta lilly_shizu_showdown_slices_shizu(
         bn::regular_bg_items::lilly_shizu_showdown_slices_shizu,
         bn::regular_bg_items::thumb_lilly_shizu_showdown,
+        DISPLAYABLE_BITMASK_SHOWDOWN,
         0xFFFF0006);
 
     constexpr inline background_meta lilly_shizu_showdown_both(
         bn::regular_bg_items::lilly_shizu_showdown_both,
         bn::regular_bg_items::thumb_lilly_shizu_showdown,
+        DISPLAYABLE_BITMASK_SHOWDOWN,
         0xFFFF0007);
 
     constexpr inline huge_background_meta event_drugs_en(
         ks::huge_bg_items::event_drugs_en,
         bn::regular_bg_items::thumb_event_drugs,
+        DISPLAYABLE_BITMASK_NONE,
         0xFFFF0008);
 
     constexpr inline background_meta op_snowywoods(
         bn::regular_bg_items::op_snowywoods,
         bn::regular_bg_items::thumb_op_snowywoods,
+        DISPLAYABLE_BITMASK_NONE,
         0xFFFF0009);
 
     constexpr inline background_meta other_iwanako(
         bn::regular_bg_items::other_iwanako_nosnow,
         bn::regular_bg_items::thumb_other_iwanako,
-        0x0FFF000A);
+        DISPLAYABLE_BITMASK_OTHER_IWANAKO_START,
+        0xFFFF000A);
 
     constexpr inline background_meta hosp_room(
                  bn::regular_bg_items::hosp_room,
                  bn::regular_bg_items::thumb_hosp_room,
+                 DISPLAYABLE_BITMASK_NONE,
                  0x3E47FD6A);
 
     constexpr inline background_meta hanako_fw_base(
                 bn::regular_bg_items::hanako_fw_base_reduced_pal,
                 bn::regular_bg_items::thumb_hanako_fw_flash,
+                DISPLAYABLE_BITMASK_HANAKO_SHANGHAIWINDOW,
                 0xE13A5821);
 
     constexpr inline background_meta kslogo_heart(
         bn::regular_bg_items::kslogo_heart,
         bn::regular_bg_items::thumb_event_missing,
+        DISPLAYABLE_BITMASK_NONE,
         0x0FFFFF00);
 
     constexpr inline background_meta kslogo_words(
         bn::regular_bg_items::kslogo_words,
         bn::regular_bg_items::thumb_event_missing,
+        DISPLAYABLE_BITMASK_NONE,
         0x0FFFFF01);
 
     inline const bn::regular_bg_item& get_custom_thumbnail_by_hash(const unsigned int hash) {

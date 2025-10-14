@@ -201,6 +201,7 @@ void SceneManager::autosave() {
     BN_LOG("Savedata progress linehash: ", savedata_progress.reproduction.line_hash);
     BN_LOG("Savedata progress answers count: ", savedata_progress.reproduction.answer_indices.size());
     ks::saves::writeAutosave(savedata_progress);
+    save_states();
 }
 
 void SceneManager::save(const unsigned short slot_index) {
@@ -209,6 +210,11 @@ void SceneManager::save(const unsigned short slot_index) {
     BN_LOG("Savedata progress linehash: ", savedata_progress.reproduction.line_hash);
     BN_LOG("Savedata progress answers count: ", savedata_progress.reproduction.answer_indices.size());
     ks::saves::writeSaveSlot(slot_index, savedata_progress);
+    save_states();
+}
+
+void SceneManager::save_states() {
+    ks::saves::writeStates(globals::states);
 }
 
 void SceneManager::reset_backgrounds_visuals() {
@@ -218,6 +224,10 @@ void SceneManager::reset_backgrounds_visuals() {
 void SceneManager::set_background(const background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time, const palette_variant_t palette_variant) {
     next_event.reset();
     reset_backgrounds_visuals();
+
+    if (bg.seen_bitmask != DISPLAYABLE_BITMASK_NONE && globals::in_game) {
+        globals::states.set_seen_displayable(bg.seen_bitmask, true);
+    }
 
     disable_fill();
     progress.metadata.thumbnail_hash = bg.hash;
@@ -304,6 +314,27 @@ void SceneManager::enable_fill(const bn::color color) {
 
 void SceneManager::disable_fill() {
     background_visual.fill_color.reset();
+}
+
+void SceneManager::set_foreground(const vfx_meta& fg, const int position_x, const int position_y, const int dissolve_time) {
+    reset_backgrounds_visuals(); // TODO: remove this line
+
+    if (fg.seen_bitmask != DISPLAYABLE_BITMASK_NONE && globals::in_game) {
+        globals::states.set_seen_displayable(fg.seen_bitmask, true);
+    }
+
+    // TODO: Support foregrounds (currently using in gallery only for items)
+    background_visual.bg_item = background_item(fg.bg);
+    background_visual.position_x = position_x;
+    background_visual.position_y = position_y;
+    background_visual.dissolve_time = dissolve_time;
+}
+
+void SceneManager::hide_foreground(const int dissolve_time) {
+    // TODO: Support foregrounds (currently using in gallery only for items)
+    reset_backgrounds_visuals();
+    background_visual.dissolve_time = dissolve_time;
+    background_visual.palette_variant = PALETTE_VARIANT_DEFAULT;
 }
 
 inline void SceneManager::process_menu_states(const gameState_t &state) {

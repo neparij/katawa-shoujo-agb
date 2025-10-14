@@ -2,12 +2,14 @@
 #define KS_BGMETA_RIN_NAP_CLOSE
 
 #include "background_meta.h"
+#include "definitions/seen_bitmask.h"
 #include "bn_regular_bg_items_rin_nap_close.h"
 #include "bn_regular_bg_items_thumb_rin_nap_close.h"
 namespace ks::background_metas {
     constexpr inline background_meta rin_nap_close(
                      bn::regular_bg_items::rin_nap_close,
                      bn::regular_bg_items::thumb_rin_nap_close,
+                     DISPLAYABLE_BITMASK_NONE,
                      0x78FB19B7);
 
 }

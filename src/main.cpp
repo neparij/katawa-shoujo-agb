@@ -15,17 +15,18 @@
 #include "sound_manager.h"
 #include "translations/en.cpp"
 #include "video_4ls_dxtv.h"
+#include "menu/menu_main.cpp.h"
 #include "menu/menu_extras.cpp.h"
 #include "menu/menu_extras_cinema.cpp.h"
 #include "menu/menu_extras_jukebox.cpp.h"
-#include "menu/menu_main.cpp.h"
+#include "menu/menu_extras_gallery.cpp.h"
 #include "menu/menu_options.cpp.h"
+#include "menu/menu_options_accessibility.cpp.h"
+#include "menu/menu_options_language.cpp.h"
 #include "menu/menu_saves.cpp.h"
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
-#include "menu/menu_options_accessibility.cpp.h"
-#include "menu/menu_options_language.cpp.h"
 #include "openings/act1.cpp.h"
 #include "openings/act2_emi.cpp.h"
 #include "openings/act3_emi.cpp.h"
@@ -155,6 +156,10 @@ inline void game(const bool is_new_game) {
         // KENJI ENDING
     }
 
+    if (!ks::is_loading) {
+        ks::saves::writeStates(ks::globals::states);
+    }
+
     if (ks::is_loading) {
         BN_ERROR("Unable to load savegame.");
     }
@@ -254,6 +259,7 @@ int main() {
     }
 
     ks::globals::settings = ks::saves::readSettings();
+    ks::globals::states = ks::saves::readStates();
     ks::timer::init();
 
     ks::SceneManager::fade_out(ks::globals::colors::BLACK, 30);
@@ -327,6 +333,9 @@ int main() {
                 break;
             case GS_MENU_EXTRAS_CINEMA:
                 ks::MenuExtrasCinema().run();
+                break;
+            case GS_MENU_EXTRAS_GALLERY:
+                ks::MenuExtrasGallery().run();
                 break;
             case GS_LOAD_GAME:
                 ks::timer::reset();

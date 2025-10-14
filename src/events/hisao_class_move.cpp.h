@@ -9,7 +9,7 @@
 namespace ks {
     class HisaoClassMoveEvent final : public CustomEvent {
     public:
-        HisaoClassMoveEvent() = default;
+        HisaoClassMoveEvent() : CustomEvent(DISPLAYABLE_BITMASK_HISAO_CLASS_MOVE) {};
         ~HisaoClassMoveEvent() override {
             _move_action.reset();
             // _background.reset();

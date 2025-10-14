@@ -23,6 +23,7 @@ namespace ks::globals {
     inline bool in_game = false;
     inline bn::unique_ptr<Translation> i18n;
     inline auto settings = saves::SaveSettingsData();
+    inline auto states = saves::SaveStatesData();
     inline const GBFS_FILE *filesystem = nullptr;
 
     extern void init_filesystem();

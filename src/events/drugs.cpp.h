@@ -12,7 +12,7 @@ namespace ks {
 
     class DrugsEvent final : public CustomEvent {
     public:
-        DrugsEvent() = default;
+        DrugsEvent() : CustomEvent(DISPLAYABLE_BITMASK_NONE) {};
         ~DrugsEvent() override {
             // _background.reset();
         };

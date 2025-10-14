@@ -10,7 +10,7 @@ namespace ks {
 
     class EmiKnockeddownFacepulloutEvent final : public CustomEvent {
     public:
-        EmiKnockeddownFacepulloutEvent() = default;
+        EmiKnockeddownFacepulloutEvent() : CustomEvent(DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN) {};
         ~EmiKnockeddownFacepulloutEvent() override {
             _move_action.reset();
             // _background.reset();

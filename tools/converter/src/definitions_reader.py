@@ -2,7 +2,7 @@ import ast
 import re
 from typing import List, Dict
 
-from src.dto.definitions import RouteDefinition, ActDefinition, LabelDefinition
+from src.dto.definitions import RouteDefinition, ActDefinition, LabelDefinition, GalleryImageDefinition
 from src.translation.translation_container import TranslationContainer
 
 
@@ -14,7 +14,11 @@ class DefinitionsReader:
     @staticmethod
     def sanitize_block(block: str) -> str:
         # Replace Ren'Py-style _() with Python-compatible quotes for AST
-        return re.sub(r'_\("([^"]+)"\)', r'"_\1"', block)
+        block = re.sub(r'_\("([^"]+)"\)', r'"_\1"', block)
+
+        # Replace Ren'Py-style event triggers with Python dict
+        block = re.sub(r'Trigger\((\"[^"]+\"),\s*(\"[^"]+\")\)', r'{\1: \2}', block)
+        return block
 
     def extract_replays_block(self):
         with open(self.definitions_file, 'r', encoding="utf-8") as f:
@@ -23,6 +27,16 @@ class DefinitionsReader:
         match = re.search(pattern, text)
         if not match:
             raise ValueError("Could not find replays block.")
+        sanitized = self.sanitize_block(match.group(1))
+        return ast.literal_eval(sanitized)
+
+    def extract_gallery_images_block(self):
+        with open(self.definitions_file, 'r', encoding="utf-8") as f:
+            text = f.read()
+        pattern = r'define\s+_gallery_images\s*=\s*(\([\s\S]*?\))\s*\n\s*define'
+        match = re.search(pattern, text)
+        if not match:
+            raise ValueError("Could not find _gallery_images block.")
         sanitized = self.sanitize_block(match.group(1))
         return ast.literal_eval(sanitized)
 
@@ -50,3 +64,22 @@ class DefinitionsReader:
                 acts.append(ActDefinition(act_name, labels))
             replays.append(RouteDefinition(route_name, acts))
         return replays
+
+    def parse_gallery_images_structure(self, gallery_images_ast) -> List[GalleryImageDefinition]:
+        gallery_images = []
+        ev_pattern = re.compile(r'(ev(?:.*|) |unlock_ev |ovl |)(.*)')
+        for entry in gallery_images_ast:
+            thumbnail = re.sub(r'thumb/(.*)\.(jpg|png)', r'\1', entry[0])
+            images = []
+            for img in entry[1:]:
+                if isinstance(img, str):
+                    images.append(ev_pattern.sub(r'\2', img))
+                elif isinstance(img, dict):
+                    for key in img:
+                        images.append(ev_pattern.sub(r'\2', key))
+                        # images.append(ev_pattern.sub(r'\2', img[key]))
+                else:
+                    raise ValueError(f"Unexpected gallery image format: {img}")
+
+            gallery_images.append(GalleryImageDefinition(thumbnail, images))
+        return gallery_images

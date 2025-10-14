@@ -10,7 +10,7 @@ namespace ks {
 
     class EmiKnockeddownLargepulloutEvent final : public CustomEvent {
     public:
-        EmiKnockeddownLargepulloutEvent() = default;
+        EmiKnockeddownLargepulloutEvent() : CustomEvent(DISPLAYABLE_BITMASK_EMI_KNOCKEDDOWN) {};
         ~EmiKnockeddownLargepulloutEvent() override {
             _move_action.reset();
             // _background.reset();
