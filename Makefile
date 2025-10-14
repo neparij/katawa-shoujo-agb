@@ -46,6 +46,7 @@ SOURCES     	:=  ../butano/common/src \
                     src/dxtvplayer \
                     src/dxtvplayer/debug \
                     src/events \
+                    src/fonts \
                     src/openings \
                     src/sound \
                     src/sound/libulc \
@@ -58,6 +59,7 @@ SOURCES     	:=  ../butano/common/src \
 		    		src/utils \
                     src/utils/gbfs
 INCLUDES    	:=  include \
+					include/fonts \
 					include/definitions \
 					include/background_metas \
 					include/sprite_metas \

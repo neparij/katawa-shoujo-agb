@@ -166,3 +166,19 @@ def bytecode_format(text: str) -> bytes:
     # TODO: Support colors
 
     return data + b"\x00"
+
+def remove_bytecode_functions(data: bytes) -> bytes:
+    """
+    :param data: The input bytecode data.
+    :return: The text with control characters removed.
+    """
+    data = data.replace(CTL_FAST, b"")
+    data = data.replace(CTL_BOLD_START, b"")
+    data = data.replace(CTL_BOLD_END, b"")
+    data = data.replace(CTL_STRIKE_START, b"")
+    data = data.replace(CTL_STRIKE_END, b"")
+    data = re.sub(br"\x06.", b"", data)  # Remove wait commands
+    data = data.replace(CTL_NOWAIT, b"")
+    data = re.sub(br"\x08.", b"", data)  # Remove color start commands
+    data = data.replace(CTL_COLOR_END, b"")
+    return data.rstrip(b"\x00")  # Remove trailing null bytes
