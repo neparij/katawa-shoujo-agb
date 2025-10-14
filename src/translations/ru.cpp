@@ -49,15 +49,6 @@ public:
     const char* menu_back() override {return "Назад";}
     const char* menu_page() override {return "Страница";}
 
-    const char* language_en() override {return "Английский";}
-    const char* language_ru() override {return "Русский";}
-    const char* language_fr() override {return "Французский";}
-    const char* language_it() override {return "Итальянский";}
-    const char* language_es() override {return "Испанский";}
-    const char* language_de() override {return "Немецкий";}
-    const char* language_jp() override {return "Японский";}
-    const char* language_zh_hans() override {return "Упрощённый китайский";}
-
     const char* screens_return() override {return "Назад";}
     const char* screens_history() override {return "История (н/д)";}
     const char* screens_options() override {return "Настройки";}

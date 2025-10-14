@@ -1,8 +1,11 @@
 // Generated code, do not edit
-// Generated at 2025-10-14T19:32:38+00:00
+// Generated at 2025-10-14T19:42:11+00:00
 #pragma once
 #define KSDEF(name, value) \
     const char* definitions_##name() override { return value; }
+
+#define KSLANGDEF(name, value) \
+    const char* language_##name() override { return value; }
 
 KSDEF(no_scene, "Нет сцены")
 KSDEF(nothing, "Ничего")
@@ -43,5 +46,13 @@ KSDEF(nk_, "Улыбающийся")
 KSDEF(hx_, "Огромный")
 KSDEF(hh_, "Стройная")
 KSDEF(emm_, "Женщина с косой")
+KSLANGDEF(en, "Английский")
+KSLANGDEF(ru, "Русский")
+KSLANGDEF(fr, "Французский")
+KSLANGDEF(it, "Итальянский")
+KSLANGDEF(es, "Испанский")
+KSLANGDEF(de, "Немецкий")
+KSLANGDEF(jp, "Японский")
+KSLANGDEF(zh_hans, "Упрощённый китайский")
 #undef KSDEF
-
+#undef KSLANGDEF

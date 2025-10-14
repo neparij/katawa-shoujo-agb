@@ -50,6 +50,17 @@ COMMON_DEFINITIONS_MAP = {
     "emm_": "Woman with braid",
 }
 
+COMMON_DEFINITIONS_LANG_MAP = {
+    "en": "English",
+    "ru": "Russian",
+    "fr": "French",
+    "it": "Italian",
+    "es": "Spanish",
+    "de": "German",
+    "jp": "Japanese",
+    "zh_hans": "Simplified Chinese",
+}
+
 
 class DefinitionsWriter:
     def __init__(self, include_dir: str, source_dir: str):
@@ -64,6 +75,8 @@ class DefinitionsWriter:
             f.write(f'#pragma once\n')
             f.write(f'#define KSDEF(name, value) \\\n')
             f.write(f'    const char* definitions_##name() override {{ return value; }}\n\n')
+            f.write(f'#define KSLANGDEF(name, value) \\\n')
+            f.write(f'    const char* language_##name() override {{ return value; }}\n\n')
             for key, value in COMMON_DEFINITIONS_MAP.items():
                 if tl is None:
                     f.write(f'KSDEF({key}, "{value}")\n')
@@ -72,7 +85,16 @@ class DefinitionsWriter:
                         f.write(f'KSDEF({key}, "{tl.strings[value]}")\n')
                     else:
                         f.write(f'KSDEF({key}, "{value}")\n')
-            f.write(f'#undef KSDEF\n\n')
+            for key, value in COMMON_DEFINITIONS_LANG_MAP.items():
+                if tl is None:
+                    f.write(f'KSLANGDEF({key}, "{value}")\n')
+                else:
+                    if value in tl.strings:
+                        f.write(f'KSLANGDEF({key}, "{tl.strings[value]}")\n')
+                    else:
+                        f.write(f'KSLANGDEF({key}, "{value}")\n')
+            f.write(f'#undef KSDEF\n')
+            f.write(f'#undef KSLANGDEF\n')
 
     def write_scripts_definitions(self, routes: List[RouteDefinition]):
         """

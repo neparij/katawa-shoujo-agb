@@ -50,15 +50,6 @@ public:
     const char* menu_back() override {return "Back";}
     const char* menu_page() override {return "Page";}
 
-    const char* language_en() override {return "English";}
-    const char* language_ru() override {return "Russian";}
-    const char* language_fr() override {return "French";}
-    const char* language_it() override {return "Italian";}
-    const char* language_es() override {return "Spanish";}
-    const char* language_de() override {return "German";}
-    const char* language_jp() override {return "Japanese";}
-    const char* language_zh_hans() override {return "Simplified Chinese";}
-
     const char* screens_return() override {return "Return";}
     const char* screens_history() override {return "History (n/a)";}
     const char* screens_options() override {return "Options";}
