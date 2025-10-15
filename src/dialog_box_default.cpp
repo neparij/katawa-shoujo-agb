@@ -99,7 +99,7 @@ namespace ks {
         actor_boxes.clear();
         title_sprites.clear();
         if (*_actor != definitions::no_char) {
-            const int title_ends_x = -device::screen_width_half + 8 + _bold_text_generator->width(_actor->name());
+            const int title_ends_x = -device::screen_width_half + 8 + _default_text_generator->width(_actor->name());
             actor_boxes.push_back(
                 bn::sprite_items::ui_talkbox_actor_start.create_sprite(-ks::device::screen_width_half + 16,
                                                                        ks::device::screen_height_half - 61));
@@ -114,10 +114,11 @@ namespace ks {
                 box.set_bg_priority(1);
             }
 
-            _bold_text_generator->set_left_alignment();
-            _bold_text_generator->set_palette_item(_actor->who_color);
-            _bold_text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52,
+            _default_text_generator->set_left_alignment();
+            _default_text_generator->set_palette_item(_actor->who_color);
+            _default_text_generator->generate(-ks::device::screen_width_half + 8, ks::device::screen_height_half - 52,
                                           _actor->name(), title_sprites);
+            _default_text_generator->set_palette_item(globals::text_palettes::original);
         }
 
         if (blending && hidden) {
@@ -140,7 +141,6 @@ namespace ks {
 
     void dialog_box_default::show_answers(bn::ivector<bn::string<128> > &answers) {
         BN_ASSERT(_default_text_generator.has_value(), "Default text generator is null");
-        BN_ASSERT(_bold_text_generator.has_value(), "Bold text generator is null");
 
         is_question = true;
         finished = false;

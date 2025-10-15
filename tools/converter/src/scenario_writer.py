@@ -1,6 +1,7 @@
 import hashlib
 import os
 import re
+from time import sleep
 from typing import List, cast, Dict
 
 import pyfastgbalz77
@@ -32,7 +33,8 @@ from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
-    add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales, bytecode_format
+    add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales, bytecode_format, \
+    sanitize_ingame_text
 
 CHARACTERS = [
     "akira",
@@ -434,7 +436,7 @@ class ScenarioWriter:
     def process_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
         # TODO: add character symbol to font
         for locale, text in dialog.message.items():
-            dialog.message[locale] = text.replace("’", "'")
+            dialog.message[locale] = sanitize_ingame_text(text)
         tl_index = add_translations_optional(self.tl_dict, dialog.label_name, dialog.message)
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
@@ -454,9 +456,9 @@ class ScenarioWriter:
 
     def process_sequence_doublespeak(self, group: SequenceGroup, ds: DoubleSpeakItem) -> List[str]:
         for locale, text in ds.message_left.items():
-            ds.message_left[locale] = text.replace("’", "'")
+            ds.message_left[locale] = sanitize_ingame_text(text)
         for locale, text in ds.message_right.items():
-            ds.message_right[locale] = text.replace("’", "'")
+            ds.message_right[locale] = sanitize_ingame_text(text)
         tl_index_left = add_translations_optional(self.tl_dict, ds.label_name, ds.message_left)
         tl_index_right = add_translations_optional(self.tl_dict, ds.label_name, ds.message_right)
 

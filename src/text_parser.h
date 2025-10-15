@@ -39,7 +39,7 @@ namespace ks::text {
 
     constexpr bn::string_view SV_NULL = "";
 
-    constexpr int BUFFER_SIZE = 128;
+    constexpr int BUFFER_SIZE = 256;
 
     struct render_cmd {
         render_cmd_t command{};

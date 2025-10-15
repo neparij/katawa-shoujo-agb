@@ -5,6 +5,7 @@
 #include "bn_string_view.h"
 #include "bn_string.h"
 #include "constants.h"
+#include "globals.h"
 #include "utils/utf8.h"
 
 
@@ -39,6 +40,24 @@ namespace ks::text {
 
             const bool is_eol = cursor + cursor_i == _text->end();
             const bool is_space = part.starts_with(32);
+            bool is_ideographic_end = true;
+
+            if (globals::settings.language == LANG_JAPAN && !is_eol) {
+                const int next_ch_length = utf8::get_char_size(*(cursor + cursor_i));
+                const bn::string<4> next_part = bn::string_view(cursor + cursor_i, next_ch_length);
+                const bool is_current_cjk_forbidden_before =
+                        next_part == "、" || next_part == "。" || next_part == "！" || next_part == "？" ||
+                        next_part == "<）>" || next_part == "」" || next_part == "』" || next_part == "ー" ||
+                        next_part == "・" || next_part == "〜" || next_part == "：" || next_part == "；" ||
+                        next_part == "<》>" || next_part == "％" || next_part == "々";
+
+                const bool is_current_cjk_forbidden_after =
+                        part == "（" || part == "「" || part == "『" || part == "《";
+                if (is_current_cjk_forbidden_before || is_current_cjk_forbidden_after) {
+                    is_ideographic_end = false;
+                }
+            }
+
             const bool is_newline = part.starts_with(10);
             const bool is_control_char = part.starts_with(CTL_FAST) ||
                                          part.starts_with(CTL_BOLD_START) ||
@@ -50,14 +69,16 @@ namespace ks::text {
                                          part.starts_with(CTL_COLOR_START) ||
                                          part.starts_with(CTL_COLOR_END);
 
-            if (is_eol || is_space || is_newline) {
+            if ((is_eol || is_space || is_newline) && is_ideographic_end) {
                 const auto buffer_width = _text_generator->width(buffer_stream.view());
 
                 if (buffer_width < max_width) {
                     // Save the possible line break
                     cursor_end = cursor_i;
                     if (is_eol || is_newline) {
-                        const bool ends_with_space = *(cursor + cursor_end - 1) == ' ';
+                        // Ends with space or ideographic CJK space.
+                        const bool ends_with_space = *(cursor + cursor_end - 1) == ' ' ||
+                                                     *(cursor + cursor_end - 1) == '　';
                         const bool ends_with_newline = *(cursor + cursor_end - 1) == '\n';
                         _lines.push_back(
                             bn::string_view(cursor, cursor_end + (ends_with_space || ends_with_newline ? -1 : 0)));

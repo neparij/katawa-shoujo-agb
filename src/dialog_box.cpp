@@ -153,6 +153,7 @@ namespace ks {
 
     template<int LinesPerPage>
     void dialog_box<LinesPerPage>::draw_line(const int line_index, const bool one_sprite_per_character) {
+        // TODO: remove pointer to back-reference and use generator directly
         bn::sprite_text_generator *tg = &_default_text_generator.value();
         int x_offset = 0;
         bool line_found = false;
@@ -168,9 +169,9 @@ namespace ks {
                 }
                 if (cmd.command == RC_SET_FONT) {
                     if (cmd.param == 0) {
-                        tg = &_default_text_generator.value();
+                        tg->set_palette_item(globals::text_palettes::original);
                     } else if (cmd.param == 1) {
-                        tg = &_bold_text_generator.value();
+                        tg->set_palette_item(globals::text_palettes::bold(globals::text_palettes::original));
                     }
                 }
                 if (cmd.command == RC_FAST) {

@@ -16,7 +16,8 @@ class CharsReader:
         self.additional = []
 
     def add_char(self, char: str):
-        if len(char.strip()) == 0:
+        # if len(char.strip()) == 0:
+        if char == " " or char == "\n" or char == "\r" or char == "\t":
             return
         if char not in self.common and char not in self.additional:
             self.additional.append(char)
@@ -55,6 +56,9 @@ class CharsReader:
                     text_entries = translation_file[2 + offset_table_size * 2:].split(b'\x00')
                     for entry in text_entries:
                         entry_without_commands = remove_bytecode_functions(entry)
-                        entry_text = entry_without_commands.decode('utf-8')
+                        try:
+                            entry_text = entry_without_commands.decode('utf-8')
+                        except UnicodeDecodeError:
+                            raise ValueError(f"Failed to decode entry in {tl_file_path}:\n{entry}\n{entry_without_commands}")
                         for char in entry_text:
                             self.add_char(char)

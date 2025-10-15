@@ -35,11 +35,9 @@ namespace ks {
         slides_pal_ptr->set_fade(globals::colors::WHITE, bn::fixed(1));
         slides_pal_ptr->set_grayscale_intensity(bn::fixed(1));
 
-        text_generator_bold->set_palette_item(globals::text_palettes::beige);
         text_generator->set_palette_item(globals::text_palettes::beige);
         text_generator_small->set_palette_item(globals::text_palettes::beige);
 
-        text_generator_bold->set_left_alignment();
         text_generator->set_left_alignment();
         text_generator_small->set_left_alignment();
 
@@ -72,8 +70,11 @@ namespace ks {
 
         const int offset_x = _text_config.align == OP_TEXT_ALIGN_CENTER ? caption_width / 2 :
                                  _text_config.align == OP_TEXT_ALIGN_RIGHT ? caption_width : 0;
-        text_generator_bold->generate_top_left(_text_config.value_x - offset_x, _text_config.top_y, _text.header,
+        text_generator->set_palette_item(globals::text_palettes::bold(globals::text_palettes::beige));
+        text_generator->generate_top_left(_text_config.value_x - offset_x, _text_config.top_y, _text.header,
                                                header_sprites);
+        text_generator->set_palette_item(globals::text_palettes::beige);
+
         for (auto &sprite: header_sprites) {
             sprite.set_visible(false);
         }
@@ -193,7 +194,6 @@ namespace ks {
             globals::main_update();
         }
 
-        text_generator_bold->set_palette_item(globals::text_palettes::original);
         text_generator->set_palette_item(globals::text_palettes::original);
         text_generator_small->set_palette_item(globals::text_palettes::original);
 

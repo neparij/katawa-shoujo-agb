@@ -245,7 +245,6 @@ extern dialog_box_novel dialog_novel;
 
 extern bn::optional<ks::SceneManager> scene;
 extern bn::optional<bn::sprite_text_generator> text_generator;
-extern bn::optional<bn::sprite_text_generator> text_generator_bold;
 extern bn::optional<bn::sprite_text_generator> text_generator_small;
 extern bn::optional<huge_bg> huge_background;
 extern bn::optional<bn::regular_bg_ptr> primary_background;

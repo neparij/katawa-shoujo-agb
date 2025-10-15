@@ -24,14 +24,12 @@ namespace ks {
     public:
         dialog_box(bn::istring* message_storage,
                    bn::optional<bn::sprite_text_generator>& default_text_generator,
-                   bn::optional<bn::sprite_text_generator>& bold_text_generator,
                    const bn::fixed_point text_start_position,
                    const int max_width,
                    const bool infinite_render)
             : _message_storage(message_storage),
               _actor(&definitions::no_char),
               _default_text_generator(default_text_generator),
-              _bold_text_generator(bold_text_generator),
               _text_start_position(text_start_position),
               _max_width(max_width),
               _infinite_render(infinite_render),
@@ -114,8 +112,7 @@ namespace ks {
         bn::istring *_message_storage;
         const character_definition *_actor;
         bn::optional<bn::sprite_text_generator> &_default_text_generator;
-        bn::optional<bn::sprite_text_generator> &_bold_text_generator;
-        bn::vector<bn::sprite_ptr, 8 * LinesPerPage> text_chunk_sprites;
+        bn::vector<bn::sprite_ptr, 9 * LinesPerPage> text_chunk_sprites; // TODO: why me added 1 extra char for division issues (CJK?)
         bn::vector<bn::sprite_ptr, 128> text_single_sprites;
         bn::unordered_map<int, unsigned int, 16> text_wait_map;
         unsigned int text_wait_ticks = 0;
@@ -141,11 +138,9 @@ namespace ks {
     class dialog_box_default final : public dialog_box<3> {
     public:
         dialog_box_default(bn::istring* message_storage,
-                           bn::optional<bn::sprite_text_generator>& default_text_generator,
-                           bn::optional<bn::sprite_text_generator>& bold_text_generator)
+                           bn::optional<bn::sprite_text_generator>& default_text_generator)
             : dialog_box(message_storage,
                          default_text_generator,
-                         bold_text_generator,
                          bn::fixed_point(-device::screen_width_half + 10, device::screen_height_half - 36),
                          device::screen_width - 20,
                          false) {
@@ -197,15 +192,15 @@ namespace ks {
     class dialog_box_novel final : public dialog_box<12> {
     public:
         dialog_box_novel(bn::istring* message_storage,
-                           bn::optional<bn::sprite_text_generator>& default_text_generator,
-                           bn::optional<bn::sprite_text_generator>& bold_text_generator)
+                           bn::optional<bn::sprite_text_generator>& default_text_generator)
             : dialog_box(message_storage,
                          default_text_generator,
-                         bold_text_generator,
                          bn::fixed_point(-device::screen_width_half + 6, -device::screen_height_half + 14),
                          device::screen_width - 12,
                          true) {
         }
+
+        static int get_line_spacing();
 
         void update() override;
 
@@ -233,11 +228,9 @@ namespace ks {
     public:
         dialog_box_doublespeak_window(bn::istring* message_storage,
                                       bn::optional<bn::sprite_text_generator>& default_text_generator,
-                                      bn::optional<bn::sprite_text_generator>& bold_text_generator,
                                       const bn::fixed_point text_start_position)
             : dialog_box(message_storage,
                          default_text_generator,
-                         bold_text_generator,
                          text_start_position,
                          device::screen_width_half - 16,
                          false) {
@@ -261,21 +254,18 @@ namespace ks {
     public:
         dialog_box_doublespeak(bn::istring* message_storage_a,
                                bn::istring* message_storage_b,
-                               bn::optional<bn::sprite_text_generator>& default_text_generator,
-                               bn::optional<bn::sprite_text_generator>& bold_text_generator)
+                               bn::optional<bn::sprite_text_generator>& default_text_generator)
             : _left_window(dialog_box_doublespeak_window(message_storage_a,
                                                          default_text_generator,
-                                                         bold_text_generator,
                                                          bn::fixed_point(
                                                              -device::screen_width_half + 8,
                                                              device::screen_height_half - 36))),
               _right_window(dialog_box_doublespeak_window(message_storage_b,
                                                           default_text_generator,
-                                                          bold_text_generator,
                                                           bn::fixed_point(
                                                               6,
                                                               device::screen_height_half - 36))),
-              _bold_text_generator(bold_text_generator) {
+              _default_text_generator(default_text_generator) {
         }
 
         void set_actors(const character_definition &actor_left, const character_definition &actor_right) {
@@ -307,7 +297,7 @@ namespace ks {
     private:
         dialog_box_doublespeak_window _left_window;
         dialog_box_doublespeak_window _right_window;
-        bn::optional<bn::sprite_text_generator>& _bold_text_generator;
+        bn::optional<bn::sprite_text_generator>& _default_text_generator;
         bn::vector<bn::sprite_ptr, 4> text_boxes;
         bn::vector<bn::sprite_ptr, 8> actor_boxes;
         bn::vector<bn::sprite_ptr, 8> title_sprites;
