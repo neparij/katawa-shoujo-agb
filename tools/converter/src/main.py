@@ -198,7 +198,7 @@ def main():
         writer = FontsWriter(ksre_path, ksagb_path, "common",
                              chars_reader.get_common(),
                              chars_reader.get_additional())
-        # writer.generate_fonts()
+        writer.generate_fonts()
         writer.generate_palettes()
 
 
