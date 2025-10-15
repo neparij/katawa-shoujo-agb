@@ -32,19 +32,12 @@ namespace ks {
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_left_alignment();
             text_generator->set_bg_priority(1);
-            text_generator_bold->set_one_sprite_per_character(false);
-            text_generator_bold->set_left_alignment();
-            text_generator_bold->set_bg_priority(1);
             text_generator_small->set_one_sprite_per_character(false);
             text_generator_small->set_left_alignment();
             text_generator_small->set_bg_priority(1);
         }
         virtual ~MenuBase() {
-            // text_generator->set_bg_priority(3);
-            // text_generator_bold->set_bg_priority(3);
-
             text_generator->set_bg_priority(1);
-            text_generator_bold->set_bg_priority(1);
             text_generator_small->set_bg_priority(1);
         }
 
@@ -153,7 +146,6 @@ namespace ks {
             SceneManager::fade_in(globals::colors::BLACK);
         }
 
-
         void add_text_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
             BN_LOG("Add entry: ", text);
             BN_LOG("at position: [", x, ", ", y, "] with index: ", index);
@@ -164,7 +156,9 @@ namespace ks {
         void add_text_entry_bold(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {
             BN_LOG("Add entry: ", text);
             BN_LOG("at position: [", x, ", ", y, "] with index: ", index);
-            text_generator_bold->generate(x, y, text, static_text_sprites);
+            text_generator->set_palette_item(globals::text_palettes::bold(text_item_palette));
+            text_generator->generate(x, y, text, static_text_sprites);
+            text_generator->set_palette_item(text_item_palette);
             selection_indexes.resize(static_text_sprites.size(), index);
         }
 

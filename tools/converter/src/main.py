@@ -81,9 +81,9 @@ def main():
         help="Path to KS GBA sources"
     )
     fonts_parser.add_argument(
-        "--locale-pairs",
-        required=False,
-        help="Locale pairs (lang:group), comma separated. Example: en:latin,de:latin,es:latin,fr:latin,ru:cyrillic,jp:j,zh_hans:c"
+        "--locales",
+        required=True,
+        help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
     )
 
     args = parser.parse_args()
@@ -178,40 +178,27 @@ def main():
     if args.command == "fonts":
         ksre_path = args.source
         ksagb_path = args.outdir
-        locale_pairs = args.locale_pairs.split(",") if args.locale_pairs else []
-        groups = {}
+        locales = args.locales.split(",") if args.locales else []
 
         if not os.environ.get('DEVKITARM'):
             raise EnvironmentError("DEVKITARM environment variable is not set. Please set up devkitARM.")
 
-        for locale_pair in locale_pairs:
-            lang, group = locale_pair.split(":")
-            if not (lang and group):
-                raise ValueError(f"Invalid locale pair: {locale_pair}")
-            if group not in groups:
-                groups[group] = []
-            groups[group].append(lang)
+        chars_reader = CharsReader(ksagb_path,
+                                   "gbfs_files",
+                                   locales,
+                                   [
+                                       "src/translations/{}.cpp",
+                                       "src/translations/{}_definitions_commons.inc",
+                                       "src/translations/{}_definitions_labels.h"
+                                   ])
+        chars_reader.read_definitions()
+        chars_reader.read_tl_files()
+        chars_reader.sort_char_tables()
 
-        for group, languages in groups.items():
-            print(f"Processing font group: {group} for languages: {', '.join(languages)}")
-            chars_reader = CharsReader(ksagb_path,
-                                       "gbfs_files",
-                                       languages,
-                                       [
-                                           "src/translations/{}.cpp",
-                                           "src/translations/{}_definitions_commons.inc",
-                                           "src/translations/{}_definitions_labels.h"
-                                       ])
-            chars_reader.read_definitions()
-            chars_reader.read_tl_files()
-            chars_reader.sort_char_tables()
-
-            writer = FontsWriter(ksre_path, ksagb_path, group,
-                                 chars_reader.get_common(),
-                                 chars_reader.get_additional())
-            writer.generate_fonts()
-
-        writer = FontsWriter(ksre_path, ksagb_path, "default", [], [])
+        writer = FontsWriter(ksre_path, ksagb_path, "common",
+                             chars_reader.get_common(),
+                             chars_reader.get_additional())
+        writer.generate_fonts()
         writer.generate_palettes()
 
 

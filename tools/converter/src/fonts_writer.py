@@ -16,6 +16,10 @@ FONT_PALETTES = [
     TextPaletteData("beige", (148, 132, 123, 255), (255, 254, 206, 255)),
     TextPaletteData("beige_selected", (0, 0, 0, 255), (255, 254, 206, 255)),
 
+    TextPaletteData("alive", (102, 102, 102, 255), (16, 16, 16, 255)),
+    TextPaletteData("red", (255, 0, 0, 255), (16, 16, 16, 255)),
+    # TextPaletteData("FF2AAA", (255, 42, 170, 255), (16, 16, 16, 255)),
+
     TextPaletteData("hi", (98, 146, 118, 255), (16, 16, 16, 255)),
     TextPaletteData("ha", (137, 124, 191, 255), (16, 16, 16, 255)),
     TextPaletteData("emi", (255, 141, 124, 255), (16, 16, 16, 255)),
@@ -58,44 +62,42 @@ class FontsWriter:
             file.write(json.dumps(metadata, indent=4))
 
     def generate_palettes(self):
-        for paldata in FONT_PALETTES:
-            p = paldata.get_palette()
-            palette_colors = [tuple(p[i:i + 3]) for i in range(0, len(p), 3)]
-            first_color_index = palette_colors.index(paldata.background_color[0:3])
-            if first_color_index != 0:
-                raise f"Background color {paldata.background_color} is not in the original palette at index 0!"
-            p[0:3] = PALETTE_BACKGROUND_COLOR
+        for bold in [False, True]:
+            for palette_data in FONT_PALETTES:
+                p = palette_data.get_palette(bold=bold)
+                palette_colors = [tuple(p[i:i + 3]) for i in range(0, len(p), 3)]
+                first_color_index = palette_colors.index(palette_data.background_color[0:3])
+                if first_color_index != 0:
+                    raise f"Background color {palette_data.background_color} is not in the original palette at index 0!"
+                p[0:3] = PALETTE_BACKGROUND_COLOR
 
-            img = Image.new("P", (16, 16), palette_colors[0])
-            img.putpalette(p)
+                img = Image.new("P", (16, 16), palette_colors[0])
+                img.putpalette(p)
 
-            # Fills pixels with all palette colors
-            for i, color in enumerate(palette_colors):
-                x = i % 16
-                y = i // 16
-                img.putpixel((x, y), i)
+                # Fills pixels with all palette colors
+                for i, color in enumerate(palette_colors):
+                    x = i % 16
+                    y = i // 16
+                    img.putpixel((x, y), i)
 
-            palette_filename = os.path.join(self.outdir, "graphics", "fonts", f"{paldata.get_name()}.bmp")
-            img.save(palette_filename)
-            print(f"Palette sample saved as {palette_filename}")
-            self.generate_json_metadata(palette_filename, 16)
+                palette_filename = os.path.join(self.outdir, "graphics", "fonts",
+                                                f"{palette_data.get_name()}{"_bold" if bold else ""}.bmp")
+                img.save(palette_filename)
+                print(f"Palette sample saved as {palette_filename}")
+                self.generate_json_metadata(palette_filename, 16)
 
     def generate_fonts(self):
         char_size = (16, 16)
-        if self.group == "default":
-            raise Exception("Default group does not support font generation.")
-        elif self.group == "latin" or self.group == "cyrillic":
-            font_path = os.path.join(self.source, "game", "fonts", "playtime.ttf")
-            fonts = create_font_group(
-                default_font_path=font_path,
-                bold_font_path=font_path,
-                small_font_path=font_path,
-                char_size=char_size,
-                main_size=13,
-                small_size=11
-            )
-        else:
-            raise Exception(f"Unknown font group: {self.group}")
+
+        font_path = os.path.join(self.source, "game", "font", "playtime.ttf")
+        cjk_font_path = os.path.join(self.source, "game", "font", "VL-PGothic-Regular.ttf")
+        fonts = create_font_group(
+            default_font_path=font_path,
+            cjk_font_path=cjk_font_path,
+            char_size=char_size,
+            main_size=13,
+            small_size=11
+        )
 
         for font in fonts:
             self._generate_spritesheet(font)
@@ -111,12 +113,16 @@ class FontsWriter:
         draw = ImageDraw.Draw(sprite_sheet_multiplied)
         draw.fontmode = "L" if ENABLE_ANTIALIASING else "1"
         font = font_data.get_font()
+        cjk_font = font_data.get_cjk_font()
 
         for i, char in enumerate(self.common_characters[1:] + self.additional_characters):
             x = 0
             y = i * font_data.char_size[1] * 10
             text_position = (x, y + (font_data.char_size[1] // 2) * 10)
-            draw.text(text_position, char, font=font, fill=paldata.text_color, anchor="lm", stroke_width=int(font_data.stroke_width * 10), stroke_fill=paldata.text_color)
+            if ord(char) >= 0x2E80:
+                draw.text(text_position, char, font=cjk_font, fill=paldata.text_color, anchor="lm", stroke_width=int(font_data.stroke_width * 10), stroke_fill=paldata.text_color)
+            else:
+                draw.text(text_position, char, font=font, fill=paldata.text_color, anchor="lm", stroke_width=int(font_data.stroke_width * 10), stroke_fill=paldata.text_color)
 
         font_filename = os.path.join(self.outdir, "graphics", "fonts", f"{font_data.get_name()}_{self.group}.bmp")
 
@@ -164,6 +170,7 @@ class FontsWriter:
 
     def _generate_font_impl(self, font_data):
         font = font_data.get_font()
+        cjk_font = font_data.get_cjk_font()
         font_name = f"{font_data.get_name()}_{self.group}"
         impl_filename = os.path.join(self.outdir, "src", "fonts", f"{font_name}.cpp")
         with open(impl_filename, "w") as impl_file:
@@ -172,11 +179,14 @@ class FontsWriter:
 
             impl_file.write(f'constexpr int8_t {font_name}_character_widths[] = {{\n')
             for i, char in enumerate(self.common_characters + self.additional_characters):
-                char_bbox = font.getbbox(char)
+                if ord(char) >= 0x2E80:
+                    char_bbox = cjk_font.getbbox(char)
+                else:
+                    char_bbox = font.getbbox(char)
                 char_width = char_bbox[2] - char_bbox[0]
                 if char == "\\":
                     char = "Backslash"
-                impl_file.write(f"    {min(font_data.char_size[0], round(char_width / 10) + 0)},    // {char}\n")
+                impl_file.write(f"    {min(font_data.char_size[0], round(char_width / 10) + 0)},    // {char} ({ord(char[0])})\n")
             impl_file.write(f'}};\n\n')
 
             impl_file.write(f'constexpr bn::sprite_font {font_name}_sprite_font(\n')

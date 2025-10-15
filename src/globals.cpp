@@ -3,11 +3,11 @@
 #include "bn_bg_palettes.h"
 #include "bn_core.h"
 #include "bn_memory.h"
-#include "fonts/fonts_cyrillic.h"
-#include "fonts/fonts_latin.h"
+#include "fonts/fonts_common.h"
 #include "translations/en.cpp"
 #include "translations/es.cpp"
 #include "translations/ru.cpp"
+#include "translations/jp.cpp"
 #include "bn_sprite_palettes.h"
 #include "ingametimer.h"
 #include "scenemanager.h"
@@ -71,7 +71,6 @@ namespace ks::globals {
         ks::secondary_background.reset();
         ks::transition_bg.reset();
         ks::text_generator.reset();
-        ks::text_generator_bold.reset();
         ks::text_generator_small.reset();
 
         ks::progress_icon_sprites.clear();
@@ -94,6 +93,8 @@ namespace ks::globals {
             i18n = bn::make_unique<TranslationEs>(TranslationEs());
         } else if (settings.language == LANG_RUSSIAN) {
             i18n = bn::make_unique<TranslationRu>(TranslationRu());
+        } else if (settings.language == LANG_JAPAN) {
+            i18n = bn::make_unique<TranslationJp>(TranslationJp());
         } else {
             BN_ERROR("Language is not implemented");
         }
@@ -102,25 +103,12 @@ namespace ks::globals {
 
     void init_text_generators(const language_t tl) {
         text_generator.reset();
-        text_generator_bold.reset();
         text_generator_small.reset();
 
-        if (tl == LANG_RUSSIAN) {
-            // Cyrillic fonts
-            text_generator = bn::sprite_text_generator(font_default_cyrillic_sprite_font);
-            text_generator_bold = bn::sprite_text_generator(font_bold_cyrillic_sprite_font);
-            text_generator_small = bn::sprite_text_generator(font_small_cyrillic_sprite_font);
-        } else {
-            // Latin fonts
-            text_generator = bn::sprite_text_generator(font_default_latin_sprite_font);
-            text_generator_bold = bn::sprite_text_generator(font_bold_latin_sprite_font);
-            text_generator_small = bn::sprite_text_generator(font_small_latin_sprite_font);
-        }
-
+        text_generator = bn::sprite_text_generator(font_default_common_sprite_font);
+        text_generator_small = bn::sprite_text_generator(font_small_common_sprite_font);
         text_generator->set_bg_priority(1);
         text_generator->set_z_order(-10);
-        text_generator_bold->set_bg_priority(1);
-        text_generator_bold->set_z_order(-10);
         text_generator_small->set_bg_priority(1);
         text_generator_small->set_z_order(-10);
     }

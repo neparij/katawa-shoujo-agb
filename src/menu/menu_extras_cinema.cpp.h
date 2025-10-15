@@ -105,14 +105,12 @@ namespace ks {
             globals::main_update();
 
             text_generator->set_one_sprite_per_character(false);
-            text_generator->set_center_alignment();
-
-            text_generator_bold->set_one_sprite_per_character(false);
-            text_generator_bold->set_left_alignment();
+            text_generator->set_left_alignment();
 
             add_text_entry_bold(-device::screen_width_half + 10, -device::screen_height_half + 14,
                     bn::format<64>("{} > {}", globals::i18n->menu_extras(), globals::i18n->menu_extras_cinema()), -1);
 
+            text_generator->set_center_alignment();
             add_menu_entry(globals::i18n->menu_extras_return_xoffset() + 90,
                            device::screen_height_half - 14, globals::i18n->menu_back(), 6);
 

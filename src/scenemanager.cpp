@@ -77,12 +77,11 @@ BN_DATA_EWRAM bn::vector<bn::string<128>, 5> answers_messages;
 
 bn::optional<ks::SceneManager> scene;
 bn::optional<bn::sprite_text_generator> text_generator;
-bn::optional<bn::sprite_text_generator> text_generator_bold;
 bn::optional<bn::sprite_text_generator> text_generator_small;
 
-BN_CODE_EWRAM dialog_box_default dialog_default = dialog_box_default(&message, text_generator, text_generator_bold);
-BN_CODE_EWRAM dialog_box_doublespeak dialog_doublespeak = dialog_box_doublespeak(&message_doublespeak_a, &message_doublespeak_b, text_generator_small, text_generator_bold);
-BN_CODE_EWRAM dialog_box_novel dialog_novel = dialog_box_novel(&message, text_generator, text_generator_bold);
+BN_CODE_EWRAM dialog_box_default dialog_default = dialog_box_default(&message, text_generator);
+BN_CODE_EWRAM dialog_box_doublespeak dialog_doublespeak = dialog_box_doublespeak(&message_doublespeak_a, &message_doublespeak_b, text_generator_small);
+BN_CODE_EWRAM dialog_box_novel dialog_novel = dialog_box_novel(&message, text_generator);
 
 bn::optional<huge_bg> huge_background;
 bn::optional<bn::regular_bg_ptr> primary_background;

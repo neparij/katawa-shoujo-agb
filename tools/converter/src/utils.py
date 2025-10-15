@@ -44,6 +44,11 @@ def sanitize_function_name(text):
 def sanitize_comment_text(text):
     return text.replace("\n", " ").replace("\r", " ").replace("\t", " ")
 
+def sanitize_ingame_text(text: str):
+    text = text.replace("’", "'")
+    # text = text.replace("　", " ") # Ideographic space (CJK)
+    return text
+
 def get_x_position(value: float, anchor: float = 0.5) -> int:
     """
     Converts a relative X position (0.0 to 1.0) with anchor (0.0 to 1.0) to an absolute X position (-120 to 120).
@@ -172,13 +177,14 @@ def remove_bytecode_functions(data: bytes) -> bytes:
     :param data: The input bytecode data.
     :return: The text with control characters removed.
     """
+    data = re.sub(br"\x06[\x00-\xFF]", b"", data)  # Remove wait commands
+    data = re.sub(br"\x08[\x00-\xFF]", b"", data)  # Remove color start commands
+
     data = data.replace(CTL_FAST, b"")
     data = data.replace(CTL_BOLD_START, b"")
     data = data.replace(CTL_BOLD_END, b"")
     data = data.replace(CTL_STRIKE_START, b"")
     data = data.replace(CTL_STRIKE_END, b"")
-    data = re.sub(br"\x06.", b"", data)  # Remove wait commands
     data = data.replace(CTL_NOWAIT, b"")
-    data = re.sub(br"\x08.", b"", data)  # Remove color start commands
     data = data.replace(CTL_COLOR_END, b"")
     return data.rstrip(b"\x00")  # Remove trailing null bytes

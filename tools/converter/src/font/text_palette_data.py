@@ -4,10 +4,11 @@ class TextPaletteData:
         self.text_color = text_color
         self.background_color = background_color
 
-    def get_palette(self) -> [int]:
+    def get_palette(self, bold : bool = False) -> [int]:
         colors = []
-        alpha_threshold = 0.2
-        colors_count = 16
+        alpha_threshold = 0.4 if bold else 0.2
+        bold_offset = 3 if bold else 0
+        colors_count = 16 - bold_offset
 
         for i in range(colors_count):
             if i == 0:
@@ -23,6 +24,10 @@ class TextPaletteData:
             g = int(self.background_color[1] + (self.text_color[1] - self.background_color[1]) * lerp_factor)
             b = int(self.background_color[2] + (self.text_color[2] - self.background_color[2]) * lerp_factor)
             colors.extend([r, g, b])
+
+        for i in range(bold_offset):
+            colors.extend([self.text_color[0], self.text_color[1], self.text_color[2]])
+
         return colors
 
     def get_name(self) -> str:

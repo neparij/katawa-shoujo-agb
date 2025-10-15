@@ -142,7 +142,12 @@ namespace ks {
                 if (line != nullptr) {
                     add_menu_entry(-device::screen_width_half + draw_x_from + 16, -device::screen_height_half + yy,
                                    line, 3);
-                    yy += 10;
+                    if (globals::settings.language == LANG_JAPAN) {
+                        yy += 13;
+                    } else {
+                        yy += 10;
+                    }
+
                 } else {
                     yy += y_spacing - 10;
                     break;

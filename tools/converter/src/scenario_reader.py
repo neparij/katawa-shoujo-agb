@@ -32,7 +32,8 @@ from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
-from src.utils import sanitize_function_name, get_xalign_position, get_x_position, starts_with_filled_bg
+from src.utils import sanitize_function_name, get_xalign_position, get_x_position, starts_with_filled_bg, \
+    sanitize_ingame_text
 
 DEFAULT_LOCALE = "en"
 
@@ -283,7 +284,12 @@ class ScenarioReader:
                 for locale, translation in self.translations.items():
                     if locale == DEFAULT_LOCALE:
                         continue
-                    choice_text[locale] = translation.strings[choice_text[DEFAULT_LOCALE]] if choice_text[DEFAULT_LOCALE] in translation.strings else choice_text[DEFAULT_LOCALE]
+                    if choice_text[DEFAULT_LOCALE] in translation.strings:
+                        translated = translation.strings[choice_text[DEFAULT_LOCALE]]
+                        choice_text[locale] = sanitize_ingame_text(translated)
+                    else:
+                        raise Exception(f"Missing translation for key: {choice_text[DEFAULT_LOCALE]} in locale {locale}")
+                        # choice_text[locale] = choice_text[DEFAULT_LOCALE]
                     print(f"    - {locale}: {choice_text[locale]}")
 
                 condition = condition_block if condition_block else None

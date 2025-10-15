@@ -4,8 +4,11 @@
 #include <bn_color.h>
 #include <bn_optional.h>
 #include <bn_sprite_items_fontpalette_main.h>
+#include <bn_sprite_items_fontpalette_main_bold.h>
 #include <bn_sprite_items_fontpalette_beige.h>
+#include <bn_sprite_items_fontpalette_beige_bold.h>
 #include <bn_sprite_items_fontpalette_beige_selected.h>
+#include <bn_sprite_items_fontpalette_beige_selected_bold.h>
 #include <bn_sprite_palette_item.h>
 #include <bn_unique_ptr.h>
 
@@ -67,6 +70,21 @@ namespace ks::globals {
         const bn::sprite_palette_item original = bn::sprite_items::fontpalette_main.palette_item();
         const bn::sprite_palette_item beige = bn::sprite_items::fontpalette_beige.palette_item();
         const bn::sprite_palette_item beige_selected = bn::sprite_items::fontpalette_beige_selected.palette_item();
+
+        [[nodiscard]] inline bn::sprite_palette_item bold(const bn::sprite_palette_item& text_item_palette) {
+            if (text_item_palette == original) {
+                return bn::sprite_items::fontpalette_main_bold.palette_item();
+            }
+            if (text_item_palette == beige) {
+                return bn::sprite_items::fontpalette_beige_bold.palette_item();
+            }
+            if (text_item_palette == beige_selected) {
+                return bn::sprite_items::fontpalette_beige_selected_bold.palette_item();
+            }
+
+            BN_ERROR("Unknown palette type for bold variant");
+            return bn::sprite_items::fontpalette_main_bold.palette_item();
+        }
     }
 }
 

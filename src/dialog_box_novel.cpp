@@ -11,6 +11,10 @@
 #include "utils/scenario_reader.h"
 
 namespace ks {
+    [[nodiscard]] inline int dialog_box_novel::get_line_spacing() {
+        return globals::i18n->type() == LANG_JAPAN ? 16 : 6;
+    }
+
     void dialog_box_novel::update() {
         const bool skip_render = bn::keypad::b_held() || bn::keypad::a_pressed();
         if (camera.has_value()) {
@@ -117,7 +121,7 @@ namespace ks {
         right_window.set_show_sprites(false);
 
         if (current_tl_indexes.size() > 1) {
-            render_offset += 6;
+            render_offset += get_line_spacing();
         }
 
         if (current_tl_indexes.size() > 1 && text_chunk_sprites.empty() && text_single_sprites.empty() &&
@@ -141,7 +145,7 @@ namespace ks {
             int aggregated_offset = 0;
             int start_index = current_tl_indexes.size() - 2;
             for (int i = current_tl_indexes.size() - 2; i >= 0; i--) {
-                aggregated_offset += tl_index_lines_count.at(i) * 12 + 6;
+                aggregated_offset += tl_index_lines_count.at(i) * 12 + get_line_spacing();
                 BN_LOG("Aggregated offset: ", aggregated_offset);
                 start_index = i;
                 if (aggregated_offset >= 144) {
@@ -157,7 +161,7 @@ namespace ks {
                 for (int line = 0; line < tl_index_lines_count.at(i); line++) {
                     draw_line(line, false);
                 }
-                render_offset += 6;
+                render_offset += get_line_spacing();
             }
             if (camera->y() < render_offset - 144 + 12) {
                 camera->set_y(render_offset - 144 + 12);
