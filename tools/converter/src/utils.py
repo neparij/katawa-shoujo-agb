@@ -172,6 +172,15 @@ def bytecode_format(text: str) -> bytes:
 
     return data + b"\x00"
 
+def split_by_commands(text: str) -> List[str]:
+    """
+    :param text: The input text with commands (e.g. {b}, {w=1.5}, etc.)
+    :return: The array of text without commands (split by commands)
+    """
+    command_re = re.compile(r"(\{[^\}]+\})")
+    parts = command_re.split(text)
+    return [part for part in parts if part and not command_re.match(part)]
+
 def remove_bytecode_functions(data: bytes) -> bytes:
     """
     :param data: The input bytecode data.

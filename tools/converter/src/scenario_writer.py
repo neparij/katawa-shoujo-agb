@@ -282,6 +282,18 @@ class ScenarioWriter:
 
             # Write uncompressed translation file
             for locale in locales:
+                # Dict[string phrase: index]
+                dict: Dict[str, int] = {}
+                with open(os.path.join(self.gbfs_dir, f'text_dictionary_{locale}.dict'), "r") as dict_file:
+                    # separated by newline
+                    dict_entries = dict_file.read().split("\n")
+                    for i, entry in enumerate(dict_entries):
+                        dict[entry] = i
+                # Replace phrases in tl_dict by dictionary index in "\xFF\x<index>" format
+                for tl in self.tl_dict[tl_group]:
+                    for phrase in dict:
+                        tl[locale] = tl[locale].replace(phrase, f"\xFF{chr(dict[phrase])}")
+
                 with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed", "wb") as tl_file:
                     # Offset table length
                     print(f">>>> Writing TL group '{tl_group}' ({locale}) with {len(self.tl_dict[tl_group])} entries")
@@ -307,7 +319,7 @@ class ScenarioWriter:
                     f.write(compressed_bytes)
 
                 # Delete uncompressed translation file
-                os.remove(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed")
+                # os.remove(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed")
 
     def get_labels(self) -> List[SequenceGroup]:
         return [group for group in self.scenario if group.type == SequenceGroupType.LABEL]
