@@ -26,8 +26,6 @@ namespace ks {
         void free();
 
         void get_tl(const unsigned short key, bn::istring &out);
-
-        char *get_tl_cstr(const unsigned short key);
     }
 }
 

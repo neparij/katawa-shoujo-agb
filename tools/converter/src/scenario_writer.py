@@ -3,7 +3,6 @@ import os
 import re
 import tempfile
 from collections import namedtuple
-from time import sleep
 from typing import List, cast, Dict
 
 import pyfastgbalz77
@@ -29,15 +28,14 @@ from src.dto.pause_item import PauseItem
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
-from src.dto.show_item import ShowItem, ShowEvent, ShowPosition
+from src.dto.show_item import ShowItem, ShowPosition
 from src.dto.show_transform_item import ShowTransformItem
 from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
-from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
-    add_translations_optional, get_textdb_name, bytecode_format, \
-    sanitize_ingame_text, spm_with_bytecode_encode
+from src.utils import get_paletted_variant, is_color_filled_bg, \
+    add_translations_optional, get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode
 
 CHARACTERS = [
     "akira",
@@ -191,10 +189,6 @@ class ScenarioWriter:
                 sequences.append(f'IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));')
                 sequences.append(
                     f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));\n')
-            else:
-                pass
-                # sequences.append(
-                #     f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_textdb_name(self.filename)}"));')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -529,8 +523,6 @@ class ScenarioWriter:
         else:
             print(f"{group.name} ({group.type}) >>> Run Label (direct) {run_label.function_callback}")
             code = [f'IF_NOT_EXIT({self.get_class_name()}::{run_label.function_callback}()); // DIRECT CALL']
-            # if group.type in [SequenceGroupType.LABEL, SequenceGroupType.MENU]:
-            #     code.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_textdb_name(self.filename)}"));')
             return code
 
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
@@ -771,7 +763,6 @@ class ScenarioWriter:
         return [
             f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.ulc"));',
             f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
-            # f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(show_video.label_name)}"));'
         ]
 
     def get_class_name(self):

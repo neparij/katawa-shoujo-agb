@@ -69,14 +69,6 @@ namespace ks::textdb {
         }
     }
 
-    char *get_tl_cstr(const unsigned short key) {
-        BN_ASSERT(is_allocated, "TextDB not allocated!");
-        BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
-        BN_ASSERT(_locale != nullptr, "TextDB Locale not set!");
-
-        return nullptr; // TODO: implement
-    }
-
     void get_tl(const unsigned short key, bn::istring &out) {
         BN_ASSERT(is_allocated && ptr != nullptr, "TextDB not allocated!");
         BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
@@ -95,7 +87,6 @@ namespace ks::textdb {
                            ptr[index_from + key * 3 + 2] << 16;
 
         int i = 0;
-        // bool spm_started = false;
 
         do {
             const char c0 = ptr[index_from + tl_index_size + offset + i];
@@ -144,13 +135,8 @@ namespace ks::textdb {
                 const char* token_ptr = reinterpret_cast<char *>(spm_table + spm_index_size + spm_token_offset);
                 BN_LOG("Add SPM token", " <<", token_ptr, ">>");
 
-                // if (!spm_started && token_ptr[0] == ' ') {
-                //     // Remove leading space for first SPM token
-                //     token_ptr++;
-                // }
-                // spm_started = true;
                 for (int j = 0; ; j++) {
-                    char tc = token_ptr[j];
+                    const char tc = token_ptr[j];
                     if (tc == CTL_TERMINATOR) {
                         break;
                     }

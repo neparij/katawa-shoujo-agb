@@ -4,7 +4,6 @@
 #include "bn_log.h"
 #include "bn_string_view.h"
 #include "bn_string.h"
-#include "constants.h"
 #include "globals.h"
 #include "utils/utf8.h"
 

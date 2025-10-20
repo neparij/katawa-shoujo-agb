@@ -1,9 +1,9 @@
 import os.path
 import tempfile
-from typing import List, cast
+from typing import List
+
 import sentencepiece as spm
 
-from src.scenario.sequence_group import SequenceGroup
 from src.utils import collect_scenario_sentences, sanitize_ingame_text
 
 

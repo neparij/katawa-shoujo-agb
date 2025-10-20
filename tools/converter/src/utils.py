@@ -260,25 +260,6 @@ def split_by_commands(text: str) -> List[str]:
     parts = command_re.split(text)
     return [part for part in parts if part and not command_re.match(part)]
 
-# TODO: Rewrite
-def remove_bytecode_functions(data: bytes) -> bytes:
-    """
-    :param data: The input bytecode data.
-    :return: The text with control characters removed.
-    """
-    data = re.sub(br"\x06[\x00-\xFF]", b"", data)  # Remove wait commands
-    data = re.sub(br"\x08[\x00-\xFF]", b"", data)  # Remove color start commands
-
-    data = data.replace(CTL_FAST, b"")
-    data = data.replace(CTL_BOLD_START, b"")
-    data = data.replace(CTL_BOLD_END, b"")
-    data = data.replace(CTL_STRIKE_START, b"")
-    data = data.replace(CTL_STRIKE_END, b"")
-    data = data.replace(CTL_NOWAIT, b"")
-    data = data.replace(CTL_COLOR_END, b"")
-    data = data.replace(CTL_NEWLINE, b"")
-    return data.rstrip(b"\x00")  # Remove trailing null bytes
-
 
 def collect_scenario_sentences(scenario: List[SequenceGroup], locale: str, out: List[str]):
     def _parse_sequence_item(_item):
