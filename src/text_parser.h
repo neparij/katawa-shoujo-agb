@@ -34,8 +34,10 @@ namespace ks::text {
     static constexpr char CTL_COLOR_START = 0x08;
     /// HT - restore color (switch spritepalette)
     static constexpr char CTL_COLOR_END = 0x09;
+    /// LF - newline
+    static constexpr char CTL_NEWLINE = 0x0A;
 
-    static constexpr char MAX_CTL_CHAR = CTL_COLOR_END;
+    static constexpr char MAX_CTL_CHAR = CTL_NEWLINE;
 
     constexpr bn::string_view SV_NULL = "";
 

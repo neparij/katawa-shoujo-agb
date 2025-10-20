@@ -1,18 +1,19 @@
 import argparse
 import os
-import re
-from typing import List, Dict, cast
+from typing import Dict
 
+from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSpritesWriter, \
+    CharacterMetaStorageWriter
 from src.definitions_reader import DefinitionsReader
 from src.definitions_writer import DefinitionsWriter
 from src.font.chars_reader import CharsReader
 from src.fonts_writer import FontsWriter
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
+from src.spm_packer import SPMPacker
+from src.spm_writer import SPMWriter
 from src.translation.translation_container import TranslationContainer
 from src.translation_reader import TranslationReader
-from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSprite, CharacterSpritesGroup, \
-    CharacterSpritesWriter, CharacterMetaStorageWriter
 
 
 def main():
@@ -24,6 +25,11 @@ def main():
         "--source",
         required=True,
         help="Path to KS:RE sources"
+    )
+    scenario_parser.add_argument(
+        "--spm-assets-path",
+        required=True,
+        help="Path to SentencePiece models for TextDB"
     )
     scenario_parser.add_argument(
         "--script",
@@ -82,32 +88,53 @@ def main():
         help="Path to KS GBA sources"
     )
     fonts_parser.add_argument(
+        "--scripts",
+        required=True,
+        help="Script names, comma separated. Example: script-a1-monday,script-a1-tuesday (etc.)"
+    )
+    fonts_parser.add_argument(
         "--locales",
         required=True,
         help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
     )
 
-    # ksre_converter create-dictionary --source="${KSRE_ROOT}" --outdir="${KSGBA_ROOT}" --scripts="$(IFS=,; echo "${SCRIPTS[*]}")" --locale="en"
-    create_dict_parser = subparsers.add_parser("create-dictionary", help="Create high-frequency dictionary")
-    create_dict_parser.add_argument(
+    spm_train_parser = subparsers.add_parser("train-spm", help="Train SentencePiece models for TextDB")
+    spm_train_parser.add_argument(
         "--source",
         required=True,
         help="Path to KS:RE sources"
     )
-    create_dict_parser.add_argument(
+    spm_train_parser.add_argument(
         "--outdir",
         required=True,
-        help="Path to output dictionary file"
+        help="Path to output directory for SPM models"
     )
-    create_dict_parser.add_argument(
+    spm_train_parser.add_argument(
         "--scripts",
         required=True,
         help="Script names, comma separated. Example: script-a1-monday,script-a1-tuesday (etc.)"
     )
-    create_dict_parser.add_argument(
-        "--locale",
+    spm_train_parser.add_argument(
+        "--locales",
         required=True,
-        help="Locale key. Example: es"
+        help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
+    )
+
+    spm_pack_parser = subparsers.add_parser("pack-spm", help="Pack SentencePiece models into GBFS")
+    spm_pack_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to SPM models"
+    )
+    spm_pack_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources"
+    )
+    spm_pack_parser.add_argument(
+        "--locales",
+        required=True,
+        help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
     )
 
     args = parser.parse_args()
@@ -115,6 +142,7 @@ def main():
     if args.command == "script":
         ksre_path = args.source
         ksagb_path = args.outdir
+        spm_assets_path = args.spm_assets_path
         script_name = args.script
         locales = args.translations.split(",") if args.translations else []
 
@@ -139,7 +167,7 @@ def main():
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, scenario)
+        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, spm_assets_path, scenario)
         # writer.clean()
         writer.write()
         exit(0)
@@ -202,6 +230,7 @@ def main():
     if args.command == "fonts":
         ksre_path = args.source
         ksagb_path = args.outdir
+        scripts = args.scripts.split(",") if args.scripts else []
         locales = args.locales.split(",") if args.locales else []
 
         if not os.environ.get('DEVKITARM'):
@@ -216,7 +245,23 @@ def main():
                                        "src/translations/{}_definitions_labels.h"
                                    ])
         chars_reader.read_definitions()
-        chars_reader.read_tl_files()
+
+        translations: Dict[str, TranslationContainer] = {}
+        for locale in locales:
+            if locale != "en":
+                print(f"Processing translation files for locale: {locale}")
+                rpy_translation_dir = os.path.join(ksre_path, "game", "tl", locale)
+                reader = TranslationReader(locale, rpy_translation_dir)
+                translations[locale] = reader.read()
+
+        for script_name in scripts:
+            print(f"Processing script: {script_name}")
+            rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
+            reader = ScenarioReader(rpy_scenario_file, translations)
+            scenario = reader.read()
+            for locale in locales:
+                chars_reader.read_scenario(scenario, locale)
+
         chars_reader.sort_char_tables()
 
         writer = FontsWriter(ksre_path, ksagb_path, "common",
@@ -225,116 +270,39 @@ def main():
         writer.generate_fonts()
         writer.generate_palettes()
 
-    if args.command == "create-dictionary":
+    if args.command == "train-spm":
         ksre_path = args.source
         outdir = args.outdir
         scripts = args.scripts.split(",") if args.scripts else []
-        locale = args.locale
+        locales = args.locales.split(",") if args.locales else []
 
-        translations: Dict[str, TranslationContainer] = {}
-        if locale != "en":
-            print(f"Processing translation files for locale: {locale}")
-            rpy_translation_dir = os.path.join(ksre_path, "game", "tl", locale)
-            reader = TranslationReader(locale, rpy_translation_dir)
-            translations[locale] = reader.read()
+        for locale in locales:
+            translations: Dict[str, TranslationContainer] = {}
+            if locale != "en":
+                print(f"Processing translation files for locale: {locale}")
+                rpy_translation_dir = os.path.join(ksre_path, "game", "tl", locale)
+                reader = TranslationReader(locale, rpy_translation_dir)
+                translations[locale] = reader.read()
 
+            spm_writer = SPMWriter(outdir, locale)
+            for script_name in scripts:
+                print(f"Processing script: {script_name}")
+                rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
+                reader = ScenarioReader(rpy_scenario_file, translations)
+                scenario = reader.read()
+                spm_writer.process_scenario(scenario)
 
-        textdb_strings = []
+            spm_writer.write_model()
 
-        def parse_sequence_item(item):
-            from src.dto.sequence_item import SequenceType
-            from src.dto.dialog_item import DialogItem
-            from src.utils import split_by_commands
+    if args.command == "pack-spm":
+        spm_path = args.source
+        ksagb_path = args.outdir
+        gbfs_path = os.path.join(ksagb_path, "gbfs_files")
+        locales = args.locales.split(",") if args.locales else []
 
-            if item.type == SequenceType.DIALOG:
-                dialog = cast(DialogItem, item)
-                if locale not in dialog.message:
-                    raise ValueError(f"Missing translation for id {dialog.id} in locale {locale}")
-                text_with_commands = dialog.message[locale]
-                text_array = split_by_commands(text_with_commands)
-                textdb_strings.extend(text_array)
-
-
-        for script_name in scripts:
-            print(f"Processing script: {script_name}")
-            rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
-            reader = ScenarioReader(rpy_scenario_file, translations)
-            scenario = reader.read()
-            print(f"Creating dictionary for script: {script_name}")
-            for sequence_group in scenario:
-                for condition in sequence_group.conditions:
-                    for item in condition.sequence:
-                        parse_sequence_item(item)
-                for item in sequence_group.sequence:
-                    parse_sequence_item(item)
-
-        print(len(textdb_strings))
-
-        # Replacement cost is the cost of replacing a word with a special token (1F - is control character, FF - is the index of the replacement in the dictionary)
-        REPLACEMENT_COST = len(b"\x1F\xFF")
-
-        class CompressionEntry:
-            def __init__(self, count: int, savings: int):
-                self.count = count
-                self.savings = savings
-            def __repr__(self):
-                return f"CompressionEntry(count={self.count}, savings={self.savings})"
-        dictionary : Dict[str, CompressionEntry] = {}
-
-        textdb_words = []
-        for text in textdb_strings:
-            words = text.split()
-            # Remove all punctuation from words
-            for i in range(len(words)):
-                words[i] = words[i].strip('.,!?;"\'()[]{}<>«»')
-
-            # Remove all capitalized ("Лёгкий" should be "ёгкий", "TEST" should be "")
-            for i in range(len(words)):
-                words[i] = re.sub(r'^[A-ZА-ЯЁ]+', '', words[i])
-                words[i] = re.sub(r'[A-ZА-ЯЁ]+$', '', words[i])
-
-            # Remove empty records
-            words = [word for word in words if len(word) > 0]
-            textdb_words.extend(words)
-
-        for word in textdb_words:
-            word_cost = len(word.encode("utf-8"))
-            if word_cost <= REPLACEMENT_COST:
-                continue
-            if word in dictionary:
-                dictionary[word].count += 1
-                dictionary[word].savings = (word_cost - REPLACEMENT_COST) * (dictionary[word].count - 1)
-            else:
-                dictionary[word] = CompressionEntry(1, 0)
-
-        # Filter out entries that do not save space
-        dictionary = {k: v for k, v in dictionary.items() if v.savings > 0}
-        # Sort by savings descending
-        dictionary = dict(sorted(dictionary.items(), key=lambda item: item[1].savings, reverse=True))
-        # Limit to 255 entries
-        if len(dictionary) > 255:
-            dictionary = dict(list(dictionary.items())[:255])
-
-        # Sum of savings
-        dict_savings = sum(entry.savings for entry in dictionary.values())
-        print(f"Dict potential savings: {dict_savings} bytes")
-
-        dict_size = sum(len(word.encode("utf-8")) + 1 for word in dictionary.keys())
-        print(f"Dict size: {dict_size} bytes")
-
-        total_savings = dict_savings - dict_size
-        print(f"Total potential savings: {total_savings} bytes")
-        print(f"Found {len(dictionary)} unique substrings")
-
-        for i, (word, entry) in enumerate(dictionary.items()):
-            print(f"{i+1:3}. {word} - {entry}")
-
-        #Write dict file
-        # with open(os.path.join(outdir, "gbfs_files", f"text_dictionary_{locale}.dict"), "wb") as f:
-        with open(os.path.join(outdir, "gbfs_files", f"text_dictionary_{locale}.dict"), "w") as f:
-            for word in dictionary.keys():
-                # f.write(word.encode("utf-8") + b'\x00')
-                f.write(f"{word}\n")
+        for locale in locales:
+            spm_packer = SPMPacker(spm_path, gbfs_path, locale)
+            spm_packer.pack()
 
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@
 #include "sound_manager.h"
 #include "ks_huge_bgs_manager.h"
 #include "sound/sound_mixer.h"
+#include "utils/scenario_reader.h"
 
 namespace ks::globals {
     void init_filesystem() {
@@ -99,6 +100,8 @@ namespace ks::globals {
             BN_ERROR("Language is not implemented");
         }
         init_text_generators();
+
+        textdb::init_spm_table(i18n->locale());
     }
 
     void init_text_generators(const language_t tl) {
