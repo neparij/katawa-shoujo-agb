@@ -21,6 +21,31 @@
 #define KS_SHOW_4LS_INTRO true
 
 namespace ks::globals {
+    struct system_stats_t {
+        char magic[16] = { 'K', 'S', 'G', 'B', 'A', 'S', 'Y', 'S', 'S', 'T', 'A', 'T', 'S', 0, 0, 0 };
+        uint32_t last_used_cpu;
+        uint32_t ewram_used;
+        uint16_t bg_tiles_used;
+        uint16_t bg_maps_used;
+        uint16_t bg_palettes_used;
+        uint16_t sprite_tiles_used;
+        uint16_t sprite_palettes_used;
+
+        system_stats_t() :
+            last_used_cpu(0),
+            ewram_used(0),
+            bg_tiles_used(0),
+            bg_maps_used(0),
+            bg_palettes_used(0),
+            sprite_tiles_used(0),
+            sprite_palettes_used(0)
+        {}
+    };
+
+    inline auto system_stats = system_stats_t();
+
+    extern void update_system_stats();
+
     inline gameState_t state = GS_INIT;
     inline bool exit_scenario = false;
     inline bool in_game = false;
