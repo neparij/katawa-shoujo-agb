@@ -1,6 +1,11 @@
 #include "globals.h"
 
+#include "bn_bg_maps.h"
 #include "bn_bg_palettes.h"
+#include "bn_bg_tiles.h"
+#include "bn_sprite_tiles.h"
+#include "bn_sprite_palettes.h"
+
 #include "bn_core.h"
 #include "bn_memory.h"
 #include "fonts/fonts_common.h"
@@ -8,7 +13,6 @@
 #include "translations/es.cpp"
 #include "translations/ru.cpp"
 #include "translations/jp.cpp"
-#include "bn_sprite_palettes.h"
 #include "ingametimer.h"
 #include "scenemanager.h"
 #include "sound_manager.h"
@@ -16,6 +20,16 @@
 #include "sound/sound_mixer.h"
 
 namespace ks::globals {
+    void update_system_stats()  {
+        system_stats.last_used_cpu = static_cast<uint32_t>((bn::core::last_cpu_usage() * 100).ceil_integer());
+        system_stats.ewram_used = static_cast<uint32_t>(bn::memory::used_static_ewram() + bn::memory::used_alloc_ewram());
+        system_stats.bg_tiles_used = static_cast<uint16_t>(bn::bg_tiles::used_tiles_count());
+        system_stats.bg_maps_used = static_cast<uint16_t>(bn::bg_maps::used_cells_count());
+        system_stats.bg_palettes_used = static_cast<uint16_t>(bn::bg_palettes::used_colors_count());
+        system_stats.sprite_tiles_used = static_cast<uint16_t>(bn::sprite_tiles::used_tiles_count());
+        system_stats.sprite_palettes_used = static_cast<uint16_t>(bn::sprite_palettes::used_colors_count());
+    }
+
     void init_filesystem() {
         BN_LOG("Initializing filesystem...");
         filesystem = find_first_gbfs_file(nullptr);
@@ -35,6 +49,8 @@ namespace ks::globals {
         bn::core::update();
         sound_manager::update();
         update_konami_code();
+
+        update_system_stats();
     }
 
     void BN_CODE_IWRAM ISR_VBlank() {
