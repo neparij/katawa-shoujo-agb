@@ -18,11 +18,6 @@ namespace ks
         constexpr bn::fixed answer_camera_duration_multiplier = 1.3;
         constexpr int answer_camera_bounds_pause_count = 70;
     } // namespace defaults
-
-    namespace system {
-        const int allocate_iterators = 2;
-        const int interator_size = 1024;
-    }
 }
 
 #endif

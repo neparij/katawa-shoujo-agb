@@ -4,7 +4,6 @@
 #include "bn_log.h"
 #include "bn_string_view.h"
 #include "bn_string.h"
-#include "constants.h"
 #include "globals.h"
 #include "utils/utf8.h"
 
@@ -58,7 +57,7 @@ namespace ks::text {
                 }
             }
 
-            const bool is_newline = part.starts_with(10);
+            const bool is_newline = part.starts_with(CTL_NEWLINE);
             const bool is_control_char = part.starts_with(CTL_FAST) ||
                                          part.starts_with(CTL_BOLD_START) ||
                                          part.starts_with(CTL_BOLD_END) ||
@@ -204,6 +203,9 @@ namespace ks::text {
                         if (first_byte == CTL_COLOR_END) {
                             palette_index = 0;
                             _commands.push_back({RC_SET_PALETTE, palette_index, SV_NULL});
+                        }
+                        if (first_byte == CTL_NEWLINE) {
+                            // Do nothing. Newline already handled in line splitting.
                         }
 
                         offset = i + char_size;

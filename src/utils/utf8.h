@@ -3,6 +3,7 @@
 
 #include "bn_log.h"
 #include "bn_string_view.h"
+#include "../text_parser.h"
 
 namespace ks {
     class utf8 {

@@ -28,6 +28,11 @@ namespace ks {
                     waiting_for_input = false;
                     next_render_cooldown = 0;
                     text_wait_map.erase(current_char_index);
+
+                    if (current_char_index == 0) {
+                        // Workaround for wait at the beginning of line (prevent wait-loop)
+                        current_char_index++;
+                    }
                 }
                 return;
             }

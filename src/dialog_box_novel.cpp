@@ -135,7 +135,7 @@ namespace ks {
             if (tl_index_lines_count.size() < current_tl_indexes.size() - 1) {
                 tl_index_lines_count.clear();
                 for (int i = tl_index_lines_count.size(); i < current_tl_indexes.size() - 1; i++) {
-                    ks::textdb::get_tl<1024>(current_tl_indexes.at(i), message);
+                    ks::textdb::get_tl(current_tl_indexes.at(i), message);
                     proceed_message();
                     tl_index_lines_count.push_back(lines_count());
                 }
@@ -156,7 +156,7 @@ namespace ks {
             // Render previous lines and setup camera
             render_offset = 0;
             for (int i = start_index; i < current_tl_indexes.size() - 1; i++) {
-                ks::textdb::get_tl<1024>(current_tl_indexes.at(i), message);
+                ks::textdb::get_tl(current_tl_indexes.at(i), message);
                 proceed_message();
                 for (int line = 0; line < tl_index_lines_count.at(i); line++) {
                     draw_line(line, false);
@@ -168,7 +168,7 @@ namespace ks {
             }
         }
 
-        ks::textdb::get_tl<1024>(current_tl_indexes.back(), message);
+        ks::textdb::get_tl(current_tl_indexes.back(), message);
         proceed_message();
         while (text_chunk_sprites.size() > 0) {
             auto sprite = text_chunk_sprites.back();
