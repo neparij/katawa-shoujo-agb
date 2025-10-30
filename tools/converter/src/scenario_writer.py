@@ -1,10 +1,12 @@
 import hashlib
 import os
 import re
-from time import sleep
+import tempfile
+from collections import namedtuple
 from typing import List, cast, Dict
 
 import pyfastgbalz77
+import sentencepiece as spm
 
 from src.character_sprite.character_sprite import CharacterDisplayableReplacements, CharacterSprite, CharacterRegex, \
     CharacterNudeIf
@@ -26,15 +28,14 @@ from src.dto.pause_item import PauseItem
 from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
-from src.dto.show_item import ShowItem, ShowEvent, ShowPosition
+from src.dto.show_item import ShowItem, ShowPosition
 from src.dto.show_transform_item import ShowTransformItem
 from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
-from src.utils import sanitize_function_name, sanitize_comment_text, get_paletted_variant, is_color_filled_bg, \
-    add_translations, add_translations_optional, get_tl_group_hash, get_tl_group_locales, bytecode_format, \
-    sanitize_ingame_text
+from src.utils import get_paletted_variant, is_color_filled_bg, \
+    add_translations_optional, get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode
 
 CHARACTERS = [
     "akira",
@@ -66,12 +67,13 @@ CHARACTERS = [
 ]
 
 class ScenarioWriter:
-    def __init__(self, filename: str, output_dir: str, gbfs_dir: str, scenario: List[SequenceGroup]):
+    def __init__(self, filename: str, output_dir: str, gbfs_dir: str, spm_dir: str, scenario: List[SequenceGroup]):
         self.filename = filename
         self.output_dir = output_dir
         self.gbfs_dir = gbfs_dir
+        self.spm_dir = spm_dir
         self.scenario = scenario
-        self.tl_dict: Dict[str, List[Dict[str, str]]] = {}
+        self.tl_dict: List[Dict[str, str]] = []
 
         self.backgrounds = []
         self.character_backgrounds = []
@@ -177,7 +179,7 @@ class ScenarioWriter:
             sequences = []
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
-                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}"));')
+                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_textdb_name(self.filename)}"));')
                 # sequences.append(f'if (!ks::in_replay) {{')
                 # sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
                 # sequences.append(f'}}')
@@ -187,9 +189,6 @@ class ScenarioWriter:
                 sequences.append(f'IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));')
                 sequences.append(
                     f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));\n')
-            else:
-                sequences.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(label.name)}"));')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -218,7 +217,7 @@ class ScenarioWriter:
             sequences.append(f'bn::vector<ks::answer_ptr, 5> answers;')
             answer_index = 0
             for answer in menu.conditions:
-                tl_index = add_translations_optional(self.tl_dict, answer.label_name, answer.answer)
+                tl_index = add_translations_optional(self.tl_dict, answer.answer)
                 sequences.append(f'answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});') if not answer.condition else sequences.append(
                     f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({{{answer_index}, {tl_index}}});')
                 answer_index += 1
@@ -261,53 +260,56 @@ class ScenarioWriter:
             cpp_file.write("\n".join(cpp_code))
 
     def write_scenario_tl(self):
-        for tl_group in self.tl_dict:
-            print(f"Writing TL group '{tl_group}' ({get_tl_group_hash(tl_group)}) with {len(self.tl_dict[tl_group])} entries")
-            locales = get_tl_group_locales(self.tl_dict[tl_group])
-            offsets : Dict[str, List[int]] = {}
-            current_offset : Dict[str, int] = {}
-            for locale in locales:
-                offsets[locale] = []
-                current_offset[locale] = 2 + len(self.tl_dict[tl_group]) * 2 # Offset table size + Offset table content
+        locales = self.tl_dict[0].keys()
+        tl_entry = namedtuple('TranslationEntry', ['offset', 'translation'])
+        translations : Dict[str, List[tl_entry]] = {}
 
-            filename_base = f"tl_{get_tl_group_hash(tl_group)}"
+        for locale in locales:
+            spp = spm.SentencePieceProcessor()
+            try:
+                spp.Load(model_file=os.path.join(self.spm_dir, f'spm-{locale}.model'))
+            except Exception as e:
+                raise Exception(f"Failed to load SPM model for locale '{locale}': {e}")
 
-            # Calculate offsets
-            for tl in self.tl_dict[tl_group]:
-                for locale in locales:
-                    offsets[locale].append(current_offset[locale])
-                    current_offset[locale] += len(bytecode_format(tl[locale]))
-                    if len(offsets) > 65535:
-                        raise Exception(f"Too many translations in group '{tl_group}'")
+            translations[locale] = []
+            offset = 0
+            for tl in self.tl_dict:
+                if locale not in tl:
+                    raise Exception(f"Locale '{locale}' not found in translation entry {tl}")
+                if offset >= 0xFFFFFF:
+                    raise Exception(f"Entry offset: {offset} (0x{offset:06X}) too large for locale '{locale}'")
+                translation = spm_with_bytecode_encode(tl[locale], spp, is_cjk=locale in ['jp', 'zh_hans'])
+                translations[locale].append(tl_entry(offset=offset, translation=translation))
+                offset += len(translation)
 
-            # Write uncompressed translation file
-            for locale in locales:
-                with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed", "wb") as tl_file:
-                    # Offset table length
-                    print(f">>>> Writing TL group '{tl_group}' ({locale}) with {len(self.tl_dict[tl_group])} entries")
-                    tl_file.write(len(self.tl_dict[tl_group]).to_bytes(2, byteorder='little'))
+        for locale in translations:
+            filename_base = f"{get_textdb_name(self.filename)}.{locale}"
+            spp = spm.SentencePieceProcessor()
 
-                    # Offset table
-                    for offset in offsets[locale]:
-                        if offset >= 0xFFFF:
-                            raise Exception(f"Entry offset: {offset} (0x{offset:04X}) too large in group '{tl_group}'")
-                        tl_file.write(offset.to_bytes(2, byteorder='little'))
+            try:
+                spp.Load(model_file=os.path.join(self.spm_dir, f'spm-{locale}.model'))
+            except Exception as e:
+                raise Exception(f"Failed to load SPM model for locale '{locale}': {e}")
 
-                    # Translations itself
-                    for value in self.tl_dict[tl_group]:
-                        tl_file.write(bytecode_format(value[locale]))
+            uncompressed_file = tempfile.mktemp(suffix=f"_tl_{locale}.u")
+            with open(uncompressed_file, "wb") as tl_file:
+                # Offset table length
+                tl_file.write(len(translations[locale]).to_bytes(2, byteorder='little'))
+                # Offset table
+                for entry in translations[locale]:
+                    tl_file.write(entry.offset.to_bytes(3, byteorder='little'))
+                # Translations itself
+                for entry in translations[locale]:
+                    tl_file.write(entry.translation)
 
-                with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed", "rb") as f:
-                    uncompressed_bytes = f.read()
+            with open(uncompressed_file, "rb") as f:
+                uncompressed_bytes = f.read()
 
-                compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
+            compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
 
-                # Write LZ77 compressed translation file
-                with open(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}", "wb") as f:
-                    f.write(compressed_bytes)
-
-                # Delete uncompressed translation file
-                os.remove(f"{os.path.join(self.gbfs_dir, filename_base)}.{locale}.uncompressed")
+            # Write LZ77 compressed translation file
+            with open(os.path.join(self.gbfs_dir, filename_base), "wb") as f:
+                f.write(compressed_bytes)
 
     def get_labels(self) -> List[SequenceGroup]:
         return [group for group in self.scenario if group.type == SequenceGroupType.LABEL]
@@ -437,7 +439,7 @@ class ScenarioWriter:
         # TODO: add character symbol to font
         for locale, text in dialog.message.items():
             dialog.message[locale] = sanitize_ingame_text(text)
-        tl_index = add_translations_optional(self.tl_dict, dialog.label_name, dialog.message)
+        tl_index = add_translations_optional(self.tl_dict, dialog.message)
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
@@ -449,7 +451,7 @@ class ScenarioWriter:
             else:
                 return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
         elif dialog.actor:
-            actor_tl_index = add_translations_optional(self.tl_dict, dialog.label_name, dialog.actor)
+            actor_tl_index = add_translations_optional(self.tl_dict, dialog.actor)
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog({actor_tl_index}, {tl_index}));']
         else:
             return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
@@ -459,8 +461,8 @@ class ScenarioWriter:
             ds.message_left[locale] = sanitize_ingame_text(text)
         for locale, text in ds.message_right.items():
             ds.message_right[locale] = sanitize_ingame_text(text)
-        tl_index_left = add_translations_optional(self.tl_dict, ds.label_name, ds.message_left)
-        tl_index_right = add_translations_optional(self.tl_dict, ds.label_name, ds.message_right)
+        tl_index_left = add_translations_optional(self.tl_dict, ds.message_left)
+        tl_index_right = add_translations_optional(self.tl_dict, ds.message_right)
 
         hashed_id = hashlib.md5(ds.id.encode()).hexdigest()[:8].upper()
         return [
@@ -521,8 +523,6 @@ class ScenarioWriter:
         else:
             print(f"{group.name} ({group.type}) >>> Run Label (direct) {run_label.function_callback}")
             code = [f'IF_NOT_EXIT({self.get_class_name()}::{run_label.function_callback}()); // DIRECT CALL']
-            if group.type in [SequenceGroupType.LABEL, SequenceGroupType.MENU]:
-                code.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(run_label.label_name)}"));')
             return code
 
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
@@ -763,7 +763,6 @@ class ScenarioWriter:
         return [
             f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, "video_{show_video.video}.ulc"));',
             f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
-            # f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_tl_group_hash(show_video.label_name)}"));'
         ]
 
     def get_class_name(self):

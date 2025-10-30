@@ -243,11 +243,11 @@ int main() {
     BN_LOG("[38;5;223m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⣿⣶⣭⣾⠿⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[33;0m");
     BN_LOG("");
 
+    ks::globals::init_filesystem();
     ks::globals::init_engine(ks::globals::colors::WHITE);
     sound_mixer::init();
     bn::core::update();
     sound_mixer::mute();
-    ks::globals::init_filesystem();
 
     if (ks::saves::initialize()) {
         print_save_debug();

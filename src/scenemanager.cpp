@@ -392,7 +392,7 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
 
     while (!ks::globals::exit_scenario) {
         if (globals::state == GS_GAME) {
-            ks::textdb::get_tl<1024>(tl_key, message);
+            ks::textdb::get_tl(tl_key, message);
             dialog_default.set_actor(actor);
             dialog_default.proceed_message();
 
@@ -420,10 +420,13 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
 }
 
 void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned int tl_key) {
+    // TODO: Fix the bug with language change with custom actor name
     if (is_loading) {
         return;
     }
-    const character_definition current = definitions::base.with_name(textdb::get_tl_cstr(actor_tl_key));
+    bn::string<32> char_name;
+    textdb::get_tl(actor_tl_key, char_name);
+    const character_definition current = definitions::base.with_name(char_name.c_str());
     return show_dialog(current, tl_key);
 }
 
@@ -434,8 +437,8 @@ void SceneManager::show_doublespeak(const character_definition &actor_left, unsi
 
     while (!ks::globals::exit_scenario) {
         if (globals::state ==  GS_GAME) {
-            ks::textdb::get_tl<128>(tl_key_left, message_doublespeak_a);
-            ks::textdb::get_tl<128>(tl_key_right, message_doublespeak_b);
+            ks::textdb::get_tl(tl_key_left, message_doublespeak_a);
+            ks::textdb::get_tl(tl_key_right, message_doublespeak_b);
 
             dialog_doublespeak.set_actors(actor_left, actor_right);
             dialog_doublespeak.proceed_messages();
@@ -485,7 +488,7 @@ void SceneManager::show_dialog_question(const bn::vector<ks::answer_ptr, 5>& ans
             answers_messages.clear();
             for (const auto& answer : answers) {
                 answers_messages.push_back(bn::string<128>(""));
-                textdb::get_tl<128>(answer.tl_key, answers_messages.back());
+                textdb::get_tl(answer.tl_key, answers_messages.back());
             }
             dialog_default.show_answers(answers_messages);
 

@@ -1,17 +1,19 @@
 import argparse
 import os
-from typing import List, Dict
+from typing import Dict
 
+from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSpritesWriter, \
+    CharacterMetaStorageWriter
 from src.definitions_reader import DefinitionsReader
 from src.definitions_writer import DefinitionsWriter
 from src.font.chars_reader import CharsReader
 from src.fonts_writer import FontsWriter
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
+from src.spm_packer import SPMPacker
+from src.spm_writer import SPMWriter
 from src.translation.translation_container import TranslationContainer
 from src.translation_reader import TranslationReader
-from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSprite, CharacterSpritesGroup, \
-    CharacterSpritesWriter, CharacterMetaStorageWriter
 
 
 def main():
@@ -23,6 +25,11 @@ def main():
         "--source",
         required=True,
         help="Path to KS:RE sources"
+    )
+    scenario_parser.add_argument(
+        "--spm-assets-path",
+        required=True,
+        help="Path to SentencePiece models for TextDB"
     )
     scenario_parser.add_argument(
         "--script",
@@ -81,6 +88,50 @@ def main():
         help="Path to KS GBA sources"
     )
     fonts_parser.add_argument(
+        "--scripts",
+        required=True,
+        help="Script names, comma separated. Example: script-a1-monday,script-a1-tuesday (etc.)"
+    )
+    fonts_parser.add_argument(
+        "--locales",
+        required=True,
+        help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
+    )
+
+    spm_train_parser = subparsers.add_parser("train-spm", help="Train SentencePiece models for TextDB")
+    spm_train_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to KS:RE sources"
+    )
+    spm_train_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to output directory for SPM models"
+    )
+    spm_train_parser.add_argument(
+        "--scripts",
+        required=True,
+        help="Script names, comma separated. Example: script-a1-monday,script-a1-tuesday (etc.)"
+    )
+    spm_train_parser.add_argument(
+        "--locales",
+        required=True,
+        help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
+    )
+
+    spm_pack_parser = subparsers.add_parser("pack-spm", help="Pack SentencePiece models into GBFS")
+    spm_pack_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to SPM models"
+    )
+    spm_pack_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources"
+    )
+    spm_pack_parser.add_argument(
         "--locales",
         required=True,
         help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
@@ -91,6 +142,7 @@ def main():
     if args.command == "script":
         ksre_path = args.source
         ksagb_path = args.outdir
+        spm_assets_path = args.spm_assets_path
         script_name = args.script
         locales = args.translations.split(",") if args.translations else []
 
@@ -115,7 +167,7 @@ def main():
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, scenario)
+        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, spm_assets_path, scenario)
         # writer.clean()
         writer.write()
         exit(0)
@@ -178,6 +230,7 @@ def main():
     if args.command == "fonts":
         ksre_path = args.source
         ksagb_path = args.outdir
+        scripts = args.scripts.split(",") if args.scripts else []
         locales = args.locales.split(",") if args.locales else []
 
         if not os.environ.get('DEVKITARM'):
@@ -192,7 +245,23 @@ def main():
                                        "src/translations/{}_definitions_labels.h"
                                    ])
         chars_reader.read_definitions()
-        chars_reader.read_tl_files()
+
+        translations: Dict[str, TranslationContainer] = {}
+        for locale in locales:
+            if locale != "en":
+                print(f"Processing translation files for locale: {locale}")
+                rpy_translation_dir = os.path.join(ksre_path, "game", "tl", locale)
+                reader = TranslationReader(locale, rpy_translation_dir)
+                translations[locale] = reader.read()
+
+        for script_name in scripts:
+            print(f"Processing script: {script_name}")
+            rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
+            reader = ScenarioReader(rpy_scenario_file, translations)
+            scenario = reader.read()
+            for locale in locales:
+                chars_reader.read_scenario(scenario, locale)
+
         chars_reader.sort_char_tables()
 
         writer = FontsWriter(ksre_path, ksagb_path, "common",
@@ -200,6 +269,40 @@ def main():
                              chars_reader.get_additional())
         writer.generate_fonts()
         writer.generate_palettes()
+
+    if args.command == "train-spm":
+        ksre_path = args.source
+        outdir = args.outdir
+        scripts = args.scripts.split(",") if args.scripts else []
+        locales = args.locales.split(",") if args.locales else []
+
+        for locale in locales:
+            translations: Dict[str, TranslationContainer] = {}
+            if locale != "en":
+                print(f"Processing translation files for locale: {locale}")
+                rpy_translation_dir = os.path.join(ksre_path, "game", "tl", locale)
+                reader = TranslationReader(locale, rpy_translation_dir)
+                translations[locale] = reader.read()
+
+            spm_writer = SPMWriter(outdir, locale)
+            for script_name in scripts:
+                print(f"Processing script: {script_name}")
+                rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
+                reader = ScenarioReader(rpy_scenario_file, translations)
+                scenario = reader.read()
+                spm_writer.process_scenario(scenario)
+
+            spm_writer.write_model()
+
+    if args.command == "pack-spm":
+        spm_path = args.source
+        ksagb_path = args.outdir
+        gbfs_path = os.path.join(ksagb_path, "gbfs_files")
+        locales = args.locales.split(",") if args.locales else []
+
+        for locale in locales:
+            spm_packer = SPMPacker(spm_path, gbfs_path, locale)
+            spm_packer.pack()
 
 
 if __name__ == "__main__":

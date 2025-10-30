@@ -2,8 +2,7 @@ import os.path
 import subprocess
 from typing import List
 
-from src.lz77_decompress import gba_lz77_decompress
-from src.utils import remove_bytecode_functions
+from src.utils import collect_scenario_sentences, sanitize_ingame_text
 
 
 class CharsReader:
@@ -43,22 +42,9 @@ class CharsReader:
 
         self.sort_char_tables()
 
-    def read_tl_files(self):
-        for tl_key in self.translation_keys:
-            for filename in os.listdir(self.gbfs_path):
-                if filename.startswith("tl_") and filename.endswith(f".{tl_key}"):
-                    tl_file_path = os.path.join(self.gbfs_path, filename)
-                    with open(tl_file_path, 'rb') as f:
-                        translation_file_lz77 = f.read()
-
-                    translation_file = gba_lz77_decompress(translation_file_lz77)
-                    offset_table_size = int.from_bytes(translation_file[0:2], byteorder='little')
-                    text_entries = translation_file[2 + offset_table_size * 2:].split(b'\x00')
-                    for entry in text_entries:
-                        entry_without_commands = remove_bytecode_functions(entry)
-                        try:
-                            entry_text = entry_without_commands.decode('utf-8')
-                        except UnicodeDecodeError:
-                            raise ValueError(f"Failed to decode entry in {tl_file_path}:\n{entry}\n{entry_without_commands}")
-                        for char in entry_text:
-                            self.add_char(char)
+    def read_scenario(self, scenario, locale):
+        text_entries: List[str] = []
+        collect_scenario_sentences(scenario, locale, text_entries)
+        for entry in text_entries:
+            for char in sanitize_ingame_text(entry):
+                self.add_char(char)
