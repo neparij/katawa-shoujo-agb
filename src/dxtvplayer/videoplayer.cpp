@@ -91,6 +91,9 @@ namespace Video
             // set up timer to increase with frame interval
             irqSet(irqMASKS::IRQ_TIMER2, frameRequest);
             irqEnable(irqMASKS::IRQ_TIMER2);
+
+            // Reset timer to start counting from zero
+            REG_TM2CNT = 0;
             // Timer interval = 1 / fps (where 65536 == 1s). frames/s are in 16:16 format
             REG_TM2CNT_L = 65536U - ((uint64_t(65536U) << 16) / m_videoInfo.fps);
             // Timer divider 2 == 256 -> 16*1024*1024 cycles/s / 256 = 65536/s
@@ -132,24 +135,19 @@ namespace Video
             {
 
                 m_videoFrame = GetNextFrame(m_videoInfo, m_videoFrame);
-
-                for (uint8_t part = 0; part < 4; part++) {
-                    updateCallback();
 #ifdef DEBUG_PLAYER
-                    auto startTime = Time::now();
+                auto startTime = Time::now();
 #endif
-                    m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame, part);
+                m_decodedFrame = decode(m_scratchPad, m_scratchPadSize, m_videoInfo, m_videoFrame);
 #ifdef DEBUG_PLAYER
-                    auto duration = Time::now() * 1000 - startTime * 1000;
-                    m_accFrameDecodeMs += duration;
-                    m_maxFrameDecodeMs = m_maxFrameDecodeMs < duration ? duration : m_maxFrameDecodeMs;
-                    ++m_nrOfFramesDecoded;
+                auto duration = Time::now() * 1000 - startTime * 1000;
+                m_accFrameDecodeMs += duration;
+                m_maxFrameDecodeMs = m_maxFrameDecodeMs < duration ? duration : m_maxFrameDecodeMs;
+                ++m_nrOfFramesDecoded;
 #endif
-                    VBlankIntrWait();
-                }
+                VBlankIntrWait();
                 ++m_framesDecoded;
             } else {
-                updateCallback();
                 if (m_framesRequested > 0)
                 {
                     --m_framesRequested;
@@ -158,7 +156,7 @@ namespace Video
 #ifdef DEBUG_PLAYER
                         auto startTime = Time::now();
 #endif
-                        m_framesDecoded = 0;
+                        m_framesDecoded--;
                         // TODO: check with the ULC audioplayback later. It's "clicking" with GSM.
                         VBlankIntrWait();
                         Memory::memcpy32(dst, m_decodedFrame, m_decodedFrameSize / 4);
@@ -171,14 +169,12 @@ namespace Video
                         ++m_nrOfFramesBlit;
 #endif
                     }
-                    if (m_framesRequested > 0)
-                    {
-                        m_framesRequested = 0;
-                    }
                 } else {
                     VBlankIntrWait();
                 }
             }
+
+            updateCallback();
         }
     }
 

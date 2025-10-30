@@ -327,11 +327,11 @@ def create_json_metadata(image_path, quantize, unquant_colors: int):
     if quantize:
         metadata["bpp_mode"] = "bpp_4_manual"
         metadata["compression"] = "auto_no_huffman"
-        metadata["tiles_compression"] = "none"
+        metadata["tiles_compression"] = "auto_no_huffman"
     else:
         metadata["colors"] = unquant_colors
         metadata["compression"] = "auto_no_huffman"
-        metadata["tiles_compression"] = "none"
+        metadata["tiles_compression"] = "auto_no_huffman"
 
     #  * * `"compression"`: optional field which specifies the compression of the tiles, the colors and the map data:
     #  *   * `"none"`: uncompressed data (this is the default option).

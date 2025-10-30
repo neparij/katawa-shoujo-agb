@@ -1424,23 +1424,23 @@ void SceneManager::show_title(const title_card_t tc) {
             ActOpening1().run();
             break;
         case TC_ACT2_EMI:
-            perform_render_video(video_tc_act2_emi_dxtv, video_tc_act2_emi_dxtv_size, "video_tc_act2_emi.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_emi_dxtv, "video_tc_act2_emi.ulc", globals::colors::WHITE);
             ActOpening2Emi().run();
             break;
         case TC_ACT2_HANAKO:
-            perform_render_video(video_tc_act2_hanako_dxtv, video_tc_act2_hanako_dxtv_size, "video_tc_act2_hanako.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_hanako_dxtv, "video_tc_act2_hanako.ulc", globals::colors::WHITE);
             ActOpening2Hanako().run();
             break;
         case TC_ACT2_LILLY:
-            perform_render_video(video_tc_act2_lilly_dxtv, video_tc_act2_lilly_dxtv_size, "video_tc_act2_lilly.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_lilly_dxtv, "video_tc_act2_lilly.ulc", globals::colors::WHITE);
             ActOpening2Lilly().run();
             break;
         case TC_ACT2_RIN:
-            perform_render_video(video_tc_act2_rin_dxtv, video_tc_act2_rin_dxtv_size, "video_tc_act2_rin.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_rin_dxtv, "video_tc_act2_rin.ulc", globals::colors::WHITE);
             ActOpening2Rin().run();
             break;
         case TC_ACT2_SHIZUNE:
-            perform_render_video(video_tc_act2_shizune_dxtv, video_tc_act2_shizune_dxtv_size, "video_tc_act2_shizune.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_shizune_dxtv, "video_tc_act2_shizune.ulc", globals::colors::WHITE);
             ActOpening2Shizune().run();
             break;
         default: BN_ERROR("Unknown title card: ", tc); break;
@@ -1452,7 +1452,7 @@ void SceneManager::show_title(const title_card_t tc) {
     ks::timer::resume_ingame_timer();
 }
 
-void SceneManager::show_video(const uint8_t* dxtv_file, const size_t dxtv_size, const char* audio_file) {
+void SceneManager::show_video(const uint8_t* dxtv_file, const char* audio_file) {
     if (is_loading) {
         return;
     }
@@ -1463,7 +1463,7 @@ void SceneManager::show_video(const uint8_t* dxtv_file, const size_t dxtv_size, 
     }
 
     ks::timer::pause_ingame_timer();
-    perform_render_video(dxtv_file, dxtv_size, audio_file, ks::globals::colors::BLACK, force_white);
+    perform_render_video(dxtv_file, audio_file, ks::globals::colors::BLACK, force_white);
     ks::timer::resume_ingame_timer();
 }
 
@@ -1691,11 +1691,11 @@ void SceneManager::perform_act_fadeout() {
     fade_out(globals::colors::WHITE, 120);
 }
 
-void SceneManager::perform_render_video(const uint8_t* dxtv_file, const size_t dxtv_size, const char* audio_file, const bn::color clear) {
-    perform_render_video(dxtv_file, dxtv_size, audio_file, clear, clear == globals::colors::WHITE);
+void SceneManager::perform_render_video(const uint8_t* dxtv_file, const char* audio_file, const bn::color clear) {
+    perform_render_video(dxtv_file, audio_file, clear, clear == globals::colors::WHITE);
 }
 
-void SceneManager::perform_render_video(const uint8_t* dxtv_file, const size_t dxtv_size, const char* audio_file, const bn::color clear, const bool force_white_end) {
+void SceneManager::perform_render_video(const uint8_t* dxtv_file, const char* audio_file, const bn::color clear, const bool force_white_end) {
     bn::blending::restore();
     sound_mixer::mute();
 
@@ -1708,8 +1708,9 @@ void SceneManager::perform_render_video(const uint8_t* dxtv_file, const size_t d
     ks::globals::release_engine();
     bn::core::update();
 
-    videoplayer_init(dxtv_file, dxtv_size, audio_file, clear.red(), clear.green(), clear.blue());
+    videoplayer_init(dxtv_file, audio_file, clear.red(), clear.green(), clear.blue());
     videoplayer_play(force_white_end);
+    videoplayer_clean();
 
     ks::globals::init_engine();
     // sound_mixer::unmute();

@@ -76,7 +76,7 @@ namespace ks {
                 on_back();
             } else {
                 if (option == 0) {
-                    SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.ulc");
+                    SceneManager::show_video(video_op_1_dxtv, "video_op_1.ulc");
                 } else if (option == 1) {
                     SceneManager::show_title(TC_ACT2_EMI);
                 } else if (option == 2) {
