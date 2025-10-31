@@ -8,12 +8,10 @@
 #include "custom_event.h"
 
 #include "bn_regular_bg_items_hanako_fw_base.h"
-#include "bn_regular_bg_items_hanako_fw_base_reduced_pal.h"
-#include "bn_regular_bg_items_hanako_fw_flash_bright.h"
 #include "bn_regular_bg_items_hanako_fw_flash0.h"
 #include "bn_regular_bg_items_hanako_fw_flash1.h"
 #include "bn_regular_bg_items_hanako_fw_flash2.h"
-#include "bn_regular_bg_items_hanako_fw_flash3.h"
+#include "gba_math.h"
 
 namespace ks {
 
@@ -59,10 +57,6 @@ namespace ks {
             } else if (_state != 2) {
                 switch (fw_blend_state) {
                     case 0:
-                        background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_flash_bright);
-                        fw_colorize_value = 0;
-                        break;
-                    case 1:
                         background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_flash0);
                         if (fw_color_index < event_data::hanako_fireworks::fw_colors.size() - 1) {
                             fw_color_index++;
@@ -71,14 +65,13 @@ namespace ks {
                         }
                         fw_colorize_value = bn::fixed(0.15);
                         break;
+                    case 1:
+                        break;
                     case 2:
                         background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_flash1);
                         break;
                     case 3:
                         background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_flash2);
-                        break;
-                    case 4:
-                        background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_flash3);
                         break;
                     default:
                         background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_base);
@@ -95,7 +88,6 @@ namespace ks {
                     case 1:
                     case 2:
                     case 3:
-                    case 4:
                         fw_blend_state++;
                         fw_timer = 6;
                         break;
@@ -115,7 +107,18 @@ namespace ks {
             if (fw_colorize_value < 0) {
                 fw_colorize_value = 0;
             }
-            palette.set_fade(event_data::hanako_fireworks::fw_colors[fw_color_index], fw_colorize_value);
+
+            if (fw_blend_state == 1) {
+                auto color = event_data::hanako_fireworks::fw_colors[fw_color_index];
+                color.set_components(
+                    CLAMP(color.red() + fw_timer * 31, 0, 31),
+                    CLAMP(color.green() + fw_timer * 31, 0, 31),
+                    CLAMP(color.blue() + fw_timer * 31, 0, 31)
+                );
+                palette.set_fade(color, bn::fixed(fw_timer).division(6) + fw_colorize_value);
+            } else {
+                palette.set_fade(event_data::hanako_fireworks::fw_colors[fw_color_index], fw_colorize_value);
+            }
 
             CustomEvent::update();
         }
@@ -126,11 +129,9 @@ namespace ks {
 
         void before_hide(void(*on_update)()) override {
             if (!is_paused) {
-                background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_base_reduced_pal);
+                background_visual.visible_bg_item->force_create_regular_ptr(bn::regular_bg_items::hanako_fw_base);
                 background_visual.visible_bg_item->set_priority(_bg_priority);
                 background_visual.visible_bg_item->set_z_order(_bg_z_order);
-                // auto palette = background_visual.visible_bg_item->regular_ptr().palette();
-                // palette.set_fade(event_data::hanako_fireworks::fw_colors[fw_color_index], fw_colorize_value);
             }
             on_update();
         }
