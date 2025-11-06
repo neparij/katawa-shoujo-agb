@@ -27,18 +27,6 @@
 
 #include "background_metas.h"
 #include "bn_regular_bg_tiles_ptr.h"
-#include "openings/act1.cpp.h"
-#include "openings/act2_emi.cpp.h"
-#include "openings/act3_emi.cpp.h"
-#include "openings/act3_hanako.cpp.h"
-#include "openings/act3_lilly.cpp.h"
-#include "openings/act3_rin.cpp.h"
-#include "openings/act3_shizune.cpp.h"
-#include "openings/act4_emi.cpp.h"
-#include "openings/act4_hanako.cpp.h"
-#include "openings/act4_lilly.cpp.h"
-#include "openings/act4_rin.cpp.h"
-#include "openings/act4_shizune.cpp.h"
 #include "scripts/script_a1_friday.h"
 #include "scripts/script_a1_monday.h"
 #include "scripts/script_a1_saturday.h"
@@ -46,7 +34,6 @@
 #include "scripts/script_a1_thursday.h"
 #include "scripts/script_a1_tuesday.h"
 #include "scripts/script_a1_wednesday.h"
-#include "temp/test_huge_bg.cpp.h"
 
 using size_type = int;
 

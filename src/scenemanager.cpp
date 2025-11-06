@@ -35,7 +35,6 @@
 #include "sound_manager.h"
 #include "translations/translation.h"
 #include <video_4ls_dxtv.h>
-#include <video_op_1_dxtv.h>
 
 #include "bn_sprite_palette_ptr.h"
 #include "dialog_box.h"
@@ -64,6 +63,7 @@
 #include "openings/act2_lilly.cpp.h"
 #include "openings/act2_rin.cpp.h"
 #include "openings/act2_shizune.cpp.h"
+#include "openings/op1.h"
 #include "shaders/paletted_color_shader.h"
 #include "sound/sound_mixer.h"
 #include "utils/string_utils.h"
@@ -117,6 +117,9 @@ void SceneManager::free_resources() {
     huge_background.reset();
     primary_background.reset();
     secondary_background.reset();
+    static_text_sprites.clear();
+    animated_text_sprites.clear();
+    progress_icon_sprites.clear();
     next_event.reset();
 
     for (auto &visual : character_visuals) {
@@ -1455,6 +1458,39 @@ void SceneManager::show_title(const title_card_t tc) {
     ks::timer::resume_ingame_timer();
 }
 
+void SceneManager::show_op1() {
+    if (is_loading) {
+        return;
+    }
+
+    BN_LOG("SHOW OPENING 1");
+
+    dialog_novel.hide(true);
+    dialog_default.hide(true);
+    dialog_doublespeak.hide(true);
+
+    ks::timer::pause_ingame_timer();
+
+    perform_op1_fadeout();
+    free_resources();
+    bn::blending::restore();
+
+    // Free last sound chunks
+    ks::sound_manager::stop<SOUND_CHANNEL_VIDEO>();
+    ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
+    ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
+    ks::sound_manager::stop<SOUND_CHANNEL_AMBIENT>();
+    globals::main_update();
+
+    GameOpening().run();
+
+    bn::bg_palettes::set_transparent_color(globals::colors::BLACK);
+    fade_reset();
+
+    globals::init_text_generators();
+    ks::timer::resume_ingame_timer();
+}
+
 void SceneManager::show_video(const uint8_t* dxtv_file, const char* audio_file) {
     if (is_loading) {
         return;
@@ -1685,6 +1721,13 @@ void SceneManager::transition_fadeout(const bn::affine_bg_item &transition_item,
 
     bn::blending::set_fade_alpha(0.0);
     ks::transition_bg.reset();
+}
+
+void SceneManager::perform_op1_fadeout() {
+    ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(120);
+    ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_SOUND>(120);
+    ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_AMBIENT>(120);
+    fade_out(globals::colors::BLACK, 120);
 }
 
 void SceneManager::perform_act_fadeout() {

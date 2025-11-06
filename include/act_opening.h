@@ -96,6 +96,7 @@ namespace ks {
         void init();
         virtual opening_text get_text() = 0;
         opening_text _text;
+        bool is_finished = false;
 
     private:
         int _current_update = 0;
