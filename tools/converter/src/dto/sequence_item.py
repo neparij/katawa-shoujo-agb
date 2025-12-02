@@ -30,6 +30,10 @@ class SequenceType(Enum):
 class SequenceItem(ABC):
     def __init__(self, t: SequenceType):
         self.type = t
+        self.line_number: int | None = None
+
+    def set_line_number(self, line_number: int):
+        self.line_number = line_number
 
     def get_type(self):
         return self.type

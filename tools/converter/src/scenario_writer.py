@@ -10,6 +10,7 @@ import sentencepiece as spm
 
 from src.character_sprite.character_sprite import CharacterDisplayableReplacements, CharacterSprite, CharacterRegex, \
     CharacterNudeIf
+from src.characters import CHARACTERS
 from src.dto.assignment_item import AssignmentItem
 from src.dto.background_item import BackgroundItem, BgShowPosition
 from src.dto.background_transform_item import BackgroundTransformItem
@@ -36,35 +37,6 @@ from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import get_paletted_variant, is_color_filled_bg, \
     add_translations_optional, get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode
-
-CHARACTERS = [
-    "akira",
-    "emi",
-    "emicas",
-    "eminude",
-    "emiwheel",
-    "hanagown",
-    "hanako",
-    "hideaki",
-    "jigoro",
-    "kenji",
-    "lilly",
-    "meiko",
-    "miki",
-    "misha",
-    "mishashort",
-    "muto",
-    "nomiya",
-    "nurse",
-    "rin",
-    "rinpan",
-    "sae",
-    "shizu",
-    "shizuyu",
-    "shopkeep",
-    "yuuko",
-    "yuukoshang"
-]
 
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, spm_dir: str, scenario: List[SequenceGroup]):

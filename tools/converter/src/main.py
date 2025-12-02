@@ -9,6 +9,7 @@ from src.definitions_writer import DefinitionsWriter
 from src.font.chars_reader import CharsReader
 from src.fonts_writer import FontsWriter
 from src.scenario_reader import ScenarioReader
+from src.scenario_graph_parser import ScenarioGraphParser
 from src.scenario_writer import ScenarioWriter
 from src.spm_packer import SPMPacker
 from src.spm_writer import SPMWriter
@@ -165,6 +166,10 @@ def main():
         print(f"Processing scenario file: {rpy_scenario_file}")
         reader = ScenarioReader(rpy_scenario_file, translations)
         scenario = reader.read()
+
+        print(f"Parsing scenario graph and run checks...")
+        graph_parser = ScenarioGraphParser(scenario)
+        graph_parser.run()
 
         print(f"Writing scenario to {output_file}")
         writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, spm_assets_path, scenario)

@@ -48,6 +48,7 @@ class ScenarioReader:
         self._hack_latest_label_name = None
         self._hack_latest_sprite_name = None
         self.linepack_events : List[SequenceItem] = []
+        self.linepack_line_number = 0
 
 
     def read(self) -> List[SequenceGroup]:
@@ -63,6 +64,7 @@ class ScenarioReader:
 
         line_pack = []
         for line in lines:
+            self.linepack_line_number += 1
             if line.strip():
                 current_indent = get_line_indent(line)
                 line_pack.append((line, current_indent))
@@ -152,7 +154,7 @@ class ScenarioReader:
         with_clause = None
         self.linepack_events : List[SequenceItem] = []
         for line, current_indent in line_pack:
-           self.process_line(line, current_indent)
+            self.process_line(line, current_indent)
         line_pack.clear()
         # TODO: process show sequence with "at" clause here!
 
@@ -163,7 +165,7 @@ class ScenarioReader:
                 has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND_TRANSFORM) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.CUSTOM_EVENT)):
-            self.stack.current().add_sequence_item(self.linepack_events, UpdateVisualsItem())
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, UpdateVisualsItem())
 
     def process_line(self, line, current_indent):
         stripped_line = line.strip()
@@ -195,7 +197,7 @@ class ScenarioReader:
 
             if self.stack.size() > 0:
                 name = f"{self.stack.parent_label().name}_{name}"
-                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(name, self.initial_name and name.startswith(self.initial_name), label_name=self.stack.current_label().name))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, RunLabelItem(name, self.initial_name and name.startswith(self.initial_name), label_name=self.stack.current_label().name))
             else:
                 name = name
 
@@ -207,7 +209,7 @@ class ScenarioReader:
             return
 
         elif stripped_line == "return":
-            self.stack.current().add_sequence_item(self.linepack_events, ReturnItem())
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, ReturnItem())
             return
 
         elif stripped_line.startswith("if "):
@@ -234,7 +236,7 @@ class ScenarioReader:
             else:
                 raise Exception("Condition block outside of label stack")
 
-            self.stack.current().add_sequence_item(self.linepack_events, ConditionItem(name))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, ConditionItem(name))
 
             condition_stack = SequenceGroup(current_indent, name, SequenceGroupType.CONDITION)
             condition_stack.add_condition(self.stack.current_label().name, condition=condition)
@@ -268,7 +270,7 @@ class ScenarioReader:
             else:
                 raise Exception("Menu block outside of label stack")
 
-            self.stack.current().add_sequence_item(self.linepack_events, MenuItem(name))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, MenuItem(name))
             self.stack.push(SequenceGroup(current_indent, name, SequenceGroupType.MENU), current_indent)
             return
 
@@ -305,13 +307,13 @@ class ScenarioReader:
         elif stripped_line.startswith("$ "):
             # Inline assignments in menu blocks
             command = stripped_line[2:].strip()
-            self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem(command))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, AssignmentItem(command))
             return
 
         elif re.match(r'^([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.+)$', stripped_line):
             # General assignment
             command = stripped_line
-            self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem(command))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, AssignmentItem(command))
             return
 
         elif stripped_line.startswith("call screen doublespeak("):
@@ -354,7 +356,7 @@ class ScenarioReader:
                 dialog_left[locale] = translation.strings[key_left]
                 dialog_right[locale] = translation.strings[key_right]
 
-            self.stack.current().add_sequence_item(self.linepack_events,
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number,
                                                    DoubleSpeakItem(original_dialog_hash[-8:],
                                                                    actor_left_ref, actor_right_ref,
                                                                    dialog_left, dialog_right,
@@ -363,7 +365,7 @@ class ScenarioReader:
         elif stripped_line.startswith("call act_op("):
             video_name = stripped_line.split("act_op(\"", 1)[1].strip("\")")
             video_without_extension = video_name.split(".")[0]
-            self.stack.current().add_sequence_item(self.linepack_events, ShowVideoItem(video_without_extension,
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, ShowVideoItem(video_without_extension,
                                                                                        label_name=self.stack.current_label().name))
             return
 
@@ -371,13 +373,13 @@ class ScenarioReader:
             if "act_op(" in stripped_line or "call screen " in stripped_line:
                 pass
             elif "call timeskip" in stripped_line:
-                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem("ks::SceneManager::timeskip", True))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, RunLabelItem("ks::SceneManager::timeskip", True))
             else:
                 # Inline calls in menu blocks
                 function_name = stripped_line.split("call ", 1)[1].strip()
                 if function_name == "a1c4o1":
-                    self.stack.current().add_sequence_item(self.linepack_events, AssignmentItem("im_new_here = True"))
-                self.stack.current().add_sequence_item(self.linepack_events, RunLabelItem(sanitize_function_name(function_name), False, label_name=self.stack.current_label().name))
+                    self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, AssignmentItem("im_new_here = True"))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, RunLabelItem(sanitize_function_name(function_name), False, label_name=self.stack.current_label().name))
             return
 
         elif stripped_line.startswith("scene bg"):
@@ -394,13 +396,13 @@ class ScenarioReader:
             else:
                 position = BgShowPosition.DEFAULT
 
-            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(scene_bg_name, position=position))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, BackgroundItem(scene_bg_name, position=position))
             self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
         elif starts_with_filled_bg(stripped_line):
             color = stripped_line.split()[1].removesuffix(":")
-            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(color))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, BackgroundItem(color))
             self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
@@ -414,9 +416,9 @@ class ScenarioReader:
             if custom_event_bg is not None and custom_event is not None:
                 event_bg_name = custom_event_bg
                 event = custom_event
-                self.stack.current().add_sequence_item(self.linepack_events, CustomEventItem(event_bg_name, event))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, CustomEventItem(event_bg_name, event))
             else:
-                self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(event_bg_name))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, BackgroundItem(event_bg_name))
 
             self._hack_latest_sprite_name = None # TODO: Remove after "Friday"-hack
             return
@@ -426,17 +428,17 @@ class ScenarioReader:
             if not match:
                 raise Exception(f"Invalid state ev syntax: {stripped_line}")
             event_state = int(match.group(1))
-            self.stack.current().add_sequence_item(self.linepack_events, CustomEventStateItem(event_state))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, CustomEventStateItem(event_state))
 
         elif stripped_line.startswith("show passoutOP1"):
-            self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(BgTransition.PASSOUTOP1))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, BackgroundTransitionItem(BgTransition.PASSOUTOP1))
             return
 
         elif stripped_line.startswith("pause"):
             value_match = re.search(r"pause (\d+\.\d+)", stripped_line)
             value = float(value_match.group(1)) if value_match else 0
             if value > 0:
-                self.stack.current().add_sequence_item(self.linepack_events, PauseItem(value))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, PauseItem(value))
             else:
                 raise Exception(f"Invalid pause value: {stripped_line}")
             return
@@ -446,7 +448,7 @@ class ScenarioReader:
             music_name = parts[2]
             fadein_match = re.search(r"fadein (\d+\.\d+)", stripped_line)
             fadein_time = float(fadein_match.group(1)) if fadein_match else 0
-            self.stack.current().add_sequence_item(self.linepack_events, 
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, 
                 MusicItem(MusicAction.PLAY, music_name, MusicEffect.FADEIN if fadein_match else MusicEffect.NONE,
                           fadein_time))
             return
@@ -454,7 +456,7 @@ class ScenarioReader:
         elif stripped_line.startswith("stop music"):
             fadeout_match = re.search(r"fadeout (\d+\.\d+)", stripped_line)
             fadeout_time = float(fadeout_match.group(1)) if fadeout_match else 0
-            self.stack.current().add_sequence_item(self.linepack_events, 
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, 
                 MusicItem(MusicAction.STOP, "", MusicEffect.FADEOUT if fadeout_match else MusicEffect.NONE,
                           fadeout_time))
             return
@@ -464,7 +466,7 @@ class ScenarioReader:
             music_name = parts[2]
             fadein_match = re.search(r"fadein (\d+\.\d+)", stripped_line)
             fadein_time = float(fadein_match.group(1)) if fadein_match else 0
-            self.stack.current().add_sequence_item(self.linepack_events, 
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, 
                 SoundItem(SoundAction.PLAY, music_name, SoundChannel.SOUND, SoundEffect.FADEIN if fadein_match else SoundEffect.NONE,
                           fadein_time))
             return
@@ -474,7 +476,7 @@ class ScenarioReader:
             music_name = parts[2]
             fadein_match = re.search(r"fadein (\d+\.\d+)", stripped_line)
             fadein_time = float(fadein_match.group(1)) if fadein_match else 0
-            self.stack.current().add_sequence_item(self.linepack_events,
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number,
                 SoundItem(SoundAction.PLAY, music_name, SoundChannel.AMBIENT, SoundEffect.FADEIN if fadein_match else SoundEffect.NONE,
                           fadein_time))
             return
@@ -482,7 +484,7 @@ class ScenarioReader:
         elif stripped_line.startswith("stop sound"):
             fadeout_match = re.search(r"fadeout (\d+\.\d+)", stripped_line)
             fadeout_time = float(fadeout_match.group(1)) if fadeout_match else 0
-            self.stack.current().add_sequence_item(self.linepack_events, 
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, 
                 SoundItem(SoundAction.STOP, "", SoundChannel.SOUND, SoundEffect.FADEOUT if fadeout_match else SoundEffect.NONE,
                           fadeout_time))
             return
@@ -490,7 +492,7 @@ class ScenarioReader:
         elif stripped_line.startswith("stop ambient"):
             fadeout_match = re.search(r"fadeout (\d+\.\d+)", stripped_line)
             fadeout_time = float(fadeout_match.group(1)) if fadeout_match else 0
-            self.stack.current().add_sequence_item(self.linepack_events,
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number,
                 SoundItem(SoundAction.STOP, "", SoundChannel.AMBIENT, SoundEffect.FADEOUT if fadeout_match else SoundEffect.NONE,
                           fadeout_time))
             return
@@ -507,7 +509,7 @@ class ScenarioReader:
                 position = BgShowPosition.DEFAULT
                 raise(Exception(f"Unknown background position: {stripped_line}"))
 
-            self.stack.current().add_sequence_item(self.linepack_events,
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number,
                                                    BackgroundTransformItem(position))
             self._hack_latest_sprite_name = None # TODO: Remove after "Friday"-hack
             return
@@ -540,7 +542,7 @@ class ScenarioReader:
             else:
                 position = ShowPosition.DEFAULT
 
-            self.stack.current().add_sequence_item(self.linepack_events, ShowItem(sprite_name, variant_name, event_type, position, "PALETTE_VARIANT_DEFAULT"))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, ShowItem(sprite_name, variant_name, event_type, position, "PALETTE_VARIANT_DEFAULT"))
             self._hack_latest_sprite_name = sprite_name
             return
 
@@ -549,7 +551,7 @@ class ScenarioReader:
             sprite_name = parts[1]
 
             event_type = HideEvent.CHARACTER_EXIT if "with charaexit" in stripped_line else HideEvent.NONE
-            self.stack.current().add_sequence_item(self.linepack_events, HideItem(sprite_name, event_type))
+            self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, HideItem(sprite_name, event_type))
             return
 
         elif "xalign " in stripped_line:
@@ -562,7 +564,7 @@ class ScenarioReader:
             if self._hack_latest_sprite_name is not None:
                 # xalign 0.4 blah-blah 1.2 etc should set value to 0.4
                 value = float(stripped_line.split("xalign ")[1].split()[0])
-                self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_xalign_position(value)))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, ShowTransformItem(self._hack_latest_sprite_name, None, get_xalign_position(value)))
 
         elif "xpos " in stripped_line:
             # TODO: See above. Same shit...
@@ -573,16 +575,16 @@ class ScenarioReader:
                 xanchor_value = 0.5
                 if "xanchor " in stripped_line:
                     xanchor_value = float(stripped_line.split("xanchor ")[1].split()[0])
-                self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_x_position(xpos_value, anchor=xanchor_value)))
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, ShowTransformItem(self._hack_latest_sprite_name, None, get_x_position(xpos_value, anchor=xanchor_value)))
 
         elif stripped_line.startswith("nvl "):
             parts = stripped_line.split()
             action_name = parts[1]
             if action_name == "clear":
                 self._hack_nvl_cleared = True
-                self.stack.current().add_sequence_item(self.linepack_events, NovelClearItem())
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, NovelClearItem())
             elif action_name == "hide":
-                self.stack.current().add_sequence_item(self.linepack_events, NovelHideItem())
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, NovelHideItem())
             return
 
         elif stripped_line.startswith("with "):
@@ -600,7 +602,7 @@ class ScenarioReader:
                             sequence = cast(CustomEventItem, sequence)
                             sequence.transition = transition
                             return
-                    self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(transition))
+                    self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, BackgroundTransitionItem(transition))
                     return
             displayable_dissolve_match = re.match(r"^with Dissolve\s*\(([\d.]+)\)$", stripped_line)
             if displayable_dissolve_match:
@@ -710,7 +712,7 @@ class ScenarioReader:
                     else:
                         raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
 
-                self.stack.current().add_sequence_item(self.linepack_events,
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number,
                     DialogItem(original_dialog_hash[-8:], actor, dialog, label_name=self.stack.current_label().name))
             elif dialog_match_ref:
                 dialog_extended = None
@@ -761,9 +763,9 @@ class ScenarioReader:
                             dialog[locale] = dialog[DEFAULT_LOCALE]
 
                 if dialog_extended is not None:
-                    self.stack.current().add_sequence_item(self.linepack_events, dialog_extended)
+                    self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number, dialog_extended)
                 else:
-                    self.stack.current().add_sequence_item(self.linepack_events,
+                    self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number,
                                                            DialogItem(original_dialog_hash[-8:], None, dialog,
                                                                       actor[DEFAULT_LOCALE],
                                                                       label_name=self.stack.current_label().name))
@@ -779,7 +781,7 @@ class ScenarioReader:
                         print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
                         sleep(0.25)
                         dialog[locale] = dialog[DEFAULT_LOCALE]
-                self.stack.current().add_sequence_item(self.linepack_events,
+                self.stack.current().add_sequence_item(self.linepack_events, self.linepack_line_number,
                     DialogItem(original_dialog_hash[-8:], None, dialog,
                                label_name=self.stack.current_label().name))
             return
@@ -992,6 +994,24 @@ def scenario_rewrites(scenario_file, content):
             "            with Dissolve(1.0)",
             # WITH
             "            state ev 1"
+        )
+
+    if scenario_name == "script-a3-shizune":
+        return content.replace(
+            "        scene evh shizune_hcg_tied_stare:\n"
+            "            yalign 0.0 xalign 1.0 zoom 2.0\n"
+            "            easein 6.0 xalign 0.7 zoom 1.0 yalign 0.345\n"
+            "            truecenter\n"
+            "            zoom 1.0\n"
+            "            \"evh shizune_hcg_tied_stare_small\"\n"
+            "        with whiteout",
+            # WITH
+            "        scene evh shizune_hcg_tied_stare:\n"
+            "            yalign 0.0 xalign 1.0 zoom 2.0\n"
+            "            easein 6.0 xalign 0.7 zoom 1.0 yalign 0.345\n"
+            "            truecenter\n"
+            "            zoom 1.0\n"
+            "        with whiteout"
         )
 
     return content
