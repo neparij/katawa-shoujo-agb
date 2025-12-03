@@ -653,7 +653,7 @@ class ScenarioReader:
 
                 hashing_contents = f"nvl clear\r\n{hashing_contents}"
 
-            dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+            dialog_match_str = re.match(r"^\"([\w\s]+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
             dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
             # narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
             # TODO: Fix translation in KS:RE project: "tl/ru/script-a1-sunday.rpy:943"
@@ -693,7 +693,7 @@ class ScenarioReader:
                     translated_stripped_line = translation.translations[dialog_hash]
 
                     if dialog_match_str:
-                        matches[locale] = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
+                        matches[locale] = re.match(r"^\"([\w\s]+)\"\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
                     elif dialog_match_ref:
                         matches[locale] = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
                     else:
