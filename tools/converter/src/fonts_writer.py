@@ -39,6 +39,9 @@ FONT_PALETTES = [
     TextPaletteData("emm", (153, 80, 80, 255), (16, 16, 16, 255)),
     TextPaletteData("sk", (113, 135, 168, 255), (16, 16, 16, 255)),
     TextPaletteData("mk", (173, 115, 94, 255), (16, 16, 16, 255)),
+
+    TextPaletteData("opening_0", (255, 255, 255, 255), (8, 23, 8, 255)),
+    TextPaletteData("opening_1", (255, 255, 255, 255), (82, 90, 90, 255)),
 ]
 
 class FontsWriter:

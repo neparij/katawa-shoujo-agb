@@ -35,7 +35,6 @@ fi
 
 FILES=(
   "4ls|1920|1080||4.3|eq=contrast=1.2:brightness=0.05:saturation=1.25|12"
-  "op_1|1440|960|||eq=contrast=1.0|8" # TODO: recreate on engine
   "tc_act2_emi|1440|960||60.0|eq=contrast=1.0|10"
   "tc_act2_hanako|1440|960||60.0|eq=contrast=1.0|10"
   "tc_act2_lilly|1440|960||49.0|eq=contrast=1.0|10"
@@ -45,6 +44,7 @@ FILES=(
 
 AUDIO_ONLY_FILES=(
   "tc_act1"
+  "op_1"
 )
 
 # TODO: Reconvert all videos with proper gain levels

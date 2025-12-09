@@ -80,6 +80,7 @@ GRAPHICS    	:=  graphics \
 					graphics/event/custom \
 					graphics/huge/thumbs \
 					graphics/vfx \
+					graphics/opening \
 					graphics/characters/akira \
 					graphics/characters/emi \
 					graphics/characters/emicas \
