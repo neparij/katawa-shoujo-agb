@@ -761,7 +761,7 @@ class ScenarioWriter:
         if not show_video.video in self.videos:
             self.videos.append(show_video.video)
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, video_{show_video.video}_dxtv_size, "video_{show_video.video}.ulc"));',
+            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, "video_{show_video.video}.ulc"));',
             f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
         ]
 

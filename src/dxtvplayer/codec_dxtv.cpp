@@ -62,9 +62,6 @@ namespace DXTV
     static constexpr uint16_t BLOCK_MOTION_MASK = (uint16_t(1) << BLOCK_MOTION_BITS) - 1; // Block x pixel motion mask
     static constexpr uint16_t BLOCK_MOTION_Y_SHIFT = BLOCK_MOTION_BITS;                   // Block y pixel motion shift
 
-    static const uint16_t *last_data_ptr;
-    static uint16_t  last_header_flags;
-
     IWRAM_DATA ALIGN(4) uint16_t blockColors[4]; // intermediate DXT block color storage
     IWRAM_DATA ALIGN(4) bool isBlockMC;          // intermediate DXT block color storage
 
@@ -267,32 +264,29 @@ namespace DXTV
     }
 
     template <>
-    IWRAM_FUNC void UnCompWrite16bit<160>(const uint32_t *data, uint32_t *dst, const uint32_t *prevSrc, uint32_t width, uint32_t height, uint8_t part)
-//    IWRAM_FUNC void UnCompWrite16bit<240>(const uint32_t *data, uint32_t *dst, const uint32_t *prevSrc, uint32_t width, uint32_t height)
+    // IWRAM_FUNC void UnCompWrite16bit<160>(const uint32_t *data, uint32_t *dst, const uint32_t *prevSrc, uint32_t width, uint32_t height)
+    IWRAM_FUNC void UnCompWrite16bit<240>(const uint32_t *data, uint32_t *dst, const uint32_t *prevSrc, uint32_t width, uint32_t height)
     {
-        constexpr uint32_t LineStride16 = 160;                    // stride to next line in dst in half words / pixels
+        constexpr uint32_t LineStride16 = 240;                    // stride to next line in dst in half words / pixels
+        // constexpr uint32_t LineStride16 = 160;                    // stride to next line in dst in half words / pixels
         constexpr uint32_t LineStride32 = LineStride16 / 2;       // stride to next line in dst in words / 2 pixels
         constexpr uint32_t Block4HStride32 = 2;                   // horizontal stride to next 4x4 block in dst in words / 2 pixels
         constexpr uint32_t Block4VStride32 = 4 * LineStride32;    // vertical stride to next 4x4 block in dst in words / 2 pixels
         constexpr uint32_t Block8HStride32 = 2 * Block4HStride32; // horizontal stride to next 8x8 block in dst in words / 2 pixels
 
-        auto dataPtr16 = (part == 0) ? reinterpret_cast<const uint16_t *>(data) : last_data_ptr;
-        if (part == 0) {
-            last_header_flags = *dataPtr16++;
-            dataPtr16++;
-        }
-
+        auto dataPtr16 = reinterpret_cast<const uint16_t *>(data);
+        // copy frame header and skip dummy flags
+        const uint16_t headerFlags = *dataPtr16++;
+        dataPtr16++;
         // check if we want to keep this duplicate frame
-        if ((last_header_flags & FRAME_KEEP) != 0)
+        if ((headerFlags & FRAME_KEEP) != 0)
         {
             // Debug::printf("Duplicate frame");
             return;
         }
 
         // set up some variables
-        const uint32_t from = part * (height / BLOCK_MAX_DIM / 4);
-        const uint32_t to = (part + 1) * (height / BLOCK_MAX_DIM / 4);
-        for (uint32_t by = from; by < to; ++by)
+        for (uint32_t by = 0; by < height / BLOCK_MAX_DIM; ++by)
         {
             uint32_t flags = 0;
             uint32_t flagsAvailable = 0;
@@ -323,15 +317,6 @@ namespace DXTV
                 flags >>= 1;
                 --flagsAvailable;
             }
-        }
-
-        last_data_ptr = dataPtr16;
-    }
-
-    template <>
-    IWRAM_FUNC void UnCompWrite16bit<160>(const uint32_t *data, uint32_t *dst, const uint32_t *prevSrc, uint32_t width, uint32_t height) {
-        for (uint8_t part = 0; part < 4; part++) {
-            UnCompWrite16bit<160>(data, dst, prevSrc, width, height, part);
         }
     }
 }

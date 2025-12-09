@@ -7,6 +7,7 @@ setup(
     install_requires=[
         "Pillow>=9.0.0",
         "tilequant>=0.3.0",
+        "numpy>=1.21.0",
     ],
     entry_points={
         "console_scripts": [

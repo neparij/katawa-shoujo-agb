@@ -1473,7 +1473,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday")));
         
             IF_NOT_EXIT(a1_monday_out_cold()); // INLINE CALL
-            IF_NOT_EXIT(ks::SceneManager::show_video(video_op_1_dxtv, video_op_1_dxtv_size, "video_op_1.ulc"));
+            IF_NOT_EXIT(ks::SceneManager::show_video(video_op_1_dxtv, "video_op_1.ulc"));
             IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("script_a1_monday")));
             IF_NOT_EXIT(ks::SceneManager::pause(60));
             IF_NOT_EXIT(a1_monday_bundle_of_hisao()); // INLINE CALL

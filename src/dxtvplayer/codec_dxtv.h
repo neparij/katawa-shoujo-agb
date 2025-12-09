@@ -13,8 +13,4 @@ namespace DXTV
     // See also: https://stackoverflow.com/questions/56474930/efficiently-implementing-dxt1-texture-decompression-in-hardware
     template <uint32_t RESOLUTION_X>
     void UnCompWrite16bit(const uint32_t *data, uint32_t *dst, const uint32_t *prevSrc, uint32_t width, uint32_t height);
-
-    template <uint32_t RESOLUTION_X>
-    void UnCompWrite16bit(const uint32_t *data, uint32_t *dst, const uint32_t *prevSrc, uint32_t width, uint32_t height, uint8_t part);
-
 }
