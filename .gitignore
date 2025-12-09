@@ -25,3 +25,8 @@ intermediate/
 # Ignore custom compiled tools for a while
 vid2h
 ulcencodetool
+
+# Allure Related Files
+.allure/
+allure-report/
+allure-results/
