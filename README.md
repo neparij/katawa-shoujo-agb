@@ -65,6 +65,27 @@ the **[Katawa Shoujo: Re-Engineered](https://github.com/fleetingheart/ksre)** pr
 
 ---
 
+## Running Tests
+
+In order to run tests and generate Allure reports, you need to have
+[mGBA](https://mgba.io/downloads.html) (Development build, v0.11+) and
+[Allure CLI](https://docs.qameta.io/allure/#_installing_allure) installed.
+
+Running tests under mGBA and producing an Allure report:
+```bash
+make clean
+make -j$(nproc)
+mgba --script allure-agb/mgba/allure-adapter.lua katawa.out.gba
+allure generate
+```
+
+Shorthand:
+```bash
+allure run -- mgba --script allure-agb/mgba/allure-adapter.lua katawa.out.gba
+```
+
+---
+
 ## Contribution
 
 1. **Fork** the repository.
