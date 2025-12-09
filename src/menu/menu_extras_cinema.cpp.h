@@ -19,7 +19,6 @@
 #include <bn_sprite_items_ui_tn_tc_act2_rin_bw.h>
 #include <bn_sprite_items_ui_tn_tc_act2_shizu.h>
 #include <bn_sprite_items_ui_tn_tc_act2_shizu_bw.h>
-#include <video_op_1_dxtv.h>
 
 #include "menu_base.h"
 
@@ -76,7 +75,7 @@ namespace ks {
                 on_back();
             } else {
                 if (option == 0) {
-                    SceneManager::show_video(video_op_1_dxtv, "video_op_1.ulc");
+                    SceneManager::show_op1();
                 } else if (option == 1) {
                     SceneManager::show_title(TC_ACT2_EMI);
                 } else if (option == 2) {

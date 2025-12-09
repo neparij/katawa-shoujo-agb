@@ -758,6 +758,12 @@ class ScenarioWriter:
                 f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
             ]
 
+        if show_video.video == "op_1":
+            return [
+                f'IF_NOT_EXIT(ks::SceneManager::show_op1());',
+                f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
+            ]
+
         if not show_video.video in self.videos:
             self.videos.append(show_video.video)
         return [

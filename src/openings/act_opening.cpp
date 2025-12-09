@@ -91,7 +91,12 @@ namespace ks {
             ks::sound_manager::play<SOUND_CHANNEL_VIDEO>(_ulc_audiofile);
         }
 
-        while (_current_update < _fade_out.end) {
+        while (_current_update < _fade_out.end && !is_finished) {
+            if (bn::keypad::start_held()) {
+                is_finished = true;
+                break;
+            }
+
             // CREATE ACTIONS:
             if (_current_update == _fade_in.start) {
                 bg_fade_action = bn::bg_palette_fade_to_action(
