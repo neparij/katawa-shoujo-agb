@@ -40,6 +40,7 @@ PYTHON      	:=  python3
 GRIT      		:=  grit
 SOURCES     	:=  ../butano/common/src \
 					../libsavgba/src \
+					allure-agb/src \
 					../tests \
 					../tests/suites \
 		    		src \
@@ -64,6 +65,7 @@ INCLUDES    	:=  include \
 					include/background_metas \
 					include/vfx_metas \
 					include/sprite_metas \
+					allure-agb/include \
 					../libsavgba/include \
 					../butano/common/include \
 					../butano/butano/include
