@@ -49,22 +49,10 @@ namespace ks {
                     globals::set_language(LANG_RUSSIAN);
                     break;
                 case 2:
-                    globals::set_language(LANG_FRENCH);
-                    break;
-                case 3:
-                    globals::set_language(LANG_ITALIAN);
-                    break;
-                case 4:
                     globals::set_language(LANG_SPANISH);
                     break;
-                case 5:
-                    globals::set_language(LANG_GERMAN);
-                    break;
-                case 6:
+                case 3:
                     globals::set_language(LANG_JAPAN);
-                    break;
-                case 7:
-                    globals::set_language(LANG_CHINESE_SIMPLIFIED);
                     break;
                 default:
                     BN_ERROR("Language is not implemented");
@@ -88,7 +76,7 @@ namespace ks {
             constexpr unsigned char y_spacing = 14;
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + yy,
-                    bn::format<64>("{} > {}", globals::i18n->menu_options(), globals::i18n->menu_language()), -1);
+                    bn::format<64>("{} > {}", globals::i18n->menu_options(), globals::i18n->menu_language()), MENU_TEXT_NOT_AN_OPTION);
             yy += y_spacing;
 
             add_menu_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
@@ -99,28 +87,28 @@ namespace ks {
                 globals::i18n->language_ru(), 1);
             yy += y_spacing;
 
-            add_menu_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
-                globals::i18n->language_fr(), 2);
+            add_text_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
+                globals::i18n->language_fr(), MENU_TEXT_DISABLED);
+            yy += y_spacing;
+
+            add_text_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
+                globals::i18n->language_it(), MENU_TEXT_DISABLED);
             yy += y_spacing;
 
             add_menu_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
-                globals::i18n->language_it(), 3);
+                globals::i18n->language_es(), 2);
+            yy += y_spacing;
+
+            add_text_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
+                globals::i18n->language_de(), MENU_TEXT_DISABLED);
             yy += y_spacing;
 
             add_menu_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
-                globals::i18n->language_es(), 4);
+                globals::i18n->language_jp(), 3);
             yy += y_spacing;
 
-            add_menu_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
-                globals::i18n->language_de(), 5);
-            yy += y_spacing;
-
-            add_menu_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
-                globals::i18n->language_jp(), 6);
-            yy += y_spacing;
-
-            add_menu_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
-                globals::i18n->language_zh_hans(), 7);
+            add_text_entry(-device::screen_width_half + draw_x_from + 4, -device::screen_height_half + yy,
+                globals::i18n->language_zh_hans(), MENU_TEXT_DISABLED);
             yy += y_spacing;
 
             need_repalette = true;
@@ -132,22 +120,22 @@ namespace ks {
                     set_selection(1);
                     break;
                 case LANG_FRENCH:
-                    set_selection(2);
+                    set_selection(0);
                     break;
                 case LANG_ITALIAN:
-                    set_selection(3);
+                    set_selection(0);
                     break;
                 case LANG_SPANISH:
-                    set_selection(4);
+                    set_selection(2);
                     break;
                 case LANG_GERMAN:
-                    set_selection(5);
+                    set_selection(0);
                     break;
                 case LANG_JAPAN:
-                    set_selection(6);
+                    set_selection(3);
                     break;
                 case LANG_CHINESE_SIMPLIFIED:
-                    set_selection(7);
+                    set_selection(0);
                     break;
                 default:
                     BN_LOG("Unknown language is set");

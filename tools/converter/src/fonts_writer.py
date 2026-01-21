@@ -15,6 +15,7 @@ FONT_PALETTES = [
     TextPaletteData(FONT_DEFAULT_PALETTE, (255, 255, 255, 255), (16, 16, 16, 255)),
     TextPaletteData("beige", (148, 132, 123, 255), (255, 254, 206, 255)),
     TextPaletteData("beige_selected", (0, 0, 0, 255), (255, 254, 206, 255)),
+    TextPaletteData("beige_disabled", (211, 197, 170, 255), (255, 254, 206, 255)),
 
     TextPaletteData("alive", (102, 102, 102, 255), (16, 16, 16, 255)),
     TextPaletteData("red", (255, 0, 0, 255), (16, 16, 16, 255)),

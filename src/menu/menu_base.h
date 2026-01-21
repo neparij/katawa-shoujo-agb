@@ -4,6 +4,9 @@
 #include "bn_keypad.h"
 #include "../globals.h"
 
+#define MENU_TEXT_NOT_AN_OPTION (-1)
+#define MENU_TEXT_DISABLED (-2)
+
 namespace ks {
 
     namespace menu {
@@ -131,8 +134,10 @@ namespace ks {
             BN_LOG("Repalette menu");
             for (int i = 0; i < static_text_sprites.size(); i++) {
                 const bool is_selected = selection_indexes.at(i) == selection;
-                if (const bool is_action = selection_indexes.at(i) != -1; !is_action) {
+                if (const bool is_action = selection_indexes.at(i) != MENU_TEXT_NOT_AN_OPTION; !is_action) {
                     static_text_sprites.at(i).set_palette(text_item_palette);
+                } else if (selection_indexes.at(i) == MENU_TEXT_DISABLED) {
+                    static_text_sprites.at(i).set_palette(globals::text_palettes::beige_disabled);
                 } else {
                     static_text_sprites.at(i).set_palette(is_selected ? globals::text_palettes::beige_selected : globals::text_palettes::beige);
                 }
@@ -170,15 +175,15 @@ namespace ks {
         }
 
         void add_text_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
-            add_text_entry(x, y, text, -1);
+            add_text_entry(x, y, text, MENU_TEXT_NOT_AN_OPTION);
         }
 
         void add_text_entry_bold(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
-            add_text_entry_bold(x, y, text, -1);
+            add_text_entry_bold(x, y, text, MENU_TEXT_NOT_AN_OPTION);
         }
 
         void add_text_entry_small(const bn::fixed x, const bn::fixed y, const bn::string_view& text) {
-            add_text_entry_small(x, y, text, -1);
+            add_text_entry_small(x, y, text, MENU_TEXT_NOT_AN_OPTION);
         }
 
         void add_menu_entry(const bn::fixed x, const bn::fixed y, const bn::string_view& text, const int index) {

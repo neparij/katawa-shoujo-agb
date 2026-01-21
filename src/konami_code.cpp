@@ -1,5 +1,6 @@
 #include "konami_code.h"
 
+#include "bn_keypad.h"
 #include "bn_log.h"
 #include "build_info.h"
 #include "globals.h"
