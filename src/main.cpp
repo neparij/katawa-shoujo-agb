@@ -7,7 +7,6 @@
 #include "bn_memory.h"
 #include "bn_regular_bg_items_video_end_4ls.h"
 #include "bn_sprite_palettes.h"
-#include "bn_sram.h"
 #include "gba_video.h"
 #include "globals.h"
 #include "ingametimer.h"
@@ -160,31 +159,6 @@ inline float bezier_f(float t) {
     return t * t * (3.0f - 2.0f * t);
 }
 
-inline void print_save_debug() {
-    const auto flashInfo = ks::saves::get_flash_info();
-    constexpr auto lineHeight = 12;
-
-    bn::bg_palettes::set_transparent_color(ks::globals::colors::BLACK);
-    ks::primary_background.reset();
-    ks::static_text_sprites.clear();
-    ks::text_generator_small->generate_top_left(8, lineHeight * 0, "Flash Info:", ks::static_text_sprites);
-    ks::text_generator_small->generate_top_left(8, lineHeight * 1, bn::format<64>("- ManufacturerId: {}", flashInfo.manufacturer), ks::static_text_sprites);
-    ks::text_generator_small->generate_top_left(8, lineHeight * 2, bn::format<64>("- DeviceType: {}", flashInfo.device), ks::static_text_sprites);
-    ks::text_generator_small->generate_top_left(8, lineHeight * 3, bn::format<64>("- SizeType: {}", flashInfo.size), ks::static_text_sprites);
-    ks::text_generator_small->generate_top_left(8, lineHeight * 4, "Press START to continue...", ks::static_text_sprites);
-    ks::text_generator_small->generate_top_left(8, lineHeight * 5, "Press SELECT to fake SRAM...", ks::static_text_sprites);
-    while (!bn::keypad::start_pressed() && !bn::keypad::select_pressed()) {
-        bn::core::update();
-    }
-    if (bn::keypad::select_pressed()) {
-        ks::saves::set_flash_info_fake_sram();
-        ks::saves::initialize();
-    }
-    ks::primary_background.reset();
-    ks::static_text_sprites.clear();
-    bn::bg_palettes::set_transparent_color(ks::globals::colors::WHITE);
-}
-
 int main() {
 #ifdef RUN_TESTS
     ks::tests::run();
@@ -237,12 +211,8 @@ int main() {
     sound_mixer::mute();
 
     if (ks::saves::initialize()) {
-        print_save_debug();
-
         const bool isNewSaveAgain = ks::saves::initialize();
         BN_ASSERT(!isNewSaveAgain, "Failed to initialize saves.");
-    } else {
-        print_save_debug();
     }
 
     ks::globals::settings = ks::saves::readSettings();

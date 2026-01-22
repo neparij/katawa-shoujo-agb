@@ -2,7 +2,6 @@
 
 #include <bn_core.h>
 #include <bn_log.h>
-#include <bn_sram.h>
 
 #include <bn_memory.h>
 #include <gba_types.h>
@@ -14,8 +13,9 @@
 #define INTEGRITY_VERSION INTEGRITY_VERSION_V2
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
 
+#if SAVE_TYPE == SAVE_TYPE_FLASH
 extern FlashInfo gFlashInfo;
-extern bool faked = false; // For testing purposes, to fake flash memory
+#endif
 
 inline bn::array<char, 16> getIntegrityTag() {
     bn::array<char, 16> expected_format_tag{};
@@ -31,13 +31,13 @@ void ks::saves::load(Type *data_ptr) {
     BN_LOG("Load save data to ptr ", data_ptr);
     BN_ASSERT(data_ptr != nullptr, "Unable to load. Data pointer is null.");
 
-    if (is_flash()) {
-        BN_LOG("Full Load from flash");
-        flash_read(0, (u8 *) data_ptr, sizeof(*data_ptr));
-    } else {
-        BN_LOG("Full Load from SRAM");
-        bn::sram::read(*data_ptr);
-    }
+    BN_LOG("Loading full save data...");
+#if SAVE_TYPE == SAVE_TYPE_SRAM
+    bn::sram::read(*data_ptr);
+#endif
+#if SAVE_TYPE == SAVE_TYPE_FLASH
+    flash_read(0, (u8 *) data_ptr, sizeof(*data_ptr));
+#endif
 }
 
 void ks::saves::save(SaveFileData *data_ptr) {
@@ -45,32 +45,31 @@ void ks::saves::save(SaveFileData *data_ptr) {
     BN_ASSERT(data_ptr != nullptr, "Unable to save. Data pointer is null.");
     BN_ASSERT(isValid(data_ptr), "Unable to save. Data is corrupted.");
 
-    if (is_flash()) {
-        BN_LOG("Full Save to flash");
-        flash_write(0, (u8 *) data_ptr, sizeof(*data_ptr));
-    } else {
-        BN_LOG("Full Save to SRAM");
-        bn::sram::write(*data_ptr);
-    }
+    BN_LOG("Saving full save data...");
+#if SAVE_TYPE == SAVE_TYPE_SRAM
+    bn::sram::write(*data_ptr);
+#endif
+#if SAVE_TYPE == SAVE_TYPE_FLASH
+    flash_write(0, (u8 *) data_ptr, sizeof(*data_ptr));
+#endif
 }
 
 bool ks::saves::initialize() {
-    BN_LOG("Initializing saves...");
-
+    BN_LOG("Initializing saves (", SAVE_TYPE_STRING, ")...");
     auto *save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
 
-    if (!faked) {
-        const int flash_init_success = flash_init((u8) FLASH_SIZE_AUTO);
-        BN_LOG("Flash DeviceID: ", gFlashInfo.device);
-        BN_LOG("Flash ManufacturerID: ", gFlashInfo.manufacturer);
-        BN_LOG("Flash SizeType: ", gFlashInfo.size);
-        BN_LOG("Flash init success: ", flash_init_success == 0);
-        if (flash_init_success != 0) {
-            gFlashInfo.device = 0;
-            gFlashInfo.manufacturer = 0;
-            gFlashInfo.size = 0;
-        }
+#if SAVE_TYPE == SAVE_TYPE_FLASH
+    const int flash_init_success = flash_init((u8) FLASH_SIZE_AUTO);
+    BN_LOG("Flash DeviceID: ", gFlashInfo.device);
+    BN_LOG("Flash ManufacturerID: ", gFlashInfo.manufacturer);
+    BN_LOG("Flash SizeType: ", gFlashInfo.size);
+    BN_LOG("Flash init success: ", flash_init_success == 0);
+    if (flash_init_success != 0) {
+        gFlashInfo.device = 0;
+        gFlashInfo.manufacturer = 0;
+        gFlashInfo.size = 0;
     }
+#endif
 
     load<SaveFileData>(save_data);
     log_settings(save_data->settings);
@@ -82,7 +81,8 @@ bool ks::saves::initialize() {
     }
 
     if (!isValid(save_data)) {
-        save_data = new SaveFileData();
+        BN_LOG("init - data is not yet valid");
+        save_data = bn::move(new SaveFileData{});
         save_data->integrity_begin.tag = getIntegrityTag();
         save_data->integrity_end.tag = getIntegrityTag();
         save_data->integrity_begin.version = INTEGRITY_VERSION;
@@ -93,9 +93,9 @@ bool ks::saves::initialize() {
         // Then restore it one-by-one.
         // Log the restoration process.
 
-        if (is_flash()) {
-            flash_reset();
-        }
+#if SAVE_TYPE == SAVE_TYPE_FLASH
+        flash_reset();
+#endif
         save(save_data);
         bn::memory::ewram_free(save_data);
         return true;
@@ -383,6 +383,7 @@ void ks::saves::log_settings(SaveSettingsData &settings) {
     BN_LOG("  disable_disturbing_content: ", settings.disable_disturbing_content);
 }
 
+#if SAVE_TYPE == SAVE_TYPE_FLASH
 template<typename Type>
 void ks::saves::flash_write_offset(const Type& source, int offset) {
     const int size = int(sizeof(Type));
@@ -431,18 +432,7 @@ void ks::saves::flash_write_offset(const Type& source, int offset) {
     bn::memory::ewram_free(flash_buffer);
 }
 
-inline bool ks::saves::is_flash() {
-    return gFlashInfo.device != 255 && gFlashInfo.manufacturer != 255 && gFlashInfo.size != 0;
-}
-
 FlashInfo ks::saves::get_flash_info() {
     return gFlashInfo;
 }
-
-void ks::saves::set_flash_info_fake_sram() {
-    gFlashInfo.device = 255;
-    gFlashInfo.manufacturer = 255;
-    gFlashInfo.size = 0;
-
-    faked = true;  // Set faked flag to true for testing purposes
-}
+#endif
