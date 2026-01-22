@@ -16,16 +16,28 @@ int flash_write_byte(u32 addr, u8 data);
 void flash_switch_bank(int bank);
 }
 
-// #define AGB_ROM  ((u8*)0x8000000)
-// #define AGB_SRAM ((u8*)0xE000000)
-#define FLASH_SECTOR_SIZE_4KB  4096
-// #define _FLASH_WRITE(pa, pd) { *(((u16 *)AGB_ROM)+((pa)/2)) = pd; __asm("nop"); }
+#ifdef SAVE_TYPE
+#define SAVE_TYPE_SRAM 0
+#define SAVE_TYPE_FLASH 1
+#if SAVE_TYPE == SAVE_TYPE_SRAM
+#define SAVE_TYPE_STRING "SRAM"
+#elif SAVE_TYPE == SAVE_TYPE_FLASH
+#define SAVE_TYPE_STRING "FLASH"
+#else
+#define SAVE_TYPE_STRING "UNKNOWN"
+#endif
+#else
+#error "SAVE_TYPE is not defined. Please define SAVE_TYPE as SRAM or FLASH."
+#endif
 
+#if SAVE_TYPE == SAVE_TYPE_FLASH
+#define FLASH_SECTOR_SIZE_4KB  4096
 struct FlashInfo {
     u8 device;
     u8 manufacturer;
     u8 size;
 };
+#endif
 
 namespace ks {
     namespace saves {
@@ -336,53 +348,34 @@ namespace ks {
 
         void deleteSaveSlot(unsigned int slot);
 
+#if SAVE_TYPE == SAVE_TYPE_SRAM
         template<typename Type>
-        void flash_write_offset(const Type& source, int offset);
-
-        bool is_flash();
-
-        FlashInfo get_flash_info();
-
-        void set_flash_info_fake_sram();
-
-        template<typename Type>
-        BN_CODE_EWRAM void write_offset_flash(const Type& source, int offset) {
-            flash_write_offset(source, offset);
-        }
-
-        template<typename Type>
-        void write_offset_sram(const Type& source, int offset) {
+        void write_offset(const Type& source, int offset) {
             bn::sram::write_offset(source, offset);
         }
 
         template<typename Type>
-        void write_offset(const Type& source, int offset) {
-            if (is_flash())
-                write_offset_flash(source, offset);
-            else
-                write_offset_sram(source, offset);
+        void read_offset(Type& destination, int offset) {
+            bn::sram::read_offset(destination, offset);
+        }
+#endif
+#if SAVE_TYPE == SAVE_TYPE_FLASH
+        template<typename Type>
+        void flash_write_offset(const Type& source, int offset);
+
+        template<typename Type>
+        BN_CODE_EWRAM void write_offset(const Type& source, int offset) {
+            flash_write_offset(source, offset);
         }
 
         template<typename Type>
-        BN_CODE_EWRAM void read_offset_flash(Type& destination, int offset) {
+        BN_CODE_EWRAM void read_offset(Type& destination, int offset) {
             const int result = flash_read(offset, (u8 *) &destination, int(sizeof(Type)));
             BN_ASSERT(result == 0, "Unable to read from flash. Reboot your console");
         }
 
-        template<typename Type>
-        void read_offset_sram(Type& destination, int offset) {
-            bn::sram::read_offset(destination, offset);
-        }
-
-
-        template<typename Type>
-        void read_offset(Type& destination, int offset) {
-            if (is_flash())
-                read_offset_flash(destination, offset);
-            else
-                read_offset_sram(destination, offset);
-        }
-
+        FlashInfo get_flash_info();
+#endif
     }
 }
 
