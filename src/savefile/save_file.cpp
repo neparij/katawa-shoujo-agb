@@ -2,7 +2,6 @@
 
 #include <bn_core.h>
 #include <bn_log.h>
-#include <bn_sram.h>
 
 #include <bn_memory.h>
 #include <gba_types.h>

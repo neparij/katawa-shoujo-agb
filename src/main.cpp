@@ -7,7 +7,6 @@
 #include "bn_memory.h"
 #include "bn_regular_bg_items_video_end_4ls.h"
 #include "bn_sprite_palettes.h"
-#include "bn_sram.h"
 #include "gba_video.h"
 #include "globals.h"
 #include "ingametimer.h"

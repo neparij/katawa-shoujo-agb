@@ -4,23 +4,17 @@
 #include <bn_array.h>
 #include <bn_log.h>
 #include <bn_sprite_item.h>
-#include <bn_sram.h>
 #include <gba_types.h>
 
 #include "definitions.h"
 #include "seen_bitmask.h"
-
-extern "C" {
-#include "gba_flash.h"
-int flash_write_byte(u32 addr, u8 data);
-void flash_switch_bank(int bank);
-}
 
 #ifdef SAVE_TYPE
 #define SAVE_TYPE_SRAM 0
 #define SAVE_TYPE_FLASH 1
 #if SAVE_TYPE == SAVE_TYPE_SRAM
 #define SAVE_TYPE_STRING "SRAM"
+#include <bn_sram.h>
 #elif SAVE_TYPE == SAVE_TYPE_FLASH
 #define SAVE_TYPE_STRING "FLASH"
 #else
@@ -31,6 +25,11 @@ void flash_switch_bank(int bank);
 #endif
 
 #if SAVE_TYPE == SAVE_TYPE_FLASH
+extern "C" {
+#include "gba_flash.h"
+    int flash_write_byte(u32 addr, u8 data);
+    void flash_switch_bank(int bank);
+}
 #define FLASH_SECTOR_SIZE_4KB  4096
 struct FlashInfo {
     u8 device;
