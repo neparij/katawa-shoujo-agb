@@ -44,8 +44,7 @@ SOURCES     	:=  ../butano/common/src \
 					../tests \
 					../tests/suites \
 		    		src \
-                    src/dxtvplayer \
-                    src/dxtvplayer/debug \
+                    src/ulcv \
                     src/events \
                     src/fonts \
                     src/openings \
@@ -133,9 +132,9 @@ ifndef LIBBUTANOABS
 endif
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .dxtv extension
+# This rule links in binary data with the .ulcv extension
 #---------------------------------------------------------------------------------
-%.dxtv.o %_dxtv.h :	%.dxtv
+%.ulcv.o %_ulcv.h :	%.ulcv
 #---------------------------------------------------------------------------------
 		@echo $(notdir $<)
 		@$(bin2o)
