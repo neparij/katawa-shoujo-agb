@@ -1,10 +1,13 @@
 #include "video_player.h"
 #include "../globals.h"
+#include <gba_input.h>
 #include <gba_interrupt.h>
+#include <gba_video.h>
 
 #include "bn_memory.h"
+#include "bn_log.h"
 #include "../sound_manager.h"
-#include "../dxtvplayer/videoplayer.h"
+#include "../ulcv/ulcvplayer.h"
 #include "../sound/sound_mixer.h"
 
 #define VP_INLINE static inline __attribute__((always_inline))
@@ -13,6 +16,7 @@
 #define KEY_PRESSED(key) (~(REG_KEYINPUT) & key)
 
 static uint32_t* g_scratchpad = nullptr;
+static int g_scratchpad_size = 0;
 static const char* g_audio_file;
 static bool sound_started = false;
 
@@ -25,7 +29,7 @@ VP_INLINE void clear_screen(volatile u16* buffer, const u16 color)
     }
 }
 
-void videoplayer_init(const uint8_t* dxtv_file, const char* audio_file,
+void videoplayer_init(const uint8_t* video_file, const char* audio_file,
                 const unsigned char r_clear, const unsigned char g_clear, const unsigned char b_clear)
 {
     // Clear both buffers
@@ -40,9 +44,30 @@ void videoplayer_init(const uint8_t* dxtv_file, const char* audio_file,
     REG_BG2X = 0;
     REG_BG2Y = 0;
 
-    constexpr int scratchpad_size = 240 * 160 * 2; // Size in bytes
-    g_scratchpad = (uint32_t*)bn::memory::ewram_alloc(scratchpad_size); // EWRAM for video decoding
-    Video::init((uint32_t*)dxtv_file, g_scratchpad, scratchpad_size);
+    // One frame buffer (currFrame) + 32 KB for the decompressed frame stream.
+    // prevFrame is always read directly from VRAM, so no second buffer needed.
+    constexpr int ulcv_scratchpad_size = 240 * 160 * 2 + 32 * 1024;
+    const bool is_ulcv = ULCV::isULCV((uint32_t*)video_file);
+    g_scratchpad_size = ulcv_scratchpad_size;
+
+    if (g_scratchpad) {
+        bn::memory::ewram_free(g_scratchpad);
+        g_scratchpad = nullptr;
+    }
+    g_scratchpad = (uint32_t*)bn::memory::ewram_alloc(g_scratchpad_size);
+    if (!g_scratchpad) {
+        BN_LOG("Video init failed: no EWRAM scratchpad");
+        return;
+    }
+
+    if (!is_ulcv) {
+        BN_LOG("Video init skipped: ULCV stream expected");
+        bn::memory::ewram_free(g_scratchpad);
+        g_scratchpad = nullptr;
+        g_scratchpad_size = 0;
+        return;
+    }
+    ULCV::init((uint32_t*)video_file, g_scratchpad, g_scratchpad_size);
     g_audio_file = audio_file;
 
     irqInit();
@@ -54,7 +79,11 @@ void videoplayer_clean()
 {
     irqDisable(IRQ_TIMER1);
     irqDisable(IRQ_TIMER2);
-    bn::memory::ewram_free(g_scratchpad);
+    if (g_scratchpad) {
+        bn::memory::ewram_free(g_scratchpad);
+        g_scratchpad = nullptr;
+        g_scratchpad_size = 0;
+    }
 }
 
 void inframe_updates() {
@@ -70,18 +99,22 @@ void inframe_updates() {
 
 void videoplayer_play(const bool force_white)
 {
+    if (!g_scratchpad) {
+        BN_LOG("Video play skipped: scratchpad is null");
+        return;
+    }
     sound_started = false;
-    Video::play();
-    while (Video::hasMoreFrames()) {
+    ULCV::play();
+    while (ULCV::hasMoreFrames()) {
         if (KEY_PRESSED(KEY_START)) {
             BN_LOG("Stop video immediately: Start was pressed");
             ks::sound_manager::stop<SOUND_CHANNEL_VIDEO>();
             break;
         }
-        Video::decodeAndBlitFrame((uint32_t *)VRAM, inframe_updates);
+        ULCV::decodeAndBlitFrame((uint32_t *)VRAM, inframe_updates);
     }
     inframe_updates();
-    Video::stop();
+    ULCV::stop();
 
     REG_BG2CNT = 0x0000;
 
