@@ -12,6 +12,8 @@
 #include <bn_affine_bg_tiles_ptr.h>
 #include <bn_bg_palette_ptr.h>
 #include <bn_log.h>
+#include <gba_systemcalls.h>
+#include <gba_video.h>
 
 #include "bn_bg_tiles.h"
 #include "bn_bg_maps.h"
@@ -37,16 +39,18 @@
 #include "ingametimer.h"
 #include "sound_manager.h"
 #include "translations/translation.h"
-#include <video_4ls_dxtv.h>
+#include <video_4ls_ulcv.h>
+#include "video_tc_act2_emi_ulcv.h"
+#include "video_tc_act2_emi_ulcv.h"
+#include "video_tc_act2_hanako_ulcv.h"
+#include "video_tc_act2_lilly_ulcv.h"
+#include "video_tc_act2_rin_ulcv.h"
+#include "video_tc_act2_shizune_ulcv.h"
+
 
 #include "bn_affine_bg_map_ptr.h"
 #include "bn_sprite_palette_ptr.h"
 #include "dialog_box.h"
-#include "video_tc_act2_emi_dxtv.h"
-#include "video_tc_act2_hanako_dxtv.h"
-#include "video_tc_act2_lilly_dxtv.h"
-#include "video_tc_act2_rin_dxtv.h"
-#include "video_tc_act2_shizune_dxtv.h"
 #include "../../butano/butano/hw/include/bn_hw_irq.h"
 #include "../../butano/butano/src/bn_bgs_manager.h"
 #include "../../butano/butano/src/bn_display_manager.h"
@@ -1928,23 +1932,23 @@ void SceneManager::show_title(const title_card_t tc) {
             ActOpening1().run();
             break;
         case TC_ACT2_EMI:
-            perform_render_video(video_tc_act2_emi_dxtv, "video_tc_act2_emi.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_emi_ulcv, "video_tc_act2_emi.ulc", globals::colors::WHITE);
             ActOpening2Emi().run();
             break;
         case TC_ACT2_HANAKO:
-            perform_render_video(video_tc_act2_hanako_dxtv, "video_tc_act2_hanako.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_hanako_ulcv, "video_tc_act2_hanako.ulc", globals::colors::WHITE);
             ActOpening2Hanako().run();
             break;
         case TC_ACT2_LILLY:
-            perform_render_video(video_tc_act2_lilly_dxtv, "video_tc_act2_lilly.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_lilly_ulcv, "video_tc_act2_lilly.ulc", globals::colors::WHITE);
             ActOpening2Lilly().run();
             break;
         case TC_ACT2_RIN:
-            perform_render_video(video_tc_act2_rin_dxtv, "video_tc_act2_rin.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_rin_ulcv, "video_tc_act2_rin.ulc", globals::colors::WHITE);
             ActOpening2Rin().run();
             break;
         case TC_ACT2_SHIZUNE:
-            perform_render_video(video_tc_act2_shizune_dxtv, "video_tc_act2_shizune.ulc", globals::colors::WHITE);
+            perform_render_video(video_tc_act2_shizune_ulcv, "video_tc_act2_shizune.ulc", globals::colors::WHITE);
             ActOpening2Shizune().run();
             break;
         case TC_ACT3_SHIZUNE:
@@ -1995,18 +1999,22 @@ void SceneManager::show_op1() {
     ks::timer::resume_ingame_timer();
 }
 
-void SceneManager::show_video(const uint8_t* dxtv_file, const char* audio_file) {
+void SceneManager::show_video(const uint8_t* video_file, const char* audio_file) {
     if (is_loading) {
         return;
     }
 
+    if (!video_file) {
+        BN_ERROR("show_video: null video stream");
+        return;
+    }
     bool force_white = false;
-    if (dxtv_file == video_4ls_dxtv) {
+    if (video_file == video_4ls_ulcv) {
         force_white = true;
     }
 
     ks::timer::pause_ingame_timer();
-    perform_render_video(dxtv_file, audio_file, ks::globals::colors::BLACK, force_white);
+    perform_render_video(video_file, audio_file, ks::globals::colors::BLACK, force_white);
     ks::timer::resume_ingame_timer();
 }
 
@@ -2255,11 +2263,11 @@ void SceneManager::perform_act_fadeout() {
     fade_out(globals::colors::WHITE, 120);
 }
 
-void SceneManager::perform_render_video(const uint8_t* dxtv_file, const char* audio_file, const bn::color clear) {
-    perform_render_video(dxtv_file, audio_file, clear, clear == globals::colors::WHITE);
+void SceneManager::perform_render_video(const uint8_t* video_file, const char* audio_file, const bn::color clear) {
+    perform_render_video(video_file, audio_file, clear, clear == globals::colors::WHITE);
 }
 
-void SceneManager::perform_render_video(const uint8_t* dxtv_file, const char* audio_file, const bn::color clear, const bool force_white_end) {
+void SceneManager::perform_render_video(const uint8_t* video_file, const char* audio_file, const bn::color clear, const bool force_white_end) {
     bn::blending::restore();
     sound_mixer::mute();
 
@@ -2272,7 +2280,7 @@ void SceneManager::perform_render_video(const uint8_t* dxtv_file, const char* au
     ks::globals::release_engine();
     bn::core::update();
 
-    videoplayer_init(dxtv_file, audio_file, clear.red(), clear.green(), clear.blue());
+    videoplayer_init(video_file, audio_file, clear.red(), clear.green(), clear.blue());
     videoplayer_play(force_white_end);
     videoplayer_clean();
 

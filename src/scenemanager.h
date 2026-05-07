@@ -250,7 +250,7 @@ public:
 
     static void show_title(const title_card_t tc);
     static void show_op1();
-    static void show_video(const uint8_t* dxtv_file, const char* audio_file);
+    static void show_video(const uint8_t* video_file, const char* audio_file);
 
     static void exit_scenario_from_ingame_menu();
 
@@ -278,8 +278,8 @@ public:
 private:
     static void perform_op1_fadeout();
     static void perform_act_fadeout();
-    static void perform_render_video(const uint8_t* dxtv_file, const char* audio_file, bn::color clear);
-    static void perform_render_video(const uint8_t* dxtv_file, const char* audio_file, bn::color clear, bool force_white_end);
+    static void perform_render_video(const uint8_t* video_file, const char* audio_file, bn::color clear);
+    static void perform_render_video(const uint8_t* video_file, const char* audio_file, bn::color clear, bool force_white_end);
     static int get_character_visual_index(character_t character, bool create_if_not_found = true);
     const char* _scenario;
 };
