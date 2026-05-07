@@ -33,6 +33,9 @@
 #include "scripts/script_a1_thursday.h"
 #include "scripts/script_a1_tuesday.h"
 #include "scripts/script_a1_wednesday.h"
+#include "scripts/script_a2_shizune.h"
+#include "scripts/script_a3_shizune.h"
+#include "scripts/script_a4_shizune.h"
 
 using size_type = int;
 
@@ -122,11 +125,11 @@ inline void game(const bool is_new_game) {
     } else if (ks::progress.force_route == FR_SHIZU) {
         // video: tc_act2_shizune
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_SHIZUNE););
-        // ks::globals::i18n->script_a2_shizune()();
-        // video: tc_act3_shizune
-        // ks::globals::i18n->script_a3_shizune()();
-        // video: tc_act4_shizune
-        // ks::globals::i18n->script_a4_shizune()();
+        ks::ScriptA2Shizune::a2_shizune();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT3_SHIZUNE););
+        ks::ScriptA3Shizune::a3_shizune();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT4_SHIZUNE););
+        ks::ScriptA4Shizune::a4_shizune();
         if (ks::progress.refuse_misha) {
             // GOOD ENDING
             // credits: credits_shizune

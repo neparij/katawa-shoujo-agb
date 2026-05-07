@@ -39,11 +39,11 @@ namespace ks {
         virtual ~dialog_box() = default;
 
         void proceed_message() {
-            BN_LOG("GENERATE LINES");
+            // BN_LOG("GENERATE LINES");
             _text_parser.generate_lines(_max_width);
-            BN_LOG("GENERATE COMMANDS");
+            // BN_LOG("GENERATE COMMANDS");
             _text_parser.generate_commands();
-            BN_LOG("---");
+            // BN_LOG("---");
         }
 
         [[nodiscard]] int pages_count() {
@@ -220,7 +220,7 @@ namespace ks {
         bn::optional<bn::regular_bg_ptr> nvl_box;
         bn::vector<unsigned int, 16> current_tl_indexes;
         bn::vector<unsigned int, 16> tl_index_lines_count;
-        bn::vector<bn::sprite_ptr, 8 * 14> text_cache_sprites; // +2 additional lines
+        bn::vector<bn::sprite_ptr, 8 * 15> text_cache_sprites; // 12 common +3 additional lines
         bn::optional<bn::camera_ptr> camera;
     };
 

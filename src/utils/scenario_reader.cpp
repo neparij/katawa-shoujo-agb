@@ -119,12 +119,12 @@ namespace ks::textdb {
                 if (!is_cjk) {
                     spm_index_size = 254 * 2;
                     spm_token_index = c0 - 1;
-                    BN_LOG("Token index: ", spm_token_index);
+                    // BN_LOG("Token index: ", spm_token_index);
                     i++;
                 } else {
                     spm_index_size = 2046 * 2;
                     spm_token_index = (c0 | c1 << 8) - 1;
-                    BN_LOG("Token index: ", spm_token_index);
+                    // BN_LOG("Token index: ", spm_token_index);
                     i += 2;
                 }
 
@@ -133,7 +133,7 @@ namespace ks::textdb {
 
                 // Start of token
                 const char* token_ptr = reinterpret_cast<char *>(spm_table + spm_index_size + spm_token_offset);
-                BN_LOG("Add SPM token", " <<", token_ptr, ">>");
+                // BN_LOG("Add SPM token", " <<", token_ptr, ">>");
 
                 for (int j = 0; ; j++) {
                     const char tc = token_ptr[j];

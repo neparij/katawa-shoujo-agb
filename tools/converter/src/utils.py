@@ -54,45 +54,21 @@ def sanitize_ingame_text(text: str):
     # text = text.replace("　", " ") # Ideographic space (CJK)
     return text
 
-def get_x_position(value: float, anchor: float = 0.5) -> int:
-    """
-    Converts a relative X position (0.0 to 1.0) with anchor (0.0 to 1.0) to an absolute X position (-120 to 120).
-    """
-    sprite_width = 128
-    anchor_offset = int((anchor - 0.5) * sprite_width)
-    return int(-120 + value * 240) - anchor_offset
-    # return int(-120 + value * 240)
+def fixed_literal(value: float) -> str:
+    """Render a Python float as a Butano `bn::fixed` literal preserving
+    the converter's normalised Ren'Py semantics (0.0 = left/top edge,
+    1.0 = right/bottom edge of the relevant container).
 
-def get_xalign_position(value: float) -> int:
+    Position resolution — anchor offset, screen mapping — happens at
+    runtime in `SceneManager` (see `_resolve_pixel_position` in
+    `src/scenemanager.cpp`) where the actual `body.vis_*` bbox of the
+    current variant is known. The converter no longer hardcodes
+    `sprite_width = 128`; that hack mispositioned every body whose
+    visible width differs from 128 px (which is most of them — bodies
+    range ~64..120 px). See `tools/converter/src/utils.py` history /
+    `git blame` for the pre-migration math.
     """
-    Converts a relative X position to an absolute X position with sprite alignment.
-    The sprite's anchor is centered.
-
-    :param value: Relative X position (0.0 to 1.0).
-    :return: Aligned absolute X position.
-    """
-    # sprite_width = 128
-    # anchor_offset = -sprite_width // 2 + int(value * sprite_width)
-    # return get_x_position(value) - anchor_offset
-    return get_x_position(value, anchor=value)
-
-def get_y_position(value: float) -> int:
-    """
-    Converts a relative Y position (0.0 to 1.0) to an absolute Y position (-80 to 80).
-    """
-    return int(-80 + value * 160)
-
-def get_yalign_position(value: float) -> int:
-    """
-    Converts a relative Y position to an absolute Y position with sprite alignment.
-    The sprite's anchor is centered.
-
-    :param value: Relative X position (0.0 to 1.0).
-    :return: Aligned absolute X position.
-    """
-    sprite_height = 160
-    anchor_offset = -sprite_height // 2 + int(value * sprite_height)
-    return get_y_position(value) - anchor_offset
+    return f"bn::fixed({value:g})"
 
 def get_paletted_variant(variant: str) -> (str, str):
     if variant.endswith("_ss"):

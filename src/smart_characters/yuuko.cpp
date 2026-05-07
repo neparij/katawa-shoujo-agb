@@ -1,0 +1,754 @@
+#include "smart_characters/yuuko.h"
+
+#include "bn_regular_bg_tiles_items_yuuko_tiles_0.h"
+#include "bn_bg_palette_items_pal_char_bg.h"
+#include "bn_sprite_tiles_items_yuuko_thumb_down.h"
+#include "bn_sprite_tiles_items_yuuko_thumb_down_close.h"
+#include "bn_sprite_tiles_items_yuuko_thumb_up.h"
+#include "bn_sprite_tiles_items_yuuko_thumb_up_close.h"
+#include "bn_sprite_tiles_items_yuukoshang_thumb_down.h"
+#include "bn_sprite_tiles_items_yuukoshang_thumb_up.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_closedhappy.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_closedhappy_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_cry.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_happy.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_happy_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_neurotic.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_neutral.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_neutral_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_panic.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_smile.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_smile_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_worried.h"
+#include "bn_sprite_tiles_items_yuuko_spr_down_worried_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_closedhappy.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_closedhappy_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_cry.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_happy.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_happy_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_neurotic.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_neutral.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_neutral_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_panic.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_panic_close.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_smile.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_worried.h"
+#include "bn_sprite_tiles_items_yuuko_spr_up_worried_close.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_down_closedhappy.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_down_happy.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_down_neurotic.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_down_neutral.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_down_panic.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_down_smile.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_down_worried.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_closedhappy.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_happy.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_neurotic.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_neutral.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_noglasses.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_panic.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_smile.h"
+#include "bn_sprite_tiles_items_yuukoshang_spr_up_worried.h"
+
+namespace ks::smart_characters::yuuko {
+
+static const bn::regular_bg_tiles_item* const slab_table[1] = {
+    &bn::regular_bg_tiles_items::yuuko_tiles_0,
+};
+
+const tileset_data tileset = {
+    /* slabs       */ slab_table,
+    /* slab_count  */ 1,
+    /* palette     */ &bn::bg_palette_items::pal_char_bg,
+};
+
+alignas(int) static const uint16_t yuuko_up_body_used[108] = {
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+    32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+    48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+    64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
+    80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+    96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107,
+};
+
+alignas(int) static const unsigned char yuuko_up_body_map_rle[268] = {
+    0x30, 0x00, 0x08, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x95, 0x00, 0x02, 0x01, 0x00, 0x02,
+    0xB8, 0x00, 0x06, 0x03, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0xFF, 0x00, 0xFF, 0x00, 0xB0, 0x00,
+    0x0A, 0x07, 0x00, 0x08, 0x00, 0x09, 0x00, 0x0A, 0x00, 0x0B, 0x00, 0x0C, 0xB0, 0x00, 0x0E, 0x0D,
+    0x00, 0x0E, 0x00, 0x0F, 0x00, 0x10, 0x00, 0x11, 0x00, 0x12, 0x00, 0x13, 0x00, 0x14, 0xAE, 0x00,
+    0x0E, 0x15, 0x00, 0x16, 0x00, 0x17, 0x00, 0x18, 0x00, 0x19, 0x00, 0x1A, 0x00, 0x1B, 0x00, 0x1C,
+    0xAE, 0x00, 0x0E, 0x1D, 0x00, 0x1E, 0x00, 0x1F, 0x00, 0x20, 0x00, 0x21, 0x00, 0x22, 0x00, 0x23,
+    0x00, 0x24, 0xAE, 0x00, 0x0E, 0x25, 0x00, 0x26, 0x00, 0x27, 0x00, 0x28, 0x00, 0x29, 0x00, 0x2A,
+    0x00, 0x2B, 0x00, 0x2C, 0xAE, 0x00, 0x0E, 0x2D, 0x00, 0x2E, 0x00, 0x2F, 0x00, 0x30, 0x00, 0x31,
+    0x00, 0x32, 0x00, 0x33, 0x00, 0x34, 0xB0, 0x00, 0x0A, 0x35, 0x00, 0x36, 0x00, 0x37, 0x00, 0x38,
+    0x00, 0x39, 0x00, 0x3A, 0xB2, 0x00, 0x0A, 0x3B, 0x00, 0x3C, 0x00, 0x3D, 0x00, 0x3E, 0x00, 0x3F,
+    0x00, 0x40, 0xB2, 0x00, 0x0A, 0x41, 0x00, 0x42, 0x00, 0x43, 0x00, 0x44, 0x00, 0x45, 0x00, 0x46,
+    0xB2, 0x00, 0x0A, 0x47, 0x00, 0x48, 0x00, 0x49, 0x00, 0x4A, 0x00, 0x4B, 0x00, 0x4C, 0xB0, 0x00,
+    0x0C, 0x4D, 0x00, 0x4E, 0x00, 0x4F, 0x00, 0x50, 0x00, 0x51, 0x00, 0x52, 0x00, 0x53, 0xB0, 0x00,
+    0x0E, 0x54, 0x00, 0x55, 0x00, 0x56, 0x00, 0x57, 0x00, 0x58, 0x00, 0x59, 0x00, 0x5A, 0x00, 0x5B,
+    0xAE, 0x00, 0x0E, 0x5C, 0x00, 0x5D, 0x00, 0x5E, 0x00, 0x5F, 0x00, 0x60, 0x00, 0x61, 0x00, 0x62,
+    0x00, 0x63, 0xAE, 0x00, 0x0E, 0x64, 0x00, 0x65, 0x00, 0x66, 0x00, 0x67, 0x00, 0x68, 0x00, 0x69,
+    0x00, 0x6A, 0x00, 0x6B, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x90, 0x00,
+};
+
+const body yuuko_up_body = {
+    /* used_tiles      */ yuuko_up_body_used,
+    /* used_count      */ 108,
+    /* map_compressed  */ yuuko_up_body_map_rle,
+    /* vis_x0          */ 12,
+    /* vis_x1          */ 20,
+    /* vis_y0          */ 6,
+    /* vis_y1          */ 26,
+    /* render_w_px     */ 59,
+    /* render_h_px     */ 160,
+    /* tileset         */ &tileset,
+    /* thumbnail_tiles */ &bn::sprite_tiles_items::yuuko_thumb_up,
+};
+
+alignas(int) static const uint16_t yuuko_down_body_used[106] = {
+    0, 1, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 13, 119, 120,
+    121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136,
+    137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 42, 147, 148, 149, 150, 151,
+    152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167,
+    168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 77, 179, 180, 181, 182,
+    183, 184, 185, 186, 187, 188, 189, 190, 191, 91, 192, 193, 194, 195, 196, 97,
+    197, 198, 199, 200, 201, 103, 202, 203, 204, 205,
+};
+
+alignas(int) static const unsigned char yuuko_down_body_map_rle[264] = {
+    0x30, 0x00, 0x08, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x95, 0x00, 0x02, 0x01, 0x00, 0x02,
+    0xB8, 0x00, 0x06, 0x03, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06, 0xFF, 0x00, 0xFF, 0x00, 0xB0, 0x00,
+    0x0A, 0x07, 0x00, 0x08, 0x00, 0x09, 0x00, 0x0A, 0x00, 0x0B, 0x00, 0x0C, 0xB0, 0x00, 0x0E, 0x0D,
+    0x00, 0x0E, 0x00, 0x0F, 0x00, 0x10, 0x00, 0x11, 0x00, 0x12, 0x00, 0x13, 0x00, 0x14, 0xAE, 0x00,
+    0x0E, 0x15, 0x00, 0x16, 0x00, 0x17, 0x00, 0x18, 0x00, 0x19, 0x00, 0x1A, 0x00, 0x1B, 0x00, 0x1C,
+    0xAE, 0x00, 0x0E, 0x1D, 0x00, 0x1E, 0x00, 0x1F, 0x00, 0x20, 0x00, 0x21, 0x00, 0x22, 0x00, 0x23,
+    0x00, 0x24, 0xAE, 0x00, 0x0E, 0x25, 0x00, 0x26, 0x00, 0x27, 0x00, 0x28, 0x00, 0x29, 0x00, 0x2A,
+    0x00, 0x2B, 0x00, 0x2C, 0xB0, 0x00, 0x0A, 0x2D, 0x00, 0x2E, 0x00, 0x2F, 0x00, 0x30, 0x00, 0x31,
+    0x00, 0x32, 0xB2, 0x00, 0x0A, 0x33, 0x00, 0x34, 0x00, 0x35, 0x00, 0x36, 0x00, 0x37, 0x00, 0x38,
+    0xB2, 0x00, 0x0A, 0x39, 0x00, 0x3A, 0x00, 0x3B, 0x00, 0x3C, 0x00, 0x3D, 0x00, 0x3E, 0xB2, 0x00,
+    0x0A, 0x3F, 0x00, 0x40, 0x00, 0x41, 0x00, 0x42, 0x00, 0x43, 0x00, 0x44, 0xB2, 0x00, 0x0A, 0x45,
+    0x00, 0x46, 0x00, 0x47, 0x00, 0x48, 0x00, 0x49, 0x00, 0x4A, 0xB0, 0x00, 0x0C, 0x4B, 0x00, 0x4C,
+    0x00, 0x4D, 0x00, 0x4E, 0x00, 0x4F, 0x00, 0x50, 0x00, 0x51, 0xB0, 0x00, 0x0E, 0x52, 0x00, 0x53,
+    0x00, 0x54, 0x00, 0x55, 0x00, 0x56, 0x00, 0x57, 0x00, 0x58, 0x00, 0x59, 0xAE, 0x00, 0x0E, 0x5A,
+    0x00, 0x5B, 0x00, 0x5C, 0x00, 0x5D, 0x00, 0x5E, 0x00, 0x5F, 0x00, 0x60, 0x00, 0x61, 0xAE, 0x00,
+    0x0E, 0x62, 0x00, 0x63, 0x00, 0x64, 0x00, 0x65, 0x00, 0x66, 0x00, 0x67, 0x00, 0x68, 0x00, 0x69,
+    0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x90, 0x00,
+};
+
+const body yuuko_down_body = {
+    /* used_tiles      */ yuuko_down_body_used,
+    /* used_count      */ 106,
+    /* map_compressed  */ yuuko_down_body_map_rle,
+    /* vis_x0          */ 12,
+    /* vis_x1          */ 20,
+    /* vis_y0          */ 6,
+    /* vis_y1          */ 26,
+    /* render_w_px     */ 59,
+    /* render_h_px     */ 160,
+    /* tileset         */ &tileset,
+    /* thumbnail_tiles */ &bn::sprite_tiles_items::yuuko_thumb_down,
+};
+
+alignas(int) static const uint16_t yuuko_up_close_body_used[146] = {
+    0, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220,
+    221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236,
+    237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252,
+    253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268,
+    269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284,
+    285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300,
+    301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316,
+    317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332,
+    333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348,
+    349, 350,
+};
+
+alignas(int) static const unsigned char yuuko_up_close_body_map_rle[340] = {
+    0x30, 0x00, 0x08, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00,
+    0xFF, 0x00, 0x87, 0x00, 0x0E, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06,
+    0x00, 0x07, 0x00, 0x08, 0xAC, 0x00, 0x12, 0x09, 0x00, 0x0A, 0x00, 0x0B, 0x00, 0x0C, 0x00, 0x0D,
+    0x00, 0x0E, 0x00, 0x0F, 0x00, 0x10, 0x00, 0x11, 0x00, 0x12, 0xA8, 0x00, 0x16, 0x13, 0x00, 0x14,
+    0x00, 0x15, 0x00, 0x16, 0x00, 0x17, 0x00, 0x18, 0x00, 0x19, 0x00, 0x1A, 0x00, 0x1B, 0x00, 0x1C,
+    0x00, 0x1D, 0x00, 0x1E, 0xA6, 0x00, 0x16, 0x1F, 0x00, 0x20, 0x00, 0x21, 0x00, 0x22, 0x00, 0x23,
+    0x00, 0x24, 0x00, 0x25, 0x00, 0x26, 0x00, 0x27, 0x00, 0x28, 0x00, 0x29, 0x00, 0x2A, 0xA6, 0x00,
+    0x16, 0x2B, 0x00, 0x2C, 0x00, 0x2D, 0x00, 0x2E, 0x00, 0x2F, 0x00, 0x30, 0x00, 0x31, 0x00, 0x32,
+    0x00, 0x33, 0x00, 0x34, 0x00, 0x35, 0x00, 0x36, 0xA6, 0x00, 0x18, 0x37, 0x00, 0x38, 0x00, 0x39,
+    0x00, 0x3A, 0x00, 0x3B, 0x00, 0x3C, 0x00, 0x3D, 0x00, 0x3E, 0x00, 0x3F, 0x00, 0x40, 0x00, 0x41,
+    0x00, 0x42, 0x00, 0x43, 0xA2, 0x00, 0x1A, 0x44, 0x00, 0x45, 0x00, 0x46, 0x00, 0x47, 0x00, 0x48,
+    0x00, 0x49, 0x00, 0x4A, 0x00, 0x4B, 0x00, 0x4C, 0x00, 0x4D, 0x00, 0x4E, 0x00, 0x4F, 0x00, 0x50,
+    0x00, 0x51, 0xA2, 0x00, 0x1A, 0x52, 0x00, 0x53, 0x00, 0x54, 0x00, 0x55, 0x00, 0x56, 0x00, 0x57,
+    0x00, 0x58, 0x00, 0x59, 0x00, 0x5A, 0x00, 0x5B, 0x00, 0x5C, 0x00, 0x5D, 0x00, 0x5E, 0x00, 0x5F,
+    0xA2, 0x00, 0x1A, 0x60, 0x00, 0x61, 0x00, 0x62, 0x00, 0x63, 0x00, 0x64, 0x00, 0x65, 0x00, 0x66,
+    0x00, 0x67, 0x00, 0x68, 0x00, 0x69, 0x00, 0x6A, 0x00, 0x6B, 0x00, 0x6C, 0x00, 0x6D, 0xA4, 0x00,
+    0x16, 0x6E, 0x00, 0x6F, 0x00, 0x70, 0x00, 0x71, 0x00, 0x72, 0x00, 0x73, 0x00, 0x74, 0x00, 0x75,
+    0x00, 0x76, 0x00, 0x77, 0x00, 0x78, 0x00, 0x79, 0xA6, 0x00, 0x16, 0x7A, 0x00, 0x7B, 0x00, 0x7C,
+    0x00, 0x7D, 0x00, 0x7E, 0x00, 0x7F, 0x00, 0x80, 0x00, 0x81, 0x00, 0x82, 0x00, 0x83, 0x00, 0x84,
+    0x00, 0x85, 0xA6, 0x00, 0x16, 0x86, 0x00, 0x87, 0x00, 0x88, 0x00, 0x89, 0x00, 0x8A, 0x00, 0x8B,
+    0x00, 0x8C, 0x00, 0x8D, 0x00, 0x8E, 0x00, 0x8F, 0x00, 0x90, 0x00, 0x91, 0xFF, 0x00, 0xFF, 0x00,
+    0xFF, 0x00, 0x8C, 0x00,
+};
+
+const body yuuko_up_close_body = {
+    /* used_tiles      */ yuuko_up_close_body_used,
+    /* used_count      */ 146,
+    /* map_compressed  */ yuuko_up_close_body_map_rle,
+    /* vis_x0          */ 9,
+    /* vis_x1          */ 23,
+    /* vis_y0          */ 14,
+    /* vis_y1          */ 26,
+    /* render_w_px     */ 102,
+    /* render_h_px     */ 160,
+    /* tileset         */ &tileset,
+    /* thumbnail_tiles */ &bn::sprite_tiles_items::yuuko_thumb_up_close,
+};
+
+alignas(int) static const uint16_t yuuko_down_close_body_used[140] = {
+    0, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365,
+    366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381,
+    382, 383, 384, 240, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 251, 252,
+    395, 396, 397, 398, 399, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410,
+    411, 412, 413, 414, 415, 416, 417, 418, 419, 420, 421, 422, 423, 424, 425, 426,
+    427, 428, 429, 430, 291, 431, 432, 433, 296, 297, 434, 435, 436, 437, 438, 439,
+    440, 441, 442, 443, 444, 310, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454,
+    455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470,
+    471, 472, 473, 474, 475, 476, 477, 478, 479, 480, 481, 482,
+};
+
+alignas(int) static const unsigned char yuuko_down_close_body_map_rle[332] = {
+    0x30, 0x00, 0x08, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00,
+    0xFF, 0x00, 0x87, 0x00, 0x0E, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x04, 0x00, 0x05, 0x00, 0x06,
+    0x00, 0x07, 0x00, 0x08, 0xAC, 0x00, 0x12, 0x09, 0x00, 0x0A, 0x00, 0x0B, 0x00, 0x0C, 0x00, 0x0D,
+    0x00, 0x0E, 0x00, 0x0F, 0x00, 0x10, 0x00, 0x11, 0x00, 0x12, 0xA8, 0x00, 0x16, 0x13, 0x00, 0x14,
+    0x00, 0x15, 0x00, 0x16, 0x00, 0x17, 0x00, 0x18, 0x00, 0x19, 0x00, 0x1A, 0x00, 0x1B, 0x00, 0x1C,
+    0x00, 0x1D, 0x00, 0x1E, 0xA6, 0x00, 0x16, 0x1F, 0x00, 0x20, 0x00, 0x21, 0x00, 0x22, 0x00, 0x23,
+    0x00, 0x24, 0x00, 0x25, 0x00, 0x26, 0x00, 0x27, 0x00, 0x28, 0x00, 0x29, 0x00, 0x2A, 0xA6, 0x00,
+    0x16, 0x2B, 0x00, 0x2C, 0x00, 0x2D, 0x00, 0x2E, 0x00, 0x2F, 0x00, 0x30, 0x00, 0x31, 0x00, 0x32,
+    0x00, 0x33, 0x00, 0x34, 0x00, 0x35, 0x00, 0x36, 0xA6, 0x00, 0x18, 0x37, 0x00, 0x38, 0x00, 0x39,
+    0x00, 0x3A, 0x00, 0x3B, 0x00, 0x3C, 0x00, 0x3D, 0x00, 0x3E, 0x00, 0x3F, 0x00, 0x40, 0x00, 0x41,
+    0x00, 0x42, 0x00, 0x43, 0xA4, 0x00, 0x18, 0x44, 0x00, 0x45, 0x00, 0x46, 0x00, 0x47, 0x00, 0x48,
+    0x00, 0x49, 0x00, 0x4A, 0x00, 0x4B, 0x00, 0x4C, 0x00, 0x4D, 0x00, 0x4E, 0x00, 0x4F, 0x00, 0x50,
+    0xA4, 0x00, 0x18, 0x51, 0x00, 0x52, 0x00, 0x53, 0x00, 0x54, 0x00, 0x55, 0x00, 0x56, 0x00, 0x57,
+    0x00, 0x58, 0x00, 0x58, 0x00, 0x59, 0x00, 0x5A, 0x00, 0x5B, 0x00, 0x5C, 0xA4, 0x00, 0x18, 0x5D,
+    0x00, 0x5E, 0x00, 0x5F, 0x00, 0x60, 0x00, 0x61, 0x00, 0x62, 0x00, 0x63, 0x00, 0x64, 0x00, 0x65,
+    0x00, 0x66, 0x00, 0x67, 0x00, 0x68, 0x00, 0x69, 0xA4, 0x00, 0x16, 0x6A, 0x00, 0x6B, 0x00, 0x6C,
+    0x00, 0x6D, 0x00, 0x6E, 0x00, 0x6F, 0x00, 0x70, 0x00, 0x71, 0x00, 0x72, 0x00, 0x73, 0x00, 0x74,
+    0x00, 0x75, 0xA6, 0x00, 0x14, 0x76, 0x00, 0x77, 0x00, 0x78, 0x00, 0x79, 0x00, 0x7A, 0x00, 0x7B,
+    0x00, 0x7C, 0x00, 0x7D, 0x00, 0x7E, 0x00, 0x7F, 0x00, 0x80, 0xA8, 0x00, 0x14, 0x81, 0x00, 0x82,
+    0x00, 0x83, 0x00, 0x84, 0x00, 0x85, 0x00, 0x86, 0x00, 0x87, 0x00, 0x88, 0x00, 0x89, 0x00, 0x8A,
+    0x00, 0x8B, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x8E, 0x00, 0x00, 0x00,
+};
+
+const body yuuko_down_close_body = {
+    /* used_tiles      */ yuuko_down_close_body_used,
+    /* used_count      */ 140,
+    /* map_compressed  */ yuuko_down_close_body_map_rle,
+    /* vis_x0          */ 10,
+    /* vis_x1          */ 23,
+    /* vis_y0          */ 14,
+    /* vis_y1          */ 26,
+    /* render_w_px     */ 102,
+    /* render_h_px     */ 160,
+    /* tileset         */ &tileset,
+    /* thumbnail_tiles */ &bn::sprite_tiles_items::yuuko_thumb_down_close,
+};
+
+alignas(int) static const uint16_t yuukoshang_up_body_used[112] = {
+    0, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, 494, 495, 496, 497,
+    498, 499, 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513,
+    514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529,
+    530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545,
+    546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561,
+    562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577,
+    578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593,
+};
+
+alignas(int) static const unsigned char yuukoshang_up_body_map_rle[276] = {
+    0x30, 0x00, 0x08, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x95, 0x00, 0x06, 0x01, 0x00, 0x02,
+    0x00, 0x03, 0x00, 0x04, 0xB2, 0x00, 0x0A, 0x05, 0x00, 0x06, 0x00, 0x07, 0x00, 0x08, 0x00, 0x09,
+    0x00, 0x0A, 0xFF, 0x00, 0xFF, 0x00, 0xAE, 0x00, 0x0A, 0x0B, 0x00, 0x0C, 0x00, 0x0D, 0x00, 0x0E,
+    0x00, 0x0F, 0x00, 0x10, 0xB0, 0x00, 0x0E, 0x11, 0x00, 0x12, 0x00, 0x13, 0x00, 0x14, 0x00, 0x15,
+    0x00, 0x16, 0x00, 0x17, 0x00, 0x18, 0xAE, 0x00, 0x0E, 0x19, 0x00, 0x1A, 0x00, 0x1B, 0x00, 0x1C,
+    0x00, 0x1D, 0x00, 0x1E, 0x00, 0x1F, 0x00, 0x20, 0xAE, 0x00, 0x0E, 0x21, 0x00, 0x22, 0x00, 0x23,
+    0x00, 0x24, 0x00, 0x25, 0x00, 0x26, 0x00, 0x27, 0x00, 0x28, 0xAE, 0x00, 0x0E, 0x29, 0x00, 0x2A,
+    0x00, 0x2B, 0x00, 0x2C, 0x00, 0x2D, 0x00, 0x2E, 0x00, 0x2F, 0x00, 0x30, 0xAE, 0x00, 0x0E, 0x31,
+    0x00, 0x32, 0x00, 0x33, 0x00, 0x34, 0x00, 0x35, 0x00, 0x36, 0x00, 0x37, 0x00, 0x38, 0xAE, 0x00,
+    0x0C, 0x39, 0x00, 0x3A, 0x00, 0x3B, 0x00, 0x3C, 0x00, 0x3D, 0x00, 0x3E, 0x00, 0x3F, 0xB2, 0x00,
+    0x0A, 0x40, 0x00, 0x41, 0x00, 0x42, 0x00, 0x43, 0x00, 0x44, 0x00, 0x45, 0xB0, 0x00, 0x0C, 0x46,
+    0x00, 0x47, 0x00, 0x48, 0x00, 0x49, 0x00, 0x4A, 0x00, 0x4B, 0x00, 0x4C, 0xB0, 0x00, 0x0C, 0x4D,
+    0x00, 0x4E, 0x00, 0x4F, 0x00, 0x50, 0x00, 0x51, 0x00, 0x52, 0x00, 0x53, 0xB0, 0x00, 0x0C, 0x54,
+    0x00, 0x55, 0x00, 0x56, 0x00, 0x57, 0x00, 0x58, 0x00, 0x59, 0x00, 0x5A, 0xB0, 0x00, 0x0C, 0x5B,
+    0x00, 0x5C, 0x00, 0x5D, 0x00, 0x5E, 0x00, 0x5F, 0x00, 0x60, 0x00, 0x61, 0xB0, 0x00, 0x0C, 0x62,
+    0x00, 0x63, 0x00, 0x64, 0x00, 0x65, 0x00, 0x66, 0x00, 0x67, 0x00, 0x68, 0xB0, 0x00, 0x0C, 0x69,
+    0x00, 0x6A, 0x00, 0x6B, 0x00, 0x6C, 0x00, 0x6D, 0x00, 0x6E, 0x00, 0x6F, 0xFF, 0x00, 0xFF, 0x00,
+    0xFF, 0x00, 0x92, 0x00,
+};
+
+const body yuukoshang_up_body = {
+    /* used_tiles      */ yuukoshang_up_body_used,
+    /* used_count      */ 112,
+    /* map_compressed  */ yuukoshang_up_body_map_rle,
+    /* vis_x0          */ 12,
+    /* vis_x1          */ 20,
+    /* vis_y0          */ 6,
+    /* vis_y1          */ 26,
+    /* render_w_px     */ 59,
+    /* render_h_px     */ 160,
+    /* tileset         */ &tileset,
+    /* thumbnail_tiles */ &bn::sprite_tiles_items::yuukoshang_thumb_up,
+};
+
+alignas(int) static const uint16_t yuukoshang_down_body_used[109] = {
+    0, 594, 484, 485, 486, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605,
+    606, 607, 608, 609, 610, 611, 612, 613, 614, 615, 616, 617, 618, 619, 620, 621,
+    622, 623, 624, 625, 626, 627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637,
+    638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653,
+    654, 655, 656, 552, 657, 658, 659, 660, 661, 662, 559, 663, 664, 665, 666, 667,
+    668, 669, 670, 671, 672, 673, 674, 675, 573, 676, 677, 678, 679, 680, 681, 682,
+    683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695,
+};
+
+alignas(int) static const unsigned char yuukoshang_down_body_map_rle[272] = {
+    0x30, 0x00, 0x08, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x95, 0x00, 0x06, 0x01, 0x00, 0x02,
+    0x00, 0x03, 0x00, 0x04, 0xB2, 0x00, 0x0A, 0x05, 0x00, 0x06, 0x00, 0x07, 0x00, 0x08, 0x00, 0x09,
+    0x00, 0x0A, 0xFF, 0x00, 0xFF, 0x00, 0xAE, 0x00, 0x0A, 0x0B, 0x00, 0x0C, 0x00, 0x0D, 0x00, 0x0E,
+    0x00, 0x0F, 0x00, 0x10, 0xB0, 0x00, 0x0E, 0x11, 0x00, 0x12, 0x00, 0x13, 0x00, 0x14, 0x00, 0x15,
+    0x00, 0x16, 0x00, 0x17, 0x00, 0x18, 0xAE, 0x00, 0x0E, 0x19, 0x00, 0x1A, 0x00, 0x1B, 0x00, 0x1C,
+    0x00, 0x1D, 0x00, 0x1E, 0x00, 0x1F, 0x00, 0x20, 0xAE, 0x00, 0x0E, 0x21, 0x00, 0x22, 0x00, 0x23,
+    0x00, 0x24, 0x00, 0x25, 0x00, 0x26, 0x00, 0x27, 0x00, 0x28, 0xAE, 0x00, 0x0E, 0x29, 0x00, 0x2A,
+    0x00, 0x2B, 0x00, 0x2C, 0x00, 0x2D, 0x00, 0x2E, 0x00, 0x2F, 0x00, 0x30, 0xB0, 0x00, 0x0A, 0x31,
+    0x00, 0x32, 0x00, 0x33, 0x00, 0x34, 0x00, 0x35, 0x00, 0x36, 0xB2, 0x00, 0x0A, 0x37, 0x00, 0x38,
+    0x00, 0x39, 0x00, 0x3A, 0x00, 0x3B, 0x00, 0x3C, 0xB2, 0x00, 0x0A, 0x3D, 0x00, 0x3E, 0x00, 0x3F,
+    0x00, 0x40, 0x00, 0x41, 0x00, 0x42, 0xB0, 0x00, 0x0C, 0x43, 0x00, 0x44, 0x00, 0x45, 0x00, 0x46,
+    0x00, 0x47, 0x00, 0x48, 0x00, 0x49, 0xB0, 0x00, 0x0C, 0x4A, 0x00, 0x4B, 0x00, 0x4C, 0x00, 0x4D,
+    0x00, 0x4E, 0x00, 0x4F, 0x00, 0x50, 0xB0, 0x00, 0x0C, 0x51, 0x00, 0x52, 0x00, 0x53, 0x00, 0x54,
+    0x00, 0x55, 0x00, 0x56, 0x00, 0x57, 0xB0, 0x00, 0x0C, 0x58, 0x00, 0x59, 0x00, 0x5A, 0x00, 0x5B,
+    0x00, 0x5C, 0x00, 0x5D, 0x00, 0x5E, 0xB0, 0x00, 0x0C, 0x5F, 0x00, 0x60, 0x00, 0x61, 0x00, 0x62,
+    0x00, 0x63, 0x00, 0x64, 0x00, 0x65, 0xB0, 0x00, 0x0C, 0x66, 0x00, 0x67, 0x00, 0x68, 0x00, 0x69,
+    0x00, 0x6A, 0x00, 0x6B, 0x00, 0x6C, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0x92, 0x00, 0x00, 0x00,
+};
+
+const body yuukoshang_down_body = {
+    /* used_tiles      */ yuukoshang_down_body_used,
+    /* used_count      */ 109,
+    /* map_compressed  */ yuukoshang_down_body_map_rle,
+    /* vis_x0          */ 12,
+    /* vis_x1          */ 20,
+    /* vis_y0          */ 6,
+    /* vis_y1          */ 26,
+    /* render_w_px     */ 59,
+    /* render_h_px     */ 160,
+    /* tileset         */ &tileset,
+    /* thumbnail_tiles */ &bn::sprite_tiles_items::yuukoshang_thumb_down,
+};
+
+const variant yuuko_up_cry = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_cry,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_up_neutral = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_neutral,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_up_closedhappy = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_closedhappy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_up_worried = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_worried,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_up_smile = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_smile,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_up_neurotic = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_neurotic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_up_happy = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_happy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_up_panic = {
+    /* body                */ &yuuko_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_panic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x1B60,
+};
+
+const variant yuuko_down_neurotic = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_neurotic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_down_happy = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_happy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_down_worried = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_worried,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_down_cry = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_cry,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_down_neutral = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_neutral,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_down_smile = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_smile,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_down_closedhappy = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_closedhappy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_down_panic = {
+    /* body                */ &yuuko_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_panic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xC85A,
+};
+
+const variant yuuko_up_close_neutral = {
+    /* body                */ &yuuko_up_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_neutral_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0x29E6,
+};
+
+const variant yuuko_up_close_closedhappy = {
+    /* body                */ &yuuko_up_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_closedhappy_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0x29E6,
+};
+
+const variant yuuko_up_close_worried = {
+    /* body                */ &yuuko_up_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_worried_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0x29E6,
+};
+
+const variant yuuko_up_close_happy = {
+    /* body                */ &yuuko_up_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_happy_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0x29E6,
+};
+
+const variant yuuko_up_close_panic = {
+    /* body                */ &yuuko_up_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_up_panic_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0x29E6,
+};
+
+const variant yuuko_down_close_worried = {
+    /* body                */ &yuuko_down_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_worried_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0xDCAD,
+};
+
+const variant yuuko_down_close_neutral = {
+    /* body                */ &yuuko_down_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_neutral_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0xDCAD,
+};
+
+const variant yuuko_down_close_closedhappy = {
+    /* body                */ &yuuko_down_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_closedhappy_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0xDCAD,
+};
+
+const variant yuuko_down_close_happy = {
+    /* body                */ &yuuko_down_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_happy_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0xDCAD,
+};
+
+const variant yuuko_down_close_smile = {
+    /* body                */ &yuuko_down_close_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuuko_spr_down_smile_close,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 6,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 8,
+    /* hash                */ 0xDCAD,
+};
+
+const variant yuukoshang_up_noglasses = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_noglasses,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_up_happy = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_happy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_up_panic = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_panic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_up_worried = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_worried,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_up_neurotic = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_neurotic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_up_smile = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_smile,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_up_neutral = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_neutral,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_up_closedhappy = {
+    /* body                */ &yuukoshang_up_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_up_closedhappy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0x254F,
+};
+
+const variant yuukoshang_down_closedhappy = {
+    /* body                */ &yuukoshang_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_down_closedhappy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xE26A,
+};
+
+const variant yuukoshang_down_happy = {
+    /* body                */ &yuukoshang_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_down_happy,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xE26A,
+};
+
+const variant yuukoshang_down_worried = {
+    /* body                */ &yuukoshang_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_down_worried,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xE26A,
+};
+
+const variant yuukoshang_down_panic = {
+    /* body                */ &yuukoshang_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_down_panic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xE26A,
+};
+
+const variant yuukoshang_down_smile = {
+    /* body                */ &yuukoshang_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_down_smile,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xE26A,
+};
+
+const variant yuukoshang_down_neutral = {
+    /* body                */ &yuukoshang_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_down_neutral,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xE26A,
+};
+
+const variant yuukoshang_down_neurotic = {
+    /* body                */ &yuukoshang_down_body,
+    /* face_tiles          */ &bn::sprite_tiles_items::yuukoshang_spr_down_neurotic,
+    /* face_offset_x_cells */ 12,
+    /* face_offset_y_cells */ 8,
+    /* face_size_x_cells   */ 8,
+    /* face_size_y_cells   */ 4,
+    /* hash                */ 0xE26A,
+};
+
+}  // namespace ks::smart_characters::yuuko

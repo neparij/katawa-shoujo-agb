@@ -5,9 +5,6 @@ import tempfile
 from typing import List
 
 from PIL import Image, ImageOps
-# import Image, ImageOps
-from tilequant import Tilequant
-from tilequant.image_converter import DitheringMode
 
 IMAGEMAGICK = "magick"
 IMGDITHER = "/Users/n.laptev/development/gba/imgdither/release/imgdither"
@@ -78,6 +75,8 @@ class ImageTools:
             canvas.paste(remove, remove_offset)
 
         if not use_sample_palette:
+            from tilequant import Tilequant
+            from tilequant.image_converter import DitheringMode
             print(f"Quantizing: {output_filename}")
             converter = Tilequant(canvas, ImageTools.TRANSPARENT_COLOR)
             quantized = converter.convert(num_palettes=palettes, colors_per_palette=colors,
@@ -149,14 +148,22 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors)
 
     @staticmethod
-    def resize_character_background(input_filename: str, output_filename: str, remove_size: tuple[int, int], remove_offset: tuple[int, int], y_offset = 0, tint: tuple[int, int, int] | None = None):
+    def resize_character_background(input_filename: str, output_filename: str, y_offset: int = 0,
+                                    face_cutout_offset: tuple[int, int] | None = None,
+                                    face_cutout_size: tuple[int, int] | None = None,
+                                    tint: list | None = None):
+        """Generate the body-BG bitmap. If `face_cutout_*` are given (canvas-px,
+        already 8-px aligned), the face region is filled with the magic
+        transparent color so it's a clean rectangle of empty BG cells —
+        runtime overlays the matching emotion sprite on top.
+        """
         palettes = 2
         colors = 16
         ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
-                          remove_size=remove_size, remove_offset=remove_offset,
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
-                          add_boundary_pixels=True, tint=tint)
+                          add_boundary_pixels=True, tint=tint,
+                          remove_offset=face_cutout_offset, remove_size=face_cutout_size)
 
     @staticmethod
     def resize_character_thumbnail(input_filename: str, output_filename: str, y_offset=0, tint: tuple[int, int, int] | None = None):
@@ -179,3 +186,4 @@ class ImageTools:
                           num_color_cluster_passes=16, num_tile_cluster_passes=256,
                           use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
                           tint=tint)
+

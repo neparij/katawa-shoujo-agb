@@ -32,7 +32,7 @@ from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
-from src.utils import sanitize_function_name, get_xalign_position, get_x_position, starts_with_filled_bg, \
+from src.utils import sanitize_function_name, starts_with_filled_bg, \
     sanitize_ingame_text
 
 DEFAULT_LOCALE = "en"
@@ -318,9 +318,12 @@ class ScenarioReader:
             doublespeak_match = re.match(r"^call screen doublespeak\((.*)\)$", stripped_line)
             if not doublespeak_match:
                 raise Exception(f"Invalid doublespeak syntax: {stripped_line}")
-            params = doublespeak_match.group(1).split(",")
+            # params = doublespeak_match.group(1).split(",")
+            # TODO: Check for consistency
+            params = re.findall(r'(?:[^,"]|"(?:\\.|[^"])*")+', doublespeak_match.group(1))
+            params = [p.strip() for p in params]
             if len(params) != 4:
-                raise Exception(f"Invalid doublespeak parameters count: {stripped_line}")
+                raise Exception(f"Invalid doublespeak parameters count ({len(params)}): {stripped_line}")
 
             hashing_contents = stripped_line
             original_dialog_hash = self.calculate_tl_hash(hashing_contents)
@@ -406,6 +409,7 @@ class ScenarioReader:
 
         elif stripped_line.startswith("scene ev") or stripped_line.startswith("show ev"):
             parts = stripped_line.split()
+            print(f" >> Scene ev: {parts}")
             event_bg_name = parts[2].removesuffix(":")
             # REMOVES TEMP
             # TODO: use specs
@@ -560,9 +564,15 @@ class ScenarioReader:
             #                     with locationchange
 
             if self._hack_latest_sprite_name is not None:
-                # xalign 0.4 blah-blah 1.2 etc should set value to 0.4
+                # `xalign V` is shorthand for `xpos V xanchor V` per
+                # Ren'Py docs: the normalised pixel-resolution happens at
+                # runtime against each variant's actual body width, see
+                # `ShowTransformItem` doc.
                 value = float(stripped_line.split("xalign ")[1].split()[0])
-                self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_xalign_position(value)))
+                self.stack.current().add_sequence_item(
+                    self.linepack_events,
+                    ShowTransformItem(self._hack_latest_sprite_name, None,
+                                      xpos=value, xanchor=value))
 
         elif "xpos " in stripped_line:
             # TODO: See above. Same shit...
@@ -573,7 +583,10 @@ class ScenarioReader:
                 xanchor_value = 0.5
                 if "xanchor " in stripped_line:
                     xanchor_value = float(stripped_line.split("xanchor ")[1].split()[0])
-                self.stack.current().add_sequence_item(self.linepack_events, ShowTransformItem(self._hack_latest_sprite_name, None, get_x_position(xpos_value, anchor=xanchor_value)))
+                self.stack.current().add_sequence_item(
+                    self.linepack_events,
+                    ShowTransformItem(self._hack_latest_sprite_name, None,
+                                      xpos=xpos_value, xanchor=xanchor_value))
 
         elif stripped_line.startswith("nvl "):
             parts = stripped_line.split()
@@ -739,8 +752,8 @@ class ScenarioReader:
                                 new_message = new_message.removesuffix("{nw}")
                                 new_message = new_message + "{fast}" + dialog[locale].replace("{vspace=30}", "\n")
                                 dialog_extended.message[locale] = new_message
-                                print(f"[38;5;83m Extended: \"{dialog[locale]}\"⠀[33;0m")
-                                sleep(0.5)
+                                print(f"[38;5;83m Extended: \"{dialog[locale]}\"?[33;0m")
+                                # sleep(0.5)
                             else:
                                 raise Exception(
                                     f"Extend dialog found, but there is no previous dialog to extend for locale {locale}: {stripped_line}")
@@ -755,8 +768,8 @@ class ScenarioReader:
                         else:
                             # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
                             # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
-                            print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
-                            sleep(0.05)
+                            print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}?[33;0m")
+                            # sleep(0.05)
                             actor[locale] = actor[DEFAULT_LOCALE]
                             dialog[locale] = dialog[DEFAULT_LOCALE]
 
@@ -776,8 +789,8 @@ class ScenarioReader:
                     else:
                         # TODO: Fix the translation in KS:RE project: "tl/ru/script-a1-sunday.rpy" a1_sunday_movement is completely broken
                         # raise Exception(f"Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}")
-                        print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}⠀[33;0m")
-                        sleep(0.25)
+                        print(f"[38;5;197m Translation regex mismatch for hash {original_dialog_hash} in locale {locale} for line: {stripped_line}?[33;0m")
+                        # sleep(0.25)
                         dialog[locale] = dialog[DEFAULT_LOCALE]
                 self.stack.current().add_sequence_item(self.linepack_events,
                     DialogItem(original_dialog_hash[-8:], None, dialog,
@@ -805,9 +818,22 @@ def rewrite_motion_background(bg_name: str) -> str:
             .replace("mural_part", "mural")
             .replace("mural_ss", "mural") # TODO: Paletted variants for backgrounds
             .replace("suburb_shanghaiext_ss", "suburb_shanghaiext") # TODO: Paletted variants for backgrounds
+            .replace("shizu_guesthisao_ss", "shizu_guesthisao") # TODO: Paletted variants for backgrounds
+            .replace("school_hallway3_ni", "school_hallway3") # TODO: Paletted variants for backgrounds
+            .replace("school_roof_ss", "school_roof") # TODO: Paletted variants for backgrounds
+            .replace("school_lobby_ss", "school_lobby") # TODO: Paletted variants for backgrounds
+            .replace("school_lobby_ni", "school_lobby") # TODO: Paletted variants for backgrounds
+            .replace("school_gardens2_ss", "school_gardens2") # TODO: Paletted variants for backgrounds
+            .replace("school_dormhisao_bw", "school_dormhisao") # TODO: Paletted variants for backgrounds (Black and white)
+            .replace("school_council_bw", "school_council") # TODO: Paletted variants for backgrounds (Black and white)
             .replace("kenji_rooftop_kenji", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop_large", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop", "kenji_rooftop") # TODO: Kenji alcotrip event
+            .replace("shizu_roof2_towardsnormal", "shizu_roof_towardsnormal") # TODO: Shizu roof event
+            .replace("shizu_roof2_towardsangry", "shizu_roof_towardsangry") # TODO: Shizu roof event
+            .replace("shizu_roof2", "shizu_roof_hisao2") # TODO: Shizu roof event
+            .replace("shizu_roof2_smile", "shizu_roof_smile") # TODO: Shizu roof event
+            .replace("shizu_goodend_pan", "shizu_goodend") # TODO: Shizu goodend event
 
             # .replace("_start", "")
             # .replace("_move", "")
@@ -849,6 +875,19 @@ def scenario_rewrites(scenario_file, content):
             "        show hospitalmask",
             # WITH
             "        scene ev hosp_room"
+        )
+
+    if scenario_name == "script-a1-wednesday":
+        return content.replace(
+            "            show shizu behind_smile:\n"
+            "                xalign 1.03\n"
+            "            show misha hips_grin at tworight\n"
+            "            with charaenter\n",
+            # WITH
+            "            show shizu behind_smile:\n"
+            "                xalign 1.2\n"
+            "            show misha hips_grin at tworight\n"
+            "            with charaenter\n"
         )
 
     if scenario_name == "script-a1-thursday":
@@ -992,6 +1031,67 @@ def scenario_rewrites(scenario_file, content):
             "            with Dissolve(1.0)",
             # WITH
             "            state ev 1"
+        )
+
+    if scenario_name == "script-a2-shizune":
+        return content.replace(
+            "        scene evbg kenji_glasses:\n"
+            "            truecenter\n"
+            "            zoom 0.82\n"
+            "            acdc_warp 20.0 zoom 0.8\n"
+            "        show evmg kenji_glasses_closed at kenji_mg_out\n"
+            "        show evfg kenji_glasses:\n"
+            "            truecenter\n"
+            "            zoom 1.0\n"
+            "            acdc_warp 20.0 zoom 0.8\n"
+            "        with whiteout",
+            # WITH
+            "        scene ev kenji_glasses_bg\n"
+            "        with whiteout"
+        ).replace(
+            "        show evmg kenji_glasses_frown at kenji_mg_out\n"
+            "        with charachangeev",
+            # WITH
+            "        scene ev kenji_glasses_bg\n"
+            "        with charachangeev"
+        ).replace(
+            "        show evmg kenji_glasses_normal at kenji_mg_out\n"
+            "        with charachangeev",
+            # WITH
+            "        scene ev kenji_glasses_bg\n"
+            "        with charachangeev"
+        ).replace(
+            "        show evmg kenji_glasses_closed at kenji_mg_out\n"
+            "        with charachangeev",
+            # WITH
+            "        scene ev kenji_glasses_bg\n"
+            "        with charachangeev"
+        ).replace(
+            "        show ev:\n"
+            "            ease 1.0 xpos 400 xanchor 2870 yanchor 650 ypos 300\n"
+            "            acdc_warp 10.0 xanchor 2670",
+            # WITH
+            "\n"
+        ).replace(
+            "        show ev:\n"
+            "            ease 0.5 xanchor 1600 yanchor 560\n"
+            "            easein 10.0 xanchor 1400 yanchor 560",
+            # WITH
+            "\n"
+        )
+
+    if scenario_name == "script-a3-shizune":
+        return content.replace(
+            "        scene evh shizune_hcg_tied_stare:\n"
+            "            yalign 0.0 xalign 1.0 zoom 2.0\n"
+            "            easein 6.0 xalign 0.7 zoom 1.0 yalign 0.345\n"
+            "            truecenter\n"
+            "            zoom 1.0\n"
+            "            \"evh shizune_hcg_tied_stare_small\"\n"
+            "        with whiteout",
+            # WITH
+            "        scene evh shizune_hcg_tied_smile_small\n"
+            "        with whiteout"
         )
 
     return content

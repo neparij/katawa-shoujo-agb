@@ -3,6 +3,7 @@
 
 #include <bn_format.h>
 #include <bn_regular_bg_items_ui_bg_menu_saves_front.h>
+#include <bn_sprite_builder.h>
 #include <bn_sprite_items_ui_bar_vertical_thumb.h>
 #include <bn_sprite_items_ui_bg_menu_saves_back_0.h>
 #include <bn_sprite_items_ui_bg_menu_saves_back_1.h>
@@ -10,9 +11,11 @@
 #include <bn_sprite_items_ui_button_b.h>
 #include <bn_sprite_items_ui_new_save.h>
 #include <bn_sprite_items_ui_new_save_selected.h>
+#include <bn_sprite_palette_items_pal_char_obj.h>
+#include <bn_sprite_shape_size.h>
 
 #include "background_metas.h"
-#include "character_sprite_metas.h"
+#include "smart_characters_index.h"
 #include "menu_base.h"
 #include "../ingametimer.h"
 #include "../scenemanager.h"
@@ -232,10 +235,27 @@ namespace ks {
                     saveslot_thumbnails.back().set_priority(2);
                     for (const auto &[thumbnail_hash, offset_x] : slot.thumbnail_characters) {
                         if (thumbnail_hash != 0) {
-                            if (const auto character_thumbnail = character_sprite_metas::get_by_hash(thumbnail_hash);
-                                character_thumbnail != nullptr) {
+                            // Smart-characters expose the same 16-bit
+                            // group hash the legacy pipeline produced (see
+                            // smart_character_converter.GroupContext.thumb_hash_str),
+                            // so existing save thumbnails keep resolving.
+                            // The converter now emits face *tiles* only —
+                            // compose a sprite_item inline from the variant's
+                            // tiles + shape + the shared OBJ palette.
+                            if (const auto* var =
+                                    ks::smart_characters::get_thumbnail_by_hash(thumbnail_hash);
+                                var != nullptr && var->body != nullptr
+                                && var->body->thumbnail_tiles != nullptr) {
+                                // Thumbnail is one-per-group (pose × outfit ×
+                                // close), 32×32, paired with the shared
+                                // `pal_char_obj`. No per-thumbnail palette,
+                                // no per-thumbnail `bn::sprite_item` struct.
+                                const bn::sprite_item thumb_item(
+                                    bn::sprite_shape_size(32, 32),
+                                    *var->body->thumbnail_tiles,
+                                    bn::sprite_palette_items::pal_char_obj);
                                 progress_icon_sprites.push_back(
-                                    character_thumbnail->thumbnail.create_sprite(
+                                    thumb_item.create_sprite(
                                         -device::screen_width_half + draw_x_from + 24 + offset_x,
                                         draw_y_from + 10 + draw_y_offset * tile_index
                                     )

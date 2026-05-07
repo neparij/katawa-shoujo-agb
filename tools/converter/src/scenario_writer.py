@@ -3,10 +3,11 @@ import os
 import re
 import tempfile
 from collections import namedtuple
-from typing import List, cast, Dict
+from typing import List, cast, Dict, Optional, Tuple
 
 import pyfastgbalz77
 import sentencepiece as spm
+import yaml
 
 from src.character_sprite.character_sprite import CharacterDisplayableReplacements, CharacterSprite, CharacterRegex, \
     CharacterNudeIf
@@ -35,7 +36,8 @@ from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
 from src.utils import get_paletted_variant, is_color_filled_bg, \
-    add_translations_optional, get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode
+    add_translations_optional, get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode, \
+    fixed_literal
 
 CHARACTERS = [
     "akira",
@@ -66,6 +68,91 @@ CHARACTERS = [
     "yuukoshang"
 ]
 
+
+# ---------------------------------------------------------------------------
+# Smart-characters YAML resolver
+# ---------------------------------------------------------------------------
+# The ScenarioWriter no longer emits separate (background, sprite, sprite_meta)
+# triplets per show — it emits a single `ks::smart_characters::<tileset>::<sym>`
+# variant reference. The tileset bucket and the YAML-defined `group_key` for a
+# given (character × pose × outfit × close) tuple live in the same YAML the
+# converter consumes, so the writer reads it directly to keep both sides in
+# lock-step.
+
+_SMART_CHARACTERS_YAML = os.path.join(
+    os.path.dirname(__file__), "character_sprite", "character_sprites.yaml"
+)
+
+_smart_yaml_cache: Optional[dict] = None
+
+
+def _load_smart_yaml() -> dict:
+    """Load and memoize the smart-characters YAML once per process."""
+    global _smart_yaml_cache
+    if _smart_yaml_cache is None:
+        with open(_SMART_CHARACTERS_YAML, "r", encoding="utf-8") as f:
+            _smart_yaml_cache = yaml.safe_load(f) or {}
+    return _smart_yaml_cache
+
+
+def _smart_character_data(character_name: str) -> dict:
+    data = _load_smart_yaml()
+    sprites = data.get("sprites") or {}
+    if character_name not in sprites:
+        raise KeyError(
+            f"Character {character_name!r} is not defined in {_SMART_CHARACTERS_YAML}"
+        )
+    return sprites[character_name]
+
+
+def smart_character_tileset(character_name: str) -> str:
+    """Tileset bucket the character belongs to (e.g. 'emicas' -> 'emi')."""
+    char_data = _smart_character_data(character_name)
+    return char_data.get("tileset", character_name)
+
+
+def smart_character_resolve(character: CharacterSprite) -> Tuple[str, str, str]:
+    """Resolve (tileset_key, group_key, variant_symbol) for a CharacterSprite.
+
+    The YAML is the source of truth for `group_key`: the converter and the
+    scenario writer both reference groups by that exact YAML key, so we must
+    not reconstruct it from (pose, outfit, close) — characters like `nurse`
+    or `yuuko` use bespoke keys (`default`, `close`, …) that don't follow
+    the `pose_outfit_close` schema.
+    """
+    char_data = _smart_character_data(character.character_name)
+    tileset_key = char_data.get("tileset", character.character_name)
+    groups = char_data.get("groups") or {}
+
+    target_pose   = character.pose
+    target_outfit = character.outfit
+    target_close  = bool(character.close)
+
+    matched_key: Optional[str] = None
+    for group_key, group_data in groups.items():
+        if (group_data.get("pose")   == target_pose
+                and group_data.get("outfit") == target_outfit
+                and bool(group_data.get("close", False)) == target_close):
+            matched_key = group_key
+            break
+
+    if matched_key is None:
+        raise KeyError(
+            f"No group in {character.character_name!r} matches "
+            f"pose={target_pose!r}, outfit={target_outfit!r}, close={target_close} "
+            f"(emotion={character.emotion!r})"
+        )
+
+    if character.emotion not in (groups[matched_key].get("sprites") or {}):
+        raise KeyError(
+            f"Group {character.character_name}/{matched_key} has no sprite "
+            f"for emotion {character.emotion!r}"
+        )
+
+    variant_symbol = f"{character.character_name}_{matched_key}_{character.emotion}"
+    return tileset_key, matched_key, variant_symbol
+
+
 class ScenarioWriter:
     def __init__(self, filename: str, output_dir: str, gbfs_dir: str, spm_dir: str, scenario: List[SequenceGroup]):
         self.filename = filename
@@ -76,11 +163,13 @@ class ScenarioWriter:
         self.tl_dict: List[Dict[str, str]] = []
 
         self.backgrounds = []
-        self.character_backgrounds = []
+        # Tileset buckets used by smart_characters in this script. Each entry
+        # corresponds to one `#include "smart_characters/<tileset>.h"` and
+        # contains every (character × pose × outfit × close) group + emotion
+        # used by this script that maps to that tileset.
+        self.smart_character_tilesets: List[str] = []
         self.events = []
         self.music = []
-        self.sprites = []
-        self.sprite_metas = []
         self.videos = []
         self.characters: Dict[str, int] = {}
 
@@ -119,17 +208,11 @@ class ScenarioWriter:
             # include_header("bn_music_items"),
         ]
 
-        for character_background in self.character_backgrounds:
-            h_code.append(include_header(character_background, "bn_regular_bg_items_"))
+        for tileset in self.smart_character_tilesets:
+            h_code.append(include_header(tileset, "smart_characters/"))
 
         for background in self.backgrounds:
             h_code.append(include_header(background, "background_metas/"))
-
-        for sprite in self.sprites:
-            h_code.append(include_header(sprite, "bn_sprite_items_"))
-
-        for sprite_meta in self.sprite_metas:
-            h_code.append(include_header(sprite_meta))
 
         for event in self.events:
             h_code.append(include_header(f"{to_snake_case(event).removesuffix("_event")}.cpp", "../events/"))
@@ -223,7 +306,7 @@ class ScenarioWriter:
                 answer_index += 1
 
             sequences.append(f'IF_NOT_EXIT(ks::SceneManager::show_dialog_question(answers));')
-            sequences.append(f'int answer = ks::SceneManager::get_dialog_question_answer();')
+            sequences.append(f'const int answer = answers[ks::SceneManager::get_dialog_question_answer()].index;')
 
             answer_callbacks = []
             for answer in menu.conditions:
@@ -535,35 +618,47 @@ class ScenarioWriter:
             return [f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{show.sprite.upper()}));']
         elif show.sprite not in CHARACTERS:
             return [f'// TODO: Show {show.sprite}']
+        elif show.variant == "behind":
+            # TODO: behind keyword is not implemented yet
+            return ["// TODO: behind keyword is not implemented yet"]
         else:
+            # Predefined transforms — verbatim from KS's `script-transforms.rpy`:
+            #   transform twoleft:    xpos 0.3  xanchor 0.5 ypos 1.0 yanchor 1.0
+            #   transform tworight:   xpos 0.7  xanchor 0.5 ypos 1.0 yanchor 1.0
+            #   transform closeleft:  xpos 0.25 xanchor 0.5 ypos 1.0 yanchor 1.0
+            #   transform closeright: xpos 0.75 xanchor 0.5 ypos 1.0 yanchor 1.0
+            #
+            # Off-screen / left / right and center are KS-specific
+            # nudges — values picked to match the legacy pixel-baked
+            # output (e.g. previous `OFFSCREENLEFT = -184 px` ≈ xpos
+            # -0.27 with xanchor 0.5 once you back out the
+            # screen-mapping). All resolution to actual pixels happens
+            # in `SceneManager::_resolve_pixel_position` against the
+            # variant's body width — see scenemanager.cpp comments.
+            renpy_pos: Tuple[float, float, float, float] | None = None
             if show.position == ShowPosition.TWOLEFT:
-                # position = (-48, 0)
-                position = (int(-0.2 * 240), 0)
+                renpy_pos = (0.3, 0.5, 1.0, 1.0)
             elif show.position == ShowPosition.TWORIGHT:
-                # position = (48, 0)
-                position = (int(0.2 * 240), 0)
+                renpy_pos = (0.7, 0.5, 1.0, 1.0)
             elif show.position == ShowPosition.CLOSELEFT:
-                # position = (-60, 0)
-                position = (int(-0.25 * 240), 0)
+                renpy_pos = (0.25, 0.5, 1.0, 1.0)
             elif show.position == ShowPosition.CLOSERIGHT:
-                position = (60, 0)
-                position = (int(0.25 * 240), 0)
+                renpy_pos = (0.75, 0.5, 1.0, 1.0)
             elif show.position == ShowPosition.OFFSCREENLEFT:
-                # TODO: Calculate bsed on sprite width
-                position = (-120 - 64, 0)
+                # Far off the left edge: anchor at right edge of body
+                # so the whole body is offscreen.
+                renpy_pos = (-0.25, 1.0, 1.0, 1.0)
             elif show.position == ShowPosition.OFFSCREENRIGHT:
-                # TODO: Calculate bsed on sprite width
-                position = (120 + 64, 0)
+                renpy_pos = (1.25, 0.0, 1.0, 1.0)
             elif show.position == ShowPosition.LEFT:
-                # TODO: Calculate bsed on sprite width
-                position = (-120 + 40, 0)
+                # Inside the screen, anchored at left edge of body.
+                renpy_pos = (0.0, 0.0, 1.0, 1.0)
             elif show.position == ShowPosition.RIGHT:
-                # TODO: Calculate bsed on sprite width
-                position = (120 - 40, 0)
+                renpy_pos = (1.0, 1.0, 1.0, 1.0)
             elif show.position == ShowPosition.CENTER:
-                position = (0, 0)
+                renpy_pos = (0.5, 0.5, 1.0, 1.0)
             elif show.position == ShowPosition.DEFAULT:
-                position = (0, 0)
+                renpy_pos = None  # keep slot's current transform
             else:
                 raise TypeError("Unknown ShowPosition type")
 
@@ -674,30 +769,35 @@ class ScenarioWriter:
                 else:
                     raise TypeError("Unknown character: " + show.sprite)
 
-                character_bg_name = character.to_bg_name()
-                character_spr_name = character.to_sprite_name()
-                character_sprite_meta_name = character.to_group_name()
+                tileset_key, _group_key, variant_symbol = smart_character_resolve(character)
 
-                if not character_bg_name in self.character_backgrounds:
-                    self.character_backgrounds.append(character_bg_name)
+                if tileset_key not in self.smart_character_tilesets:
+                    self.smart_character_tilesets.append(tileset_key)
 
-                if not character_spr_name in self.sprites:
-                    self.sprites.append(character_spr_name)
+                variant_ref = f"ks::smart_characters::{tileset_key}::{variant_symbol}"
 
-                if not character_sprite_meta_name in self.sprite_metas:
-                    self.sprite_metas.append(character_sprite_meta_name)
-
-                if show.position == ShowPosition.DEFAULT:
+                if renpy_pos is None:
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, {show.palette_variant}));')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character('
+                        f'CHARACTER_{show.sprite.upper()}, {variant_ref}, '
+                        f'{show.palette_variant}));')
                 else:
+                    xpos, xanchor, ypos, yanchor = renpy_pos
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_{show.sprite.upper()}, ks::sprite_metas::{character_sprite_meta_name}, bn::regular_bg_items::{character_bg_name}, bn::sprite_items::{character_spr_name}, {show.palette_variant}, {position[0]}, {position[1]}));')
+                        f'IF_NOT_EXIT(ks::SceneManager::show_character('
+                        f'CHARACTER_{show.sprite.upper()}, {variant_ref}, '
+                        f'{show.palette_variant}, '
+                        f'{fixed_literal(xpos)}, {fixed_literal(xanchor)}, '
+                        f'{fixed_literal(ypos)}, {fixed_literal(yanchor)}));')
                 return result
             # Move if not default position and variant is not provided
-            if show.position != ShowPosition.DEFAULT:
+            if renpy_pos is not None:
+                xpos, xanchor, ypos, yanchor = renpy_pos
                 result.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_{show.sprite.upper()}, {position[0]}, {position[1]}));')
+                    f'IF_NOT_EXIT(ks::SceneManager::set_character_position('
+                    f'CHARACTER_{show.sprite.upper()}, '
+                    f'{fixed_literal(xpos)}, {fixed_literal(xanchor)}, '
+                    f'{fixed_literal(ypos)}, {fixed_literal(yanchor)}));')
 
             return result
 
@@ -741,9 +841,17 @@ class ScenarioWriter:
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         print(show_transform)
         if show_transform.sprite not in CHARACTERS:
-            return [f'// TODO: Show transform {show_transform.sprite} {show_transform.x}, 0']
+            return [
+                f'// TODO: Show transform {show_transform.sprite} '
+                f'xpos={show_transform.xpos} xanchor={show_transform.xanchor} '
+                f'ypos={show_transform.ypos} yanchor={show_transform.yanchor}'
+            ]
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::set_character_position(CHARACTER_{show_transform.sprite.upper()}, {show_transform.x}, 0));']
+            f'IF_NOT_EXIT(ks::SceneManager::set_character_position('
+            f'CHARACTER_{show_transform.sprite.upper()}, '
+            f'{fixed_literal(show_transform.xpos)}, {fixed_literal(show_transform.xanchor)}, '
+            f'{fixed_literal(show_transform.ypos)}, {fixed_literal(show_transform.yanchor)}));'
+        ]
 
     def process_sequence_pause(self, group: SequenceGroup, pause: PauseItem) -> List[str]:
         return [f'IF_NOT_EXIT(ks::SceneManager::pause({int(pause.value * 60)}));']

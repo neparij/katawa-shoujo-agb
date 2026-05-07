@@ -37,6 +37,10 @@ namespace ks {
 
         constexpr background_item &operator=(const background_item &) = default;
 
+        [[nodiscard]] constexpr const bn::regular_bg_tiles_item& regular_tiles_item() const;
+
+        [[nodiscard]] constexpr const bn::bg_palette_item& palette_item() const;
+
         // Move constructor and assignment
         constexpr background_item(background_item &&other) noexcept
             : _regular(bn::move(other._regular)),
@@ -95,6 +99,23 @@ namespace ks {
         bn::optional<bn::affine_bg_item> _affine;
         bn::optional<ks::huge_bg_item> _huge;
     };
+
+    constexpr const bn::regular_bg_tiles_item & background_item::regular_tiles_item() const {
+        BN_ASSERT(_regular.has_value(), "Regular bg item is not set");
+        return _regular->tiles_item();
+    }
+
+    constexpr const bn::bg_palette_item& background_item::palette_item() const {
+        if (_regular.has_value()) {
+            return _regular->palette_item();
+        } else if (_affine.has_value()) {
+            return _affine->palette_item();
+        } else {
+            BN_ASSERT(_huge.has_value(), "Huge bg item is not set");
+            return _huge->palette_item();
+        }
+        BN_ERROR("palette_item: Background item has no value");
+    }
 }
 
 #endif //BACKGROUND_ITEM_H
