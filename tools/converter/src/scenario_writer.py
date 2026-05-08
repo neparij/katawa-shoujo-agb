@@ -394,7 +394,7 @@ class ScenarioWriter:
             if len(compressed_bytes) % 4:
                 compressed_bytes += b"\x00" * (4 - (len(compressed_bytes) % 4))
 
-            # Write LZ77 compressed translation file
+            # Write Huffman compressed translation file
             with open(os.path.join(self.gbfs_dir, filename_base), "wb") as f:
                 f.write(compressed_bytes)
 
