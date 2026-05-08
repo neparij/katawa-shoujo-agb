@@ -2,6 +2,7 @@
 
 #include "bn_blending_actions.h"
 #include "bn_core.h"
+#include "bn_sprite_tiles.h"
 #include "dialog_box.h"
 
 #include "bn_regular_bg_items_ui_nvl.h"
@@ -11,6 +12,22 @@
 #include "utils/scenario_reader.h"
 
 namespace ks {
+    namespace
+    {
+        inline void _trim_cache_for_vram(bn::vector<bn::sprite_ptr, 8 * 15>& cache_sprites)
+        {
+            // Keep NVL stable during long fast-forward on CJK-heavy text:
+            // sprites that are cached off-screen still hold their sprite_tiles_ptr, so VRAM tiles don't return.
+            // When tiles are close to exhaustion, evict oldest cached sprites aggressively.
+            constexpr int min_free_tiles = 64;
+
+            while(cache_sprites.size() > 0 && bn::sprite_tiles::available_tiles_count() < min_free_tiles)
+            {
+                cache_sprites.pop_back();
+            }
+        }
+    }
+
     [[nodiscard]] inline int dialog_box_novel::get_line_spacing() {
         return globals::i18n->type() == LANG_JAPAN ? 16 : 6;
     }
@@ -34,6 +51,7 @@ namespace ks {
                             text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
                         }
                     }
+                    _trim_cache_for_vram(text_cache_sprites);
                 }
             } else {
                 if (camera->y() < render_offset - 144) {
@@ -47,6 +65,7 @@ namespace ks {
                                 text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
                             }
                         }
+                        _trim_cache_for_vram(text_cache_sprites);
                     }
                 }
             }
@@ -80,6 +99,7 @@ namespace ks {
                 text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
             }
         }
+        _trim_cache_for_vram(text_cache_sprites);
         globals::main_update();
     }
 
@@ -180,6 +200,7 @@ namespace ks {
         }
 
         text_chunk_sprites.clear();
+        _trim_cache_for_vram(text_cache_sprites);
     }
 
     void dialog_box_novel::hide(const bool blending) {

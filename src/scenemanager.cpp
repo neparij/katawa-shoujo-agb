@@ -1199,8 +1199,28 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         return;
 
     }
-    // BN_ERROR("Transition not implemented: ", transition);
-    BN_LOG("Transition not implemented: ", transition);
+    if (transition == SCENE_TRANSITION_WHITEOUT || transition == SCENE_TRANSITION_SILENTWHITEOUT) {
+        if (transition == SCENE_TRANSITION_WHITEOUT) {
+            sfx_play("sfx_whiteout.8ad", SOUND_CHANNEL_SOUND);
+        }
+        fade_out(ks::globals::colors::WHITE, 60);
+        if (to.has_value()) {
+            background_visual.visible_bg_item.reset();
+            ks::globals::main_update();
+            background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            background_visual.visible_bg_item->set_priority(3);
+            background_visual.visible_bg_item->set_z_order(10);
+            // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            if (next_event.has_value()) {
+                (*next_event)->init();
+            }
+        }
+        fade_in(ks::globals::colors::WHITE, 60);
+        fade_reset();
+        return;
+    }
+    BN_ERROR("Transition not implemented: ", transition);
+    // BN_LOG("Transition not implemented: ", transition);
 }
 
 void SceneManager::perform_transition(const scene_transition_t transition) {

@@ -63,12 +63,15 @@ namespace ks {
 
             const int chunked_lines_from = (_text_parser.fast_ends_on_line() / LinesPerPage) * LinesPerPage;
             const int chunked_lines_to = _text_parser.fast_ends_on_line();
-            for (int i = chunked_lines_from; i < chunked_lines_to; i++) {
-                draw_line(i, false);
+            const bool instant_render = user_skip || user_advance || force_render;
+            for (int i = chunked_lines_from; i <= chunked_lines_to; i++) {
+                // Never render per-character when user is skipping or we're forcing render,
+                // otherwise we can exhaust sprite font tiles on long lines.
+                draw_line(i, !instant_render && i == chunked_lines_to);
             }
-            draw_line(chunked_lines_to, true);
 
             current_line_index = chunked_lines_to;
+            waiting_for_input = instant_render;
             BN_LOG("fast done");
         } else {
             if (user_skip || user_advance || force_render) {

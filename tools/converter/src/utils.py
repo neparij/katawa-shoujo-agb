@@ -173,20 +173,38 @@ def unpack_from_12bits(data: bytes) -> bytes:
 
     return bytes(unpacked)
 
-def spm_with_bytecode_encode(text: str, spp: spm.SentencePieceProcessor, is_cjk: bool, pack_cjk: bool = False) -> bytes:
+def encode_token_biased(token_id: int) -> bytes:
+    """
+    Aggressive variable-length encoding for SPM token IDs (1..2047).
+
+    - 1 byte:  token_id in [1..191]  -> [0x01..0xBF]
+    - 2 bytes: token_id in [192..2047] encoded like 2-byte UTF-8:
+        b0 = 0xC0 | (token_id >> 6)          (0xC0..0xDF)
+        b1 = 0x80 | (token_id & 0x3F)        (0x80..0xBF)
+
+    This guarantees the first byte is never 0xFF, so `0xFF 0xFF` remains
+    a unique command prefix in the stream.
+    """
+    if token_id <= 0 or token_id > 2047:
+        raise ValueError(f"token_id out of range: {token_id}")
+    if token_id < 0xC0:
+        return bytes([token_id])
+    return bytes([
+        0xC0 | ((token_id >> 6) & 0x1F),
+        0x80 | (token_id & 0x3F),
+    ])
+
+def spm_with_bytecode_encode(text: str, spp: spm.SentencePieceProcessor) -> bytes:
     """
     :param text: The input text.
     :param spp: The SentencePieceProcessor instance.
-    :param is_cjk: Whether to use 2-byte encoding for CJK characters.
-    :param pack_cjk: Whether to pack CJK characters into 12-bit encoding
-                     (Reduces uncompressed size, but adds complexity).
     :return: The SPM-encoded text formatted with control characters as bytes.
     """
     command_re = re.compile(r"(\{[^\}]+\})")
     text = text.replace("\n", "{newline}") # Ensure newlines are handled, because SPM will revoke them
     parts = command_re.split(text)
     encoded: bytes = b""
-    max_spm_value = 0xFFFF if is_cjk else 0xFF
+    max_spm_value = 0xFFFF
     for part in parts:
         if part and not command_re.match(part):
             spm_ids = spp.EncodeAsIds(part)
@@ -201,30 +219,13 @@ def spm_with_bytecode_encode(text: str, spp: spm.SentencePieceProcessor, is_cjk:
             if max_spm_value in spm_ids:
                 raise Exception(f"SPM encoding produced ID {max_spm_value} (reserved token) for part: '{part}'")
 
-            if is_cjk and pack_cjk:
-                # TODO: To check that we actual need it.
-                # TODO: If necessary, set cmd_start_bytes=3 to prevent collisions.
-                encoded_chunk = b""
-                for spm_id in spm_ids:
-                    encoded_chunk += spm_id.to_bytes(2, byteorder='little')
-                bitpacked = pack_to_12bits(encoded_chunk)
-
-                # Check that text is the same after packing/unpacking:
-                unpacked = unpack_from_12bits(bitpacked)
-                if unpacked != encoded_chunk:
-                    raise Exception(f"12-bit packing/unpacking mismatch: '{encoded_chunk}' != '{unpacked}'")
-
-                encoded += bitpacked
-            elif is_cjk:
-                for spm_id in spm_ids:
-                    encoded += spm_id.to_bytes(2, byteorder='little')
-            else:
-                for spm_id in spm_ids:
-                    encoded += spm_id.to_bytes(1, byteorder='little')
+            for spm_id in spm_ids:
+                encoded += encode_token_biased(spm_id)
         elif command_re.match(part):
-            encoded += bytecode_format(part, cmd_start_bytes=2 if is_cjk else 1)
+            encoded += bytecode_format(part, cmd_start_bytes=1)
 
-    return encoded + b"\x00" * (2 if is_cjk else 1)  # Null-terminate
+    # Null-terminate: 0x00 is unambiguous because token IDs start from 1 and commands begin with 0xFF.
+    return encoded + b"\x00"
 
 
 def split_by_commands(text: str) -> List[str]:

@@ -12,7 +12,10 @@ class SPMWriter:
         self.assets_path = assets_path
         self.locale = locale
         self.textdb_strings: List[str] = []
-        self.max_tokens = 255 if locale not in ['jp', 'zh_hans'] else 2047
+        # We use a biased variable-length token encoding in TextDB:
+        # most frequent token IDs stay 1-byte, while the tail uses 2 bytes.
+        # This allows larger vocabularies without bloating the common-case.
+        self.max_tokens = 2047
 
     def process_scenario(self, scenario):
         collect_scenario_sentences(scenario, self.locale, self.textdb_strings)
@@ -27,7 +30,7 @@ class SPMWriter:
         spm_args = (f"--input={textdb_strings_file} "
                     f"--model_prefix={output_file_prefix} "
                     f"--vocab_size={self.max_tokens} "
-                    f"--model_type=unigram "
+                    f"--model_type=bpe "
                     f"--character_coverage=1.0 "
                     f"--unk_id=0 "
                     f"--bos_id=-1 "
@@ -38,6 +41,6 @@ class SPMWriter:
                     f"--train_extremely_large_corpus=true "
                     f"--split_by_whitespace=false "
                     f"--max_sentencepiece_length=32 "
-                    f"--num_sub_iterations=8 "
+                    f"--num_sub_iterations=10 "
                     f"--shrinking_factor=0.95")
         spm.SentencePieceTrainer.Train(spm_args)

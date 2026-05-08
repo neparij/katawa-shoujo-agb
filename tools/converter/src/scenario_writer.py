@@ -9,6 +9,7 @@ import pyfastgbalz77
 import sentencepiece as spm
 import yaml
 
+from src.gba_huffman import gba_huff_compress_8bit
 from src.character_sprite.character_sprite import CharacterDisplayableReplacements, CharacterSprite, CharacterRegex, \
     CharacterNudeIf
 from src.dto.assignment_item import AssignmentItem
@@ -361,7 +362,7 @@ class ScenarioWriter:
                     raise Exception(f"Locale '{locale}' not found in translation entry {tl}")
                 if offset >= 0xFFFFFF:
                     raise Exception(f"Entry offset: {offset} (0x{offset:06X}) too large for locale '{locale}'")
-                translation = spm_with_bytecode_encode(tl[locale], spp, is_cjk=locale in ['jp', 'zh_hans'])
+                translation = spm_with_bytecode_encode(tl[locale], spp)
                 translations[locale].append(tl_entry(offset=offset, translation=translation))
                 offset += len(translation)
 
@@ -388,7 +389,10 @@ class ScenarioWriter:
             with open(uncompressed_file, "rb") as f:
                 uncompressed_bytes = f.read()
 
-            compressed_bytes = pyfastgbalz77.compress(uncompressed_bytes, True)
+            # BIOS-compatible Huffman compression (SWI 0x13, 8-bit symbols)
+            compressed_bytes = gba_huff_compress_8bit(uncompressed_bytes)
+            if len(compressed_bytes) % 4:
+                compressed_bytes += b"\x00" * (4 - (len(compressed_bytes) % 4))
 
             # Write LZ77 compressed translation file
             with open(os.path.join(self.gbfs_dir, filename_base), "wb") as f:
@@ -528,8 +532,12 @@ class ScenarioWriter:
         if dialog.actor_ref:
             if dialog.actor_ref == "n":
                 for locale, text in dialog.message.items():
-                    # Replace by regular expression ("{vspace=\d+}"):
-                    dialog.message[locale] = re.sub(r'^\{vspace=\d+\}', '', text)
+                    fixed_text = text
+                    # Remove vspace from the beginning of the line
+                    fixed_text = re.sub(r'^\{vspace=\d+\}', '', fixed_text)
+                    # Remove \n sequences from the beginning of the line
+                    fixed_text = re.sub(r'^\n+', '', fixed_text)
+                    dialog.message[locale] = fixed_text
                 return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::nvl_show({tl_index}));']
             else:
                 return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
