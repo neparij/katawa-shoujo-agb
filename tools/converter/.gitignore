@@ -8,3 +8,7 @@ out/
 *.egg-info/
 run.sh
 src/out/
+
+*.so
+*.dll
+*.dylib
