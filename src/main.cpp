@@ -12,7 +12,7 @@
 #include "ingametimer.h"
 #include "scenemanager.h"
 #include "sound_manager.h"
-#include "translations/en.cpp"
+#include "translation.h"
 #include "video_4ls_ulcv.h"
 #include "menu/menu_main.cpp.h"
 #include "menu/menu_extras.cpp.h"
@@ -21,7 +21,6 @@
 #include "menu/menu_extras_gallery.cpp.h"
 #include "menu/menu_options.cpp.h"
 #include "menu/menu_options_accessibility.cpp.h"
-#include "menu/menu_options_language.cpp.h"
 #include "menu/menu_saves.cpp.h"
 
 #include "background_metas.h"
@@ -62,13 +61,13 @@ inline void game(const bool is_new_game) {
     if (ks::progress.force_route == FR_EMI) {
         // video: tc_act2_emi
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_EMI););
-        // ks::globals::i18n->script_a2_emi()();
+        // tl::script_a2_emi()();
         // video: tc_act3_emi
-        // ks::globals::i18n->script_a3_emi()();
+        // tl::script_a3_emi()();
         if (ks::progress.have_a_minute && ks::progress.talk_to_her_mom || ks::progress.let_misha_know) {
             // GOOD ENDING
             // video: tc_act4_emi
-            // ks::globals::i18n->script_a4_emi()();
+            // tl::script_a4_emi()();
             // credits: credits_emi
         } else {
             // BAD ENDING
@@ -76,11 +75,11 @@ inline void game(const bool is_new_game) {
     } else if (ks::progress.force_route == FR_HANAKO) {
         // video: tc_act2_hanako
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_HANAKO););
-        // ks::globals::i18n->script_a2_hanako()();
+        // tl::script_a2_hanako()();
         // video: tc_act3_hanako
-        // ks::globals::i18n->script_a3_hanako()();
+        // tl::script_a3_hanako()();
         // video: tc_act4_hanako
-        // ks::globals::i18n->script_a4_hanako()();
+        // tl::script_a4_hanako()();
         if (ks::progress.go_to_the_city && ks::progress.agree_with_lilly) {
             // GOOD ENDING
             // credits: credits_hanako
@@ -92,11 +91,11 @@ inline void game(const bool is_new_game) {
     } else if (ks::progress.force_route == FR_LILLY) {
         // video: tc_act2_lilly
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_LILLY););
-        // ks::globals::i18n->script_a2_lilly()();
+        // tl::script_a2_lilly()();
         // video: tc_act3_lilly
-        // ks::globals::i18n->script_a3_lilly()();
+        // tl::script_a3_lilly()();
         // video: tc_act4_lilly
-        // ks::globals::i18n->script_a4_lilly()();
+        // tl::script_a4_lilly()();
         if (ks::progress.want_true && ks::progress.address_it && ks::progress.mention_the_letter) {
             // GOOD ENDING
             // credits: credits_lilly
@@ -106,13 +105,13 @@ inline void game(const bool is_new_game) {
     } else if (ks::progress.force_route == FR_RIN) {
         // video: tc_act2_rin
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_RIN););
-        // ks::globals::i18n->script_a2_rin()();
+        // tl::script_a2_rin()();
         // video: tc_act3_rin
-        // ks::globals::i18n->script_a3_rin()();
+        // tl::script_a3_rin()();
         // video: tc_act4_rin
         if (!ks::progress.explain) {
             // video: tc_act4_rin
-            // ks::globals::i18n->script_a4_rin()();
+            // tl::script_a4_rin()();
             if (ks::progress.is_true) {
                 // TRUE ENDING
             } else {
@@ -281,9 +280,6 @@ int main() {
                 break;
             case GS_MENU_OPTIONS:
                 ks::MenuOptions().run();
-                break;
-            case GS_MENU_OPTIONS_LANGUAGE:
-                ks::MenuOptionsLanguage().run();
                 break;
             case GS_MENU_OPTIONS_ACCESSIBILITY:
                 ks::MenuOptionsAccessibility().run();

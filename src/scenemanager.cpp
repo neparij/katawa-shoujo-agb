@@ -38,7 +38,7 @@
 #include "globals.h"
 #include "ingametimer.h"
 #include "sound_manager.h"
-#include "translations/translation.h"
+#include "translation.h"
 #include <video_4ls_ulcv.h>
 #include "video_tc_act2_emi_ulcv.h"
 #include "video_tc_act2_emi_ulcv.h"
@@ -64,7 +64,6 @@
 #include "menu/menu_ingame_pause.cpp.h"
 #include "menu/menu_options.cpp.h"
 #include "menu/menu_options_accessibility.cpp.h"
-#include "menu/menu_options_language.cpp.h"
 #include "menu/menu_saves.cpp.h"
 #include "openings/act1.cpp.h"
 #include "openings/act2_emi.cpp.h"
@@ -180,8 +179,8 @@ void SceneManager::set(const ks::SceneManager instance) {
     BN_LOG("SceneManager init done!");
 }
 
-void SceneManager::set_textdb(const char *db) {
-    textdb::set(db, globals::i18n->locale());
+void SceneManager::set_textdb(const uint8_t *db) {
+    textdb::set(db);
     if (!is_loading) {
         textdb::free();
         textdb::allocate();
@@ -409,9 +408,6 @@ inline void SceneManager::process_menu_states(const gameState_t &state) {
             break;
         case GS_GAME_MENU_OPTIONS_ACCESSIBILITY:
             ks::MenuOptionsAccessibility().run();
-            break;
-        case GS_GAME_MENU_OPTIONS_LANGUAGE:
-            ks::MenuOptionsLanguage().run();
             break;
         default:
             BN_ERROR("Wrong state: ", ks::globals::state);

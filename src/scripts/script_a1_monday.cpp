@@ -1,8 +1,9 @@
 #include "script_a1_monday.h"
+#include "a1_monday_tl.h"
 namespace ks {
         void ScriptA1Monday::a1_monday_out_cold() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_OUT_COLD);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_monday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_monday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::op_snowywoods, OpSnowywoodsEvent(), SCENE_TRANSITION_NONE, 60));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_SERENE, 120));
@@ -175,7 +176,7 @@ namespace ks {
         }
         void ScriptA1Monday::a1_monday_bundle_of_hisao() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_BUNDLE_OF_HISAO);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_monday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_monday_tl));
             ks::SceneManager::set_line_hash(0x010658DE);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::centered, 44));
             IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::hosp_room, HospRoomEvent(), SCENE_TRANSITION_NONE, 45));
@@ -298,7 +299,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 60));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::WHITE));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
-            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::event_drugs_en, DrugsEvent(), SCENE_TRANSITION_NONE, 0));
+            IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::event_drugs, DrugsEvent(), SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF13BB347);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 99));
@@ -404,7 +405,7 @@ namespace ks {
         }
         void ScriptA1Monday::a1_monday_gateway_effect() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_GATEWAY_EFFECT);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_monday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_monday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_gate, 0, 0, SCENE_TRANSITION_NONE, 90, PALETTE_VARIANT_DEFAULT));
             // ach("prologue_achieve"); TODO: unknown assignment
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -528,7 +529,7 @@ namespace ks {
         }
         void ScriptA1Monday::a1_monday_enter_stage_left() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_ENTER_STAGE_LEFT);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_monday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_monday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9B60DCE9);
@@ -886,7 +887,7 @@ namespace ks {
         }
         void ScriptA1Monday::a1_monday_in_the_nursery() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_IN_THE_NURSERY);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_monday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_monday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_staircase2, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x128DC0F0);
@@ -1223,7 +1224,7 @@ namespace ks {
         }
         void ScriptA1Monday::a1_monday_nobodys_room() {
             ks::SceneManager::set_label(LABEL_A1_MONDAY_NOBODYS_ROOM);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_monday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_monday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_PEARLY, 240));

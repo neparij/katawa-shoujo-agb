@@ -1139,7 +1139,7 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
 
     # DRUGS EVENT
     if bg_name == "drugs_event":
-        return "event_drugs_en", "DrugsEvent"
+        return "event_drugs", "DrugsEvent"
 
     # NIGHTSKY FIREWORKS
     if bg_name == "nightsky_fw":

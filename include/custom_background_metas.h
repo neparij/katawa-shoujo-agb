@@ -14,7 +14,7 @@
 #include "bn_regular_bg_items_emi_knockeddown_legs.h"
 #include "bn_regular_bg_items_hanako_fw_base.h"
 #include "bn_regular_bg_items_hosp_room.h"
-#include "ks_huge_bg_items_event_drugs_en.h"
+#include "ks_huge_bg_items_event_drugs.h"
 #include "bn_regular_bg_items_thumb_event_drugs.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_lilly.h"
 #include "bn_regular_bg_items_lilly_shizu_showdown_slices_shizu.h"
@@ -83,8 +83,8 @@ namespace ks::background_metas {
         DISPLAYABLE_BITMASK_SHOWDOWN,
         0xFFFF0007);
 
-    constexpr inline huge_background_meta event_drugs_en(
-        ks::huge_bg_items::event_drugs_en,
+    constexpr inline huge_background_meta event_drugs(
+        ks::huge_bg_items::event_drugs,
         bn::regular_bg_items::thumb_event_drugs,
         DISPLAYABLE_BITMASK_NONE,
         0xFFFF0008);
@@ -135,7 +135,7 @@ namespace ks::background_metas {
             case 0xFFFF0005: return lilly_shizu_showdown_slices_lilly.thumbnail;
             case 0xFFFF0006: return lilly_shizu_showdown_slices_shizu.thumbnail;
             case 0xFFFF0007: return lilly_shizu_showdown_both.thumbnail;
-            case 0xFFFF0008: return event_drugs_en.thumbnail;
+            case 0xFFFF0008: return event_drugs.thumbnail;
             case 0xFFFF0009: return op_snowywoods.thumbnail;
             case 0xFFFF000A: return other_iwanako.thumbnail;
             case 0x3E47FD6A: return hosp_room.thumbnail;

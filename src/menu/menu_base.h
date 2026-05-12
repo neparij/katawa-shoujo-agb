@@ -3,6 +3,7 @@
 
 #include "bn_keypad.h"
 #include "../globals.h"
+#include "../../include/translation.h"
 
 #define MENU_TEXT_NOT_AN_OPTION (-1)
 #define MENU_TEXT_DISABLED (-2)

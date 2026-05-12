@@ -16,7 +16,7 @@
 
 #include "konami_code.h"
 #include "definitions.h"
-#include "translations/translation.h"
+#include "translation.h"
 #include "savefile/save_file.h"
 #include "utils/gbfs/gbfs.h"
 
@@ -51,7 +51,6 @@ namespace ks::globals {
     inline gameState_t state = GS_INIT;
     inline bool exit_scenario = false;
     inline bool in_game = false;
-    inline bn::unique_ptr<Translation> i18n;
     inline auto settings = saves::SaveSettingsData();
     inline auto states = saves::SaveStatesData();
     inline const GBFS_FILE *filesystem = nullptr;

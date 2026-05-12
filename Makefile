@@ -34,6 +34,7 @@ ifndef LIBSAVGBAABS
 endif
 
 TARGET      	:=  $(notdir $(CURDIR))
+LANGUAGE		?=  en
 BUILD       	:=  build
 LIBBUTANO   	:=  ../butano/butano
 PYTHON      	:=  python3
@@ -56,7 +57,7 @@ SOURCES     	:=  ../butano/common/src \
                     src/savefile \
                     src/scripts \
                     src/shaders \
-                    src/translations \
+                    src/tl/$(LANGUAGE) \
 		    		src/utils \
                     src/utils/gbfs
 INCLUDES    	:=  include \
@@ -70,9 +71,11 @@ INCLUDES    	:=  include \
 					../libsavgba/include \
 					../butano/common/include \
 					../butano/butano/include
-DATA        	:=  video
+DATA        	:=  video \
+					tl/$(LANGUAGE)
 GRAPHICS    	:=  graphics \
 					graphics/common_palettes \
+					graphics/fonts/$(LANGUAGE) \
 					graphics/fonts \
 					graphics/bgs \
 					graphics/bgs/thumbs \
@@ -109,7 +112,8 @@ GRAPHICS    	:=  graphics \
 					graphics/characters/yuuko \
 					graphics/characters/yuukoshang \
 					../butano/common/graphics
-HUGE_GRAPHICS   :=  graphics/huge
+HUGE_GRAPHICS   :=  graphics/huge \
+					graphics/huge/$(LANGUAGE)
 AUDIO       	:=  audio
 DMGAUDIO    	:=  dmg_audio
 ROMTITLE    	:=  KATAWASHOUJO
@@ -138,6 +142,13 @@ endif
 #---------------------------------------------------------------------------------
 %.ulcv.o %_ulcv.h :	%.ulcv
 #---------------------------------------------------------------------------------
+		@echo $(notdir $<)
+		@$(bin2o)
+
+#---------------------------------------------------------------------------------
+# This rule links in binary data with the .tl extension
+#---------------------------------------------------------------------------------
+%.tl.o %_tl.h :	%.tl
 		@echo $(notdir $<)
 		@$(bin2o)
 

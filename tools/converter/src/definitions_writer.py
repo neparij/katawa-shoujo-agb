@@ -50,17 +50,6 @@ COMMON_DEFINITIONS_MAP = {
     "emm_": "Woman with braid",
 }
 
-COMMON_DEFINITIONS_LANG_MAP = {
-    "en": "English",
-    "ru": "Russian",
-    "fr": "French",
-    "it": "Italian",
-    "es": "Spanish",
-    "de": "German",
-    "jp": "Japanese",
-    "zh_hans": "Simplified Chinese",
-}
-
 
 class DefinitionsWriter:
     def __init__(self, include_dir: str, source_dir: str):
@@ -69,14 +58,12 @@ class DefinitionsWriter:
 
     def write_common_definitions(self, tl: TranslationContainer):
         language = tl.language if tl is not None else "en"
-        with open(f"{self.source_dir}/translations/{language}_definitions_commons.inc", "w") as f:
+        with open(f"{self.source_dir}/tl/{language}/definitions_commons.inc", "w") as f:
             f.write(f'// Generated code, do not edit\n')
             f.write(f'// Generated at {datetime.now(UTC).isoformat(timespec='seconds')}\n')
             f.write(f'#pragma once\n')
             f.write(f'#define KSDEF(name, value) \\\n')
-            f.write(f'    const char* definitions_##name() override {{ return value; }}\n\n')
-            f.write(f'#define KSLANGDEF(name, value) \\\n')
-            f.write(f'    const char* language_##name() override {{ return value; }}\n\n')
+            f.write(f'    const char* definitions_##name() {{ return value; }}\n\n')
             for key, value in COMMON_DEFINITIONS_MAP.items():
                 if tl is None:
                     f.write(f'KSDEF({key}, "{value}")\n')
@@ -85,16 +72,7 @@ class DefinitionsWriter:
                         f.write(f'KSDEF({key}, "{tl.strings[value]}")\n')
                     else:
                         f.write(f'KSDEF({key}, "{value}")\n')
-            for key, value in COMMON_DEFINITIONS_LANG_MAP.items():
-                if tl is None:
-                    f.write(f'KSLANGDEF({key}, "{value}")\n')
-                else:
-                    if value in tl.strings:
-                        f.write(f'KSLANGDEF({key}, "{tl.strings[value]}")\n')
-                    else:
-                        f.write(f'KSLANGDEF({key}, "{value}")\n')
             f.write(f'#undef KSDEF\n')
-            f.write(f'#undef KSLANGDEF\n')
 
     def write_scripts_definitions(self, routes: List[RouteDefinition]):
         """
@@ -141,12 +119,12 @@ class DefinitionsWriter:
         """
         Write the translations of the labels to a file.
         """
-        with open(f"{self.source_dir}/translations/{tl_key}_definitions_labels.h", "w") as f:
+        with open(f"{self.source_dir}/tl/{tl_key}/definitions_labels.h", "w") as f:
             f.write(f"#ifndef {tl_key.upper()}_DEFINITIONS_LABELS_H\n")
             f.write(f"#define {tl_key.upper()}_DEFINITIONS_LABELS_H\n\n")
             f.write("#include \"definitions/labels.h\"\n\n")
-            f.write("namespace ks {\n")
-            f.write(f"    inline const char* get_label_{tl_key}_translation(const label_t label) {{\n")
+            f.write("namespace ks::tl {\n")
+            f.write(f"    inline const char* get_label_translation(const label_t label) {{\n")
             f.write("        switch (label) {\n")
             for route in routes:
                 for act in route.acts:

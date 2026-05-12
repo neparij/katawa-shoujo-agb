@@ -10,6 +10,7 @@
 #include "bn_regular_bg_position_hbe_ptr.h"
 #include "scenemanager.h"
 #include "utils/scenario_reader.h"
+#include "translation.h"
 
 namespace ks {
     namespace
@@ -29,7 +30,7 @@ namespace ks {
     }
 
     [[nodiscard]] inline int dialog_box_novel::get_line_spacing() {
-        return globals::i18n->type() == LANG_JAPAN ? 16 : 6;
+        return tl::type() == LANG_JAPAN ? 16 : 6;
     }
 
     void dialog_box_novel::update() {

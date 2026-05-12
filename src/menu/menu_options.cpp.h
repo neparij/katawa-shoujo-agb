@@ -47,22 +47,15 @@ namespace ks {
                     break;
                 case 1:
                     if (globals::state == GS_GAME_MENU_OPTIONS) {
-                        globals::state = GS_GAME_MENU_OPTIONS_LANGUAGE;
-                    } else {
-                        globals::state = GS_MENU_OPTIONS_LANGUAGE;
-                    }
-                    break;
-                case 2:
-                    if (globals::state == GS_GAME_MENU_OPTIONS) {
                         globals::state = GS_GAME_MENU_OPTIONS_ACCESSIBILITY;
                     } else {
                         globals::state = GS_MENU_OPTIONS_ACCESSIBILITY;
                     }
                     break;
+                case 2:
                 case 3:
-                case 4:
                     break;
-                case 5:
+                case 4:
                     on_back();
                     break;
                 default:
@@ -90,11 +83,11 @@ namespace ks {
             constexpr unsigned char y_spacing = 16;
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + yy,
-                    globals::i18n->menu_options(), -1);
+                    tl::menu_options(), -1);
             yy += y_spacing + 4;
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + yy,
-                    globals::i18n->menu_options_general(), -1);
+                    tl::menu_options_general(), -1);
             yy += y_spacing;
 
             static_text_sprites.push_back(
@@ -102,19 +95,15 @@ namespace ks {
                     -device::screen_width_half + draw_x_from + 8, -device::screen_height_half + yy));
             checkboxes_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(-device::screen_width_half + draw_x_from + 16, -device::screen_height_half + yy,
-                globals::i18n->menu_options_hdisabled(), 0);
+                tl::menu_options_hdisabled(), 0);
             yy += y_spacing;
 
             add_menu_entry(-device::screen_width_half + draw_x_from + 16, -device::screen_height_half + yy,
-                globals::i18n->menu_options_language(), 1);
-            yy += y_spacing;
-
-            add_menu_entry(-device::screen_width_half + draw_x_from + 16, -device::screen_height_half + yy,
-                globals::i18n->menu_options_accessibility(), 2);
+                tl::menu_options_accessibility(), 1);
             yy += y_spacing;
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + yy,
-                    globals::i18n->menu_options_sound(), -1);
+                    tl::menu_options_sound(), -1);
             yy += y_spacing;
 
             static_text_sprites.push_back(
@@ -130,7 +119,7 @@ namespace ks {
                     -device::screen_width_half + 16, -device::screen_height_half + yy));
             thumbs_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(0, -device::screen_height_half + yy,
-                globals::i18n->menu_options_music_volume(), 3);
+                tl::menu_options_music_volume(), 2);
             yy += y_spacing;
 
             static_text_sprites.push_back(
@@ -146,17 +135,17 @@ namespace ks {
                     -device::screen_width_half + 16+96, -device::screen_height_half + yy));
             thumbs_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(0, -device::screen_height_half + yy,
-                globals::i18n->menu_options_sfx_volume(), 4);
+                tl::menu_options_sfx_volume(), 3);
             yy += y_spacing;
 
             text_generator->set_right_alignment();
             add_menu_entry(device::screen_width_half - draw_x_from, device::screen_height_half - 14,
-                           globals::i18n->menu_back(), 5);
+                           tl::menu_back(), 4);
             need_repalette = true;
         }
 
         void on_repalette() override {
-            if (selection == 3) {
+            if (selection == 2) {
                 thumbbars_ptrs.at(0).set_palette(globals::text_palettes::beige_selected);
                 thumbbars_ptrs.at(1).set_palette(globals::text_palettes::beige_selected);
                 thumbs_ptrs.at(0).set_palette(globals::text_palettes::beige_selected);
@@ -166,7 +155,7 @@ namespace ks {
                 thumbs_ptrs.at(0).set_palette(globals::text_palettes::beige);
             }
 
-            if (selection == 4) {
+            if (selection == 3) {
                 thumbbars_ptrs.at(2).set_palette(globals::text_palettes::beige_selected);
                 thumbbars_ptrs.at(3).set_palette(globals::text_palettes::beige_selected);
                 thumbs_ptrs.at(1).set_palette(globals::text_palettes::beige_selected);
@@ -179,14 +168,14 @@ namespace ks {
 
         void on_navigate(const bool up, const bool down, const bool left, const bool right) override {
             MenuBase::on_navigate(up, down, left, right);
-            if (selection == 3 && (left || right)) {
+            if (selection == 2 && (left || right)) {
                 if (right) {
                     globals::settings.music_volume = CLAMP(globals::settings.music_volume + 0x11, 0x00, 0xFF);
                 } else {
                     globals::settings.music_volume = CLAMP(globals::settings.music_volume - 0x11, 0x00, 0xFF);
                 }
                 update_thumbbars();
-            } else if (selection == 4 && (left || right)) {
+            } else if (selection == 3 && (left || right)) {
                 if (right) {
                     globals::settings.sfx_volume = CLAMP(globals::settings.sfx_volume + 0x11, 0x00, 0xFF);
                 } else {

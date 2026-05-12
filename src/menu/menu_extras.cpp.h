@@ -23,21 +23,21 @@ namespace ks {
 
             text_generator->set_one_sprite_per_character(false);
             text_generator->set_center_alignment();
-            add_menu_entry(globals::i18n->menu_extras_jukebox_xoffset() - 90, 0,
-                           globals::i18n->menu_extras_jukebox(), 0);
+            add_menu_entry(tl::menu_extras_jukebox_xoffset() - 90, 0,
+                           tl::menu_extras_jukebox(), 0);
 
-            add_menu_entry(globals::i18n->menu_extras_gallery_xoffset() - 30, 0,
-                           globals::i18n->menu_extras_gallery(), 1);
+            add_menu_entry(tl::menu_extras_gallery_xoffset() - 30, 0,
+                           tl::menu_extras_gallery(), 1);
 
-            add_menu_entry(globals::i18n->menu_extras_library_xoffset() + 30, 0,
-                           globals::i18n->menu_extras_library(), 2);
+            add_menu_entry(tl::menu_extras_library_xoffset() + 30, 0,
+                           tl::menu_extras_library(), 2);
 
-            add_menu_entry(globals::i18n->menu_extras_cinema_xoffset() + 90, 0,
-                           globals::i18n->menu_extras_cinema(), 3);
+            add_menu_entry(tl::menu_extras_cinema_xoffset() + 90, 0,
+                           tl::menu_extras_cinema(), 3);
 
-            add_menu_entry(globals::i18n->menu_extras_return_xoffset() + 90,
+            add_menu_entry(tl::menu_extras_return_xoffset() + 90,
                            device::screen_height_half - 14,
-                           globals::i18n->menu_back(), 4);
+                           tl::menu_back(), 4);
 
             show_selected();
         }

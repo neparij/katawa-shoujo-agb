@@ -18,7 +18,7 @@ namespace ks {
             ) {}
     protected:
         opening_text get_text() override {
-            return globals::i18n->opening_text_act3_shizune();
+            return tl::opening_text_act3_shizune();
         }
     private:
         static constexpr opening_slide slides[1] = {

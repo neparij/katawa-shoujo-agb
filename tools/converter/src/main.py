@@ -134,7 +134,7 @@ def main():
 
         rpy_scenario_file = os.path.join(ksre_path, "game", f"{script_name}.rpy")
         gba_scripts_path = os.path.join(ksagb_path, "src", "scripts")
-        gbfs_path = os.path.join(ksagb_path, "gbfs_files")
+        tl_path = os.path.join(ksagb_path, "tl")
         output_file = script_name.replace("-", "_")
 
         translations : Dict[str, TranslationContainer] = {}
@@ -153,7 +153,7 @@ def main():
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
-        writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, spm_assets_path, scenario)
+        writer = ScenarioWriter(output_file, gba_scripts_path, tl_path, spm_assets_path, scenario)
         # writer.clean()
         writer.write()
         exit(0)
@@ -204,9 +204,9 @@ def main():
                                    "gbfs_files",
                                    locales,
                                    [
-                                       "src/translations/{}.cpp",
-                                       "src/translations/{}_definitions_commons.inc",
-                                       "src/translations/{}_definitions_labels.h"
+                                       "src/tl/{}/translation.cpp",
+                                       "src/tl/{}/definitions_commons.inc",
+                                       "src/tl/{}/definitions_labels.h"
                                    ])
         chars_reader.read_definitions()
 
@@ -261,11 +261,11 @@ def main():
     if args.command == "pack-spm":
         spm_path = args.source
         ksagb_path = args.outdir
-        gbfs_path = os.path.join(ksagb_path, "gbfs_files")
+        tl_path = os.path.join(ksagb_path, "tl")
         locales = args.locales.split(",") if args.locales else []
 
         for locale in locales:
-            spm_packer = SPMPacker(spm_path, gbfs_path, locale)
+            spm_packer = SPMPacker(spm_path, tl_path, locale)
             spm_packer.pack()
 
 

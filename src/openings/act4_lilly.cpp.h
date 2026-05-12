@@ -18,7 +18,7 @@ namespace ks {
             ) {}
     protected:
         opening_text get_text() override {
-            return globals::i18n->opening_text_act4_lilly();
+            return tl::opening_text_act4_lilly();
         }
     private:
         static constexpr opening_slide slides[1] = {

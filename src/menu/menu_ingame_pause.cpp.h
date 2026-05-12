@@ -67,28 +67,28 @@ namespace ks {
             add_text_entry(0, -ks::device::screen_height_half + 8,
                            bn::format<64>(
                                "{}: {}:{}:{}",
-                               ks::globals::i18n->screens_playtime(),
+                               ks::tl::screens_playtime(),
                                progress.metadata.hours_played,
                                bn::format<2>(progress.metadata.minutes_played < 10 ? "0{}" : "{}",
                                              progress.metadata.minutes_played),
                                bn::format<2>(progress.metadata.seconds_played < 10 ? "0{}" : "{}",
                                              progress.metadata.seconds_played)));
 
-            add_menu_entry(0, 38 - (15 * 4), ks::globals::i18n->screens_return(), 0);
-            add_menu_entry(0, 38 - (15 * 3), ks::globals::i18n->screens_history(), 1);
-            add_menu_entry(0, 38 - (15 * 2), ks::globals::i18n->screens_options(), 2);
-            add_menu_entry(0, 38 - (15 * 1), ks::globals::i18n->screens_saves_menu(), 3);
-            add_menu_entry(0, 38, ks::globals::i18n->screens_main_menu(), 4);
+            add_menu_entry(0, 38 - (15 * 4), ks::tl::screens_return(), 0);
+            add_menu_entry(0, 38 - (15 * 3), ks::tl::screens_history(), 1);
+            add_menu_entry(0, 38 - (15 * 2), ks::tl::screens_options(), 2);
+            add_menu_entry(0, 38 - (15 * 1), ks::tl::screens_saves_menu(), 3);
+            add_menu_entry(0, 38, ks::tl::screens_main_menu(), 4);
 
             add_text_entry_small(0, ks::device::screen_height_half - 8 - 12,
                            bn::format<64>("{}: {}",
-                                          ks::globals::i18n->screens_current_scene(),
-                                          ks::globals::i18n->label(progress.metadata.label)));
+                                          ks::tl::screens_current_scene(),
+                                          ks::tl::label(progress.metadata.label)));
 
             add_text_entry_small(0, ks::device::screen_height_half - 8,
                            bn::format<64>("{}: {}",
-                                          ks::globals::i18n->screens_current_track(),
-                                          ks::globals::i18n->music(ks::sound_manager::current_music)));
+                                          ks::tl::screens_current_track(),
+                                          ks::tl::music(ks::sound_manager::current_music)));
         }
 
         ~MenuIngamePause() override {

@@ -1,8 +1,9 @@
 #include "script_a2_shizune.h"
+#include "a2_shizune_tl.h"
 namespace ks {
         void ScriptA2Shizune::a2_shizune_message_passing() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_MESSAGE_PASSING);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::pause(60));
@@ -282,7 +283,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_talk_to_the_hand() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_TALK_TO_THE_HAND);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_normalbell.8ad", SOUND_CHANNEL_SOUND));
@@ -661,7 +662,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_chinese_whispers() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_CHINESE_WHISPERS);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_doorknock.8ad", SOUND_CHANNEL_SOUND));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -1216,7 +1217,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_advanced_game_theory() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_ADVANCED_GAME_THEORY);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_cafeteria, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::nvl_clear());
@@ -2006,7 +2007,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_bread_scissors_paper() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_BREAD_SCISSORS_PAPER);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_council, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::nvl_clear());
@@ -2643,7 +2644,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_interface() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_INTERFACE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xB8718972);
@@ -2928,7 +2929,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_spring_into_action() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_SPRING_INTO_ACTION);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_impact.8ad", SOUND_CHANNEL_SOUND));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -3529,7 +3530,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_past_imperfective() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_PAST_IMPERFECTIVE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormext_full, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_NORMAL, 30));
@@ -4323,7 +4324,7 @@ namespace ks {
         }
         void ScriptA2Shizune::a2_shizune_when_stars_embrace() {
             ks::SceneManager::set_label(LABEL_A2_SHIZUNE_WHEN_STARS_EMBRACE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a2_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a2_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_OPENEYE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xC7BA01BC);

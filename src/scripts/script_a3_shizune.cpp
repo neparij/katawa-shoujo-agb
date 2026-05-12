@@ -1,8 +1,9 @@
 #include "script_a3_shizune.h"
+#include "a3_shizune_tl.h"
 namespace ks {
         void ScriptA3Shizune::a3_shizune_force_feedback() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_FORCE_FEEDBACK);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::nvl_clear());
@@ -208,7 +209,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_united_nations() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_UNITED_NATIONS);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhallway, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_DAILY, 30));
@@ -1031,7 +1032,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_use_mention_distinction() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_USE_MENTION_DISTINCTION);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::shizu_guesthisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_PEARLY, 300));
@@ -1421,7 +1422,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_family_plot() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_FAMILY_PLOT);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::shizu_guesthisao, 0, 0, SCENE_TRANSITION_OPENEYE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x9E6A29F6);
@@ -1673,7 +1674,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_pangrammatic_window() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_PANGRAMMATIC_WINDOW);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::shizu_guesthisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_DREAMY, 120));
@@ -2186,7 +2187,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_closer() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_CLOSER);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::shizu_living, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x4E0DF9BE);
@@ -2567,7 +2568,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_confrontation() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_CONFRONTATION);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::shizu_guesthisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_DAILY, 30));
@@ -2869,7 +2870,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_the_anchor() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_THE_ANCHOR);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::city_station, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x1B27EB17);
@@ -3236,7 +3237,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_roadmap() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_ROADMAP);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_council, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             // renpy.music.set_volume(0.5, 0.0, channel="music"); TODO: unknown assignment
@@ -3811,7 +3812,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_acute_triangle() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_ACUTE_TRIANGLE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_paper.8ad", SOUND_CHANNEL_SOUND));
@@ -4355,7 +4356,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_dewey_decimated() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_DEWEY_DECIMATED);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_hallway2, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xC828C4A2);
@@ -4820,7 +4821,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_tongue_tied() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_TONGUE_TIED);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xD131922A);
@@ -5330,7 +5331,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_look_ahead() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_LOOK_AHEAD);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ScriptA3Shizune::aside_and_ahead_1()); // DIRECT CALL
             ks::SceneManager::set_line_hash(0xA32C7BA1);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1622));
@@ -5462,7 +5463,7 @@ namespace ks {
         }
         void ScriptA3Shizune::a3_shizune_look_aside() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_LOOK_ASIDE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a3_shizune"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
             IF_NOT_EXIT(ScriptA3Shizune::aside_and_ahead_1()); // DIRECT CALL
             ks::SceneManager::set_line_hash(0xAC24F9B4);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1661));
