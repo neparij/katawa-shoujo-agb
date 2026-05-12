@@ -2,6 +2,7 @@
 
 #include "bn_memory.h"
 #include "lz77.h"
+#include "huff.h"
 #include <bn_log.h>
 #include <cstring>
 
@@ -46,7 +47,10 @@ namespace ks::textdb {
         BN_LOG("TextDB load from: ", filename);
         u32 src_len = 0;
         const u8 *compressed_data = (u8 *) gbfs_get_obj(ks::globals::filesystem, filename.c_str(), &src_len);
-        const u32 size = (compressed_data[1]) | (compressed_data[2] << 8) | (compressed_data[3] << 16);
+        const u32 header = *(reinterpret_cast<const u32*>(compressed_data));
+        const u32 type = (header >> 4) & 0x0F;
+        const u32 size = (header >> 8) & 0x00FFFFFF;
+        BN_ASSERT(type == 1 || type == 2, "Unsupported TextDB compression type!");
 
         BN_LOG("EWRAM free: ", bn::memory::available_alloc_ewram());
         BN_LOG("Allocate ", size, " bytes for text database...");
@@ -56,7 +60,11 @@ namespace ks::textdb {
         is_allocated = true;
 
         BN_LOG("Decompress TextDB file...");
-        LZ77UnCompWRAM((u32) compressed_data, (u32) ptr);
+        if (type == 1) {
+            LZ77UnCompWRAM((u32) compressed_data, (u32) ptr);
+        } else {
+            HuffUnComp((u32) compressed_data, (u32) ptr);
+        }
         BN_LOG("EWRAM after allocation: ", bn::memory::available_alloc_ewram());
     }
 
@@ -74,9 +82,6 @@ namespace ks::textdb {
         BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
         BN_ASSERT(_locale != nullptr, "TextDB Locale not set!");
 
-        const bool is_cjk = (globals::settings.language == LANG_JAPAN ||
-                             globals::settings.language == LANG_CHINESE_SIMPLIFIED);
-
         out.clear();
         const int index_elements = ptr[0] | ptr[1] << 8;
         constexpr int index_from = 2;
@@ -89,19 +94,15 @@ namespace ks::textdb {
         int i = 0;
 
         do {
-            const char c0 = ptr[index_from + tl_index_size + offset + i];
-            const char c1 = ptr[index_from + tl_index_size + offset + i + 1];
-            if (c0 == CTL_TERMINATOR && (!is_cjk || c1 == CTL_TERMINATOR)) {
+            const u8 c0 = ptr[index_from + tl_index_size + offset + i];
+            if (c0 == CTL_TERMINATOR) {
                 break;
             }
 
-            if (c0 == CMD_START && (!is_cjk || c1 == CMD_START)) {
+            if (c0 == CMD_START) {
                 // Add command
                 BN_LOG("Add command from SPM-stream");
-                i++;
-                if (is_cjk) {
-                    i++;
-                }
+                i += 1;  // skip 0xFF
                 const char cmd = ptr[index_from + tl_index_size + offset + i];
                 const auto cmd_size = utf8::get_char_size(cmd);
                 if (cmd == text::CTL_NEWLINE) {
@@ -115,18 +116,21 @@ namespace ks::textdb {
                 i += cmd_size;
             } else {
                 // Process spm GET.
-                int spm_token_index, spm_index_size;
-                if (!is_cjk) {
-                    spm_index_size = 254 * 2;
-                    spm_token_index = c0 - 1;
-                    BN_LOG("Token index: ", spm_token_index);
-                    i++;
+                constexpr int spm_index_size = 2046 * 2;
+                int token_id;
+                if (c0 < 0xC0) {
+                    token_id = c0;
+                    i += 1;
                 } else {
-                    spm_index_size = 2046 * 2;
-                    spm_token_index = (c0 | c1 << 8) - 1;
-                    BN_LOG("Token index: ", spm_token_index);
+                    const u8 c1 = ptr[index_from + tl_index_size + offset + i + 1];
+                    BN_ASSERT((c1 & 0xC0) == 0x80, "Invalid token continuation byte!");
+                    token_id = ((int(c0) & 0x1F) << 6) | (int(c1) & 0x3F);
                     i += 2;
                 }
+
+                BN_ASSERT(token_id > 0 && token_id <= 2047, "token_id out of range!");
+                const int spm_token_index = token_id - 1;
+                BN_LOG("Token index: ", spm_token_index);
 
                 // Where is the token starts?
                 const int spm_token_offset = (spm_table[spm_token_index * 2]) | (spm_table[spm_token_index * 2 + 1] << 8); // Little-endian 0x0000 to 0xFFFF

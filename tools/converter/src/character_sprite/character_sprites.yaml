@@ -1,0 +1,5355 @@
+sprites:
+  akira:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: akira
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          evil:
+            filename: akira/akira_basic_evil.png
+            naked: false
+          laugh:
+            filename: akira/akira_basic_laugh.png
+            naked: false
+          ending:
+            filename: akira/akira_basic_ending.png
+            naked: false
+          annoyed:
+            filename: akira/akira_basic_annoyed.png
+            naked: false
+          resigned:
+            filename: akira/akira_basic_resigned.png
+            naked: false
+          smile:
+            filename: akira/akira_basic_smile.png
+            naked: false
+          kill:
+            filename: akira/akira_basic_kill.png
+            naked: false
+          boo:
+            filename: akira/akira_basic_boo.png
+            naked: false
+          lost:
+            filename: akira/akira_basic_lost.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          laugh:
+            filename: akira/close/akira_basic_laugh_close.png
+            naked: false
+          ending:
+            filename: akira/close/akira_basic_ending_close.png
+            naked: false
+          boo:
+            filename: akira/close/akira_basic_boo_close.png
+            naked: false
+          smile:
+            filename: akira/close/akira_basic_smile_close.png
+            naked: false
+          annoyed:
+            filename: akira/close/akira_basic_annoyed_close.png
+            naked: false
+          lost:
+            filename: akira/close/akira_basic_lost_close.png
+            naked: false
+          resigned:
+            filename: akira/close/akira_basic_resigned_close.png
+            naked: false
+          distant:
+            filename: akira/close/akira_basic_distant_close.png
+            naked: false
+  emi:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: emi
+    groups:
+      basic_gym:
+        pose: basic
+        outfit: gym
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 11
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          shock:
+            filename: emi/emi_basic_shock_gym.png
+            naked: false
+          grin:
+            filename: emi/emi_basic_grin_gym.png
+            naked: false
+          closedhappy:
+            filename: emi/emi_basic_closedhappy_gym.png
+            naked: false
+          concentrate:
+            filename: emi/emi_basic_concentrate_gym.png
+            naked: false
+          closedgrin:
+            filename: emi/emi_basic_closedgrin_gym.png
+            naked: false
+          confused:
+            filename: emi/emi_basic_confused_gym.png
+            naked: false
+          happy:
+            filename: emi/emi_basic_happy_gym.png
+            naked: false
+          closedsweat:
+            filename: emi/emi_basic_closedsweat_gym.png
+            naked: false
+          annoyed:
+            filename: emi/emi_basic_annoyed_gym.png
+            naked: false
+          hes:
+            filename: emi/emi_basic_hes_gym.png
+            naked: false
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 11
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          grin:
+            filename: emi/emi_basic_grin.png
+            naked: false
+          closedsweat:
+            filename: emi/emi_basic_closedsweat.png
+            naked: false
+          closedhappy:
+            filename: emi/emi_basic_closedhappy.png
+            naked: false
+          hes:
+            filename: emi/emi_basic_hes.png
+            naked: false
+          closedgrin:
+            filename: emi/emi_basic_closedgrin.png
+            naked: false
+          annoyed:
+            filename: emi/emi_basic_annoyed.png
+            naked: false
+          shock:
+            filename: emi/emi_basic_shock.png
+            naked: false
+          happy:
+            filename: emi/emi_basic_happy.png
+            naked: false
+          confused:
+            filename: emi/emi_basic_confused.png
+            naked: false
+          concentrate:
+            filename: emi/emi_basic_concentrate.png
+            naked: false
+      excited_gym:
+        pose: excited
+        outfit: gym
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 12
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: emi/emi_excited_smile_gym.png
+            naked: false
+          sad:
+            filename: emi/emi_excited_sad_gym.png
+            naked: false
+          circle:
+            filename: emi/emi_excited_circle_gym.png
+            naked: false
+          proud:
+            filename: emi/emi_excited_proud_gym.png
+            naked: false
+          hesitant:
+            filename: emi/emi_excited_hesitant_gym.png
+            naked: false
+          amused:
+            filename: emi/emi_excited_amused_gym.png
+            naked: false
+          happy:
+            filename: emi/emi_excited_happy_gym.png
+            naked: false
+          joy:
+            filename: emi/emi_excited_joy_gym.png
+            naked: false
+          laugh:
+            filename: emi/emi_excited_laugh_gym.png
+            naked: false
+      excited:
+        pose: excited
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 12
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          joy:
+            filename: emi/emi_excited_joy.png
+            naked: false
+          sad:
+            filename: emi/emi_excited_sad.png
+            naked: false
+          smile:
+            filename: emi/emi_excited_smile.png
+            naked: false
+          circle:
+            filename: emi/emi_excited_circle.png
+            naked: false
+          proud:
+            filename: emi/emi_excited_proud.png
+            naked: false
+          laugh:
+            filename: emi/emi_excited_laugh.png
+            naked: false
+          amused:
+            filename: emi/emi_excited_amused.png
+            naked: false
+          happy:
+            filename: emi/emi_excited_happy.png
+            naked: false
+      sad_gym:
+        pose: sad
+        outfit: gym
+        close: false
+        base_emotion: shy
+        base_emotion_offset:
+        - 13
+        - 11
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          shyblush:
+            filename: emi/emi_sad_shyblush_gym.png
+            naked: false
+          pout:
+            filename: emi/emi_sad_pout_gym.png
+            naked: false
+          angry:
+            filename: emi/emi_sad_angry_gym.png
+            naked: false
+          grin:
+            filename: emi/emi_sad_grin_gym.png
+            naked: false
+          grit:
+            filename: emi/emi_sad_grit_gym.png
+            naked: false
+          annoyed:
+            filename: emi/emi_sad_annoyed_gym.png
+            naked: false
+          shy:
+            filename: emi/emi_sad_shy_gym.png
+            naked: false
+          depressed:
+            filename: emi/emi_sad_depressed_gym.png
+            naked: false
+      sad:
+        pose: sad
+        outfit: null
+        close: false
+        base_emotion: shy
+        base_emotion_offset:
+        - 13
+        - 11
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          grin:
+            filename: emi/emi_sad_grin.png
+            naked: false
+          annoyed:
+            filename: emi/emi_sad_annoyed.png
+            naked: false
+          grit:
+            filename: emi/emi_sad_grit.png
+            naked: false
+          shy:
+            filename: emi/emi_sad_shy.png
+            naked: false
+          pout:
+            filename: emi/emi_sad_pout.png
+            naked: false
+          angry:
+            filename: emi/emi_sad_angry.png
+            naked: false
+          shyblush:
+            filename: emi/emi_sad_shyblush.png
+            naked: false
+          depressed:
+            filename: emi/emi_sad_depressed.png
+            naked: false
+      basic_gym_close:
+        pose: basic
+        outfit: gym
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 11
+        - 7
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          happy:
+            filename: emi/close/emi_basic_happy_gym_close.png
+            naked: false
+          hes:
+            filename: emi/close/emi_basic_hes_gym_close.png
+            naked: false
+          closedhappy:
+            filename: emi/close/emi_basic_closedhappy_gym_close.png
+            naked: false
+          closedgrin:
+            filename: emi/close/emi_basic_closedgrin_gym_close.png
+            naked: false
+          closedsweat:
+            filename: emi/close/emi_basic_closedsweat_gym_close.png
+            naked: false
+          annoyed:
+            filename: emi/close/emi_basic_annoyed_gym_close.png
+            naked: false
+          shock:
+            filename: emi/close/emi_basic_shock_gym_close.png
+            naked: false
+          happyblush:
+            filename: emi/close/emi_basic_happyblush_gym_close.png
+            naked: false
+          confused:
+            filename: emi/close/emi_basic_confused_gym_close.png
+            naked: false
+          grin:
+            filename: emi/close/emi_basic_grin_gym_close.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 11
+        - 7
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          hes:
+            filename: emi/close/emi_basic_hes_close.png
+            naked: false
+          shock:
+            filename: emi/close/emi_basic_shock_close.png
+            naked: false
+          closedhappy:
+            filename: emi/close/emi_basic_closedhappy_close.png
+            naked: false
+          confused:
+            filename: emi/close/emi_basic_confused_close.png
+            naked: false
+          happy:
+            filename: emi/close/emi_basic_happy_close.png
+            naked: false
+          annoyed:
+            filename: emi/close/emi_basic_annoyed_close.png
+            naked: false
+          grin:
+            filename: emi/close/emi_basic_grin_close.png
+            naked: false
+          closedgrin:
+            filename: emi/close/emi_basic_closedgrin_close.png
+            naked: false
+      excited_gym_close:
+        pose: excited
+        outfit: gym
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 11
+        - 8
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          laugh:
+            filename: emi/close/emi_excited_laugh_gym_close.png
+            naked: false
+          sad:
+            filename: emi/close/emi_excited_sad_gym_close.png
+            naked: false
+          happy:
+            filename: emi/close/emi_excited_happy_gym_close.png
+            naked: false
+          amused:
+            filename: emi/close/emi_excited_amused_gym_close.png
+            naked: false
+          proud:
+            filename: emi/close/emi_excited_proud_gym_close.png
+            naked: false
+      excited_close:
+        pose: excited
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 11
+        - 8
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: emi/close/emi_excited_smile_close.png
+            naked: false
+          proud:
+            filename: emi/close/emi_excited_proud_close.png
+            naked: false
+          laugh:
+            filename: emi/close/emi_excited_laugh_close.png
+            naked: false
+          happy:
+            filename: emi/close/emi_excited_happy_close.png
+            naked: false
+          sad:
+            filename: emi/close/emi_excited_sad_close.png
+            naked: false
+          amused:
+            filename: emi/close/emi_excited_amused_close.png
+            naked: false
+      sad_gym_close:
+        pose: sad
+        outfit: gym
+        close: true
+        base_emotion: shy
+        base_emotion_offset:
+        - 11
+        - 7
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          pout:
+            filename: emi/close/emi_sad_pout_gym_close.png
+            naked: false
+          angry:
+            filename: emi/close/emi_sad_angry_gym_close.png
+            naked: false
+          depressed:
+            filename: emi/close/emi_sad_depressed_gym_close.png
+            naked: false
+          shy:
+            filename: emi/close/emi_sad_shy_gym_close.png
+            naked: false
+          grin:
+            filename: emi/close/emi_sad_grin_gym_close.png
+            naked: false
+          annoyed:
+            filename: emi/close/emi_sad_annoyed_gym_close.png
+            naked: false
+          shyblush:
+            filename: emi/close/emi_sad_shyblush_gym_close.png
+            naked: false
+      sad_close:
+        pose: sad
+        outfit: null
+        close: true
+        base_emotion: shy
+        base_emotion_offset:
+        - 11
+        - 7
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          depressed:
+            filename: emi/close/emi_sad_depressed_close.png
+            naked: false
+          annoyed:
+            filename: emi/close/emi_sad_annoyed_close.png
+            naked: false
+          shy:
+            filename: emi/close/emi_sad_shy_close.png
+            naked: false
+          shyblush:
+            filename: emi/close/emi_sad_shyblush_close.png
+            naked: false
+          grin:
+            filename: emi/close/emi_sad_grin_close.png
+            naked: false
+          angry:
+            filename: emi/close/emi_sad_angry_close.png
+            naked: false
+          pout:
+            filename: emi/close/emi_sad_pout_close.png
+            naked: false
+          grit:
+            filename: emi/close/emi_sad_grit_close.png
+            naked: false
+  emicas:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: emi
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 15
+        - 11
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          grit:
+            filename: emicas/emicas_grit.png
+            naked: false
+          frown:
+            filename: emicas/emicas_frown.png
+            naked: false
+          awayfrown:
+            filename: emicas/emicas_awayfrown.png
+            naked: false
+          weaksmile:
+            filename: emicas/emicas_weaksmile.png
+            naked: false
+          happy:
+            filename: emicas/emicas_happy.png
+            naked: false
+          pout:
+            filename: emicas/emicas_pout.png
+            naked: false
+          sad:
+            filename: emicas/emicas_sad.png
+            naked: false
+          blush:
+            filename: emicas/emicas_blush.png
+            naked: false
+          angry:
+            filename: emicas/emicas_angry.png
+            naked: false
+          wink:
+            filename: emicas/emicas_wink.png
+            naked: false
+          evil:
+            filename: emicas/emicas_evil.png
+            naked: false
+          smile:
+            filename: emicas/emicas_smile.png
+            naked: false
+          neutral:
+            filename: emicas/emicas_neutral.png
+            naked: false
+          grin:
+            filename: emicas/emicas_grin.png
+            naked: false
+          closedsmile:
+            filename: emicas/emicas_closedsmile.png
+            naked: false
+      up:
+        pose: up
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 15
+        - 11
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          weaksmile:
+            filename: emicas/emicas_weaksmile_up.png
+            naked: false
+          sad:
+            filename: emicas/emicas_sad_up.png
+            naked: false
+          neutral:
+            filename: emicas/emicas_neutral_up.png
+            naked: false
+          smile:
+            filename: emicas/emicas_smile_up.png
+            naked: false
+          happy:
+            filename: emicas/emicas_happy_up.png
+            naked: false
+          pout:
+            filename: emicas/emicas_pout_up.png
+            naked: false
+          angry:
+            filename: emicas/emicas_angry_up.png
+            naked: false
+          grin:
+            filename: emicas/emicas_grin_up.png
+            naked: false
+          frown:
+            filename: emicas/emicas_frown_up.png
+            naked: false
+          awayfrown:
+            filename: emicas/emicas_awayfrown_up.png
+            naked: false
+          wink:
+            filename: emicas/emicas_wink_up.png
+            naked: false
+          closedsmile:
+            filename: emicas/emicas_closedsmile_up.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 13
+        - 7
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: emicas/close/emicas_frown_close.png
+            naked: false
+          awayfrown:
+            filename: emicas/close/emicas_awayfrown_close.png
+            naked: false
+          smile:
+            filename: emicas/close/emicas_smile_close.png
+            naked: false
+          sad:
+            filename: emicas/close/emicas_sad_close.png
+            naked: false
+          blush:
+            filename: emicas/close/emicas_blush_close.png
+            naked: false
+          closedsmile:
+            filename: emicas/close/emicas_closedsmile_close.png
+            naked: false
+          neutral:
+            filename: emicas/close/emicas_neutral_close.png
+            naked: false
+          weaksmile:
+            filename: emicas/close/emicas_weaksmile_close.png
+            naked: false
+          angry:
+            filename: emicas/close/emicas_angry_close.png
+            naked: false
+          happy:
+            filename: emicas/close/emicas_happy_close.png
+            naked: false
+          wink:
+            filename: emicas/close/emicas_wink_close.png
+            naked: false
+      up_close:
+        pose: up
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 13
+        - 7
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          neutral:
+            filename: emicas/close/emicas_neutral_up_close.png
+            naked: false
+          closedsmile:
+            filename: emicas/close/emicas_closedsmile_up_close.png
+            naked: false
+          grin:
+            filename: emicas/close/emicas_grin_up_close.png
+            naked: false
+          happy:
+            filename: emicas/close/emicas_happy_up_close.png
+            naked: false
+          frown:
+            filename: emicas/close/emicas_frown_up_close.png
+            naked: false
+          blush:
+            filename: emicas/close/emicas_blush_up_close.png
+            naked: false
+          awayfrown:
+            filename: emicas/close/emicas_awayfrown_up_close.png
+            naked: false
+          smile:
+            filename: emicas/close/emicas_smile_up_close.png
+            naked: false
+          weaksmile:
+            filename: emicas/close/emicas_weaksmile_up_close.png
+            naked: false
+          sad:
+            filename: emicas/close/emicas_sad_up_close.png
+            naked: false
+          wink:
+            filename: emicas/close/emicas_wink_up_close.png
+            naked: false
+          angry:
+            filename: emicas/close/emicas_angry_up_close.png
+            naked: false
+  eminude:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: emi
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: grin
+        base_emotion_offset:
+        - 15
+        - 11
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          blush:
+            filename: eminude/eminude_blush.png
+            naked: true
+          grin:
+            filename: eminude/eminude_grin.png
+            naked: true
+          evil:
+            filename: eminude/eminude_evil.png
+            naked: true
+          wink:
+            filename: eminude/eminude_wink.png
+            naked: true
+          happy:
+            filename: eminude/eminude_happy.png
+            naked: true
+          closedsmile:
+            filename: eminude/eminude_closedsmile.png
+            naked: true
+          frown:
+            filename: eminude/eminude_frown.png
+            naked: true
+          awayfrown:
+            filename: eminude/eminude_awayfrown.png
+            naked: true
+          weaksmile:
+            filename: eminude/eminude_weaksmile.png
+            naked: true
+          neutral:
+            filename: eminude/eminude_neutral.png
+            naked: true
+          pout:
+            filename: eminude/eminude_pout.png
+            naked: true
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: grin
+        base_emotion_offset:
+        - 13
+        - 7
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          blush:
+            filename: eminude/close/eminude_blush_close.png
+            naked: true
+          sad:
+            filename: eminude/close/eminude_sad_close.png
+            naked: true
+          angry:
+            filename: eminude/close/eminude_angry_close.png
+            naked: true
+          grin:
+            filename: eminude/close/eminude_grin_close.png
+            naked: true
+          closedsmile:
+            filename: eminude/close/eminude_closedsmile_close.png
+            naked: true
+          happy:
+            filename: eminude/close/eminude_happy_close.png
+            naked: true
+          weaksmile:
+            filename: eminude/close/eminude_weaksmile_close.png
+            naked: true
+          evil:
+            filename: eminude/close/eminude_evil_close.png
+            naked: true
+          frown:
+            filename: eminude/close/eminude_frown_close.png
+            naked: true
+          pout:
+            filename: eminude/close/eminude_pout_close.png
+            naked: true
+          wink:
+            filename: eminude/close/eminude_wink_close.png
+            naked: true
+          neutral:
+            filename: eminude/close/eminude_neutral_close.png
+            naked: true
+          smile:
+            filename: eminude/close/eminude_smile_close.png
+            naked: true
+  emiwheel:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: emi
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: grin
+        base_emotion_offset:
+        - 15
+        - 14
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          awayfrown:
+            filename: emiwheel/emiwheel_awayfrown.png
+            naked: false
+          blush:
+            filename: emiwheel/emiwheel_blush.png
+            naked: false
+          weaksmile:
+            filename: emiwheel/emiwheel_weaksmile.png
+            naked: false
+          pout:
+            filename: emiwheel/emiwheel_pout.png
+            naked: false
+          closedsmile:
+            filename: emiwheel/emiwheel_closedsmile.png
+            naked: false
+          happy:
+            filename: emiwheel/emiwheel_happy.png
+            naked: false
+          frown:
+            filename: emiwheel/emiwheel_frown.png
+            naked: false
+          smile:
+            filename: emiwheel/emiwheel_smile.png
+            naked: false
+          sad:
+            filename: emiwheel/emiwheel_sad.png
+            naked: false
+          wink:
+            filename: emiwheel/emiwheel_wink.png
+            naked: false
+          evil:
+            filename: emiwheel/emiwheel_evil.png
+            naked: false
+          angry:
+            filename: emiwheel/emiwheel_angry.png
+            naked: false
+          grin:
+            filename: emiwheel/emiwheel_grin.png
+            naked: false
+          neutral:
+            filename: emiwheel/emiwheel_neutral.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: grin
+        base_emotion_offset:
+        - 14
+        - 9
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          neutral:
+            filename: emiwheel/close/emiwheel_neutral_close.png
+            naked: false
+          closedsmile:
+            filename: emiwheel/close/emiwheel_closedsmile_close.png
+            naked: false
+          blush:
+            filename: emiwheel/close/emiwheel_blush_close.png
+            naked: false
+          wink:
+            filename: emiwheel/close/emiwheel_wink_close.png
+            naked: false
+          awayfrown:
+            filename: emiwheel/close/emiwheel_awayfrown_close.png
+            naked: false
+          grin:
+            filename: emiwheel/close/emiwheel_grin_close.png
+            naked: false
+  hanagown:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: hanako
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          drunkgiggle:
+            filename: hanagown/hanagown_drunkgiggle.png
+            naked: false
+          normalblush:
+            filename: hanagown/hanagown_normal_blush.png
+            naked: false
+          distantblush:
+            filename: hanagown/hanagown_distant_blush.png
+            naked: false
+          worry:
+            filename: hanagown/hanagown_worry.png
+            naked: false
+          drunkpout:
+            filename: hanagown/hanagown_drunkpout.png
+            naked: false
+          worryblush:
+            filename: hanagown/hanagown_worry_blush.png
+            naked: false
+          smile:
+            filename: hanagown/hanagown_smile.png
+            naked: false
+          drunksmile:
+            filename: hanagown/hanagown_drunksmile.png
+            naked: false
+          drunknormal:
+            filename: hanagown/hanagown_drunknormal.png
+            naked: false
+          drunksad:
+            filename: hanagown/hanagown_drunksad.png
+            naked: false
+          irritated:
+            filename: hanagown/hanagown_irritated.png
+            naked: false
+          drunkdistant:
+            filename: hanagown/hanagown_drunkdistant.png
+            naked: false
+          distant:
+            filename: hanagown/hanagown_distant.png
+            naked: false
+          normal:
+            filename: hanagown/hanagown_normal.png
+            naked: false
+      stock:
+        pose: stock
+        outfit: null
+        close: false
+        base_emotion: normalblush
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          distantblush:
+            filename: hanagown/hanagown_stockdistant_blush.png
+            naked: true
+          normalblush:
+            filename: hanagown/hanagown_stocknormal_blush.png
+            naked: true
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: normal
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          drunkworry:
+            filename: hanagown/close/hanagown_drunkworry_close.png
+            naked: false
+          smile:
+            filename: hanagown/close/hanagown_smile_close.png
+            naked: false
+          drunknormal:
+            filename: hanagown/close/hanagown_drunknormal_close.png
+            naked: false
+          drunkgiggle:
+            filename: hanagown/close/hanagown_drunkgiggle_close.png
+            naked: false
+          normal:
+            filename: hanagown/close/hanagown_normal_close.png
+            naked: false
+          distant:
+            filename: hanagown/close/hanagown_distant_close.png
+            naked: false
+          drunksmile:
+            filename: hanagown/close/hanagown_drunksmile_close.png
+            naked: false
+          drunkpout:
+            filename: hanagown/close/hanagown_drunkpout_close.png
+            naked: false
+          worry:
+            filename: hanagown/close/hanagown_worry_close.png
+            naked: false
+      stock_close:
+        pose: stock
+        outfit: null
+        close: true
+        base_emotion: normalblush
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worryblush:
+            filename: hanagown/close/hanagown_stockworry_blush_close.png
+            naked: true
+  hanako:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: hanako
+    groups:
+      basic_cas:
+        pose: basic
+        outfit: cas
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worry:
+            filename: hanako/hanako_basic_worry_cas.png
+            naked: false
+          normal:
+            filename: hanako/hanako_basic_normal_cas.png
+            naked: false
+          smile:
+            filename: hanako/hanako_basic_smile_cas.png
+            naked: false
+          distant:
+            filename: hanako/hanako_basic_distant_cas.png
+            naked: false
+          bashful:
+            filename: hanako/hanako_basic_bashful_cas.png
+            naked: false
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: hanako/hanako_basic_smile.png
+            naked: false
+          normal:
+            filename: hanako/hanako_basic_normal.png
+            naked: false
+          worry:
+            filename: hanako/hanako_basic_worry.png
+            naked: false
+          distant:
+            filename: hanako/hanako_basic_distant.png
+            naked: false
+          bashful:
+            filename: hanako/hanako_basic_bashful.png
+            naked: false
+      cover_cas:
+        pose: cover
+        outfit: cas
+        close: false
+        base_emotion: distant
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          bashful:
+            filename: hanako/hanako_cover_bashful_cas.png
+            naked: false
+          worry:
+            filename: hanako/hanako_cover_worry_cas.png
+            naked: false
+          distant:
+            filename: hanako/hanako_cover_distant_cas.png
+            naked: false
+      cover:
+        pose: cover
+        outfit: null
+        close: false
+        base_emotion: distant
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worry:
+            filename: hanako/hanako_cover_worry.png
+            naked: false
+          smile:
+            filename: hanako/hanako_cover_smile.png
+            naked: false
+          distant:
+            filename: hanako/hanako_cover_distant.png
+            naked: false
+          bashful:
+            filename: hanako/hanako_cover_bashful.png
+            naked: false
+      def_cas:
+        pose: def
+        outfit: cas
+        close: false
+        base_emotion: worry
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worry:
+            filename: hanako/hanako_def_worry_cas.png
+            naked: false
+          strain:
+            filename: hanako/hanako_def_strain_cas.png
+            naked: false
+      def:
+        pose: def
+        outfit: null
+        close: false
+        base_emotion: worry
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          shock:
+            filename: hanako/hanako_def_shock.png
+            naked: false
+          worry:
+            filename: hanako/hanako_def_worry.png
+            naked: false
+          strain:
+            filename: hanako/hanako_def_strain.png
+            naked: false
+      defarms_cas:
+        pose: defarms
+        outfit: cas
+        close: false
+        base_emotion: worry
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          shock:
+            filename: hanako/hanako_defarms_shock_cas.png
+            naked: false
+          worry:
+            filename: hanako/hanako_defarms_worry_cas.png
+            naked: false
+          strain:
+            filename: hanako/hanako_defarms_strain_cas.png
+            naked: false
+      defarms:
+        pose: defarms
+        outfit: null
+        close: false
+        base_emotion: worry
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          strain:
+            filename: hanako/hanako_defarms_strain.png
+            naked: false
+          worry:
+            filename: hanako/hanako_defarms_worry.png
+            naked: false
+          shock:
+            filename: hanako/hanako_defarms_shock.png
+            naked: false
+      emb_cas:
+        pose: emb
+        outfit: cas
+        close: false
+        base_emotion: timid
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: hanako/hanako_emb_smile_cas.png
+            naked: false
+          downsmile:
+            filename: hanako/hanako_emb_downsmile_cas.png
+            naked: false
+          downsad:
+            filename: hanako/hanako_emb_downsad_cas.png
+            naked: false
+          timid:
+            filename: hanako/hanako_emb_timid_cas.png
+            naked: false
+          downtimid:
+            filename: hanako/hanako_emb_downtimid_cas.png
+            naked: false
+          emb:
+            filename: hanako/hanako_emb_emb_cas.png
+            naked: false
+          blushing:
+            filename: hanako/hanako_emb_blushing_cas.png
+            naked: false
+          sad:
+            filename: hanako/hanako_emb_sad_cas.png
+            naked: false
+      emb:
+        pose: emb
+        outfit: null
+        close: false
+        base_emotion: timid
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          downsad:
+            filename: hanako/hanako_emb_downsad.png
+            naked: false
+          blushtimid:
+            filename: hanako/hanako_emb_blushtimid.png
+            naked: false
+          emb:
+            filename: hanako/hanako_emb_emb.png
+            naked: false
+          blushing:
+            filename: hanako/hanako_emb_blushing.png
+            naked: false
+          timid:
+            filename: hanako/hanako_emb_timid.png
+            naked: false
+          downsmile:
+            filename: hanako/hanako_emb_downsmile.png
+            naked: false
+          downtimid:
+            filename: hanako/hanako_emb_downtimid.png
+            naked: false
+          smile:
+            filename: hanako/hanako_emb_smile.png
+            naked: false
+          sad:
+            filename: hanako/hanako_emb_sad.png
+            naked: false
+      basic_cas_close:
+        pose: basic
+        outfit: cas
+        close: true
+        base_emotion: normal
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worry:
+            filename: hanako/close/hanako_basic_worry_cas_close.png
+            naked: false
+          smile:
+            filename: hanako/close/hanako_basic_smile_cas_close.png
+            naked: false
+          bashful:
+            filename: hanako/close/hanako_basic_bashful_cas_close.png
+            naked: false
+          distant:
+            filename: hanako/close/hanako_basic_distant_cas_close.png
+            naked: false
+          normal:
+            filename: hanako/close/hanako_basic_normal_cas_close.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: normal
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: hanako/close/hanako_basic_smile_close.png
+            naked: false
+          bashful:
+            filename: hanako/close/hanako_basic_bashful_close.png
+            naked: false
+          distant:
+            filename: hanako/close/hanako_basic_distant_close.png
+            naked: false
+          worry:
+            filename: hanako/close/hanako_basic_worry_close.png
+            naked: false
+          normal:
+            filename: hanako/close/hanako_basic_normal_close.png
+            naked: false
+      cover_cas_close:
+        pose: cover
+        outfit: cas
+        close: true
+        base_emotion: distant
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          bashful:
+            filename: hanako/close/hanako_cover_bashful_cas_close.png
+            naked: false
+          distant:
+            filename: hanako/close/hanako_cover_distant_cas_close.png
+            naked: false
+          worry:
+            filename: hanako/close/hanako_cover_worry_cas_close.png
+            naked: false
+          smile:
+            filename: hanako/close/hanako_cover_smile_cas_close.png
+            naked: false
+      cover_close:
+        pose: cover
+        outfit: null
+        close: true
+        base_emotion: distant
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: hanako/close/hanako_cover_smile_close.png
+            naked: false
+          worry:
+            filename: hanako/close/hanako_cover_worry_close.png
+            naked: false
+          bashful:
+            filename: hanako/close/hanako_cover_bashful_close.png
+            naked: false
+          distant:
+            filename: hanako/close/hanako_cover_distant_close.png
+            naked: false
+      def_cas_close:
+        pose: def
+        outfit: cas
+        close: true
+        base_emotion: worry
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worry:
+            filename: hanako/close/hanako_def_worry_cas_close.png
+            naked: false
+          strain:
+            filename: hanako/close/hanako_def_strain_cas_close.png
+            naked: false
+      def_close:
+        pose: def
+        outfit: null
+        close: true
+        base_emotion: worry
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worry:
+            filename: hanako/close/hanako_def_worry_close.png
+            naked: false
+          shock:
+            filename: hanako/close/hanako_def_shock_close.png
+            naked: false
+      defarms_cas_close:
+        pose: defarms
+        outfit: cas
+        close: true
+        base_emotion: worry
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          strain:
+            filename: hanako/close/hanako_defarms_strain_cas_close.png
+            naked: false
+          worry:
+            filename: hanako/close/hanako_defarms_worry_cas_close.png
+            naked: false
+      defarms_close:
+        pose: defarms
+        outfit: null
+        close: true
+        base_emotion: worry
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          shock:
+            filename: hanako/close/hanako_defarms_shock_close.png
+            naked: false
+          strain:
+            filename: hanako/close/hanako_defarms_strain_close.png
+            naked: false
+      emb_cas_close:
+        pose: emb
+        outfit: cas
+        close: true
+        base_emotion: timid
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          downtimid:
+            filename: hanako/close/hanako_emb_downtimid_cas_close.png
+            naked: false
+          timid:
+            filename: hanako/close/hanako_emb_timid_cas_close.png
+            naked: false
+          downsad:
+            filename: hanako/close/hanako_emb_downsad_cas_close.png
+            naked: false
+          downsmile:
+            filename: hanako/close/hanako_emb_downsmile_cas_close.png
+            naked: false
+          smile:
+            filename: hanako/close/hanako_emb_smile_cas_close.png
+            naked: false
+          sad:
+            filename: hanako/close/hanako_emb_sad_cas_close.png
+            naked: false
+          emb:
+            filename: hanako/close/hanako_emb_emb_cas_close.png
+            naked: false
+          blushtimid:
+            filename: hanako/close/hanako_emb_blushtimid_cas_close.png
+            naked: false
+      emb_close:
+        pose: emb
+        outfit: null
+        close: true
+        base_emotion: timid
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          downsad:
+            filename: hanako/close/hanako_emb_downsad_close.png
+            naked: false
+          sad:
+            filename: hanako/close/hanako_emb_sad_close.png
+            naked: false
+          downsmile:
+            filename: hanako/close/hanako_emb_downsmile_close.png
+            naked: false
+          blushing:
+            filename: hanako/close/hanako_emb_blushing_close.png
+            naked: false
+          blushtimid:
+            filename: hanako/close/hanako_emb_blushtimid_close.png
+            naked: false
+          downtimid:
+            filename: hanako/close/hanako_emb_downtimid_close.png
+            naked: false
+          smile:
+            filename: hanako/close/hanako_emb_smile_close.png
+            naked: false
+          timid:
+            filename: hanako/close/hanako_emb_timid_close.png
+            naked: false
+          emb:
+            filename: hanako/close/hanako_emb_emb_close.png
+            naked: false
+  hideaki:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: hideaki
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          happy:
+            filename: hideaki/hideaki_happy.png
+            naked: false
+          evil:
+            filename: hideaki/hideaki_evil.png
+            naked: false
+          disapproves:
+            filename: hideaki/hideaki_disapproves.png
+            naked: false
+          normal:
+            filename: hideaki/hideaki_normal.png
+            naked: false
+          ohshit:
+            filename: hideaki/hideaki_ohshit.png
+            naked: false
+          thinking:
+            filename: hideaki/hideaki_thinking.png
+            naked: false
+          darkside:
+            filename: hideaki/hideaki_darkside.png
+            naked: false
+          surprise:
+            filename: hideaki/hideaki_surprise.png
+            naked: false
+          triangle:
+            filename: hideaki/hideaki_triangle.png
+            naked: false
+          bored:
+            filename: hideaki/hideaki_bored.png
+            naked: false
+          angry:
+            filename: hideaki/hideaki_angry.png
+            naked: false
+          confused:
+            filename: hideaki/hideaki_confused.png
+            naked: false
+          sad:
+            filename: hideaki/hideaki_sad.png
+            naked: false
+          serious:
+            filename: hideaki/hideaki_serious.png
+            naked: false
+      up:
+        pose: up
+        outfit: null
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          surprise:
+            filename: hideaki/hideaki_surprise_up.png
+            naked: false
+          angry:
+            filename: hideaki/hideaki_angry_up.png
+            naked: false
+          serious:
+            filename: hideaki/hideaki_serious_up.png
+            naked: false
+          bored:
+            filename: hideaki/hideaki_bored_up.png
+            naked: false
+          happy:
+            filename: hideaki/hideaki_happy_up.png
+            naked: false
+          closed:
+            filename: hideaki/hideaki_closed_up.png
+            naked: false
+          normal:
+            filename: hideaki/hideaki_normal_up.png
+            naked: false
+  jigoro:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: jigoro
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: neutral
+        base_emotion_offset:
+        - 12
+        - 7
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          smug:
+            filename: jigoro/jigoro_smug.png
+            naked: false
+          laugh:
+            filename: jigoro/jigoro_laugh.png
+            naked: false
+          angry:
+            filename: jigoro/jigoro_angry.png
+            naked: false
+          neutral:
+            filename: jigoro/jigoro_neutral.png
+            naked: false
+  kenji:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: kenji
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: tsun
+        base_emotion_offset:
+        - 15
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          neutral:
+            filename: kenji/kenji_neutral.png
+            naked: false
+          happy:
+            filename: kenji/kenji_happy.png
+            naked: false
+          tsun:
+            filename: kenji/kenji_tsun.png
+            naked: false
+      basic_naked:
+        pose: basic
+        outfit: naked
+        close: false
+        base_emotion: tsun
+        base_emotion_offset:
+        - 15
+        - 9
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          happy:
+            filename: kenji/kenji_happy_naked.png
+            naked: true
+          neutral:
+            filename: kenji/kenji_neutral_naked.png
+            naked: true
+          tsun:
+            filename: kenji/kenji_tsun_naked.png
+            naked: true
+      rage:
+        pose: rage
+        outfit: null
+        close: false
+        base_emotion: rage
+        base_emotion_offset:
+        - 16
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          rage:
+            filename: kenji/kenji_rage.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: tsun
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          tsun:
+            filename: kenji/close/kenji_tsun_close.png
+            naked: false
+          happy:
+            filename: kenji/close/kenji_happy_close.png
+            naked: false
+          neutral:
+            filename: kenji/close/kenji_neutral_close.png
+            naked: false
+      rage_close:
+        pose: rage
+        outfit: null
+        close: true
+        base_emotion: rage
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          rage:
+            filename: kenji/close/kenji_rage_close.png
+            naked: false
+  lilly:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: lilly
+    groups:
+      back_cas:
+        pose: back
+        outfit: cas
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: lilly/lilly_back_smile_cas.png
+            naked: false
+          smileclosed:
+            filename: lilly/lilly_back_smileclosed_cas.png
+            naked: false
+          pout:
+            filename: lilly/lilly_back_pout_cas.png
+            naked: false
+          listen:
+            filename: lilly/lilly_back_listen_cas.png
+            naked: false
+          surprise:
+            filename: lilly/lilly_back_surprise_cas.png
+            naked: false
+          sad:
+            filename: lilly/lilly_back_sad_cas.png
+            naked: false
+      back:
+        pose: back
+        outfit: null
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          smileclosed:
+            filename: lilly/lilly_back_smileclosed.png
+            naked: false
+          listen:
+            filename: lilly/lilly_back_listen.png
+            naked: false
+          pout:
+            filename: lilly/lilly_back_pout.png
+            naked: false
+          devious:
+            filename: lilly/lilly_back_devious.png
+            naked: false
+          giggle:
+            filename: lilly/lilly_back_giggle.png
+            naked: false
+          surprise:
+            filename: lilly/lilly_back_surprise.png
+            naked: false
+      basic_cas:
+        pose: basic
+        outfit: cas
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: lilly/lilly_basic_smile_cas.png
+            naked: false
+          reminisce:
+            filename: lilly/lilly_basic_reminisce_cas.png
+            naked: false
+          sleepy:
+            filename: lilly/lilly_basic_sleepy_cas.png
+            naked: false
+          cheerful:
+            filename: lilly/lilly_basic_cheerful_cas.png
+            naked: false
+          concerned:
+            filename: lilly/lilly_basic_concerned_cas.png
+            naked: false
+          displeased:
+            filename: lilly/lilly_basic_displeased_cas.png
+            naked: false
+          smileclosed:
+            filename: lilly/lilly_basic_smileclosed_cas.png
+            naked: false
+          sad:
+            filename: lilly/lilly_basic_sad_cas.png
+            naked: false
+          weaksmile:
+            filename: lilly/lilly_basic_weaksmile_cas.png
+            naked: false
+          pout:
+            filename: lilly/lilly_basic_pout_cas.png
+            naked: false
+      basic_paj:
+        pose: basic
+        outfit: paj
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          reminisce:
+            filename: lilly/lilly_basic_reminisce_paj.png
+            naked: false
+          smile:
+            filename: lilly/lilly_basic_smile_paj.png
+            naked: false
+          smileclosed:
+            filename: lilly/lilly_basic_smileclosed_paj.png
+            naked: false
+          concerned:
+            filename: lilly/lilly_basic_concerned_paj.png
+            naked: false
+          cheerful:
+            filename: lilly/lilly_basic_cheerful_paj.png
+            naked: false
+          sleepy:
+            filename: lilly/lilly_basic_sleepy_paj.png
+            naked: false
+          displeased:
+            filename: lilly/lilly_basic_displeased_paj.png
+            naked: false
+          cheerfulblush:
+            filename: lilly/lilly_basic_cheerfulblush_paj.png
+            naked: false
+          weaksmile:
+            filename: lilly/lilly_basic_weaksmile_paj.png
+            naked: false
+          sad:
+            filename: lilly/lilly_basic_sad_paj.png
+            naked: false
+          surprised:
+            filename: lilly/lilly_basic_surprised_paj.png
+            naked: false
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          concerned:
+            filename: lilly/lilly_basic_concerned.png
+            naked: false
+          sleepy:
+            filename: lilly/lilly_basic_sleepy.png
+            naked: false
+          sad:
+            filename: lilly/lilly_basic_sad.png
+            naked: false
+          smile:
+            filename: lilly/lilly_basic_smile.png
+            naked: false
+          displeased:
+            filename: lilly/lilly_basic_displeased.png
+            naked: false
+          reminisce:
+            filename: lilly/lilly_basic_reminisce.png
+            naked: false
+          pout:
+            filename: lilly/lilly_basic_pout.png
+            naked: false
+          smileclosed:
+            filename: lilly/lilly_basic_smileclosed.png
+            naked: false
+          weaksmile:
+            filename: lilly/lilly_basic_weaksmile.png
+            naked: false
+          cheerful:
+            filename: lilly/lilly_basic_cheerful.png
+            naked: false
+      basic1_paj:
+        pose: basic1
+        outfit: paj
+        close: false
+        base_emotion: ara
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          oops:
+            filename: lilly/lilly_basic_oops_paj.png
+            naked: false
+          ara:
+            filename: lilly/lilly_basic_ara_paj.png
+            naked: false
+          listen:
+            filename: lilly/lilly_basic_listen_paj.png
+            naked: false
+          planned:
+            filename: lilly/lilly_basic_planned_paj.png
+            naked: false
+          giggle:
+            filename: lilly/lilly_basic_giggle_paj.png
+            naked: false
+          satisfied:
+            filename: lilly/lilly_basic_satisfied_paj.png
+            naked: false
+          emb:
+            filename: lilly/lilly_basic_emb_paj.png
+            naked: false
+          arablush:
+            filename: lilly/lilly_basic_arablush_paj.png
+            naked: false
+          pout:
+            filename: lilly/lilly_basic_pout_paj.png
+            naked: false
+      basic2_cas:
+        pose: basic2
+        outfit: cas
+        close: false
+        base_emotion: ara
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          ara:
+            filename: lilly/lilly_basic_ara_cas.png
+            naked: false
+          giggle:
+            filename: lilly/lilly_basic_giggle_cas.png
+            naked: false
+          emb:
+            filename: lilly/lilly_basic_emb_cas.png
+            naked: false
+      basic2:
+        pose: basic2
+        outfit: null
+        close: false
+        base_emotion: ara
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          planned:
+            filename: lilly/lilly_basic_planned.png
+            naked: false
+          ara:
+            filename: lilly/lilly_basic_ara.png
+            naked: false
+          emb:
+            filename: lilly/lilly_basic_emb.png
+            naked: false
+          giggle:
+            filename: lilly/lilly_basic_giggle.png
+            naked: false
+      basic3_cas:
+        pose: basic3
+        outfit: cas
+        close: false
+        base_emotion: listen
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          oops:
+            filename: lilly/lilly_basic_oops_cas.png
+            naked: false
+          listen:
+            filename: lilly/lilly_basic_listen_cas.png
+            naked: false
+          satisfied:
+            filename: lilly/lilly_basic_satisfied_cas.png
+            naked: false
+          surprised:
+            filename: lilly/lilly_basic_surprised_cas.png
+            naked: false
+      basic3:
+        pose: basic3
+        outfit: null
+        close: false
+        base_emotion: listen
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          listen:
+            filename: lilly/lilly_basic_listen.png
+            naked: false
+          oops:
+            filename: lilly/lilly_basic_oops.png
+            naked: false
+          surprised:
+            filename: lilly/lilly_basic_surprised.png
+            naked: false
+      behind_nak:
+        pose: behind
+        outfit: nak
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          weaksmile:
+            filename: lilly/lilly_behind_weaksmile_nak.png
+            naked: true
+          smile:
+            filename: lilly/lilly_behind_smile_nak.png
+            naked: true
+          smileclosed:
+            filename: lilly/lilly_behind_smileclosed_nak.png
+            naked: true
+          reminisce:
+            filename: lilly/lilly_behind_reminisce_nak.png
+            naked: true
+          pout:
+            filename: lilly/lilly_behind_pout_nak.png
+            naked: true
+          emb:
+            filename: lilly/lilly_behind_emb_nak.png
+            naked: true
+          sleepy:
+            filename: lilly/lilly_behind_sleepy_nak.png
+            naked: true
+          giggle:
+            filename: lilly/lilly_behind_giggle_nak.png
+            naked: true
+      behind:
+        pose: behind
+        outfit: null
+        close: false
+        base_emotion: cheerful
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          cheerful:
+            filename: lilly/lilly_behind_cheerful.png
+            naked: false
+      cane_cas:
+        pose: cane
+        outfit: cas
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          oops:
+            filename: lilly/lilly_cane_oops_cas.png
+            naked: false
+          sad:
+            filename: lilly/lilly_cane_sad_cas.png
+            naked: false
+          listen:
+            filename: lilly/lilly_cane_listen_cas.png
+            naked: false
+          emb:
+            filename: lilly/lilly_cane_emb_cas.png
+            naked: false
+          smile:
+            filename: lilly/lilly_cane_smile_cas.png
+            naked: false
+          cheerful:
+            filename: lilly/lilly_cane_cheerful_cas.png
+            naked: false
+          weaksmile:
+            filename: lilly/lilly_cane_weaksmile_cas.png
+            naked: false
+          surprised:
+            filename: lilly/lilly_cane_surprised_cas.png
+            naked: false
+          giggle:
+            filename: lilly/lilly_cane_giggle_cas.png
+            naked: false
+          sleepy:
+            filename: lilly/lilly_cane_sleepy_cas.png
+            naked: false
+          reminisce:
+            filename: lilly/lilly_cane_reminisce_cas.png
+            naked: false
+          smileclosed:
+            filename: lilly/lilly_cane_smileclosed_cas.png
+            naked: false
+      cane:
+        pose: cane
+        outfit: null
+        close: false
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          pout:
+            filename: lilly/lilly_cane_pout.png
+            naked: false
+          ara:
+            filename: lilly/lilly_cane_ara.png
+            naked: false
+          concerned:
+            filename: lilly/lilly_cane_concerned.png
+            naked: false
+          satisfied:
+            filename: lilly/lilly_cane_satisfied.png
+            naked: false
+          emb:
+            filename: lilly/lilly_cane_emb.png
+            naked: false
+          giggle:
+            filename: lilly/lilly_cane_giggle.png
+            naked: false
+          oops:
+            filename: lilly/lilly_cane_oops.png
+            naked: false
+          smileclosed:
+            filename: lilly/lilly_cane_smileclosed.png
+            naked: false
+          smile:
+            filename: lilly/lilly_cane_smile.png
+            naked: false
+          displeased:
+            filename: lilly/lilly_cane_displeased.png
+            naked: false
+          planned:
+            filename: lilly/lilly_cane_planned.png
+            naked: false
+          sleepy:
+            filename: lilly/lilly_cane_sleepy.png
+            naked: false
+          reminisce:
+            filename: lilly/lilly_cane_reminisce.png
+            naked: false
+          sad:
+            filename: lilly/lilly_cane_sad.png
+            naked: false
+          cheerful:
+            filename: lilly/lilly_cane_cheerful.png
+            naked: false
+          listen:
+            filename: lilly/lilly_cane_listen.png
+            naked: false
+          weaksmile:
+            filename: lilly/lilly_cane_weaksmile.png
+            naked: false
+          surprised:
+            filename: lilly/lilly_cane_surprised.png
+            naked: false
+      back_cas_close:
+        pose: back
+        outfit: cas
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          listen:
+            filename: lilly/close/lilly_back_listen_cas_close.png
+            naked: false
+          smile:
+            filename: lilly/close/lilly_back_smile_cas_close.png
+            naked: false
+          smileclosed:
+            filename: lilly/close/lilly_back_smileclosed_cas_close.png
+            naked: false
+          sad:
+            filename: lilly/close/lilly_back_sad_cas_close.png
+            naked: false
+          giggle:
+            filename: lilly/close/lilly_back_giggle_cas_close.png
+            naked: false
+      back_close:
+        pose: back
+        outfit: null
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 14
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          listen:
+            filename: lilly/close/lilly_back_listen_close.png
+            naked: false
+      basic_cas_close:
+        pose: basic
+        outfit: cas
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          cheerfulblush:
+            filename: lilly/close/lilly_basic_cheerfulblush_cas_close.png
+            naked: false
+          displeased:
+            filename: lilly/close/lilly_basic_displeased_cas_close.png
+            naked: false
+          concerned:
+            filename: lilly/close/lilly_basic_concerned_cas_close.png
+            naked: false
+          pout:
+            filename: lilly/close/lilly_basic_pout_cas_close.png
+            naked: false
+          cheerful:
+            filename: lilly/close/lilly_basic_cheerful_cas_close.png
+            naked: false
+          smile:
+            filename: lilly/close/lilly_basic_smile_cas_close.png
+            naked: false
+          smileclosed:
+            filename: lilly/close/lilly_basic_smileclosed_cas_close.png
+            naked: false
+          reminisce:
+            filename: lilly/close/lilly_basic_reminisce_cas_close.png
+            naked: false
+          sad:
+            filename: lilly/close/lilly_basic_sad_cas_close.png
+            naked: false
+          weaksmile:
+            filename: lilly/close/lilly_basic_weaksmile_cas_close.png
+            naked: false
+          sleepy:
+            filename: lilly/close/lilly_basic_sleepy_cas_close.png
+            naked: false
+      basic_paj_close:
+        pose: basic
+        outfit: paj
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: lilly/close/lilly_basic_smile_paj_close.png
+            naked: false
+          cheerful:
+            filename: lilly/close/lilly_basic_cheerful_paj_close.png
+            naked: false
+          concerned:
+            filename: lilly/close/lilly_basic_concerned_paj_close.png
+            naked: false
+          displeased:
+            filename: lilly/close/lilly_basic_displeased_paj_close.png
+            naked: false
+          cheerfulblush:
+            filename: lilly/close/lilly_basic_cheerfulblush_paj_close.png
+            naked: false
+          sleepy:
+            filename: lilly/close/lilly_basic_sleepy_paj_close.png
+            naked: false
+          sad:
+            filename: lilly/close/lilly_basic_sad_paj_close.png
+            naked: false
+          surprised:
+            filename: lilly/close/lilly_basic_surprised_paj_close.png
+            naked: false
+          weaksmile:
+            filename: lilly/close/lilly_basic_weaksmile_paj_close.png
+            naked: false
+          reminisce:
+            filename: lilly/close/lilly_basic_reminisce_paj_close.png
+            naked: false
+          smileclosed:
+            filename: lilly/close/lilly_basic_smileclosed_paj_close.png
+            naked: false
+      basic_che_close:
+        pose: basic
+        outfit: che
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          pout:
+            filename: lilly/close/lilly_basic_pout_che_close.png
+            naked: false
+          cheerful:
+            filename: lilly/close/lilly_basic_cheerful_che_close.png
+            naked: false
+          smile:
+            filename: lilly/close/lilly_basic_smile_che_close.png
+            naked: false
+          displeased:
+            filename: lilly/close/lilly_basic_displeased_che_close.png
+            naked: false
+          reminisce:
+            filename: lilly/close/lilly_basic_reminisce_che_close.png
+            naked: false
+          sad:
+            filename: lilly/close/lilly_basic_sad_che_close.png
+            naked: false
+          weaksmile:
+            filename: lilly/close/lilly_basic_weaksmile_che_close.png
+            naked: false
+          sleepy:
+            filename: lilly/close/lilly_basic_sleepy_che_close.png
+            naked: false
+          smileclosed:
+            filename: lilly/close/lilly_basic_smileclosed_che_close.png
+            naked: false
+          veryemb:
+            filename: lilly/close/lilly_basic_veryemb_che_close.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          displeased:
+            filename: lilly/close/lilly_basic_displeased_close.png
+            naked: false
+          reminisce:
+            filename: lilly/close/lilly_basic_reminisce_close.png
+            naked: false
+          concerned:
+            filename: lilly/close/lilly_basic_concerned_close.png
+            naked: false
+          pout:
+            filename: lilly/close/lilly_basic_pout_close.png
+            naked: false
+          smile:
+            filename: lilly/close/lilly_basic_smile_close.png
+            naked: false
+          smileclosed:
+            filename: lilly/close/lilly_basic_smileclosed_close.png
+            naked: false
+          sleepy:
+            filename: lilly/close/lilly_basic_sleepy_close.png
+            naked: false
+          weaksmile:
+            filename: lilly/close/lilly_basic_weaksmile_close.png
+            naked: false
+      basic1_paj_close:
+        pose: basic1
+        outfit: paj
+        close: true
+        base_emotion: ara
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          planned:
+            filename: lilly/close/lilly_basic_planned_paj_close.png
+            naked: false
+          pout:
+            filename: lilly/close/lilly_basic_pout_paj_close.png
+            naked: false
+          giggle:
+            filename: lilly/close/lilly_basic_giggle_paj_close.png
+            naked: false
+          oops:
+            filename: lilly/close/lilly_basic_oops_paj_close.png
+            naked: false
+          ara:
+            filename: lilly/close/lilly_basic_ara_paj_close.png
+            naked: false
+          satisfied:
+            filename: lilly/close/lilly_basic_satisfied_paj_close.png
+            naked: false
+          emb:
+            filename: lilly/close/lilly_basic_emb_paj_close.png
+            naked: false
+      basic2_cas_close:
+        pose: basic2
+        outfit: cas
+        close: true
+        base_emotion: ara
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          giggle:
+            filename: lilly/close/lilly_basic_giggle_cas_close.png
+            naked: false
+          planned:
+            filename: lilly/close/lilly_basic_planned_cas_close.png
+            naked: false
+          emb:
+            filename: lilly/close/lilly_basic_emb_cas_close.png
+            naked: false
+          ara:
+            filename: lilly/close/lilly_basic_ara_cas_close.png
+            naked: false
+      basic2_che_close:
+        pose: basic2
+        outfit: che
+        close: true
+        base_emotion: arablush
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          arablush:
+            filename: lilly/close/lilly_basic_arablush_che_close.png
+            naked: false
+          planned:
+            filename: lilly/close/lilly_basic_planned_che_close.png
+            naked: false
+          giggle:
+            filename: lilly/close/lilly_basic_giggle_che_close.png
+            naked: false
+          emb:
+            filename: lilly/close/lilly_basic_emb_che_close.png
+            naked: false
+      basic2_close:
+        pose: basic2
+        outfit: null
+        close: true
+        base_emotion: ara
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          giggle:
+            filename: lilly/close/lilly_basic_giggle_close.png
+            naked: false
+          ara:
+            filename: lilly/close/lilly_basic_ara_close.png
+            naked: false
+          arablush:
+            filename: lilly/close/lilly_basic_arablush_close.png
+            naked: false
+          planned:
+            filename: lilly/close/lilly_basic_planned_close.png
+            naked: false
+      basic3_cas_close:
+        pose: basic3
+        outfit: cas
+        close: true
+        base_emotion: listen
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          oops:
+            filename: lilly/close/lilly_basic_oops_cas_close.png
+            naked: false
+          listen:
+            filename: lilly/close/lilly_basic_listen_cas_close.png
+            naked: false
+          satisfied:
+            filename: lilly/close/lilly_basic_satisfied_cas_close.png
+            naked: false
+          surprised:
+            filename: lilly/close/lilly_basic_surprised_cas_close.png
+            naked: false
+      basic3_che_close:
+        pose: basic3
+        outfit: che
+        close: true
+        base_emotion: listen
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          oops:
+            filename: lilly/close/lilly_basic_oops_che_close.png
+            naked: false
+          satisfied:
+            filename: lilly/close/lilly_basic_satisfied_che_close.png
+            naked: false
+          surprised:
+            filename: lilly/close/lilly_basic_surprised_che_close.png
+            naked: false
+          listen:
+            filename: lilly/close/lilly_basic_listen_che_close.png
+            naked: false
+      basic3_close:
+        pose: basic3
+        outfit: null
+        close: true
+        base_emotion: listen
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          satisfied:
+            filename: lilly/close/lilly_basic_satisfied_close.png
+            naked: false
+          oops:
+            filename: lilly/close/lilly_basic_oops_close.png
+            naked: false
+          surprised:
+            filename: lilly/close/lilly_basic_surprised_close.png
+            naked: false
+          listen:
+            filename: lilly/close/lilly_basic_listen_close.png
+            naked: false
+      behind_nak_close:
+        pose: behind
+        outfit: nak
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          listen:
+            filename: lilly/close/lilly_behind_listen_nak_close.png
+            naked: true
+      behind_che_close:
+        pose: behind
+        outfit: che
+        close: true
+        base_emotion: cheerful
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          cheerful:
+            filename: lilly/close/lilly_behind_cheerful_che_close.png
+            naked: false
+      behind_close:
+        pose: behind
+        outfit: null
+        close: true
+        base_emotion: cheerful
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          displeased:
+            filename: lilly/close/lilly_behind_displeased_close.png
+            naked: false
+          cheerful:
+            filename: lilly/close/lilly_behind_cheerful_close.png
+            naked: false
+      cane_cas_close:
+        pose: cane
+        outfit: cas
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          sleepy:
+            filename: lilly/close/lilly_cane_sleepy_cas_close.png
+            naked: false
+          cheerful:
+            filename: lilly/close/lilly_cane_cheerful_cas_close.png
+            naked: false
+          smile:
+            filename: lilly/close/lilly_cane_smile_cas_close.png
+            naked: false
+          surprised:
+            filename: lilly/close/lilly_cane_surprised_cas_close.png
+            naked: false
+          weaksmile:
+            filename: lilly/close/lilly_cane_weaksmile_cas_close.png
+            naked: false
+          listen:
+            filename: lilly/close/lilly_cane_listen_cas_close.png
+            naked: false
+          satisfied:
+            filename: lilly/close/lilly_cane_satisfied_cas_close.png
+            naked: false
+          ara:
+            filename: lilly/close/lilly_cane_ara_cas_close.png
+            naked: false
+          concerned:
+            filename: lilly/close/lilly_cane_concerned_cas_close.png
+            naked: false
+          displeased:
+            filename: lilly/close/lilly_cane_displeased_cas_close.png
+            naked: false
+          oops:
+            filename: lilly/close/lilly_cane_oops_cas_close.png
+            naked: false
+          giggle:
+            filename: lilly/close/lilly_cane_giggle_cas_close.png
+            naked: false
+          smileclosed:
+            filename: lilly/close/lilly_cane_smileclosed_cas_close.png
+            naked: false
+      cane_close:
+        pose: cane
+        outfit: null
+        close: true
+        base_emotion: smileclosed
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          oops:
+            filename: lilly/close/lilly_cane_oops_close.png
+            naked: false
+          smile:
+            filename: lilly/close/lilly_cane_smile_close.png
+            naked: false
+          smileclosed:
+            filename: lilly/close/lilly_cane_smileclosed_close.png
+            naked: false
+          reminisce:
+            filename: lilly/close/lilly_cane_reminisce_close.png
+            naked: false
+          listen:
+            filename: lilly/close/lilly_cane_listen_close.png
+            naked: false
+          concerned:
+            filename: lilly/close/lilly_cane_concerned_close.png
+            naked: false
+          cheerful:
+            filename: lilly/close/lilly_cane_cheerful_close.png
+            naked: false
+          weaksmile:
+            filename: lilly/close/lilly_cane_weaksmile_close.png
+            naked: false
+          displeased:
+            filename: lilly/close/lilly_cane_displeased_close.png
+            naked: false
+          mad:
+            filename: lilly/close/lilly_cane_mad_close.png
+            naked: false
+          surprised:
+            filename: lilly/close/lilly_cane_surprised_close.png
+            naked: false
+          giggle:
+            filename: lilly/close/lilly_cane_giggle_close.png
+            naked: false
+  meiko:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: meiko
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          serious:
+            filename: meiko/meiko_serious.png
+            naked: false
+          wink:
+            filename: meiko/meiko_wink.png
+            naked: false
+          smile:
+            filename: meiko/meiko_smile.png
+            naked: false
+          worry:
+            filename: meiko/meiko_worry.png
+            naked: false
+          happy:
+            filename: meiko/meiko_happy.png
+            naked: false
+  miki:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: miki
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 9
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -24
+        silhouette_tint: null
+        sprites:
+          grinclosed:
+            filename: miki/miki_grinclosed.png
+            naked: false
+          smile:
+            filename: miki/miki_smile.png
+            naked: false
+          grin:
+            filename: miki/miki_grin.png
+            naked: false
+          wink:
+            filename: miki/miki_wink.png
+            naked: false
+          whistle:
+            filename: miki/miki_whistle.png
+            naked: false
+          serious:
+            filename: miki/miki_serious.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -24
+        silhouette_tint: null
+        sprites:
+          whistle:
+            filename: miki/close/miki_whistle_close.png
+            naked: false
+          angry:
+            filename: miki/close/miki_angry_close.png
+            naked: false
+          grin:
+            filename: miki/close/miki_grin_close.png
+            naked: false
+          confused:
+            filename: miki/close/miki_confused_close.png
+            naked: false
+          serious:
+            filename: miki/close/miki_serious_close.png
+            naked: false
+          grinclosed:
+            filename: miki/close/miki_grinclosed_close.png
+            naked: false
+          smile:
+            filename: miki/close/miki_smile_close.png
+            naked: false
+          wink:
+            filename: miki/close/miki_wink_close.png
+            naked: false
+  misha:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: misha
+    groups:
+      hips_cas:
+        pose: hips
+        outfit: cas
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: misha/misha_hips_smile_cas.png
+            naked: false
+          grin:
+            filename: misha/misha_hips_grin_cas.png
+            naked: false
+          frown:
+            filename: misha/misha_hips_frown_cas.png
+            naked: false
+      cross_cas:
+        pose: cross
+        outfit: cas
+        close: false
+        base_emotion: grin
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          grin:
+            filename: misha/misha_cross_grin_cas.png
+            naked: false
+          laugh:
+            filename: misha/misha_cross_laugh_cas.png
+            naked: false
+      perky_cas:
+        pose: perky
+        outfit: cas
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          confused:
+            filename: misha/misha_perky_confused_cas.png
+            naked: false
+          sad:
+            filename: misha/misha_perky_sad_cas.png
+            naked: false
+          smile:
+            filename: misha/misha_perky_smile_cas.png
+            naked: false
+      sign_cas:
+        pose: sign
+        outfit: cas
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: misha/misha_sign_smile_cas.png
+            naked: false
+          confused:
+            filename: misha/misha_sign_confused_cas.png
+            naked: false
+      perky_yuk:
+        pose: perky
+        outfit: yuk
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sad:
+            filename: misha/misha_perky_sad_yuk.png
+            naked: false
+          smile:
+            filename: misha/misha_perky_smile_yuk.png
+            naked: false
+          confused:
+            filename: misha/misha_perky_confused_yuk.png
+            naked: false
+      sign_yuk:
+        pose: sign
+        outfit: yuk
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: misha/misha_sign_smile_yuk.png
+            naked: false
+      hips:
+        pose: hips
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          laugh:
+            filename: misha/misha_hips_laugh.png
+            naked: false
+          grin:
+            filename: misha/misha_hips_grin.png
+            naked: false
+          frown:
+            filename: misha/misha_hips_frown.png
+            naked: false
+          smile:
+            filename: misha/misha_hips_smile.png
+            naked: false
+      cross:
+        pose: cross
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: misha/misha_cross_frown.png
+            naked: false
+          laugh:
+            filename: misha/misha_cross_laugh.png
+            naked: false
+          smile:
+            filename: misha/misha_cross_smile.png
+            naked: false
+          grin:
+            filename: misha/misha_cross_grin.png
+            naked: false
+      perky:
+        pose: perky
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          confused:
+            filename: misha/misha_perky_confused.png
+            naked: false
+          sad:
+            filename: misha/misha_perky_sad.png
+            naked: false
+          smile:
+            filename: misha/misha_perky_smile.png
+            naked: false
+      sign:
+        pose: sign
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: misha/misha_sign_smile.png
+            naked: false
+          confused:
+            filename: misha/misha_sign_confused.png
+            naked: false
+          sad:
+            filename: misha/misha_sign_sad.png
+            naked: false
+      hips_cas_close:
+        pose: hips
+        outfit: cas
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          laugh:
+            filename: misha/close/misha_hips_laugh_cas_close.png
+            naked: false
+          grin:
+            filename: misha/close/misha_hips_grin_cas_close.png
+            naked: false
+      cross_cas_close:
+        pose: cross
+        outfit: cas
+        close: true
+        base_emotion: grin
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: misha/close/misha_cross_smile_cas_close.png
+            naked: false
+      perky_cas_close:
+        pose: perky
+        outfit: cas
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          confused:
+            filename: misha/close/misha_perky_confused_cas_close.png
+            naked: false
+      hips_close:
+        pose: hips
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: misha/close/misha_hips_frown_close.png
+            naked: false
+          smile:
+            filename: misha/close/misha_hips_smile_close.png
+            naked: false
+          grin:
+            filename: misha/close/misha_hips_grin_close.png
+            naked: false
+          laugh:
+            filename: misha/close/misha_hips_laugh_close.png
+            naked: false
+      cross_close:
+        pose: cross
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: misha/close/misha_cross_smile_close.png
+            naked: false
+          frown:
+            filename: misha/close/misha_cross_frown_close.png
+            naked: false
+          grin:
+            filename: misha/close/misha_cross_grin_close.png
+            naked: false
+          laugh:
+            filename: misha/close/misha_cross_laugh_close.png
+            naked: false
+      perky_close:
+        pose: perky
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: misha/close/misha_perky_smile_close.png
+            naked: false
+          sad:
+            filename: misha/close/misha_perky_sad_close.png
+            naked: false
+          confused:
+            filename: misha/close/misha_perky_confused_close.png
+            naked: false
+      sign_close:
+        pose: sign
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sad:
+            filename: misha/close/misha_sign_sad_close.png
+            naked: false
+          smile:
+            filename: misha/close/misha_sign_smile_close.png
+            naked: false
+          confused:
+            filename: misha/close/misha_sign_confused_close.png
+            naked: false
+  mishashort:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: misha
+    groups:
+      hips_cas:
+        pose: hips
+        outfit: cas
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: mishashort/mishashort_hips_smile_cas.png
+            naked: false
+          grin:
+            filename: mishashort/mishashort_hips_grin_cas.png
+            naked: false
+      cross_cas:
+        pose: cross
+        outfit: cas
+        close: false
+        base_emotion: grin
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: mishashort/mishashort_cross_frown_cas.png
+            naked: false
+          laugh:
+            filename: mishashort/mishashort_cross_laugh_cas.png
+            naked: false
+          grin:
+            filename: mishashort/mishashort_cross_grin_cas.png
+            naked: false
+      perky_cas:
+        pose: perky
+        outfit: cas
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          confused:
+            filename: mishashort/mishashort_perky_confused_cas.png
+            naked: false
+          sad:
+            filename: mishashort/mishashort_perky_sad_cas.png
+            naked: false
+          smile:
+            filename: mishashort/mishashort_perky_smile_cas.png
+            naked: false
+      sign_cas:
+        pose: sign
+        outfit: cas
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          confused:
+            filename: mishashort/mishashort_sign_confused_cas.png
+            naked: false
+          smile:
+            filename: mishashort/mishashort_sign_smile_cas.png
+            naked: false
+      hips:
+        pose: hips
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: mishashort/mishashort_hips_frown.png
+            naked: false
+          grin:
+            filename: mishashort/mishashort_hips_grin.png
+            naked: false
+          smile:
+            filename: mishashort/mishashort_hips_smile.png
+            naked: false
+      cross:
+        pose: cross
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          laugh:
+            filename: mishashort/mishashort_cross_laugh.png
+            naked: false
+          frown:
+            filename: mishashort/mishashort_cross_frown.png
+            naked: false
+          grin:
+            filename: mishashort/mishashort_cross_grin.png
+            naked: false
+          smile:
+            filename: mishashort/mishashort_cross_smile.png
+            naked: false
+      perky:
+        pose: perky
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          confused:
+            filename: mishashort/mishashort_perky_confused.png
+            naked: false
+          sad:
+            filename: mishashort/mishashort_perky_sad.png
+            naked: false
+          smile:
+            filename: mishashort/mishashort_perky_smile.png
+            naked: false
+      sign:
+        pose: sign
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sad:
+            filename: mishashort/mishashort_sign_sad.png
+            naked: false
+          smile:
+            filename: mishashort/mishashort_sign_smile.png
+            naked: false
+          confused:
+            filename: mishashort/mishashort_sign_confused.png
+            naked: false
+      hips_close:
+        pose: hips
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          grin:
+            filename: mishashort/close/mishashort_hips_grin_close.png
+            naked: false
+          smile:
+            filename: mishashort/close/mishashort_hips_smile_close.png
+            naked: false
+          frown:
+            filename: mishashort/close/mishashort_hips_frown_close.png
+            naked: false
+          laugh:
+            filename: mishashort/close/mishashort_hips_laugh_close.png
+            naked: false
+      cross_close:
+        pose: cross
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          laugh:
+            filename: mishashort/close/mishashort_cross_laugh_close.png
+            naked: false
+          grin:
+            filename: mishashort/close/mishashort_cross_grin_close.png
+            naked: false
+          frown:
+            filename: mishashort/close/mishashort_cross_frown_close.png
+            naked: false
+      perky_close:
+        pose: perky
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          confused:
+            filename: mishashort/close/mishashort_perky_confused_close.png
+            naked: false
+          sad:
+            filename: mishashort/close/mishashort_perky_sad_close.png
+            naked: false
+          smile:
+            filename: mishashort/close/mishashort_perky_smile_close.png
+            naked: false
+      sign_close:
+        pose: sign
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: mishashort/close/mishashort_sign_smile_close.png
+            naked: false
+          confused:
+            filename: mishashort/close/mishashort_sign_confused_close.png
+            naked: false
+          sad:
+            filename: mishashort/close/mishashort_sign_sad_close.png
+            naked: false
+  muto:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: muto
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 6
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          normal:
+            filename: muto/muto_normal.png
+            naked: false
+          irritated:
+            filename: muto/muto_irritated.png
+            naked: false
+          smile:
+            filename: muto/muto_smile.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 6
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          smile:
+            filename: muto/close/muto_smile_close.png
+            naked: false
+  nomiya:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: nomiya
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          talktongue:
+            filename: nomiya/nomiya_talktongue.png
+            naked: false
+          veryhappy:
+            filename: nomiya/nomiya_veryhappy.png
+            naked: false
+          smile:
+            filename: nomiya/nomiya_smile.png
+            naked: false
+          frown:
+            filename: nomiya/nomiya_frown.png
+            naked: false
+          stern:
+            filename: nomiya/nomiya_stern.png
+            naked: false
+          talk:
+            filename: nomiya/nomiya_talk.png
+            naked: false
+          serious:
+            filename: nomiya/nomiya_serious.png
+            naked: false
+          dreamy:
+            filename: nomiya/nomiya_dreamy.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: frown
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -96
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: nomiya/close/nomiya_frown_close.png
+            naked: false
+  nurse:
+    displayable_regex: (?P<name>[^_]+)_(?P<emotion>[^_]+)$
+    tileset: nurse
+    groups:
+      default:
+        pose: null
+        outfit: null
+        close: false
+        base_emotion: neutral
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -48
+        silhouette_tint: null
+        sprites:
+          neutral:
+            filename: nurse/nurse_neutral.png
+            naked: false
+          fabulous:
+            filename: nurse/nurse_fabulous.png
+            naked: false
+          grin:
+            filename: nurse/nurse_grin.png
+            naked: false
+          concern:
+            filename: nurse/nurse_concern.png
+            naked: false
+      close:
+        pose: null
+        outfit: null
+        close: true
+        base_emotion: neutral
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -96
+        silhouette_tint: null
+        sprites:
+          grin:
+            filename: nurse/close/nurse_grin_close.png
+            naked: false
+          fabulous:
+            filename: nurse/close/nurse_fabulous_close.png
+            naked: false
+          concern:
+            filename: nurse/close/nurse_concern_close.png
+            naked: false
+          neutral:
+            filename: nurse/close/nurse_neutral_close.png
+            naked: false
+  rin:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: rin
+    groups:
+      basic_cas:
+        pose: basic
+        outfit: cas
+        close: false
+        base_emotion: absent
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          deadpanupset:
+            filename: rin/rin_basic_deadpanupset_cas.png
+            naked: false
+          deadpancontemplation:
+            filename: rin/rin_basic_deadpancontemplation_cas.png
+            naked: false
+          deadpan:
+            filename: rin/rin_basic_deadpan_cas.png
+            naked: false
+          surprised:
+            filename: rin/rin_basic_surprised_cas.png
+            naked: false
+          deadpannormal:
+            filename: rin/rin_basic_deadpannormal_cas.png
+            naked: false
+          awayabsent:
+            filename: rin/rin_basic_awayabsent_cas.png
+            naked: false
+          sad:
+            filename: rin/rin_basic_sad_cas.png
+            naked: false
+          absent:
+            filename: rin/rin_basic_absent_cas.png
+            naked: false
+          lucid:
+            filename: rin/rin_basic_lucid_cas.png
+            naked: false
+      negative_cas:
+        pose: negative
+        outfit: cas
+        close: false
+        base_emotion: spaciness
+        base_emotion_offset:
+        - 12
+        - 5
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          spaciness:
+            filename: rin/rin_negative_spaciness_cas.png
+            naked: false
+          annoyed:
+            filename: rin/rin_negative_annoyed_cas.png
+            naked: false
+          sad:
+            filename: rin/rin_negative_sad_cas.png
+            naked: false
+          worried:
+            filename: rin/rin_negative_worried_cas.png
+            naked: false
+          confused:
+            filename: rin/rin_negative_confused_cas.png
+            naked: false
+          angry:
+            filename: rin/rin_negative_angry_cas.png
+            naked: false
+      relaxed_cas:
+        pose: relaxed
+        outfit: cas
+        close: false
+        base_emotion: doubt
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sleepy:
+            filename: rin/rin_relaxed_sleepy_cas.png
+            naked: false
+          doubt:
+            filename: rin/rin_relaxed_doubt_cas.png
+            naked: false
+          nonchalant:
+            filename: rin/rin_relaxed_nonchalant_cas.png
+            naked: false
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: absent
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          delight:
+            filename: rin/rin_basic_delight.png
+            naked: false
+          sad:
+            filename: rin/rin_basic_sad.png
+            naked: false
+          deadpannormal:
+            filename: rin/rin_basic_deadpannormal.png
+            naked: false
+          surprised:
+            filename: rin/rin_basic_surprised.png
+            naked: false
+          deadpandelight:
+            filename: rin/rin_basic_deadpandelight.png
+            naked: false
+          upset:
+            filename: rin/rin_basic_upset.png
+            naked: false
+          deadpanamused:
+            filename: rin/rin_basic_deadpanamused.png
+            naked: false
+          absent:
+            filename: rin/rin_basic_absent.png
+            naked: false
+          amused:
+            filename: rin/rin_basic_amused.png
+            naked: false
+          deadpanupset:
+            filename: rin/rin_basic_deadpanupset.png
+            naked: false
+          deadpancontemplation:
+            filename: rin/rin_basic_deadpancontemplation.png
+            naked: false
+          lucid:
+            filename: rin/rin_basic_lucid.png
+            naked: false
+          crying:
+            filename: rin/rin_basic_crying.png
+            naked: false
+          awayabsent:
+            filename: rin/rin_basic_awayabsent.png
+            naked: false
+          deadpansurprised:
+            filename: rin/rin_basic_deadpansurprised.png
+            naked: false
+          deadpan:
+            filename: rin/rin_basic_deadpan.png
+            naked: false
+      negative:
+        pose: negative
+        outfit: null
+        close: false
+        base_emotion: spaciness
+        base_emotion_offset:
+        - 12
+        - 5
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          angry:
+            filename: rin/rin_negative_angry.png
+            naked: false
+          crying:
+            filename: rin/rin_negative_crying.png
+            naked: false
+          confused:
+            filename: rin/rin_negative_confused.png
+            naked: false
+          sad:
+            filename: rin/rin_negative_sad.png
+            naked: false
+          annoyed:
+            filename: rin/rin_negative_annoyed.png
+            naked: false
+          worried:
+            filename: rin/rin_negative_worried.png
+            naked: false
+          spaciness:
+            filename: rin/rin_negative_spaciness.png
+            naked: false
+      relaxed:
+        pose: relaxed
+        outfit: null
+        close: false
+        base_emotion: doubt
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          doubt:
+            filename: rin/rin_relaxed_doubt.png
+            naked: false
+          surprised:
+            filename: rin/rin_relaxed_surprised.png
+            naked: false
+          boredom:
+            filename: rin/rin_relaxed_boredom.png
+            naked: false
+          nonchalant:
+            filename: rin/rin_relaxed_nonchalant.png
+            naked: false
+          disgust:
+            filename: rin/rin_relaxed_disgust.png
+            naked: false
+          sleepy:
+            filename: rin/rin_relaxed_sleepy.png
+            naked: false
+      back:
+        pose: back
+        outfit: null
+        close: false
+        base_emotion: null
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          cas:
+            filename: rin/rin_back_cas.png
+            naked: false
+      basic_cas_close:
+        pose: basic
+        outfit: cas
+        close: true
+        base_emotion: absent
+        base_emotion_offset:
+        - 10
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          awayabsent:
+            filename: rin/close/rin_basic_awayabsent_cas_close.png
+            naked: false
+          sad:
+            filename: rin/close/rin_basic_sad_cas_close.png
+            naked: false
+          lucid:
+            filename: rin/close/rin_basic_lucid_cas_close.png
+            naked: false
+          deadpansurprised:
+            filename: rin/close/rin_basic_deadpansurprised_cas_close.png
+            naked: false
+          deadpanupset:
+            filename: rin/close/rin_basic_deadpanupset_cas_close.png
+            naked: false
+          deadpanamused:
+            filename: rin/close/rin_basic_deadpanamused_cas_close.png
+            naked: false
+          deadpan:
+            filename: rin/close/rin_basic_deadpan_cas_close.png
+            naked: false
+          deadpannormal:
+            filename: rin/close/rin_basic_deadpannormal_cas_close.png
+            naked: false
+          surprised:
+            filename: rin/close/rin_basic_surprised_cas_close.png
+            naked: false
+          absent:
+            filename: rin/close/rin_basic_absent_cas_close.png
+            naked: false
+      negative_cas_close:
+        pose: negative
+        outfit: cas
+        close: true
+        base_emotion: spaciness
+        base_emotion_offset:
+        - 10
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sad:
+            filename: rin/close/rin_negative_sad_cas_close.png
+            naked: false
+          confused:
+            filename: rin/close/rin_negative_confused_cas_close.png
+            naked: false
+          worried:
+            filename: rin/close/rin_negative_worried_cas_close.png
+            naked: false
+          spaciness:
+            filename: rin/close/rin_negative_spaciness_cas_close.png
+            naked: false
+          annoyed:
+            filename: rin/close/rin_negative_annoyed_cas_close.png
+            naked: false
+          angry:
+            filename: rin/close/rin_negative_angry_cas_close.png
+            naked: false
+      relaxed_cas_close:
+        pose: relaxed
+        outfit: cas
+        close: true
+        base_emotion: doubt
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          nonchalant:
+            filename: rin/close/rin_relaxed_nonchalant_cas_close.png
+            naked: false
+          doubt:
+            filename: rin/close/rin_relaxed_doubt_cas_close.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: absent
+        base_emotion_offset:
+        - 10
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          crying:
+            filename: rin/close/rin_basic_crying_close.png
+            naked: false
+          awayabsent:
+            filename: rin/close/rin_basic_awayabsent_close.png
+            naked: false
+          lucid:
+            filename: rin/close/rin_basic_lucid_close.png
+            naked: false
+          delight:
+            filename: rin/close/rin_basic_delight_close.png
+            naked: false
+          deadpandelight:
+            filename: rin/close/rin_basic_deadpandelight_close.png
+            naked: false
+          upset:
+            filename: rin/close/rin_basic_upset_close.png
+            naked: false
+          amused:
+            filename: rin/close/rin_basic_amused_close.png
+            naked: false
+          deadpanupset:
+            filename: rin/close/rin_basic_deadpanupset_close.png
+            naked: false
+          blush:
+            filename: rin/close/rin_basic_blush_close.png
+            naked: false
+          deadpancontemplation:
+            filename: rin/close/rin_basic_deadpancontemplation_close.png
+            naked: false
+          deadpansurprised:
+            filename: rin/close/rin_basic_deadpansurprised_close.png
+            naked: false
+          deadpan:
+            filename: rin/close/rin_basic_deadpan_close.png
+            naked: false
+          sad:
+            filename: rin/close/rin_basic_sad_close.png
+            naked: false
+          surprised:
+            filename: rin/close/rin_basic_surprised_close.png
+            naked: false
+          deadpannormal:
+            filename: rin/close/rin_basic_deadpannormal_close.png
+            naked: false
+          deadpanamused:
+            filename: rin/close/rin_basic_deadpanamused_close.png
+            naked: false
+          absent:
+            filename: rin/close/rin_basic_absent_close.png
+            naked: false
+      negative_close:
+        pose: negative
+        outfit: null
+        close: true
+        base_emotion: spaciness
+        base_emotion_offset:
+        - 10
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          worried:
+            filename: rin/close/rin_negative_worried_close.png
+            naked: false
+          sad:
+            filename: rin/close/rin_negative_sad_close.png
+            naked: false
+          confused:
+            filename: rin/close/rin_negative_confused_close.png
+            naked: false
+          annoyed:
+            filename: rin/close/rin_negative_annoyed_close.png
+            naked: false
+          spaciness:
+            filename: rin/close/rin_negative_spaciness_close.png
+            naked: false
+          angry:
+            filename: rin/close/rin_negative_angry_close.png
+            naked: false
+      relaxed_close:
+        pose: relaxed
+        outfit: null
+        close: true
+        base_emotion: doubt
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sleepy:
+            filename: rin/close/rin_relaxed_sleepy_close.png
+            naked: false
+          surprised:
+            filename: rin/close/rin_relaxed_surprised_close.png
+            naked: false
+          nonchalant:
+            filename: rin/close/rin_relaxed_nonchalant_close.png
+            naked: false
+          boredom:
+            filename: rin/close/rin_relaxed_boredom_close.png
+            naked: false
+          doubt:
+            filename: rin/close/rin_relaxed_doubt_close.png
+            naked: false
+      relaxed_silhouette:
+        pose: relaxed
+        outfit: silhouette
+        close: false
+        base_emotion: surprised
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: 0
+        sprites:
+          surprised:
+            filename: rin/rin_relaxed_surprised.png
+            naked: false
+  rinpan:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: rin
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: absent
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          deadpan:
+            filename: rinpan/rinpan_basic_deadpan.png
+            naked: false
+          upset:
+            filename: rinpan/rinpan_basic_upset.png
+            naked: false
+          surprised:
+            filename: rinpan/rinpan_basic_surprised.png
+            naked: false
+          awayabsent:
+            filename: rinpan/rinpan_basic_awayabsent.png
+            naked: false
+          deadpandelight:
+            filename: rinpan/rinpan_basic_deadpandelight.png
+            naked: false
+          deadpanupset:
+            filename: rinpan/rinpan_basic_deadpanupset.png
+            naked: false
+          deadpanamused:
+            filename: rinpan/rinpan_basic_deadpanamused.png
+            naked: false
+          amused:
+            filename: rinpan/rinpan_basic_amused.png
+            naked: false
+          absent:
+            filename: rinpan/rinpan_basic_absent.png
+            naked: false
+          lucid:
+            filename: rinpan/rinpan_basic_lucid.png
+            naked: false
+          deadpancontemplation:
+            filename: rinpan/rinpan_basic_deadpancontemplation.png
+            naked: false
+          deadpannormal:
+            filename: rinpan/rinpan_basic_deadpannormal.png
+            naked: false
+          deadpansurprised:
+            filename: rinpan/rinpan_basic_deadpansurprised.png
+            naked: false
+      relaxed:
+        pose: relaxed
+        outfit: null
+        close: false
+        base_emotion: doubt
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sleepy:
+            filename: rinpan/rinpan_relaxed_sleepy.png
+            naked: false
+          boredom:
+            filename: rinpan/rinpan_relaxed_boredom.png
+            naked: false
+          surprised:
+            filename: rinpan/rinpan_relaxed_surprised.png
+            naked: false
+          nonchalant:
+            filename: rinpan/rinpan_relaxed_nonchalant.png
+            naked: false
+          doubt:
+            filename: rinpan/rinpan_relaxed_doubt.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: absent
+        base_emotion_offset:
+        - 10
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          deadpanamused:
+            filename: rinpan/close/rinpan_basic_deadpanamused_close.png
+            naked: false
+          awayabsent:
+            filename: rinpan/close/rinpan_basic_awayabsent_close.png
+            naked: false
+          deadpancontemplation:
+            filename: rinpan/close/rinpan_basic_deadpancontemplation_close.png
+            naked: false
+          deadpan:
+            filename: rinpan/close/rinpan_basic_deadpan_close.png
+            naked: false
+          lucid:
+            filename: rinpan/close/rinpan_basic_lucid_close.png
+            naked: false
+          deadpandelight:
+            filename: rinpan/close/rinpan_basic_deadpandelight_close.png
+            naked: false
+          deadpanupset:
+            filename: rinpan/close/rinpan_basic_deadpanupset_close.png
+            naked: false
+      relaxed_close:
+        pose: relaxed
+        outfit: null
+        close: true
+        base_emotion: doubt
+        base_emotion_offset:
+        - 13
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          boredom:
+            filename: rinpan/close/rinpan_relaxed_boredom_close.png
+            naked: false
+          doubt:
+            filename: rinpan/close/rinpan_relaxed_doubt_close.png
+            naked: false
+          sleepy:
+            filename: rinpan/close/rinpan_relaxed_sleepy_close.png
+            naked: false
+          nonchalant:
+            filename: rinpan/close/rinpan_relaxed_nonchalant_close.png
+            naked: false
+          surprised:
+            filename: rinpan/close/rinpan_relaxed_surprised_close.png
+            naked: false
+  sae:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: sae
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: neutral
+        base_emotion_offset:
+        - 14
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -24
+        silhouette_tint: null
+        sprites:
+          doubt:
+            filename: sae/sae_doubt.png
+            naked: false
+          neutral:
+            filename: sae/sae_neutral.png
+            naked: false
+          scowlsmoke:
+            filename: sae/sae_scowl_smoke.png
+            naked: false
+          smilesmoke:
+            filename: sae/sae_smile_smoke.png
+            naked: false
+          doubtsmoke:
+            filename: sae/sae_doubt_smoke.png
+            naked: false
+          smile:
+            filename: sae/sae_smile.png
+            naked: false
+          neutralsmoke:
+            filename: sae/sae_neutral_smoke.png
+            naked: false
+          scowl:
+            filename: sae/sae_scowl.png
+            naked: false
+  shizu:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: shizu
+    groups:
+      adjust_cas:
+        pose: adjust
+        outfit: cas
+        close: false
+        base_emotion: happy
+        base_emotion_offset:
+        - 13
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          happy:
+            filename: shizu/shizu_adjust_happy_cas.png
+            naked: false
+          frown:
+            filename: shizu/shizu_adjust_frown_cas.png
+            naked: false
+          smug:
+            filename: shizu/shizu_adjust_smug_cas.png
+            naked: false
+      adjust:
+        pose: adjust
+        outfit: null
+        close: false
+        base_emotion: happy
+        base_emotion_offset:
+        - 13
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          noglasses:
+            filename: shizu/shizu_adjust_noglasses.png
+            naked: false
+          smug:
+            filename: shizu/shizu_adjust_smug.png
+            naked: false
+          angry:
+            filename: shizu/shizu_adjust_angry.png
+            naked: false
+          blush:
+            filename: shizu/shizu_adjust_blush.png
+            naked: false
+          frown:
+            filename: shizu/shizu_adjust_frown.png
+            naked: false
+          happy:
+            filename: shizu/shizu_adjust_happy.png
+            naked: false
+      basic_cas:
+        pose: basic
+        outfit: cas
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 16
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          angry:
+            filename: shizu/shizu_basic_angry_cas.png
+            naked: false
+          happy:
+            filename: shizu/shizu_basic_happy_cas.png
+            naked: false
+          sparkle:
+            filename: shizu/shizu_basic_sparkle_cas.png
+            naked: false
+          normal2:
+            filename: shizu/shizu_basic_normal2_cas.png
+            naked: false
+          frown:
+            filename: shizu/shizu_basic_frown_cas.png
+            naked: false
+          normal:
+            filename: shizu/shizu_basic_normal_cas.png
+            naked: false
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: normal
+        base_emotion_offset:
+        - 16
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          normal:
+            filename: shizu/shizu_basic_normal.png
+            naked: false
+          angry:
+            filename: shizu/shizu_basic_angry.png
+            naked: false
+          normal2:
+            filename: shizu/shizu_basic_normal2.png
+            naked: false
+          sparkle:
+            filename: shizu/shizu_basic_sparkle.png
+            naked: false
+          frown:
+            filename: shizu/shizu_basic_frown.png
+            naked: false
+          happy:
+            filename: shizu/shizu_basic_happy.png
+            naked: false
+      behind_nak:
+        pose: behind
+        outfit: nak
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 13
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: shizu/shizu_behind_frown_nak.png
+            naked: false
+          smile:
+            filename: shizu/shizu_behind_smile_nak.png
+            naked: false
+          blank:
+            filename: shizu/shizu_behind_blank_nak.png
+            naked: false
+          smilelow:
+            filename: shizu/shizu_behind_smilelow_nak.png
+            naked: false
+      behind:
+        pose: behind
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 13
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sad:
+            filename: shizu/shizu_behind_sad.png
+            naked: false
+          smile:
+            filename: shizu/shizu_behind_smile.png
+            naked: false
+          frustrated:
+            filename: shizu/shizu_behind_frustrated.png
+            naked: false
+          blank:
+            filename: shizu/shizu_behind_blank.png
+            naked: false
+          frown:
+            filename: shizu/shizu_behind_frown.png
+            naked: false
+      behind_cas:
+        pose: behind
+        outfit: cas
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 13
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frustrated:
+            filename: shizu/shizu_behind_frustrated_cas.png
+            naked: false
+          smile:
+            filename: shizu/shizu_behind_smile_cas.png
+            naked: false
+          frown:
+            filename: shizu/shizu_behind_frown_cas.png
+            naked: false
+          blank:
+            filename: shizu/shizu_behind_blank_cas.png
+            naked: false
+      cross_cas:
+        pose: cross
+        outfit: cas
+        close: false
+        base_emotion: angry
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          angry:
+            filename: shizu/shizu_cross_angry_cas.png
+            naked: false
+          wut:
+            filename: shizu/shizu_cross_wut_cas.png
+            naked: false
+      cross:
+        pose: cross
+        outfit: null
+        close: false
+        base_emotion: angry
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          rageclosed:
+            filename: shizu/shizu_cross_rageclosed.png
+            naked: false
+          rage:
+            filename: shizu/shizu_cross_rage.png
+            naked: false
+          angry:
+            filename: shizu/shizu_cross_angry.png
+            naked: false
+          wut:
+            filename: shizu/shizu_cross_wut.png
+            naked: false
+      adjust_cas_close:
+        pose: adjust
+        outfit: cas
+        close: true
+        base_emotion: happy
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          blush:
+            filename: shizu/close/shizu_adjust_blush_cas_close.png
+            naked: false
+          smug:
+            filename: shizu/close/shizu_adjust_smug_cas_close.png
+            naked: false
+          frown:
+            filename: shizu/close/shizu_adjust_frown_cas_close.png
+            naked: false
+          happy:
+            filename: shizu/close/shizu_adjust_happy_cas_close.png
+            naked: false
+      adjust_close:
+        pose: adjust
+        outfit: null
+        close: true
+        base_emotion: happy
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          happy:
+            filename: shizu/close/shizu_adjust_happy_close.png
+            naked: false
+          angry:
+            filename: shizu/close/shizu_adjust_angry_close.png
+            naked: false
+          blush:
+            filename: shizu/close/shizu_adjust_blush_close.png
+            naked: false
+          smug:
+            filename: shizu/close/shizu_adjust_smug_close.png
+            naked: false
+          frown:
+            filename: shizu/close/shizu_adjust_frown_close.png
+            naked: false
+      basic_cas_close:
+        pose: basic
+        outfit: cas
+        close: true
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          normal2:
+            filename: shizu/close/shizu_basic_normal2_cas_close.png
+            naked: false
+          angry:
+            filename: shizu/close/shizu_basic_angry_cas_close.png
+            naked: false
+          happy:
+            filename: shizu/close/shizu_basic_happy_cas_close.png
+            naked: false
+          normal:
+            filename: shizu/close/shizu_basic_normal_cas_close.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: normal
+        base_emotion_offset:
+        - 14
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frown:
+            filename: shizu/close/shizu_basic_frown_close.png
+            naked: false
+          normal2:
+            filename: shizu/close/shizu_basic_normal2_close.png
+            naked: false
+          sparkle:
+            filename: shizu/close/shizu_basic_sparkle_close.png
+            naked: false
+          normal:
+            filename: shizu/close/shizu_basic_normal_close.png
+            naked: false
+          happy:
+            filename: shizu/close/shizu_basic_happy_close.png
+            naked: false
+          angry:
+            filename: shizu/close/shizu_basic_angry_close.png
+            naked: false
+      behind_close:
+        pose: behind
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          sad:
+            filename: shizu/close/shizu_behind_sad_close.png
+            naked: false
+          blank:
+            filename: shizu/close/shizu_behind_blank_close.png
+            naked: false
+          smile:
+            filename: shizu/close/shizu_behind_smile_close.png
+            naked: false
+          frustrated:
+            filename: shizu/close/shizu_behind_frustrated_close.png
+            naked: false
+          frown:
+            filename: shizu/close/shizu_behind_frown_close.png
+            naked: false
+      behind_cas_close:
+        pose: behind
+        outfit: cas
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 11
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          frustrated:
+            filename: shizu/close/shizu_behind_frustrated_cas_close.png
+            naked: false
+          smile:
+            filename: shizu/close/shizu_behind_smile_cas_close.png
+            naked: false
+          sad:
+            filename: shizu/close/shizu_behind_sad_cas_close.png
+            naked: false
+          blank:
+            filename: shizu/close/shizu_behind_blank_cas_close.png
+            naked: false
+      cross_close:
+        pose: cross
+        outfit: null
+        close: true
+        base_emotion: angry
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          wut:
+            filename: shizu/close/shizu_cross_wut_close.png
+            naked: false
+          stunned:
+            filename: shizu/close/shizu_cross_stunned_close.png
+            naked: false
+          angry:
+            filename: shizu/close/shizu_cross_angry_close.png
+            naked: false
+      out_close:
+        pose: out
+        outfit: null
+        close: true
+        base_emotion: serious
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          serious:
+            filename: shizu/close/shizu_out_serious_close.png
+            naked: false
+  shizuyu:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: shizu
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: happy
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          aside:
+            filename: shizuyu/shizuyu_basic_aside.png
+            naked: false
+          blush:
+            filename: shizuyu/shizuyu_basic_blush.png
+            naked: false
+          happy:
+            filename: shizuyu/shizuyu_basic_happy.png
+            naked: false
+      cross:
+        pose: cross
+        outfit: null
+        close: false
+        base_emotion: happy
+        base_emotion_offset:
+        - 14
+        - 10
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          blush:
+            filename: shizuyu/shizuyu_cross_blush.png
+            naked: false
+          happy:
+            filename: shizuyu/shizuyu_cross_happy.png
+            naked: false
+          angry:
+            filename: shizuyu/shizuyu_cross_angry.png
+            naked: false
+      basic_close:
+        pose: basic
+        outfit: null
+        close: true
+        base_emotion: happy
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          angry:
+            filename: shizuyu/close/shizuyu_basic_angry_close.png
+            naked: false
+          happy:
+            filename: shizuyu/close/shizuyu_basic_happy_close.png
+            naked: false
+      cross_close:
+        pose: cross
+        outfit: null
+        close: true
+        base_emotion: happy
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          blush:
+            filename: shizuyu/close/shizuyu_cross_blush_close.png
+            naked: false
+          happy:
+            filename: shizuyu/close/shizuyu_cross_happy_close.png
+            naked: false
+          angry:
+            filename: shizuyu/close/shizuyu_cross_angry_close.png
+            naked: false
+  shopkeep:
+    displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
+    tileset: shopkeep
+    groups:
+      basic:
+        pose: basic
+        outfit: null
+        close: false
+        base_emotion: neutral
+        base_emotion_offset:
+        - 13
+        - 8
+        base_emotion_size:
+        - 4
+        - 4
+        base_origin_offset: -24
+        silhouette_tint: null
+        sprites:
+          surprised:
+            filename: shopkeep/shopkeep_surprised.png
+            naked: false
+          happy:
+            filename: shopkeep/shopkeep_happy.png
+            naked: false
+          thinking:
+            filename: shopkeep/shopkeep_thinking.png
+            naked: false
+          neutral:
+            filename: shopkeep/shopkeep_neutral.png
+            naked: false
+  yuuko:
+    displayable_regex: (?P<name>[^_]+)_(?P<emotion>[^_]+)(_(?P<pose>[^_]+))?$
+    tileset: yuuko
+    groups:
+      up:
+        pose: up
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 8
+        base_emotion_size:
+        - 8
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          cry:
+            filename: yuuko/yuuko_cry_up.png
+            naked: false
+          neutral:
+            filename: yuuko/yuuko_neutral_up.png
+            naked: false
+          closedhappy:
+            filename: yuuko/yuuko_closedhappy_up.png
+            naked: false
+          worried:
+            filename: yuuko/yuuko_worried_up.png
+            naked: false
+          smile:
+            filename: yuuko/yuuko_smile_up.png
+            naked: false
+          neurotic:
+            filename: yuuko/yuuko_neurotic_up.png
+            naked: false
+          happy:
+            filename: yuuko/yuuko_happy_up.png
+            naked: false
+          panic:
+            filename: yuuko/yuuko_panic_up.png
+            naked: false
+      down:
+        pose: down
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 8
+        base_emotion_size:
+        - 8
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          neurotic:
+            filename: yuuko/yuuko_neurotic_down.png
+            naked: false
+          happy:
+            filename: yuuko/yuuko_happy_down.png
+            naked: false
+          worried:
+            filename: yuuko/yuuko_worried_down.png
+            naked: false
+          cry:
+            filename: yuuko/yuuko_cry_down.png
+            naked: false
+          neutral:
+            filename: yuuko/yuuko_neutral_down.png
+            naked: false
+          smile:
+            filename: yuuko/yuuko_smile_down.png
+            naked: false
+          closedhappy:
+            filename: yuuko/yuuko_closedhappy_down.png
+            naked: false
+          panic:
+            filename: yuuko/yuuko_panic_down.png
+            naked: false
+      up_close:
+        pose: up
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -96
+        silhouette_tint: null
+        sprites:
+          neutral:
+            filename: yuuko/close/yuuko_neutral_up_close.png
+            naked: false
+          closedhappy:
+            filename: yuuko/close/yuuko_closedhappy_up_close.png
+            naked: false
+          worried:
+            filename: yuuko/close/yuuko_worried_up_close.png
+            naked: false
+          happy:
+            filename: yuuko/close/yuuko_happy_up_close.png
+            naked: false
+          panic:
+            filename: yuuko/close/yuuko_panic_up_close.png
+            naked: false
+      down_close:
+        pose: down
+        outfit: null
+        close: true
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 6
+        base_emotion_size:
+        - 8
+        - 8
+        base_origin_offset: -96
+        silhouette_tint: null
+        sprites:
+          worried:
+            filename: yuuko/close/yuuko_worried_down_close.png
+            naked: false
+          neutral:
+            filename: yuuko/close/yuuko_neutral_down_close.png
+            naked: false
+          closedhappy:
+            filename: yuuko/close/yuuko_closedhappy_down_close.png
+            naked: false
+          happy:
+            filename: yuuko/close/yuuko_happy_down_close.png
+            naked: false
+          smile:
+            filename: yuuko/close/yuuko_smile_down_close.png
+            naked: false
+  yuukoshang:
+    displayable_regex: (?P<name>[^_]+)_(?P<emotion>[^_]+)(_(?P<pose>[^_]+))?$
+    tileset: yuuko
+    groups:
+      up:
+        pose: up
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 8
+        base_emotion_size:
+        - 8
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          noglasses:
+            filename: yuukoshang/yuukoshang_noglasses_up.png
+            naked: false
+          happy:
+            filename: yuukoshang/yuukoshang_happy_up.png
+            naked: false
+          panic:
+            filename: yuukoshang/yuukoshang_panic_up.png
+            naked: false
+          worried:
+            filename: yuukoshang/yuukoshang_worried_up.png
+            naked: false
+          neurotic:
+            filename: yuukoshang/yuukoshang_neurotic_up.png
+            naked: false
+          smile:
+            filename: yuukoshang/yuukoshang_smile_up.png
+            naked: false
+          neutral:
+            filename: yuukoshang/yuukoshang_neutral_up.png
+            naked: false
+          closedhappy:
+            filename: yuukoshang/yuukoshang_closedhappy_up.png
+            naked: false
+      down:
+        pose: down
+        outfit: null
+        close: false
+        base_emotion: smile
+        base_emotion_offset:
+        - 12
+        - 8
+        base_emotion_size:
+        - 8
+        - 4
+        base_origin_offset: 0
+        silhouette_tint: null
+        sprites:
+          closedhappy:
+            filename: yuukoshang/yuukoshang_closedhappy_down.png
+            naked: false
+          happy:
+            filename: yuukoshang/yuukoshang_happy_down.png
+            naked: false
+          worried:
+            filename: yuukoshang/yuukoshang_worried_down.png
+            naked: false
+          panic:
+            filename: yuukoshang/yuukoshang_panic_down.png
+            naked: false
+          smile:
+            filename: yuukoshang/yuukoshang_smile_down.png
+            naked: false
+          neutral:
+            filename: yuukoshang/yuukoshang_neutral_down.png
+            naked: false
+          neurotic:
+            filename: yuukoshang/yuukoshang_neurotic_down.png
+            naked: false

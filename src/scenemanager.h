@@ -14,15 +14,17 @@
 #include "background_meta.h"
 #include "background_ptr.h"
 #include "bn_rect_window.h"
-#include "character_sprite_meta.h"
 #include "dialog_box.h"
 #include "gba_base.h"
 #include "gba_types.h"
 #include "savefile/save_file.h"
 #include "ext_bg_blocks_manager.h"
+#include "smart_characters_manager.h"
 #include "vfx_meta.h"
 #include "events/custom_event.h"
 #include "shaders/vram_dma_shader.h"
+
+#include "smart_character_bg.h"  // for ks::smart_characters::variant
 
 
 #define IF_NOT_EXIT(step)                         \
@@ -58,27 +60,59 @@ struct background_visuals_ptr
     palette_variant_t palette_variant;
 };
 
+/// Per-character logical state tracked by `SceneManager`. The actual BG /
+/// OBJ resources live inside `ks::smart_characters_manager`; this struct
+/// keeps just enough metadata for save thumbnails, smooth-move tweens,
+/// and the show/hide flow.
+///
+/// Position is stored in **Ren'Py-style normalised coords** — `xpos` /
+/// `ypos` are fractions of the screen size (0.0 = left/top edge,
+/// 1.0 = right/bottom edge), and `xanchor` / `yanchor` are fractions of
+/// the *displayable's own* size (0.0 = left/top edge, 1.0 = right/bottom
+/// edge of the visible body bbox). The runtime translates this to a
+/// screen-centre-relative pixel offset every time the slot is applied
+/// to the smart-character manager, using the *current* variant's actual
+/// `body.vis_*` bbox — so a body change automatically re-anchors. This
+/// is the fundamental fix for the converter-side
+/// "sprite_width = 128 px" hard-coding (see `tools/converter/src/utils.py`
+/// pre-migration): real bodies vary from ~64..120 px wide and the old
+/// pixel-baked positioning made characters with `xalign 1.03` collide
+/// with siblings at `xalign 0.7`. Default = `(0.5, 0.5, 1.0, 1.0)` —
+/// horizontally centred, bottom edge anchored to the bottom of the
+/// screen, matching the implicit Ren'Py default for `image` displayables
+/// in KS.
 struct character_visuals_ptr
 {
     character_t character;
-    bn::optional<bn::regular_bg_item> visible_bg_item;
-    bn::optional<bn::sprite_item> visible_sprite_item;
-    bn::optional<bn::regular_bg_item> bg_item;
-    bn::optional<bn::sprite_item> sprite_item;
-    bn::optional<ks::character_sprite_meta> sprite_meta;
     palette_variant_t palette_variant;
 
-    bn::optional<bn::regular_bg_ptr> background;
-    bn::optional<bn::sprite_ptr> sprite;
-    bn::fixed alpha;
+    /// Latest `ks::smart_characters::variant` shown for this slot.
+    /// Required because `set_character_position` can fire before any
+    /// re-`show_character` does (e.g. xpos/ypos on the line *after* the
+    /// `show`); we re-apply this variant if the smart-manager somehow
+    /// dropped the char between the two.
+    const ks::smart_characters::variant* variant_ptr;
+
+    /// Stable group hash (mirrored from `variant_ptr->hash`). Stored
+    /// directly so save metadata can copy it without dereferencing the
+    /// variant pointer (which may dangle across saves).
+    unsigned short variant_hash;
+
+    /// Ren'Py-style normalised position (see struct doc). `xpos` /
+    /// `ypos` are screen-relative; `xanchor` / `yanchor` are body-
+    /// relative. Smooth-move tweens run in pixel space inside the smart
+    /// manager — these stay logical and are re-resolved on demand.
+    bn::fixed xpos;
+    bn::fixed xanchor;
+    bn::fixed ypos;
+    bn::fixed yanchor;
+
+    /// Show / hide latches consumed by `update_visuals`. `will_show` is
+    /// raised by `show_character` and lowered after the smart-manager
+    /// has reflected the change; `will_hide` is raised by
+    /// `hide_character` and lowered after the manager destroyed it.
     bool will_show;
     bool will_hide;
-    int position_x;
-    int position_y;
-    int tiles_x;
-    int tiles_y;
-    int offset_x;
-    int offset_y;
 };
 
 struct answer_ptr
@@ -158,33 +192,46 @@ public:
     static void nvl_clear();
     static void nvl_hide();
     static void nvl_show(unsigned int tl_key);
-    static void show_character(const character_t character,
-                               const ks::character_sprite_meta& sprite_meta,
-                               const bn::regular_bg_item& bg,
-                               const bn::sprite_item& sprite,
-                               const palette_variant_t palette_variant);
-    static void show_character(const character_t character,
-                               const ks::character_sprite_meta& sprite_meta,
-                               const bn::regular_bg_item& bg,
-                               const bn::sprite_item& sprite,
-                               const palette_variant_t palette_variant,
-                               const int position_x,
-                               const int position_y);
-    static void show_character(const character_t character,
-                               const ks::character_sprite_meta& sprite_meta,
-                               const bn::regular_bg_item& bg,
-                               const bn::sprite_item& sprite,
-                               const palette_variant_t palette_variant,
-                               const int position_x,
-                               const int position_y,
-                               const bool position_change);
-    static void set_character_position(const character_t character,
-                                       const int position_x,
-                                       const int position_y);
-    // static void set_character_window_visibility(bn::regular_bg_ptr bg, bn::fixed target_x, bn::fixed target_y);
-    static void set_character_window_visibility(bn::regular_bg_ptr bg);
-    static void hide_character(const character_t character);
-    static void hide_character(const character_t character, const bool need_update, bool remove);
+    /// Show / change a character. The variant carries the `body` (BG) and
+    /// `face` (OBJ) pair plus the group hash used by save thumbnails.
+    /// The 3-arg overload preserves the slot's current position (Ren'Py
+    /// `show <char>` with no transform); the positioned overload
+    /// updates it. Position is given in **Ren'Py-style normalised
+    /// coords**: `xpos`/`ypos` are screen-relative (0..1), `xanchor`/
+    /// `yanchor` are body-relative (0..1). The runtime resolves these
+    /// to pixels using the *current* variant's `body.vis_*` bbox — so
+    /// `xalign 1.03` always lands the body's right edge at 103 % of
+    /// the screen regardless of how wide the actual sprite is. Default
+    /// for a fresh slot is `(0.5, 0.5, 1.0, 1.0)`. The palette variant
+    /// is applied scene-wide via
+    /// `smart_characters_manager::set_palette_variant` (every character
+    /// carries the same variant — see migration notes).
+    static void show_character(character_t character,
+                               const ks::smart_characters::variant& var,
+                               palette_variant_t palette_variant);
+    static void show_character(character_t character,
+                               const ks::smart_characters::variant& var,
+                               palette_variant_t palette_variant,
+                               bn::fixed xpos,
+                               bn::fixed xanchor,
+                               bn::fixed ypos,
+                               bn::fixed yanchor);
+
+    /// Move an existing character to a new on-screen position, given in
+    /// Ren'Py-style normalised coords (see `show_character` doc). If
+    /// the resolved pixel position equals the current one the call is a
+    /// no-op. Otherwise the move smooth-tweens over
+    /// `SMART_CHARACTER_MOVE_FRAMES` frames (same length as the first-show
+    /// fade-in), including same-block `show` + transform lines so motion
+    /// and alpha blend run together.
+    static void set_character_position(character_t character,
+                                       bn::fixed xpos,
+                                       bn::fixed xanchor,
+                                       bn::fixed ypos,
+                                       bn::fixed yanchor);
+
+    static void hide_character(character_t character);
+    static void hide_character(character_t character, bool need_update, bool remove);
 
     static void perform_transition(scene_transition_t transition, const bn::optional<ks::background_item>& to);
     static void perform_transition(scene_transition_t transition);
@@ -254,7 +301,7 @@ extern bn::optional<bn::regular_bg_ptr> secondary_background;
 extern bn::optional<bn::affine_bg_ptr> transition_bg;
 extern bn::optional<bn::color> fill_color;
 extern bn::optional<bn::unique_ptr<CustomEvent>> next_event;
-extern bn::vector<character_visuals_ptr, 4> character_visuals;
+extern bn::vector<character_visuals_ptr, smart_characters_manager::MAX_CHARS> character_visuals;
 extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;

@@ -1,6 +1,5 @@
 {
-    "type": "sprite",
+    "type": "sprite_tiles",
     "bpp_mode": "bpp_8",
-    "colors_count": 128,
     "compression": "auto_no_huffman"
 }

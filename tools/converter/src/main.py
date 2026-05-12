@@ -2,8 +2,6 @@ import argparse
 import os
 from typing import Dict
 
-from src.character_sprite.character_sprite import CharacterSpritesReader, CharacterSpritesWriter, \
-    CharacterMetaStorageWriter
 from src.definitions_reader import DefinitionsReader
 from src.definitions_writer import DefinitionsWriter
 from src.font.chars_reader import CharsReader
@@ -45,18 +43,6 @@ def main():
         "--translations",
         required=False,
         help="Translation keys, comma separated. Example: de,es,fr,ru,zh_hans"
-    )
-
-    character_sprites_parser = subparsers.add_parser("character-sprites", help="Character sprites converter")
-    character_sprites_parser.add_argument(
-        "--source",
-        required=True,
-        help="Path to KS:RE sources"
-    )
-    character_sprites_parser.add_argument(
-        "--outdir",
-        required=True,
-        help="Path to KS GBA sources"
     )
 
     definitions_parser = subparsers.add_parser("definitions", help="Definitions converter")
@@ -170,28 +156,6 @@ def main():
         writer = ScenarioWriter(output_file, gba_scripts_path, gbfs_path, spm_assets_path, scenario)
         # writer.clean()
         writer.write()
-        exit(0)
-
-    if args.command == "character-sprites":
-        ksre_path = args.source
-        ksagb_path = args.outdir
-
-        ksre_character_sprites_path = os.path.join(ksre_path, "game", "sprites")
-
-        print(f"Processing character sprites: {ksre_character_sprites_path}")
-        reader = CharacterSpritesReader(ksre_character_sprites_path)
-        character_sprites_groups = reader.process_all()
-
-        group_counter = 1
-        for group in character_sprites_groups:
-            print(f"{group_counter}/{len(character_sprites_groups)} - Processing character group: {group}")
-            writer = CharacterSpritesWriter(os.path.join(ksagb_path, "graphics", "characters", group.character_name),
-                                            os.path.join(ksagb_path, "include"))
-            writer.write(group)
-            group_counter += 1
-
-        meta_writer = CharacterMetaStorageWriter(os.path.join(ksagb_path, "include"))
-        meta_writer.write(character_sprites_groups)
         exit(0)
 
     if args.command == "definitions":

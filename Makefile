@@ -44,6 +44,7 @@ SOURCES     	:=  ../butano/common/src \
 					../tests \
 					../tests/suites \
 		    		src \
+                    src/smart_characters \
                     src/ulcv \
                     src/events \
                     src/fonts \
@@ -64,6 +65,7 @@ INCLUDES    	:=  include \
 					include/background_metas \
 					include/vfx_metas \
 					include/sprite_metas \
+					include/smart_characters \
 					allure-agb/include \
 					../libsavgba/include \
 					../butano/common/include \
@@ -119,7 +121,7 @@ USERLDFLAGS 	:=  -Wl,--print-memory-usage
 USERLIBDIRS 	:=  $(DEVKITPRO)/libgba
 USERLIBS    	:=  -lmm -lgba
 DEFAULTLIBS 	:=  false
-STACKTRACE		:=
+STACKTRACE		:=  true
 USERBUILD   	:=  
 EXTTOOL     	:= @$(PYTHON) -B tools/build_info.py --compiler=$(CXX); \
 				   $(PYTHON) -B tools/ks_assets_tool.py --grit="$(GRIT)" --graphics="$(HUGE_GRAPHICS)" --build=$(BUILD)

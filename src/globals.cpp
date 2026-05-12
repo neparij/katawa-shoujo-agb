@@ -45,6 +45,11 @@ namespace ks::globals {
         if (is_loading) {
             BN_LOG("[WARN] Main update while loading!");
         }
+
+        if (bn::keypad::select_pressed()) {
+            ks::saves::log_progress(ks::progress);
+        }
+
         huge_bgs_manager::update();
         SceneManager::update();
         bn::core::update();
