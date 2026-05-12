@@ -5,9 +5,9 @@ import sentencepiece as spm
 
 
 class SPMPacker:
-    def __init__(self, spm_path: str, gbfs_path: str, locale: str):
+    def __init__(self, spm_path: str, tl_path: str, locale: str):
         self.spm_path = spm_path
-        self.gbfs_path = gbfs_path
+        self.tl_path = tl_path
         self.locale = locale
 
     def pack(self):
@@ -15,7 +15,7 @@ class SPMPacker:
         token = namedtuple('Token', ['offset', 'value'])
         model_file = os.path.join(self.spm_path, f'spm-{self.locale}.model')
         vocab_file = os.path.join(self.spm_path, f'spm-{self.locale}.vocab')
-        out_file = os.path.join(self.gbfs_path, f'spm_vocab_{self.locale}.bin')
+        out_file = os.path.join(self.tl_path, self.locale, f'spm_vocab.tl')
 
         spp = spm.SentencePieceProcessor()
         tokens: list[token] = []
@@ -34,6 +34,7 @@ class SPMPacker:
             tokens.append(token(offset=offset, value=piece))
             offset += len(piece.encode('utf-8')) + 1
 
+        os.makedirs(os.path.dirname(out_file), exist_ok=True)
         with open(out_file, 'wb') as f:
             # Write offset table
             for t in tokens:

@@ -9,10 +9,7 @@
 #include "bn_core.h"
 #include "bn_memory.h"
 #include "fonts/fonts_common.h"
-#include "translations/en.cpp"
-#include "translations/es.cpp"
-#include "translations/ru.cpp"
-#include "translations/jp.cpp"
+#include "translation.h"
 #include "ingametimer.h"
 #include "scenemanager.h"
 #include "sound_manager.h"
@@ -69,7 +66,7 @@ namespace ks::globals {
         bn::core::init(clear_color, bn::string_view(), ISR_VBlank, sound_mixer::update);
         sound_manager::init();
 
-        set_language(settings.language);
+        set_language(tl::type());
 
         if (clear_color.has_value()) {
             bn::bg_palettes::set_transparent_color(clear_color);
@@ -102,27 +99,11 @@ namespace ks::globals {
 
     void release_engine() {
         release_resources();
-        i18n.reset();
     }
 
     void set_language(const language_t tl) {
         settings.language = tl;
-
-        if (settings.language == LANG_ENGLISH) {
-            // i18n = new(translation_buffer) TranslationEn();
-            i18n = bn::make_unique<TranslationEn>(TranslationEn());
-        } else if (settings.language == LANG_SPANISH) {
-            i18n = bn::make_unique<TranslationEs>(TranslationEs());
-        } else if (settings.language == LANG_RUSSIAN) {
-            i18n = bn::make_unique<TranslationRu>(TranslationRu());
-        } else if (settings.language == LANG_JAPAN) {
-            i18n = bn::make_unique<TranslationJp>(TranslationJp());
-        } else {
-            BN_ERROR("Language is not implemented");
-        }
         init_text_generators();
-
-        textdb::init_spm_table(i18n->locale());
     }
 
     void init_text_generators(const language_t tl) {
@@ -138,7 +119,7 @@ namespace ks::globals {
     }
 
     void init_text_generators() {
-        init_text_generators(i18n->type());
+        init_text_generators(tl::type());
     }
 
     void accessibility_apply() {

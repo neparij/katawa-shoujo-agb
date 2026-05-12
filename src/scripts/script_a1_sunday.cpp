@@ -1,8 +1,9 @@
 #include "script_a1_sunday.h"
+#include "a1_sunday_tl.h"
 namespace ks {
         void ScriptA1Sunday::a1_sunday_dont_panic() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_DONT_PANIC);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -151,7 +152,7 @@ namespace ks {
         }
         void ScriptA1Sunday::a1_sunday_is_carnival() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_IS_CARNIVAL);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhallway, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -900,7 +901,7 @@ namespace ks {
         }
         void ScriptA1Sunday::a1_sunday_clouds_in_my_head() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_CLOUDS_IN_MY_HEAD);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhallway, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -1747,7 +1748,7 @@ namespace ks {
         }
         void ScriptA1Sunday::a1_sunday_promise_of_time() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_PROMISE_OF_TIME);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ScriptA1Sunday::stranger_lilly_and_hanako()); // DIRECT CALL
             IF_NOT_EXIT(ScriptA1Sunday::stranger_union()); // DIRECT CALL
             IF_NOT_EXIT(ScriptA1Sunday::lilly_and_hanako_union()); // DIRECT CALL
@@ -2099,7 +2100,7 @@ namespace ks {
         }
         void ScriptA1Sunday::a1_sunday_nc5xb3() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_NC5XB3);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ScriptA1Sunday::stranger_lilly_and_hanako()); // DIRECT CALL
             IF_NOT_EXIT(ScriptA1Sunday::stranger_union()); // DIRECT CALL
             IF_NOT_EXIT(ScriptA1Sunday::lilly_and_hanako_union()); // DIRECT CALL
@@ -2473,7 +2474,7 @@ namespace ks {
         }
         void ScriptA1Sunday::a1_sunday_movement() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_MOVEMENT);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_miyagi, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_close_downsmile, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -3209,7 +3210,7 @@ namespace ks {
         }
         void ScriptA1Sunday::a1_sunday_throwing_balls() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_THROWING_BALLS);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhallway, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -4347,7 +4348,7 @@ namespace ks {
         }
         void ScriptA1Sunday::a1_sunday_the_deep_end() {
             ks::SceneManager::set_label(LABEL_A1_SUNDAY_THE_DEEP_END);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_sunday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_sunday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhallway, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());

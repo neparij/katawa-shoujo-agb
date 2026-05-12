@@ -130,7 +130,7 @@ public:
 
     static void free_resources();
     static void set(const ks::SceneManager instance);
-    static void set_textdb(const char* db);
+    static void set_textdb(const uint8_t* db);
     static void reload_textdb();
     static void init_savedata(ks::saves::SaveSlotProgressData &value);
     static void set_script(const script_t script);

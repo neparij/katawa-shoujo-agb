@@ -1,8 +1,9 @@
 #include "script_a1_saturday.h"
+#include "a1_saturday_tl.h"
 namespace ks {
         void ScriptA1Saturday::a1_saturday_support() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_SUPPORT);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_saturday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_saturday_tl));
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -219,7 +220,7 @@ namespace ks {
         }
         void ScriptA1Saturday::a1_saturday_an_asethetics() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_AN_ASETHETICS);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_saturday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_saturday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -631,7 +632,7 @@ namespace ks {
         }
         void ScriptA1Saturday::a1_saturday_creative_pain() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_CREATIVE_PAIN);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_saturday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_saturday_tl));
             if (ks::in_replay) {
                 ScriptA1Saturday::a1_saturday_creative_pain__condition_0_0();
             } 
@@ -833,7 +834,7 @@ namespace ks {
         }
         void ScriptA1Saturday::a1_saturday_proper_exercise() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_PROPER_EXERCISE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_saturday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_saturday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormext_half, -8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::smart_characters::rin::rin_basic_deadpan, PALETTE_VARIANT_DEFAULT, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_EMI, ks::smart_characters::emi::emi_basic_annoyed, PALETTE_VARIANT_DEFAULT, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
@@ -1146,7 +1147,7 @@ namespace ks {
         }
         void ScriptA1Saturday::a1_saturday_sip_p2() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_SIP_P2);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_saturday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_saturday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -1183,7 +1184,7 @@ namespace ks {
         }
         void ScriptA1Saturday::a1_saturday_shanghaied() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_SHANGHAIED);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_saturday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_saturday_tl));
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -2753,7 +2754,7 @@ namespace ks {
         }
         void ScriptA1Saturday::a1_saturday_quiet() {
             ks::SceneManager::set_label(LABEL_A1_SATURDAY_QUIET);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_saturday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_saturday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xF0F76D96);

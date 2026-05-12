@@ -32,7 +32,7 @@ namespace ks {
             move_scroll_thumb();
 
             // for (int i = 0; i < 39; i++) {
-            //     const auto& track = globals::i18n->music(i);
+            //     const auto& track = tl::music(i);
             //     BN_LOG("Music entry [", i, "]: ", track);
             //     // add_menu_entry_small(-device::screen_width_half + 14, -device::screen_height_half + 14 + 16 + (i * 8),
             //                          // bn::format<64>("{}: {}", i + 1, track), i);
@@ -66,11 +66,11 @@ namespace ks {
             text_generator_small->set_left_alignment();
 
             add_text_entry_bold(-device::screen_width_half + 10, -device::screen_height_half + 14,
-                                bn::format<64>("{} > {}", globals::i18n->menu_extras(),
-                                               globals::i18n->menu_extras_jukebox()), -1);
+                                bn::format<64>("{} > {}", tl::menu_extras(),
+                                               tl::menu_extras_jukebox()), -1);
 
             add_text_entry_small(-device::screen_width_half + 10, -device::screen_height_half + 14 +16,
-                    bn::format<64>("{}: {}", globals::i18n->screens_now_playing(), globals::i18n->music(sound_manager::current_music))
+                    bn::format<64>("{}: {}", tl::screens_now_playing(), tl::music(sound_manager::current_music))
                 );
 
             unsigned short idx = 0;
@@ -78,7 +78,7 @@ namespace ks {
                 if (i > total_tracks) {
                     break;
                 }
-                const auto &track = globals::i18n->music(i);
+                const auto &track = tl::music(i);
                 add_menu_entry(-device::screen_width_half + 14,
                                -device::screen_height_half + 14 + 32 + (idx * 16),
                                track,
@@ -87,7 +87,7 @@ namespace ks {
 
             text_generator->set_right_alignment();
             add_menu_entry(device::screen_width_half - 10,
-                           device::screen_height_half - 14, globals::i18n->menu_back(), 6);
+                           device::screen_height_half - 14, tl::menu_back(), 6);
 
             need_repalette = true;
         }

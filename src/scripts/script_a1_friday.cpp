@@ -1,8 +1,9 @@
 #include "script_a1_friday.h"
+#include "a1_friday_tl.h"
 namespace ks {
         void ScriptA1Friday::a1_friday_exercise() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_EXERCISE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 0));
             IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -113,7 +114,7 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_invisible_hat() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_INVISIBLE_HAT);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             if (!ks::progress.promised || ks::in_replay) {
                 ScriptA1Friday::a1_friday_invisible_hat__condition_0_0();
             } 
@@ -249,7 +250,7 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_home_field_advantage() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_HOME_FIELD_ADVANTAGE);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_dormhallway, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_close_happy, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
@@ -360,7 +361,7 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_slow_recovery() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_SLOW_RECOVERY);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             if (ks::in_replay) {
                 ScriptA1Friday::a1_friday_slow_recovery__condition_0_0();
             } 
@@ -426,7 +427,7 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_no_recovery() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_NO_RECOVERY);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             if (ks::progress.get_tired()) {
                 ScriptA1Friday::a1_friday_no_recovery__condition_0_0();
             } 
@@ -456,7 +457,7 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_no_free_lunch() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_NO_FREE_LUNCH);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_council, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_smile, PALETTE_VARIANT_DEFAULT, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
@@ -749,7 +750,7 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_foot_and_mouth() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_FOOT_AND_MOUTH);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             if (ks::in_replay) {
                 ScriptA1Friday::a1_friday_foot_and_mouth__condition_0_0();
             } 
@@ -1247,7 +1248,7 @@ namespace ks {
         }
         void ScriptA1Friday::a1_friday_mind_your_step() {
             ks::SceneManager::set_label(LABEL_A1_FRIDAY_MIND_YOUR_STEP);
-            IF_NOT_EXIT(ks::SceneManager::set_textdb("a1_friday"));
+            IF_NOT_EXIT(ks::SceneManager::set_textdb(a1_friday_tl));
             IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_courtyard_ss, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             // renpy.music.play(music_tranquil, fadein=3.0, if_changed=True); TODO: unknown assignment

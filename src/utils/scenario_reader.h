@@ -9,17 +9,13 @@ namespace ks {
         static constexpr char CTL_TERMINATOR = 0x00;
         static constexpr char CMD_START = 0xFF;
 
-        extern u8 *spm_table;
         extern u8 *ptr;
         extern bool is_allocated;
-        extern const char *_chunk;
-        extern const char *_locale;
+        extern const u8 *_chunk;
 
-        void init_spm_table(const char *locale);
+        [[nodiscard]] const u8 *get_chunk();
 
-        [[nodiscard]] const char *get_chunk();
-
-        void set(const char *chunk, const char *locale);
+        void set(const u8 *chunk);
 
         void allocate();
 

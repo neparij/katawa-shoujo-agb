@@ -5,6 +5,7 @@
 #include "bn_bg_palette_actions.h"
 #include "bn_sprite_actions.h"
 #include "easing_actions.h"
+#include "translation.h"
 
 #include "bn_optional.h"
 #include "bn_vector.h"

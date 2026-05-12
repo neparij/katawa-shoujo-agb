@@ -6,6 +6,7 @@
 #include <bn_regular_bg_items_ui_bg_menu_main.h>
 
 #include "bn_blending_actions.h"
+#include "bn_sprite_actions.h"
 #include "bn_sprite_items_ui_icon_00_tc1_hisao.h"
 #include "bn_sprite_items_ui_icon_01_tc2_hanako.h"
 #include "bn_sprite_items_ui_icon_02_tc3_hanako.h"
@@ -46,14 +47,14 @@ namespace ks {
             add_text_entry_small(-device::screen_width_half + 4, device::screen_height_half - 6, version);
 
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 3),
-                           globals::i18n->menu_start(), 0);
+                           tl::menu_start(), 0);
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 2),
-                           globals::i18n->menu_saves(), 1);
+                           tl::menu_saves(), 1);
 
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 1),
-                           globals::i18n->menu_extras(), 2);
+                           tl::menu_extras(), 2);
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 0),
-                           globals::i18n->menu_options(), 3);
+                           tl::menu_options(), 3);
         }
 
         ~MenuMain() override {

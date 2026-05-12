@@ -155,10 +155,10 @@ def smart_character_resolve(character: CharacterSprite) -> Tuple[str, str, str]:
 
 
 class ScenarioWriter:
-    def __init__(self, filename: str, output_dir: str, gbfs_dir: str, spm_dir: str, scenario: List[SequenceGroup]):
+    def __init__(self, filename: str, output_dir: str, tl_dir: str, spm_dir: str, scenario: List[SequenceGroup]):
         self.filename = filename
         self.output_dir = output_dir
-        self.gbfs_dir = gbfs_dir
+        self.tl_dir = tl_dir
         self.spm_dir = spm_dir
         self.scenario = scenario
         self.tl_dict: List[Dict[str, str]] = []
@@ -174,23 +174,6 @@ class ScenarioWriter:
         self.videos = []
         self.characters: Dict[str, int] = {}
 
-    def clean(self):
-        self.clean_output_dir()
-        self.clean_gbfs_dir_translations()
-
-    def clean_output_dir(self):
-        # delete all files in output_dir
-        for root, dirs, files in os.walk(self.output_dir):
-            for file in files:
-                os.remove(os.path.join(root, file))
-
-    def clean_gbfs_dir_translations(self):
-        # delete all files in gbfs_dir with mask tl_*.locale
-        for root, dirs, files in os.walk(self.gbfs_dir):
-            for file in files:
-                if file.startswith("tl_") and file.endswith(f".{self.locale}"):
-                    os.remove(os.path.join(root, file))
-
     def write(self):
         os.makedirs(os.path.dirname(os.path.join(self.output_dir, self.filename)), exist_ok=True)
         self.write_source()
@@ -204,9 +187,7 @@ class ScenarioWriter:
             '#define SCENE_INLINE static inline __attribute__((always_inline))',
             # Include common stuff
             include_header("../scenemanager"),
-            include_header("../character"),
-            # Include common BN stuff
-            # include_header("bn_music_items"),
+            include_header("../character")
         ]
 
         for tileset in self.smart_character_tilesets:
@@ -256,6 +237,7 @@ class ScenarioWriter:
     def write_source(self):
         cpp_code = [
             include_header(f"{self.filename}"),
+            include_header(f"{get_textdb_name(self.filename)}_tl"),
         ]
         functions = []
 
@@ -263,7 +245,7 @@ class ScenarioWriter:
             sequences = []
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
-                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb("{get_textdb_name(self.filename)}"));')
+                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb({get_textdb_name(self.filename)}_tl));')
                 # sequences.append(f'if (!ks::in_replay) {{')
                 # sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
                 # sequences.append(f'}}')
@@ -367,7 +349,7 @@ class ScenarioWriter:
                 offset += len(translation)
 
         for locale in translations:
-            filename_base = f"{get_textdb_name(self.filename)}.{locale}"
+            filename_base = f"{get_textdb_name(self.filename)}.tl"
             spp = spm.SentencePieceProcessor()
 
             try:
@@ -395,7 +377,7 @@ class ScenarioWriter:
                 compressed_bytes += b"\x00" * (4 - (len(compressed_bytes) % 4))
 
             # Write Huffman compressed translation file
-            with open(os.path.join(self.gbfs_dir, filename_base), "wb") as f:
+            with open(os.path.join(self.tl_dir, locale, filename_base), "wb") as f:
                 f.write(compressed_bytes)
 
     def get_labels(self) -> List[SequenceGroup]:

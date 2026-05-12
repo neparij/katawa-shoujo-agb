@@ -193,7 +193,7 @@ namespace ks {
             const unsigned short to = bn::max(0, from - 3);
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + 14,
-                    globals::i18n->menu_saves(), -1);
+                    tl::menu_saves(), -1);
 
             for (unsigned short i = from; i > to; i--, tile_index++, selection_index += 1) {
                 const bool additional_slot = i == total_saves + 1;
@@ -209,21 +209,21 @@ namespace ks {
 
                 if (slot.has_data) {
                     add_menu_entry_small(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index,
-                               globals::i18n->label(slot.label),
+                               tl::label(slot.label),
                                selection_index);
 
                     add_menu_entry_small(-device::screen_width_half + draw_x_from + 52, draw_y_from + (draw_y_offset * tile_index + 12),
                                    bn::format<64>(
                                        "{}: {}:{}:{} {}",
-                                       globals::i18n->screens_playtime(),
+                                       tl::screens_playtime(),
                                        slot.hours_played,
                                        bn::format<2>(slot.minutes_played < 10 ? "0{}" : "{}", slot.minutes_played),
                                        bn::format<2>(slot.seconds_played < 10 ? "0{}" : "{}", slot.seconds_played),
-                                       additional_slot ? globals::i18n->saves_auto_suffix() : ""),
+                                       additional_slot ? tl::saves_auto_suffix() : ""),
                                    selection_index);
                 } else {
                     add_menu_entry(-device::screen_width_half + draw_x_from + 52, draw_y_from + draw_y_offset * tile_index + 10,
-                                                   globals::i18n->textbutton_save(),
+                                                   tl::textbutton_save(),
                                                    selection_index);
                 }
 
@@ -283,7 +283,7 @@ namespace ks {
 
             text_generator->set_right_alignment();
             add_menu_entry(device::screen_width_half - draw_x_from, device::screen_height_half - 14,
-                           globals::i18n->menu_back(), 3);
+                           tl::menu_back(), 3);
             need_repalette = true;
         }
 

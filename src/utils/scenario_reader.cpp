@@ -8,46 +8,26 @@
 
 #include "utf8.h"
 #include "../globals.h"
+#include "spm_vocab_tl.h"
 
 
 namespace ks::textdb {
-    u8 *spm_table = nullptr;
     u8 *ptr = nullptr;
     bool is_allocated = false;
-    const char *_chunk = nullptr;
-    const char *_locale = nullptr;
+    const u8 *_chunk = nullptr;
 
-    void init_spm_table(const char *locale) {
-        auto filename = bn::string < 24 > ("spm_vocab_");
-        filename.append(locale);
-        filename.append(".bin");
-
-        BN_LOG("Init SPM Table: ", filename);
-        u32 src_len = 0;
-        spm_table = (u8 *) gbfs_get_obj(globals::filesystem, filename.c_str(), &src_len);
-        BN_ASSERT(spm_table != nullptr, "SPM vocabulary table not found in filesystem!");
-    }
-
-    const char *get_chunk() {
+    const u8 *get_chunk() {
         return _chunk;
     }
 
-    void set(const char *chunk, const char *locale) {
+    void set(const u8 *chunk) {
         _chunk = chunk;
-        _locale = locale;
     }
 
     void allocate() {
         BN_ASSERT(!is_allocated, "TextDB already allocated!");
-
-        auto filename = bn::string < 24 > (_chunk);
-        filename.append(".");
-        filename.append(_locale);
-
-        BN_LOG("TextDB load from: ", filename);
-        u32 src_len = 0;
-        const u8 *compressed_data = (u8 *) gbfs_get_obj(ks::globals::filesystem, filename.c_str(), &src_len);
-        const u32 header = *(reinterpret_cast<const u32*>(compressed_data));
+        BN_LOG("TextDB load...");
+        const u32 header = *(reinterpret_cast<const u32*>(_chunk));
         const u32 type = (header >> 4) & 0x0F;
         const u32 size = (header >> 8) & 0x00FFFFFF;
         BN_ASSERT(type == 1 || type == 2, "Unsupported TextDB compression type!");
@@ -61,9 +41,9 @@ namespace ks::textdb {
 
         BN_LOG("Decompress TextDB file...");
         if (type == 1) {
-            LZ77UnCompWRAM((u32) compressed_data, (u32) ptr);
+            LZ77UnCompWRAM((u32) _chunk, (u32) ptr);
         } else {
-            HuffUnComp((u32) compressed_data, (u32) ptr);
+            HuffUnComp((u32) _chunk, (u32) ptr);
         }
         BN_LOG("EWRAM after allocation: ", bn::memory::available_alloc_ewram());
     }
@@ -80,7 +60,6 @@ namespace ks::textdb {
     void get_tl(const unsigned short key, bn::istring &out) {
         BN_ASSERT(is_allocated && ptr != nullptr, "TextDB not allocated!");
         BN_ASSERT(_chunk != nullptr, "TextDB Chunk not set!");
-        BN_ASSERT(_locale != nullptr, "TextDB Locale not set!");
 
         out.clear();
         const int index_elements = ptr[0] | ptr[1] << 8;
@@ -133,10 +112,10 @@ namespace ks::textdb {
                 BN_LOG("Token index: ", spm_token_index);
 
                 // Where is the token starts?
-                const int spm_token_offset = (spm_table[spm_token_index * 2]) | (spm_table[spm_token_index * 2 + 1] << 8); // Little-endian 0x0000 to 0xFFFF
+                const int spm_token_offset = (spm_vocab_tl[spm_token_index * 2]) | (spm_vocab_tl[spm_token_index * 2 + 1] << 8); // Little-endian 0x0000 to 0xFFFF
 
                 // Start of token
-                const char* token_ptr = reinterpret_cast<char *>(spm_table + spm_index_size + spm_token_offset);
+                const char* token_ptr = reinterpret_cast<const char *>(spm_vocab_tl + spm_index_size + spm_token_offset);
                 BN_LOG("Add SPM token", " <<", token_ptr, ">>");
 
                 for (int j = 0; ; j++) {

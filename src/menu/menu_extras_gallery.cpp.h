@@ -132,7 +132,7 @@ namespace ks {
             text_generator->set_left_alignment();
 
             add_text_entry_bold(-device::screen_width_half + 10, -device::screen_height_half + 14,
-                    bn::format<64>("{} > {}", globals::i18n->menu_extras(), globals::i18n->menu_extras_gallery()), -1);
+                    bn::format<64>("{} > {}", tl::menu_extras(), tl::menu_extras_gallery()), -1);
 
             int idx = 0;
             for (const auto &item : items) {
@@ -149,11 +149,11 @@ namespace ks {
             }
 
             add_text_entry(-device::screen_width_half + 10, device::screen_height_half - 14,
-                    bn::format<64>("(L/R) {}: {}/{}", globals::i18n->menu_page(), page + 1, MENU_EXTRAS_GALLERY_MAX_PAGE_INDEX + 1), -1);
+                    bn::format<64>("(L/R) {}: {}/{}", tl::menu_page(), page + 1, MENU_EXTRAS_GALLERY_MAX_PAGE_INDEX + 1), -1);
 
             text_generator->set_right_alignment();
             add_menu_entry(device::screen_width_half - 10,
-                           device::screen_height_half - 14, globals::i18n->menu_back(), idx);
+                           device::screen_height_half - 14, tl::menu_back(), idx);
 
             items_count = idx + 1;
             need_repalette = true;

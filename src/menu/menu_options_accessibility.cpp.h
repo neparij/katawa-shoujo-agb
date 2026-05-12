@@ -82,11 +82,11 @@ namespace ks {
             constexpr unsigned char y_spacing = 16;
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + yy,
-                    bn::format<64>("{} > {}", globals::i18n->menu_options(), globals::i18n->menu_accessibility()), -1);
+                    bn::format<64>("{} > {}", tl::menu_options(), tl::menu_accessibility()), -1);
             yy += y_spacing + 4;
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + yy,
-                    globals::i18n->menu_options_accessibility_display(), -1);
+                    tl::menu_options_accessibility_display(), -1);
             yy += y_spacing;
 
             static_text_sprites.push_back(
@@ -102,7 +102,7 @@ namespace ks {
                     -device::screen_width_half + 16, -device::screen_height_half + yy));
             thumbs_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(0, -device::screen_height_half + yy,
-                globals::i18n->menu_options_accessibility_text_speed(), 0);
+                tl::menu_options_accessibility_text_speed(), 0);
             yy += y_spacing;
 
             static_text_sprites.push_back(
@@ -118,7 +118,7 @@ namespace ks {
                     -device::screen_width_half + 16, -device::screen_height_half + yy));
             thumbs_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(0, -device::screen_height_half + yy,
-                globals::i18n->menu_options_accessibility_brightness(), 1);
+                tl::menu_options_accessibility_brightness(), 1);
             yy += y_spacing;
 
             static_text_sprites.push_back(
@@ -126,18 +126,18 @@ namespace ks {
                     -device::screen_width_half + draw_x_from + 8, -device::screen_height_half + yy));
             checkboxes_ptrs.push_back(static_text_sprites.back());
             add_menu_entry(-device::screen_width_half + draw_x_from + 16, -device::screen_height_half + yy,
-                globals::i18n->menu_options_accessibility_high_contrast(), 2);
+                tl::menu_options_accessibility_high_contrast(), 2);
             yy += y_spacing + 4;
 
             add_text_entry_bold(-device::screen_width_half + draw_x_from, -device::screen_height_half + yy,
-                    globals::i18n->menu_options_accessibility_mental(), -1);
+                    tl::menu_options_accessibility_mental(), -1);
             yy += y_spacing;
 
             static_text_sprites.push_back(
                 bn::sprite_items::ui_button_check_0.create_sprite(-device::screen_width_half + draw_x_from + 8,
                                                                   -device::screen_height_half + yy));
             checkboxes_ptrs.push_back(static_text_sprites.back());
-            for (auto disturbing_option_arr = globals::i18n->menu_options_accessibility_disable_disturbing_content();
+            for (auto disturbing_option_arr = tl::menu_options_accessibility_disable_disturbing_content();
                  const char *line: disturbing_option_arr) {
                 if (line != nullptr) {
                     add_menu_entry(-device::screen_width_half + draw_x_from + 16, -device::screen_height_half + yy,
@@ -156,7 +156,7 @@ namespace ks {
 
             text_generator->set_right_alignment();
             add_menu_entry(device::screen_width_half - draw_x_from, device::screen_height_half - 14,
-                           globals::i18n->menu_back(), 4);
+                           tl::menu_back(), 4);
             need_repalette = true;
         }
 
