@@ -17,6 +17,15 @@ class ImageTools:
     TRANSPARENT_COLOR = (255, 0, 253)
 
     @staticmethod
+    def list_converted_images_in_directory(directory: str) -> List[str]:
+        # return [f.removesuffix(".bmp") for f in os.listdir(directory) if f.endswith(".bmp")]
+        images = []
+        for f in os.listdir(directory):
+            if f.endswith(".json") and os.path.exists(os.path.join(directory, f.removesuffix(".json") + ".bmp")):
+                images.append(f.removesuffix(".json"))
+        return images
+
+    @staticmethod
     def resize(input_filename: str, output_filename: str, palettes: int, colors: int,
                y_crop: int = 0,
                y_offset: int = 0,
@@ -148,7 +157,8 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors)
 
     @staticmethod
-    def resize_character_background(input_filename: str, output_filename: str, y_offset: int = 0,
+    def resize_character_background(input_filename: str, output_filename: str,
+                                    y_offset: int = 0, y_crop: int = 120,
                                     face_cutout_offset: tuple[int, int] | None = None,
                                     face_cutout_size: tuple[int, int] | None = None,
                                     tint: list | None = None):
@@ -159,17 +169,19 @@ class ImageTools:
         """
         palettes = 2
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=y_crop, y_offset=y_offset,
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
                           add_boundary_pixels=True, tint=tint,
                           remove_offset=face_cutout_offset, remove_size=face_cutout_size)
 
     @staticmethod
-    def resize_character_thumbnail(input_filename: str, output_filename: str, y_offset=0, tint: tuple[int, int, int] | None = None):
+    def resize_character_thumbnail(input_filename: str, output_filename: str,
+                                   y_offset=0, y_crop: int = 120,
+                                   tint: tuple[int, int, int] | None = None):
         palettes = 2
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=y_crop, y_offset=y_offset,
                           target_height=32, target_size=(32, 32),
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
@@ -177,10 +189,11 @@ class ImageTools:
 
     @staticmethod
     def resize_character_emotion_sprite(input_filename: str, output_filename: str, sprite_offset: tuple[int, int],
-                                        sprite_size: tuple[int, int], y_offset = 0, use_sample_palette = None, tint: tuple[int, int, int] | None = None):
+                                        sprite_size: tuple[int, int], y_offset = 0, y_crop: int = 120,
+                                        use_sample_palette = None, tint: tuple[int, int, int] | None = None):
         palettes = 1
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=y_crop, y_offset=y_offset,
                           dithering=0.0,
                           sprite_offset=sprite_offset, sprite_size=sprite_size,
                           num_color_cluster_passes=16, num_tile_cluster_passes=256,

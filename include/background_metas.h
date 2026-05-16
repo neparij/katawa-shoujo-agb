@@ -158,6 +158,11 @@
 #include "background_metas/mural_start.h"
 #include "background_metas/mural.h"
 #include "background_metas/mural_unfinished.h"
+#include "background_metas/icecream.h"
+#include "background_metas/braille.h"
+#include "background_metas/hanako_eye.h"
+#include "background_metas/worrytree.h"
+#include "background_metas/dandelion.h"
 #include "background_metas/lilly_airport.h"
 #include "background_metas/hanako_missionary_underwear.h"
 #include "background_metas/hanako_park_look.h"
@@ -733,6 +738,11 @@ namespace ks::background_metas {
             case 0x8201EF9B: return mural_start.thumbnail;
             case 0x739D14E0: return mural.thumbnail;
             case 0x7E2E975F: return mural_unfinished.thumbnail;
+            case 0xC969B336: return icecream.thumbnail;
+            case 0x4B0327BF: return braille.thumbnail;
+            case 0xD043743F: return hanako_eye.thumbnail;
+            case 0x702457A5: return worrytree.thumbnail;
+            case 0xC2F79D98: return dandelion.thumbnail;
             case 0x5272ECA0: return lilly_airport.thumbnail;
             case 0xF70B4944: return hanako_missionary_underwear.thumbnail;
             case 0xFFA32A75: return hanako_park_look.thumbnail;

@@ -36,9 +36,8 @@ from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
-from src.utils import get_paletted_variant, is_color_filled_bg, \
-    add_translations_optional, get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode, \
-    fixed_literal
+from src.utils import is_color_filled_bg, add_translations_optional, \
+    get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode, fixed_literal
 
 CHARACTERS = [
     "akira",
@@ -480,7 +479,7 @@ class ScenarioWriter:
                 f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{bg.background.upper()}));'
             ]
         else:
-            return [f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, PALETTE_VARIANT_DEFAULT));']
+            return [f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, {bg.palette_variant}));']
 
     def process_sequence_condition(self, group: SequenceGroup, condition: ConditionItem) -> List[str]:
         matching_scenario_item = next((item for item in self.scenario if item.name == condition.function_callback),
@@ -512,7 +511,8 @@ class ScenarioWriter:
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
-            if dialog.actor_ref == "n":
+            if dialog.actor_ref == "n" or dialog.actor_ref == "rinbabble":
+                # TODO: fix the Rinbabble dialogs
                 for locale, text in dialog.message.items():
                     fixed_text = text
                     # Remove vspace from the beginning of the line
@@ -655,9 +655,6 @@ class ScenarioWriter:
             result = []
 
             if show.variant:
-                show.variant, show.palette_variant = get_paletted_variant(show.variant)
-                # show.sprite = show.sprite.replace("_ss", "").replace("_ni", "")
-
                 displayable = f"{show.sprite}_{show.variant}"
                 if show.sprite == "akira":
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
@@ -684,6 +681,7 @@ class ScenarioWriter:
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.hanagown(displayable))
                 elif show.sprite == "hanako":
+                    displayable = CharacterDisplayableReplacements.hanako(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "hideaki":
@@ -960,6 +958,8 @@ def to_ks_progress_variables(s: str) -> str:
             return variable
         elif variable in ["FR_NONE", "FR_EMI", "FR_HANAKO", "FR_LILLY", "FR_RIN", "FR_SHIZU", "FR_KENJI"]:
             return variable
+        elif variable.startswith("settings___"):
+            return f"ks::globals::settings.{variable.removeprefix("settings___")}"
         return f"ks::progress.{variable}"
 
     # Regex to match variable names (assumes they are composed of letters, numbers, and underscores)

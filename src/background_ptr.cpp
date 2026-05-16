@@ -1,5 +1,7 @@
 #include "background_item.h"
 #include "background_ptr.h"
+
+#include "bn_bg_palette_ptr.h"
 #include "bn_memory.h"
 #include "bn_compression_type.h"
 #include "bn_span.h"
@@ -110,6 +112,19 @@ namespace ks {
             other._palette_ewram = nullptr;
         }
         return *this;
+    }
+
+    bn::bg_palette_ptr background_ptr::palette() const {
+        if (_regular_ptr.has_value()) {
+            return _regular_ptr->palette();
+        }
+        if (_affine_ptr.has_value()) {
+            return _affine_ptr->palette();
+        }
+        if (_huge_ptr.has_value()) {
+            return _huge_ptr->regular_bg_ptr().palette();
+        }
+        BN_ERROR("palette: Background pointer has no value");
     }
 
     background_ptr::~background_ptr() {

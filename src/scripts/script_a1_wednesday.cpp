@@ -2493,7 +2493,7 @@ namespace ks {
             ks::SceneManager::set_line_hash(0x6ED47740);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 715));
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_ANOTHER, 60));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::mural_start, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::mural, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_RIN, ks::smart_characters::rin::rin_basic_close_deadpan, PALETTE_VARIANT_DEFAULT, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0xE17612FE);

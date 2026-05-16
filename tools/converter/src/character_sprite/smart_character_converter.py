@@ -127,7 +127,8 @@ TILES_PER_SLAB = 1024
 # ---------------------------------------------------------------------------
 
 def render_body_bmp(source_png: str, output_bmp: str, *,
-                    y_offset: int, tint: list | None,
+                    y_offset: int, y_crop: int,
+                    tint: list | None,
                     cutout_offset_px: tuple[int, int],
                     cutout_size_px: tuple[int, int]) -> None:
     """Render the shared body BG for a group into a 256×256 8bpp BMP using
@@ -146,6 +147,7 @@ def render_body_bmp(source_png: str, output_bmp: str, *,
     ImageTools.resize_character_background(
         source_png, output_bmp,
         y_offset=y_offset,
+        y_crop=y_crop,
         face_cutout_offset=cutout_offset_px,
         face_cutout_size=cutout_size_px,
         tint=tint,
@@ -153,7 +155,8 @@ def render_body_bmp(source_png: str, output_bmp: str, *,
 
 
 def render_thumbnail_bmp(source_png: str, output_bmp: str, *,
-                         y_offset: int, tint: list | None) -> None:
+                         y_offset: int, y_crop: int,
+                         tint: list | None) -> None:
     """Render a 32×32 8bpp mini-portrait of the whole character body+face.
 
     Quantised against `pal_char_bg` so the resulting indexed bitmap can
@@ -170,6 +173,7 @@ def render_thumbnail_bmp(source_png: str, output_bmp: str, *,
     ImageTools.resize_character_thumbnail(
         source_png, output_bmp,
         y_offset=y_offset,
+        y_crop=y_crop,
         tint=tint,
     )
 
@@ -191,7 +195,8 @@ def write_thumbnail_json(json_path: str) -> None:
 
 
 def render_face_bmp(source_png: str, output_bmp: str, *,
-                    y_offset: int, tint: list | None,
+                    y_offset: int, y_crop: int,
+                    tint: list | None,
                     sprite_offset_px: tuple[int, int],
                     sprite_size_px: tuple[int, int]) -> None:
     """Render one emotion face OBJ BMP from the source PNG.
@@ -211,6 +216,7 @@ def render_face_bmp(source_png: str, output_bmp: str, *,
         sprite_offset=sprite_offset_px,
         sprite_size=sprite_size_px,
         y_offset=y_offset,
+        y_crop=y_crop,
         tint=tint,
     )
 
@@ -491,7 +497,8 @@ class GroupContext:
         self.face_offset_cells: tuple[int, int] = (int(off[0]), int(off[1]))
         self.face_size_cells:   tuple[int, int] = (int(size[0]), int(size[1]))
 
-        self.y_offset      = int(group_data.get("base_origin_offset") or 0)
+        self.y_offset      = int(group_data.get("base_origin_offset", 0))
+        self.y_crop        = int(group_data.get("base_origin_ycrop", 120))
         self.silhouette_tint = group_data.get("silhouette_tint")
         self.sprites: dict = group_data.get("sprites", {}) or {}
 
@@ -792,6 +799,7 @@ class SmartCharacterConverter:
                 render_body_bmp(
                     base_png, body_bmp,
                     y_offset=ctx.y_offset,
+                    y_crop=ctx.y_crop,
                     tint=ctx.tint_arg,
                     cutout_offset_px=ctx.face_offset_px,
                     cutout_size_px=ctx.face_size_px,
@@ -807,6 +815,7 @@ class SmartCharacterConverter:
                 render_thumbnail_bmp(
                     base_png, thumb_bmp,
                     y_offset=ctx.y_offset,
+                    y_crop=ctx.y_crop,
                     tint=ctx.tint_arg,
                 )
                 if (not os.path.exists(thumb_json)
@@ -889,6 +898,7 @@ class SmartCharacterConverter:
                 render_face_bmp(
                     sprite_src, face_bmp,
                     y_offset=ctx.y_offset,
+                    y_crop=ctx.y_crop,
                     tint=ctx.tint_arg,
                     sprite_offset_px=ctx.face_offset_px,
                     sprite_size_px=ctx.face_size_px,

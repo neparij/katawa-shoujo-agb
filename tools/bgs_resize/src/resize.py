@@ -13,6 +13,7 @@ from tilequant.image_converter import DitheringMode
 from src.definition_reader import DefinitionsReader, GalleryImageDefinition
 
 ONLY_METADATA = False
+ONLY_MISSING = False
 GALLERY_IMAGES : List[GalleryImageDefinition] = []
 
 PINK_COLOR = (255, 0, 255)  # Pink background color
@@ -60,13 +61,23 @@ IGNORE_METAS = [
 BG_INCLUDE_VFX_IMAGES = [
     "mural_start",
     "mural",
-    "mural_unfinished"
+    "mural_unfinished",
+    "icecream",
+    "braille",
+    "hanako_eye",
+    "worrytree",
+    "dandelion"
 ]
 
 EVENTS_INCLUDE_THUMB_IMAGES = [
     "mural_start",
     "mural",
-    "mural_unfinished"
+    "mural_unfinished",
+    "icecream",
+    "braille",
+    "hanako_eye",
+    "worrytree",
+    "dandelion"
 ]
 
 DISPLAYABLE_BITMASK_MAP = {
@@ -117,7 +128,7 @@ def displayable_bitmask_name(bg_name : str):
     return "DISPLAYABLE_BITMASK_NONE"
 
 def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, unquant_colors : int = 256,
-                  only_metadata=False, metadata_type=None):
+                  only_metadata=False, only_missing=False, metadata_type=None):
     if not metadata_type in [None, "bg", "vfx"]:
         raise Exception(f"Unknown storage type: {metadata_type}")
 
@@ -134,9 +145,15 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
         output_meta_path = os.path.join(output_dir, "thumbs", f"thumb_{output_file_name}")
 
         if metadata_type in ["bg"]:
-            if not only_metadata:
-                process_image_savefile_thumbnail(image_file, output_meta_path)
-            create_thumbnail_json_metadata(os.path.join(output_dir, "thumbs", "thumb_" + output_file_name))
+            thumb_exists = os.path.exists(output_meta_path)
+            thumb_json_exists = os.path.exists(os.path.join(output_dir, "thumbs", f"thumb_{os.path.splitext(output_file_name)[0]}.json"))
+            create_thumbnail = True
+            if thumb_exists and thumb_json_exists:
+                create_thumbnail = not only_missing
+            if create_thumbnail:
+                if not only_metadata:
+                    process_image_savefile_thumbnail(image_file, output_meta_path)
+                create_thumbnail_json_metadata(os.path.join(output_dir, "thumbs", "thumb_" + output_file_name))
 
         if os.path.splitext(output_file_name)[0] in IGNORE_IMAGES:
             print(f"Skipping {image_file} as it is in the ignore list.")
@@ -147,14 +164,20 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
             print(f"Using custom palette count {quantize_palettes} for {image_file}")
 
         try:
-            if quantize:
-                if not only_metadata:
-                    process_image_quantized(image_file, output_path, quantize_palettes)
-                create_json_metadata(output_path, quantize, unquant_colors)
-            else:
-                if not only_metadata:
-                    process_image(image_file, output_path, unquant_colors)
-                create_json_metadata(output_path, quantize, unquant_colors)
+            image_exists = os.path.exists(output_path)
+            image_json_exists = os.path.exists(os.path.join(output_dir, f"{os.path.splitext(output_file_name)[0]}.json"))
+            create_image = True
+            if image_exists and image_json_exists:
+                create_image = not only_missing
+            if create_image:
+                if quantize:
+                    if not only_metadata:
+                        process_image_quantized(image_file, output_path, quantize_palettes)
+                    create_json_metadata(output_path, quantize, unquant_colors)
+                else:
+                    if not only_metadata:
+                        process_image(image_file, output_path, unquant_colors)
+                    create_json_metadata(output_path, quantize, unquant_colors)
 
             if os.path.splitext(output_file_name)[0] not in IGNORE_METAS and metadata_type is not None:
                 if metadata_type == "bg":
@@ -458,7 +481,7 @@ def resize_events():
     for input_directory in input_directories:
         image_files += [f"{input_directory}/{f}" for f in os.listdir(input_directory) if f.lower().endswith('.png')]
 
-    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, metadata_type="bg")
+    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, only_missing=ONLY_MISSING, metadata_type="bg")
 
 def resize_items():
     ### HERE AND AFTER EVENTS
@@ -492,7 +515,7 @@ def resize_items():
     for item in items:
         image_files.append(f"{input_directory}/{item}.png")
 
-    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, metadata_type="vfx")
+    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, only_missing=ONLY_MISSING, metadata_type="vfx")
 
 def resize_backgrounds():
     ## HERE AND AFTER BACKGROUNDS
@@ -504,7 +527,7 @@ def resize_backgrounds():
     image_files += [f"{bgs_directory}/{f}" for f in os.listdir(bgs_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     image_files += [f"{vfx_directory}/{f}.jpg" for f in BG_INCLUDE_VFX_IMAGES]
 
-    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, metadata_type="bg")
+    resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, only_missing=ONLY_MISSING, metadata_type="bg")
     # resize_images_in_directory(input_directory, quantize=False, unquant_colors=16 * 8)
     # resize_images_in_directory(input_directory)
 
@@ -516,11 +539,19 @@ def main():
         default=False,
         action="store_true"
     )
+    parser.add_argument(
+        "--only-missing",
+        required=False,
+        default=False,
+        action="store_true"
+    )
 
     args = parser.parse_args()
     global ONLY_METADATA
+    global ONLY_MISSING
     global GALLERY_IMAGES
     ONLY_METADATA = args.only_metadata
+    ONLY_MISSING = args.only_missing
 
 
     definitions_reader = DefinitionsReader(os.path.join("/Users/n.laptev/development/ksre-2", "game", "definitions.rpy"))

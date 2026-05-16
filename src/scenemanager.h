@@ -258,7 +258,7 @@ public:
 
     static void timeskip();
 
-    static void apply_palette_variant(const bn::regular_bg_ptr &bg,
+    static void apply_palette_variant(const background_ptr &bg,
                                       const bn::span<const bn::color> &original_palette,
                                       const palette_variant_t palette_variant);
     static void apply_palette_variant(const bn::sprite_ptr &spr,
@@ -284,7 +284,7 @@ private:
     const char* _scenario;
 };
 
-extern bn::string<1024> message;
+extern bn::string<4096> message;
 extern bn::string<128> message_doublespeak_a;
 extern bn::string<128> message_doublespeak_b;
 extern bn::vector<bn::string<128>, 5> answers_messages;

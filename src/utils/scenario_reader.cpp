@@ -95,27 +95,40 @@ namespace ks::textdb {
                 i += cmd_size;
             } else {
                 // Process spm GET.
-                constexpr int spm_index_size = 2046 * 2;
+                const int spm_token_count = spm_vocab_tl[0] | (spm_vocab_tl[1] << 8);   // little-endian uint16
+                constexpr int spm_index_from = 2;
+                const int spm_index_size = spm_token_count * 2;
                 int token_id;
                 if (c0 < 0xC0) {
                     token_id = c0;
                     i += 1;
-                } else {
+                } else if ((c0 & 0xE0) == 0xC0) {
                     const u8 c1 = ptr[index_from + tl_index_size + offset + i + 1];
                     BN_ASSERT((c1 & 0xC0) == 0x80, "Invalid token continuation byte!");
                     token_id = ((int(c0) & 0x1F) << 6) | (int(c1) & 0x3F);
                     i += 2;
+                } else if ((c0 & 0xF0) == 0xE0) {
+                    const u8 c1 = ptr[index_from + tl_index_size + offset + i + 1];
+                    const u8 c2 = ptr[index_from + tl_index_size + offset + i + 2];
+                    BN_ASSERT((c1 & 0xC0) == 0x80, "Invalid token continuation byte (c1)!");
+                    BN_ASSERT((c2 & 0xC0) == 0x80, "Invalid token continuation byte (c2)!");
+                    token_id = ((int(c0) & 0x0F) << 12) | ((int(c1) & 0x3F) << 6) | (int(c2) & 0x3F);
+                    i += 3;
+                } else {
+                    BN_ERROR("Invalid token lead byte in TextDB stream!");
                 }
 
-                BN_ASSERT(token_id > 0 && token_id <= 2047, "token_id out of range!");
+                BN_ASSERT(token_id > 0, "token_id out of range!");
+                BN_ASSERT(token_id <= spm_token_count, "token_id exceeds loaded SPM vocabulary!");
                 const int spm_token_index = token_id - 1;
                 BN_LOG("Token index: ", spm_token_index);
 
                 // Where is the token starts?
-                const int spm_token_offset = (spm_vocab_tl[spm_token_index * 2]) | (spm_vocab_tl[spm_token_index * 2 + 1] << 8); // Little-endian 0x0000 to 0xFFFF
+                const int spm_token_offset = (spm_vocab_tl[spm_index_from + spm_token_index * 2]) |
+                                             (spm_vocab_tl[spm_index_from + spm_token_index * 2 + 1] << 8); // Little-endian 0x0000 to 0xFFFF
 
                 // Start of token
-                const char* token_ptr = reinterpret_cast<const char *>(spm_vocab_tl + spm_index_size + spm_token_offset);
+                const char* token_ptr = reinterpret_cast<const char *>(spm_vocab_tl + spm_index_from + spm_index_size + spm_token_offset);
                 BN_LOG("Add SPM token", " <<", token_ptr, ">>");
 
                 for (int j = 0; ; j++) {

@@ -43,10 +43,11 @@ class BackgroundItem(SequenceItem):
     def some_method(self):
         pass
 
-    def __init__(self, background: str, position: BgShowPosition = BgShowPosition.DEFAULT, transition: BgTransition = BgTransition.NONE, dissolve_time: float = 0):
+    def __init__(self, background: str, position: BgShowPosition = BgShowPosition.DEFAULT, palette_variant: str = "PALETTE_VARIANT_DEFAULT", transition: BgTransition = BgTransition.NONE, dissolve_time: float = 0):
         super().__init__(SequenceType.BACKGROUND)
         self.background = background
         self.position = position
+        self.palette_variant = palette_variant
         self.transition = transition
         self.dissolve_time = dissolve_time
 

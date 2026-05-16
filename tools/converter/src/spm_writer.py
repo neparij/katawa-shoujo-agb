@@ -13,9 +13,9 @@ class SPMWriter:
         self.locale = locale
         self.textdb_strings: List[str] = []
         # We use a biased variable-length token encoding in TextDB:
-        # most frequent token IDs stay 1-byte, while the tail uses 2 bytes.
-        # This allows larger vocabularies without bloating the common-case.
-        self.max_tokens = 2047
+        # most frequent token IDs stay 1-byte, while the tail uses 2-3 bytes.
+        # Keep this in sync with src/utils/scenario_reader.cpp decoder.
+        self.max_tokens = 4095
 
     def process_scenario(self, scenario):
         collect_scenario_sentences(scenario, self.locale, self.textdb_strings)

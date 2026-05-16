@@ -2313,7 +2313,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 686));
             ks::SceneManager::set_line_hash(0xE889132F);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 687));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::shizu_guesthisao, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::shizu_guesthisao, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_SUNSET));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_pillow.8ad", SOUND_CHANNEL_SOUND));
             // renpy.music.set_volume(0.5, 1.0, channel="music"); TODO: unknown assignment
@@ -3238,7 +3238,7 @@ namespace ks {
         void ScriptA3Shizune::a3_shizune_roadmap() {
             ks::SceneManager::set_label(LABEL_A3_SHIZUNE_ROADMAP);
             IF_NOT_EXIT(ks::SceneManager::set_textdb(a3_shizune_tl));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_council, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_council, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_BLACK_AND_WHITE));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             // renpy.music.set_volume(0.5, 0.0, channel="music"); TODO: unknown assignment
             IF_NOT_EXIT(ks::SceneManager::music_play(MUSIC_PEARLY));
@@ -5348,7 +5348,7 @@ namespace ks {
             // renpy.music.set_volume(0.0, 0.5, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::set_line_hash(0x6126D752);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1627));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_roof, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_roof, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_SUNSET));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHASHORT, ks::smart_characters::misha::mishashort_perky_close_confused, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             // renpy.music.set_volume(1.0, 6.0, channel="ambient"); TODO: unknown assignment
@@ -5735,7 +5735,7 @@ namespace ks {
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1727));
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_door_creak.8ad", SOUND_CHANNEL_SOUND));
             IF_NOT_EXIT(ks::SceneManager::sfx_play("sfx_rooftop.8ad", SOUND_CHANNEL_AMBIENT, 60));
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_roof, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_roof, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_SUNSET));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             ks::SceneManager::set_line_hash(0x733F636B);
             IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, 1728));
@@ -5857,7 +5857,7 @@ namespace ks {
         }
         void ScriptA3Shizune::aside_and_ahead_3() {
             // renpy.music.set_volume(1.0, 1.0, channel="ambient"); TODO: unknown assignment
-            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_roof, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT));
+            IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::school_roof, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_SUNSET));
             IF_NOT_EXIT(ks::SceneManager::show_character(CHARACTER_MISHASHORT, ks::smart_characters::misha::mishashort_perky_close_confused, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1)));
             IF_NOT_EXIT(ks::SceneManager::update_visuals());
             IF_NOT_EXIT(ks::SceneManager::music_stop(30));

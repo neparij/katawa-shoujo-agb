@@ -132,7 +132,7 @@ namespace ks {
         const int _max_width;
         bool _infinite_render = false;
 
-        text::parser<32> _text_parser;
+        text::parser<64> _text_parser;
     };
 
     class dialog_box_default final : public dialog_box<3> {

@@ -10,6 +10,7 @@ Usage:
 import argparse
 import hashlib
 import os
+import shutil
 import sys
 import tempfile
 import tkinter as tk
@@ -160,6 +161,7 @@ class SpriteViewer:
         self._current_sprite_data: dict | None = None
         self._current_group_data: dict | None = None
 
+        self._clean_cache_dir()
         self._build_ui()
         self._populate_tree()
         self._rerender_right()
@@ -569,6 +571,7 @@ class SpriteViewer:
             ("emotion_size w (cells)",   f"{size[0]}  ({size[0] * 8} px)",   False),
             ("emotion_size h (cells)",   f"{size[1]}  ({size[1] * 8} px)",   False),
             ("origin_offset",        group.get("base_origin_offset", 0), False),
+            ("origin_ycrop",        group.get("base_origin_ycrop", 120), False),
             ("silhouette_tint",      group.get("silhouette_tint"),       False),
         ]
         for lbl, val, ib in rows:
@@ -648,6 +651,16 @@ class SpriteViewer:
 
     _TRANSPARENT_COLOR = (255, 0, 253)  # magic transparent color used by ImageTools
     _CACHE_DIR = os.path.join(tempfile.gettempdir(), "ksgba_sprite_viewer")
+
+    def _clean_cache_dir(self):
+        if not os.path.isdir(self._CACHE_DIR):
+            return
+        for f in os.listdir(self._CACHE_DIR):
+            path = os.path.join(self._CACHE_DIR, f)
+            if os.path.isfile(path):
+                os.remove(path)
+            elif os.path.isdir(path):
+                shutil.rmtree(path)
 
     def _preview_cache_path(self, path: str, y_offset: int, tint,
                             cutout_offset_px: tuple[int, int] | None,
@@ -739,7 +752,8 @@ class SpriteViewer:
             # selected sprite so we still show *something* meaningful.
             bg_path = sprite_path
 
-        y_offset = group.get("base_origin_offset") or 0
+        y_offset = group.get("base_origin_offset", 0)
+        y_crop = group.get("base_origin_ycrop", 120)
         silhouette_tint = group.get("silhouette_tint")
         tint = [silhouette_tint] * 3 if silhouette_tint is not None else None
 
@@ -766,6 +780,7 @@ class SpriteViewer:
                 ImageTools.resize_character_background(
                     bg_path, cache_path,
                     y_offset=y_offset,
+                    y_crop=y_crop,
                     face_cutout_offset=cutout_offset_px,
                     face_cutout_size=cutout_size_px,
                     tint=tint,
@@ -803,6 +818,7 @@ class SpriteViewer:
                         sprite_offset=cutout_offset_px,
                         sprite_size=cutout_size_px,
                         y_offset=y_offset,
+                        y_crop=y_crop,
                         tint=tint,
                     )
                 except Exception as exc:

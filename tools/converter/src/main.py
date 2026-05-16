@@ -6,6 +6,7 @@ from src.definitions_reader import DefinitionsReader
 from src.definitions_writer import DefinitionsWriter
 from src.font.chars_reader import CharsReader
 from src.fonts_writer import FontsWriter
+from src.image_tools.image_tools import ImageTools
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
 from src.spm_packer import SPMPacker
@@ -137,6 +138,8 @@ def main():
         tl_path = os.path.join(ksagb_path, "tl")
         output_file = script_name.replace("-", "_")
 
+        bgs_converted_images = ImageTools.list_converted_images_in_directory(os.path.join(ksagb_path, "graphics", "bgs"))
+
         translations : Dict[str, TranslationContainer] = {}
         for locale in locales:
             if locale == "en":
@@ -150,6 +153,7 @@ def main():
 
         print(f"Processing scenario file: {rpy_scenario_file}")
         reader = ScenarioReader(rpy_scenario_file, translations)
+        reader.set_bgs_images_cache(bgs_converted_images)
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")

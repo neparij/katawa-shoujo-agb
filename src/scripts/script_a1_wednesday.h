@@ -29,7 +29,7 @@
 #include "background_metas/school_staircase2.h"
 #include "background_metas/school_courtyard.h"
 #include "background_metas/school_dormext_start.h"
-#include "background_metas/mural_start.h"
+#include "background_metas/mural.h"
 #include "background_metas/school_dormext_start_ss.h"
 #include "background_metas/school_dormext_half_ni.h"
 #include "../events/emi_knockeddown_facepullout.cpp.h"

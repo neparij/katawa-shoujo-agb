@@ -221,5 +221,5 @@ namespace ks::text {
     }
 
     template class parser<1>;
-    template class parser<32>;
+    template class parser<64>;
 }

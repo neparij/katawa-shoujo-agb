@@ -85,6 +85,8 @@ namespace ks {
         background_ptr(background_ptr &&other) noexcept;
         background_ptr &operator=(background_ptr &&other) noexcept;
 
+        bn::bg_palette_ptr palette() const;
+
         background_ptr(const background_ptr &) = delete;
         background_ptr &operator=(const background_ptr &) = delete;
 

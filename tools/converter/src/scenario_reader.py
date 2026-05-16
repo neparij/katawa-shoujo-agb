@@ -33,7 +33,7 @@ from src.scenario.scenario_script_stack import ScenarioScriptStack
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType
 from src.translation.translation_container import TranslationContainer
 from src.utils import sanitize_function_name, starts_with_filled_bg, \
-    sanitize_ingame_text
+    sanitize_ingame_text, get_sprite_paletted_variant, get_bg_paletted_variant
 
 DEFAULT_LOCALE = "en"
 
@@ -48,7 +48,10 @@ class ScenarioReader:
         self._hack_latest_label_name = None
         self._hack_latest_sprite_name = None
         self.linepack_events : List[SequenceItem] = []
+        self.bgs_images_cache : List[str] = []
 
+    def set_bgs_images_cache(self, bgs_images_cache):
+        self.bgs_images_cache = bgs_images_cache
 
     def read(self) -> List[SequenceGroup]:
         """Reads the scenario file and returns a list of sequence groups."""
@@ -217,17 +220,10 @@ class ScenarioReader:
             print(f"    current label: {self.stack.current_label().name}")
             condition = rewrite_condition(condition)
 
-            # TODO: process conditions, also transpose it from py to c++
-
             # TODO: custom condition definition for _in_replay
             #     Example in rpy scenario:
             #     if _in_replay:
             #         return
-
-            # TODO: custom condition definition for persistent.disable_disturbing_content
-            #     Example in rpy scenario:
-            #     if persistent.disable_disturbing_content:
-            #         "The following scene is disabled based on your accessibility options. By proceeding forward, you'll skip to the next day. "
 
             if self.stack:
                 name = f"{self.stack.current().name}__condition_{sum(1 for item in self.stack.current().sequence if isinstance(item, ConditionItem))}"
@@ -343,19 +339,26 @@ class ScenarioReader:
             }
 
             for locale, translation in self.translations.items():
-                key_left, key_right = dialogs[0], dialogs[1]
-                if dialogs[0].startswith("_(") and dialogs[0].endswith(")"):
-                    key_left = re.match(r"^_\(\"(.*)\"\)$", dialogs[0]).group(1)
-                if dialogs[1].startswith("_(") and dialogs[1].endswith(")"):
-                    key_right = re.match(r"^_\(\"(.*)\"\)$", dialogs[1]).group(1)
+                def resolve_dialog(dialog_expr: str) -> str:
+                    if dialog_expr.startswith("_(") and dialog_expr.endswith(")"):
+                        key = re.match(r"^_\(\"(.*)\"\)$", dialog_expr).group(1)
+                        if key not in translation.strings:
+                            raise Exception(f"Missing translation for key: {key} in locale {locale}")
+                        return translation.strings[key]
 
-                if key_left not in translation.strings:
-                    raise Exception(f"Missing translation for key: {key_left} in locale {locale}")
-                if key_right not in translation.strings:
-                    raise Exception(f"Missing translation for key: {key_right} in locale {locale}")
+                    literal_match = re.match(r'^"(.*)"$', dialog_expr)
+                    if literal_match:
+                        literal_text = literal_match.group(1)
+                        if literal_text in ["…"]:
+                            # For plain literals (for example "…"), keep source text
+                            # if the string table does not contain a translation entry.
+                            print(f"[38;5;208m Warning: Literal text \"{literal_text}\" not found in translation table for locale {locale}?[33;0m")
+                            return translation.strings.get(literal_text, literal_text)
 
-                dialog_left[locale] = translation.strings[key_left]
-                dialog_right[locale] = translation.strings[key_right]
+                    raise Exception(f"Unsupported doublespeak dialog expression: {dialog_expr}")
+
+                dialog_left[locale] = resolve_dialog(dialogs[0])
+                dialog_right[locale] = resolve_dialog(dialogs[1])
 
             self.stack.current().add_sequence_item(self.linepack_events,
                                                    DoubleSpeakItem(original_dialog_hash[-8:],
@@ -386,7 +389,7 @@ class ScenarioReader:
         elif stripped_line.startswith("scene bg"):
             parts = stripped_line.split()
             scene_bg_name = parts[2].removesuffix(":")
-            scene_bg_name = rewrite_motion_background(scene_bg_name)
+            scene_bg_name, palette_variant = get_bg_name_and_palette(scene_bg_name, self.bgs_images_cache)
 
             if "at bgleft" in stripped_line or "at left" in stripped_line:
                 position = BgShowPosition.BGLEFT
@@ -397,7 +400,7 @@ class ScenarioReader:
             else:
                 position = BgShowPosition.DEFAULT
 
-            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(scene_bg_name, position=position))
+            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(scene_bg_name, position=position, palette_variant=palette_variant))
             self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
@@ -544,7 +547,8 @@ class ScenarioReader:
             else:
                 position = ShowPosition.DEFAULT
 
-            self.stack.current().add_sequence_item(self.linepack_events, ShowItem(sprite_name, variant_name, event_type, position, "PALETTE_VARIANT_DEFAULT"))
+            variant_name, palette_variant = get_sprite_paletted_variant(variant_name)
+            self.stack.current().add_sequence_item(self.linepack_events, ShowItem(sprite_name, variant_name, event_type, position, palette_variant))
             self._hack_latest_sprite_name = sprite_name
             return
 
@@ -664,7 +668,7 @@ class ScenarioReader:
 
                 hashing_contents = f"nvl clear\r\n{hashing_contents}"
 
-            dialog_match_str = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
+            dialog_match_str = re.match(r"^\"(.+?)\"\s+\"(.*)\"(?:| nointeract)$", stripped_line)
             dialog_match_ref = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", stripped_line)
             # narration_match = re.match(r"^\"(.*)\"(?:| nointeract)$", stripped_line)
             # TODO: Fix translation in KS:RE project: "tl/ru/script-a1-sunday.rpy:943"
@@ -689,12 +693,14 @@ class ScenarioReader:
                     if dialog_hash not in translation.translations:
                         dialog_hash = original_dialog_hash_nointeract
                     if dialog_hash not in translation.translations:
-                        # Hack: there is a case where the dialog hash label contains unclosed previous label.
-                        # So we need to find a key by remaining part of hash
-                        # Example: a1_thursday_things_you_can_do_5abaf868 should be a1_thursday_5abaf868
-                        short_hash = original_dialog_hash[-8:]
+                        # Hack: translation labels can differ in prefix, but keep the same 8-char hash suffix.
+                        # Also check both normal and explicit `nointeract` hash variants.
+                        short_hash_candidates = (
+                            original_dialog_hash[-8:],
+                            original_dialog_hash_nointeract[-8:],
+                        )
                         for key in translation.translations:
-                            if key.endswith(short_hash):
+                            if any(key.endswith(short_hash) for short_hash in short_hash_candidates):
                                 dialog_hash = key
                                 break
                     if dialog_hash not in translation.translations:
@@ -704,7 +710,7 @@ class ScenarioReader:
                     translated_stripped_line = translation.translations[dialog_hash]
 
                     if dialog_match_str:
-                        matches[locale] = re.match(r"^\"(\w+)\"\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
+                        matches[locale] = re.match(r"^\"(.+?)\"\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
                     elif dialog_match_ref:
                         matches[locale] = re.match(r"^(\w+)\s+\"(.*)\"(?:| nointeract)$", translated_stripped_line)
                     else:
@@ -801,12 +807,54 @@ def get_line_indent(line: str) -> int:
     return (len(line) - len(line.lstrip())) // 4
 
 def rewrite_condition(condition: str) -> str:
-    # FROM: "Hi! I'm new here. Hisao Nakai. We're in the same class." in choices
-    # TO im_new_here = True
-    return condition.replace('"Hi! I\'m new here. Hisao Nakai. We\'re in the same class." in choices', 'im_new_here == True')
+    return (condition
+            .replace('"Hi! I\'m new here. Hisao Nakai. We\'re in the same class." in choices', 'im_new_here == True')
+            .replace("persistent.disable_disturbing_content", "settings___disable_disturbing_content")
+            )
 
-def rewrite_background(bg_name: str) -> str:
-    return rewrite_motion_background(bg_name)
+def get_custom_bg(bg_name: str) -> (str, str):
+    bgs = {
+        "school_track_fb": ("school_track", "PALETTE_VARIANT_PAST"),
+        # "watchhallway_blur": ("vfx/watchhallway_blur", "PALETTE_VARIANT_DEFAULT"),
+        # "worrytree": ("vfx/worrytree", "PALETTE_VARIANT_DEFAULT"),
+        # "worrytree_ss": ("vfx/worrytree", "PALETTE_VARIANT_SUNSET"),
+        # "gallery_atelier_close": ("vfx/gallery_atelier_close", "PALETTE_VARIANT_DEFAULT"),
+        # "misc_sky_rays": ("bgs/misc_sky_rays.jpg", "PALETTE_VARIANT_DEFAULT"),
+        "school_dormhisao_ni_fb": ("school_dormhisao_blurred_ni", "PALETTE_VARIANT_PAST"),
+        "shizu_houseext_lights_fb": ("shizu_houseext_lights", "PALETTE_VARIANT_PAST"),
+        "hosp_ext_fb": ("hosp_ext", "PALETTE_VARIANT_PAST_NIGHT"),
+        # "tearoom_lillyhisao_noon": ("event/Lilly_supercg/tearoom_lillyhisao_noon.png", "PALETTE_VARIANT_DEFAULT"),
+        # "tearoom_lillyhisao_sunset": ("event/Lilly_supercg/tearoom_lillyhisao_sunset.png", "PALETTE_VARIANT_DEFAULT"),
+        # "tearoom_everyone_noon": ("event/Lilly_supercg/tearoom_everyone_noon.png", "PALETTE_VARIANT_DEFAULT"),
+        # TODO: image bg school_roof_ni_crop = Transform("bgs/school_roof_ni.jpg", crop=(200, 0, 1920, 1080)),
+        # TODO: mural_start = "vfx/mural_start.jpg"
+        # TODO: mural_unfinished = "vfx/mural_unfinished.jpg"
+        # TODO: mural_part = "vfx/mural.jpg"
+        # TODO: mural = "vfx/mural.jpg"
+        # TODO: mural_ss = sunset("vfx/mural.jpg")
+        "mural_start": ("mural", "PALETTE_VARIANT_DEFAULT"),
+        "mural_unfinished": ("mural_unfinished", "PALETTE_VARIANT_DEFAULT"),
+        "mural_part": ("mural", "PALETTE_VARIANT_DEFAULT"),
+        "mural_ss": ("mural", "PALETTE_VARIANT_SUNSET"),
+        "gallery_atelier_bw": ("gallery_atelier", "PALETTE_VARIANT_BLACK_AND_WHITE"),
+        "school_scienceroom_bw": ("school_scienceroom", "PALETTE_VARIANT_BLACK_AND_WHITE"),
+        "school_library_bw": ("school_library", "PALETTE_VARIANT_BLACK_AND_WHITE"),
+        "city_street4_bw": ("city_street4", "PALETTE_VARIANT_BLACK_AND_WHITE"),
+        "city_street3_bw": ("city_street3", "PALETTE_VARIANT_BLACK_AND_WHITE"),
+        "school_council_bw": ("school_council", "PALETTE_VARIANT_BLACK_AND_WHITE"),
+        "school_dormhisao_bw": ("school_dormhisao", "PALETTE_VARIANT_BLACK_AND_WHITE"),
+        # TODO: school_library_yuuko_blurred = "vfx/school_library_yuuko_blurred.jpg",
+    }
+    if bg_name in bgs.keys():
+        return bgs[bg_name]
+    else:
+        return None, None
+
+def get_bg_name_and_palette(bg_name: str, bg_names : None|List[str] = None) -> (str, str):
+    custom_bg_name, palette_variant = get_custom_bg(bg_name)
+    if custom_bg_name is not None:
+        return custom_bg_name, palette_variant
+    return get_bg_paletted_variant(bg_name, bg_names)
 
 def rewrite_motion_background(bg_name: str) -> str:
     # TODO: remove this method and allow motion backgrounds
@@ -815,17 +863,7 @@ def rewrite_motion_background(bg_name: str) -> str:
             .replace("hana_library_std", "hana_library")
             .replace("hana_library_gasp_std", "hana_library_gasp")
             .replace("hana_library_smile_std", "hana_library_smile")
-            .replace("mural_part", "mural")
-            .replace("mural_ss", "mural") # TODO: Paletted variants for backgrounds
-            .replace("suburb_shanghaiext_ss", "suburb_shanghaiext") # TODO: Paletted variants for backgrounds
-            .replace("shizu_guesthisao_ss", "shizu_guesthisao") # TODO: Paletted variants for backgrounds
-            .replace("school_hallway3_ni", "school_hallway3") # TODO: Paletted variants for backgrounds
-            .replace("school_roof_ss", "school_roof") # TODO: Paletted variants for backgrounds
-            .replace("school_lobby_ss", "school_lobby") # TODO: Paletted variants for backgrounds
-            .replace("school_lobby_ni", "school_lobby") # TODO: Paletted variants for backgrounds
-            .replace("school_gardens2_ss", "school_gardens2") # TODO: Paletted variants for backgrounds
-            .replace("school_dormhisao_bw", "school_dormhisao") # TODO: Paletted variants for backgrounds (Black and white)
-            .replace("school_council_bw", "school_council") # TODO: Paletted variants for backgrounds (Black and white)
+            .replace("lilly_airport_end_fb", "lilly_airport_end") # TODO: Paletted variants for backgrounds
             .replace("kenji_rooftop_kenji", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop_large", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop", "kenji_rooftop") # TODO: Kenji alcotrip event
@@ -834,6 +872,15 @@ def rewrite_motion_background(bg_name: str) -> str:
             .replace("shizu_roof2", "shizu_roof_hisao2") # TODO: Shizu roof event
             .replace("shizu_roof2_smile", "shizu_roof_smile") # TODO: Shizu roof event
             .replace("shizu_goodend_pan", "shizu_goodend") # TODO: Shizu goodend event
+            .replace("emi_run_face_ss", "emi_run_face") # TODO: Emi run face paletted variant
+            .replace("hanako_cry_closed_fb", "hanako_cry_closed") # TODO: Hanako cry paletted variant
+            .replace("hanako_billiards_distant_med", "hanako_billiards_distant") # TODO: Hanako billiard event
+            .replace("hanako_billiards_serious_med", "hanako_billiards_serious") # TODO: Hanako billiard event
+            .replace("hanako_billiards_smile_med", "hanako_billiards_smile") # TODO: Hanako billiard event
+            .replace("hanako_billiards_timid_med", "hanako_billiards_timid") # TODO: Hanako billiard event
+
+            .replace("hisaobird_", "bird_")
+            .replace("hisao_mirror_800", "hisao_mirror")
 
             # .replace("_start", "")
             # .replace("_move", "")
@@ -845,6 +892,15 @@ def rewrite_motion_background(bg_name: str) -> str:
             )
 
 def scenario_rewrites(scenario_file, content):
+
+    # TODO: Dialog Window auto-management (see: https://www.renpy.org/doc/html/dialogue.html#dialogue-window-management)
+    content = (
+        content
+        .replace("$ _window = False\n", "")
+        .replace("window auto True\n", "")
+        .replace("window auto False\n", "")
+    )
+
     scenario_name = os.path.splitext(os.path.basename(scenario_file))[0]
     if scenario_name == "script-a1-monday":
         return content.replace(
@@ -1033,6 +1089,357 @@ def scenario_rewrites(scenario_file, content):
             "            state ev 1"
         )
 
+    if scenario_name == "script-a2-emi":
+        return content.replace(
+            "        show emi gymbounce_once\n"
+            "        with Dissolve(0.1)\n",
+            # WITH TODO: Emi bouncing animation
+            ""
+        ).replace(
+            "        show emi gymbounce\n"
+            "        with Dissolve(0.05)\n",
+            # WITH TODO: Emi bouncing animation
+            ""
+        ).replace(
+            "        show emi blur at offscreenright\n"
+            "        with None",
+            # WITH TODO: Emi blur VFX
+            "        show emi at offscreenright\n"
+            "        with None",
+        ).replace(
+            "        scene ev emi_bed_full:\n"
+            "            xalign 0.5 yalign 1.0\n"
+            "            easein 15.0 yalign 0.0\n"
+            "        with Dissolve(1.0)",
+            # WITH TODO: Emi bed event
+            "        scene ev emi_bed_normal_f:\n"
+            "        with Dissolve(1.0)",
+        )
+
+    if scenario_name == "script-a3-emi":
+        return content.replace(
+            "        show emi rin_roof\n"
+            "        with charaenter",
+            # WITH TODO: Emi roof (shadow on Rin)
+            "\n"
+        ).replace(
+            "        scene bg school_library_yuuko_blurred\n"
+            "        show phone mobile:\n"
+            "            xalign 0.5 yanchor 0.5 ypos 0.7 alpha 0.0\n"
+            "            easein 1.0 yalign 0.5 alpha 1.0\n"
+            "        with locationchange",
+            # WITH TODO: mobile phone on scene in library
+            "\n"
+        ).replace(
+            "        scene evh emi_shed_base1\n"
+            "        show emi emi_shed_grin\n"
+            "        show hisao emi_shed_neutral\n"
+            "        show evh_l emi_shed_up\n"
+            "        show evh_r emi_shed_down\n"
+            "        with shorttimeskip",
+            # WITH TODO: Lemon
+            "        scene evh emi_shed_base1\n"
+            "        with shorttimeskip"
+        ).replace(
+            "        show emi emi_shed_hesitant\n"
+            "        with persistent.charachange",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show evh emi_shed_base2\n"
+            "        show hisao emi_shed_closed\n"
+            "        with charachangeev",
+            # WTIH TODO: Lemon
+            "        scene evh emi_shed_base2"
+        ).replace(
+            "        show emi emi_shed_shock\n"
+            "        with hpunch",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show hisao emi_shed_neutral\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show emi emi_shed_closed\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show hisao emi_shed_closed\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show evh emi_shed_base3\n"
+            "        show emi emi_shed_hesitant\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "        scene evh emi_shed_base3"
+        ).replace(
+            "        show emi emi_shed_grin\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show emi emi_shed_hesitant\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show evh_r emi_shed_up\n"
+            "        show emi emi_shed_shock\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show hisao emi_shed_sweat\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        ).replace(
+            "        show evh emi_shed_base4\n"
+            "        show hisao emi_shed_neutral\n"
+            "        show emi emi_shed_closed\n"
+            "        show evh_l emi_shed_down\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "        scene evh emi_shed_base4"
+        ).replace(
+            "        show evh_l emi_shed_up\n"
+            "        show evh_r emi_shed_down\n"
+            "        with charachangeev",
+            # WITH TODO: Lemon
+            "\n"
+        )
+
+    if scenario_name == "script-a4-emi":
+        return content.replace(
+            "        show emi gymconcentratebounce\n",
+            # WITH TODO: Emi concentrate bounce animation
+            "\n"
+        )
+
+    if scenario_name == "script-a2-rin":
+        return content.replace(
+            "        show ev hisaobird_0:\n"
+            "            center\n"
+            "            ypos 1.5 alpha 0.0\n"
+            "            easein 0.5 center alpha 1.0\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        show ev at center:\n"
+            "            alpha 1.0",
+            # WITH TODO: Hisaobird event?
+            "        show ev hisaobird_0:\n"
+            "        with charachangeev",
+        ).replace(
+            "        show ev:\n"
+            "            easeout 0.5 alpha 0.0 ypos 1.5\n"
+            "        show bg:\n"
+            "            yalign 0.0\n"
+            "            ease 20.0 zoom 1.1\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        hide ev",
+            # WITH TODO: Hisaobird event?
+            "        scene bg school_scienceroom:\n"
+            "        with charachangeev"
+        ).replace(
+            "        show ev hisaobird_1:\n"
+            "            center\n"
+            "            ypos 1.5 alpha 0.0\n"
+            "            easein 0.5 center alpha 1.0\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        show ev hisaobird_2 at center:\n"
+            "            alpha 1.0\n"
+            "            with charachangeev",
+            # WITH TODO: Hisaobird event?
+            "        show ev hisaobird_1:\n"
+            "        with charachangeev\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        show ev hisaobird_2:\n"
+            "        with charachangeev"
+        ).replace(
+            "        show bg behind ev at center\n"
+            "        show shizu behind_blank_close behind ev at closeright\n"
+            "        show misha cross_smile_close behind ev at closeleft\n"
+            "\n"
+            "        show ev hisaobird_9:\n"
+            "            center\n"
+            "            easeout 0.5 alpha 0.0 ypos 1.5\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        hide ev",
+            # WITH (fix) TODO: Hisaobird event?
+            "        scene ev hisaobird_9:\n"
+            "        with charachangeev\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        scene bg school_scienceroom:\n"
+            "        with charachangeev\n"
+            "        show shizu behind_blank_close at closeright\n"
+            "        show misha cross_smile_close at closeleft"
+        ).replace(
+            "        scene bg watchhallway_blur\n"
+            "        show ev watch_worn at truecenter\n"
+            "        with locationchange",
+            # WITH TODO: Watch worn event?
+            "        scene bg school_hallway3\n"
+            "        with locationchange"
+        ).replace(
+            "        show ev:\n"
+            "            easeout 0.5 ypos 1.0 alpha 0.0",
+            # WITH
+            "\n"
+        )
+
+    if scenario_name == "script-a3-rin":
+        return content.replace(
+            "        show ev:\n"
+            "            acdc_warp 40.0 zoom 1.0",
+            # WITH
+            "\n"
+        ).replace(
+            "            show ev:\n"
+            "                easeout 1.0 ypos 0.7 alpha 0.0\n"
+            "            with None",
+            # WITH
+            "\n"
+        )
+
+    if scenario_name == "script-a4-rin":
+        return content.replace(
+            "            show ev:\n"
+            "                \"ev rin_trueend_gone_ni\" with Dissolve(10.0)",
+            # WITH
+            "\n"
+        ).replace(
+            "            show evh:\n"
+            "                acdc_warp 8.0 yalign 0.8",
+            # WITH
+            "\n"
+        ).replace(
+            "            show evbg:\n"
+            "                acdc_warp 12.0 zoom 1.15\n"
+            "            show rin goodend_2_hires:\n"
+            "                zoom 0.769\n"
+            "                acdc_warp 12.0 yalign 0.0 zoom 1.0\n"
+            "            show evfg:\n"
+            "                acdc_warp 12.0 yalign 0.0 zoom 1.45\n"
+            "            with None",
+            # WITH
+            "\n"
+        )
+
+    if scenario_name == "script-a2-lilly":
+        return content.replace(
+            "        scene evbg lilly_sunsetwalk:\n"
+            "            truecenter zoom 0.9\n"
+            "            acdc_warp 20.0 zoom 1.0\n"
+            "        show evfg lilly_sunsetwalk:\n"
+            "            truecenter zoom 0.85\n"
+            "            acdc_warp 20.0 zoom 1.0\n"
+            "        with locationskip",
+            # WITH TODO: Lilly sunset walk, check if we can reuse Lilly's superclose sprites!
+            "        scene ev lilly_sunsetwalk_bg\n"
+            "        with locationskip",
+        )
+
+    if scenario_name == "script-a3-lilly":
+        return content.replace(
+            "        scene evhunlock lilly_handjob_chest_normal_small\n"
+            "        show evh lilly_handjob_chest_normal:\n"
+            "            xalign 0.7 yalign 1.0\n"
+            "            ease 8.0 xalign 0.4 yalign 0.2\n"
+            "        with whiteout",
+            # WITH:
+            "        scene ev lilly_hcg_handjob_chest_normal\n"
+            "        with whiteout"
+        ).replace(
+            "        show evhunlock lilly_handjob_chest_frown_small\n"
+            "        show evh lilly_handjob_chest_frown:\n"
+            "            xalign 0.4 yalign 0.2\n"
+            "        with charachangeev",
+            # WITH:
+            "        scene ev lilly_hcg_handjob_chest_frown\n"
+            "        with charachangeev"
+        ).replace(
+            "        show evh lilly_handjob_chest_normal\n"
+            "        with charachangeev",
+            # WITH
+            "        scene ev lilly_hcg_handjob_chest_normal\n"
+            "        with charachangeev"
+        ).replace(
+            "        show evh:\n"
+            "            zoom 1.0 xalign 0.4 yalign 0.2\n"
+            "            ease 4.0 xalign 0.5 yalign 0.5\n"
+            "        with None",
+            # WITH
+            "\n"
+        ).replace(
+            "        show evh lilly_handjob_stroke_normopen:\n"
+            "            zoom 1.0 xalign 0.4 yalign 0.2\n"
+            "            ease 4.0 xalign 0.5 yalign 0.5\n"
+            "        with charachangeev",
+            # WITH
+            "        scene ev lilly_hcg_handjob_stroke_normopen\n"
+            "        with charachangeev"
+        ).replace(
+            "        show evh lilly_handjob_stroke_normshut_small:\n"
+            "            truecenter\n"
+            "            zoom 1.0\n"
+            "        with charachangeev",
+            # WITH
+            "        scene ev lilly_hcg_handjob_stroke_normshut_small\n"
+            "        with charachangeev"
+        ).replace(
+            "show evh lilly_handjob_stroke_flustopen_small", "scene ev lilly_hcg_handjob_stroke_flustopen_small"
+        ).replace(
+            "show evh lilly_handjob_stroke_normopen_small", "scene ev lilly_hcg_handjob_stroke_normopen_small"
+        ).replace(
+            "show evh lilly_cowgirl_smile_small", "scene ev lilly_hcg_cowgirl_smile_small"
+        ).replace(
+            "show evh lilly_cowgirl_weaksmile_small", "scene ev lilly_hcg_cowgirl_weaksmile_small"
+        ).replace(
+            "scene evh lilly_cowgirl_strain_small", "scene ev lilly_hcg_cowgirl_strain_small"
+        ).replace(
+            "scene evh lilly_cowgirl_frown_small", "scene ev lilly_hcg_cowgirl_frown_small"
+        ).replace(
+            "scene evh lilly_cowgirl_cry_small", "scene ev lilly_hcg_cowgirl_cry_small"
+        ).replace(
+            "scene evh lilly_cowgirl_weaksmile_small", "scene ev lilly_hcg_cowgirl_weaksmile_small"
+        ).replace(
+            "scene evh lilly_cowgirl_smile_small", "scene ev lilly_hcg_cowgirl_smile_small"
+        ).replace(
+            "scene evh lilly_bath_smile_small", "scene ev lilly_hcg_bath_smile_small"
+        ).replace(
+            "show evh lilly_bath_emb_small", "scene ev lilly_hcg_bath_emb_small"
+        ).replace(
+            "show evh lilly_bath_smile_small", "scene ev lilly_hcg_bath_smile_small"
+        ).replace(
+            "show evh lilly_bath_open_small", "scene ev lilly_hcg_bath_open_small"
+        ).replace(
+            "show evh lilly_bath_grab_small", "scene ev lilly_hcg_bath_grab_small"
+        ).replace(
+            "show evh lilly_bath_moan_small", "scene ev lilly_hcg_bath_moan_small"
+        ).replace(
+            "show evh lilly_bath_smile_small", "scene ev lilly_hcg_bath_smile_small"
+        ).replace(
+            "scene evh lilly_afterbath_open_small", "scene ev lilly_hcg_afterbath_open_small"
+        ).replace(
+            "scene evh lilly_afterbath_shut_small", "scene ev lilly_hcg_afterbath_shut_small"
+        )
+
     if scenario_name == "script-a2-shizune":
         return content.replace(
             "        scene evbg kenji_glasses:\n"
@@ -1092,6 +1499,87 @@ def scenario_rewrites(scenario_file, content):
             # WITH
             "        scene evh shizune_hcg_tied_smile_small\n"
             "        with whiteout"
+        )
+
+    if scenario_name == "script-a2-hanako":
+        return content.replace(
+            "        show hanagown:\n"
+            "            easeout 0.5 xpos 0.7 alpha 0.0\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        hide hanako",
+            # WITH (fix)
+            "        show hanagown:\n"
+            "            easeout 0.5 xpos 0.7 alpha 0.0\n"
+            "\n"
+            "        pause 0.5\n"
+            "\n"
+            "        hide hanagown",
+        )
+
+    if scenario_name == "script-a3-hanako":
+        return content.replace(
+            "        scene evbg hanako_breakdown:\n"
+            "            truecenter\n"
+            "            1.0\n"
+            "            zoom 1.05\n"
+            "            easein 8.0 zoom 1.0\n"
+            "        show evfg hanako_breakdown_down:\n"
+            "            truecenter\n"
+            "            1.0\n"
+            "            zoom 1.1\n"
+            "            easein 8.0 zoom 1.0\n"
+            "        with silentwhiteout",
+            # WITH TODO: Hanako breakdown event
+            "        scene ev hanako_breakdown_down:\n"
+            "        with silentwhiteout",
+        ).replace(
+            "        scene evbg hanako_breakdown:\n"
+            "            truecenter\n"
+            "        show evfg hanako_breakdown_up:\n"
+            "            truecenter\n"
+            "        with charachangeev\n",
+            # WITH TODO: Hanako breakdown event
+            "\n"
+        ).replace(
+            "        show evfg hanako_breakdown_closed\n"
+            "        with charachangeev\n",
+            # WITH TODO: Hanako breakdown event
+            "\n"
+        ).replace(
+            "        show hanako emb_downsad_close:\n"
+            "            function partial(tremble_general, 1.0, 0.5, 1.09, 0.5, 1.0)\n"
+            "        with charachangealways",
+            # WITH TODO: Hanako breakdown event
+            "        show hanako emb_downsad_close"
+        )
+
+    if scenario_name == "script-a4-hanako":
+        return content.replace(
+            "        scene evbg hanako_emptyclassroom:\n"
+            "            truecenter\n"
+            "            zoom 0.9\n"
+            "            easein 20.0 zoom 1.0\n"
+            "        show evfg hanako_emptyclassroom:\n"
+            "            truecenter\n"
+            "            zoom 0.8\n"
+            "            easein 20.0 zoom 1.0\n"
+            "        with whiteout",
+            # WITH TODO: Hanako empty classroom event
+            "        scene ev hanako_emptyclassroom_bg\n"
+            "        with whiteout"
+        ).replace(
+            "        show hanako:\n"
+            "            linear 1.0 alpha 0.0\n"
+            "        with shorttimeskip\n"
+            "\n"
+            "        hide hanako",
+            # WITH (fix)
+            "        hide hanako\n"
+            "\n"
+            "        scene bg city_karaokeint\n"
+            "        with shorttimeskip"
         )
 
     return content

@@ -13,6 +13,8 @@ extern const body kenji_basic_naked_body;
 extern const body kenji_rage_body;
 extern const body kenji_basic_close_body;
 extern const body kenji_rage_close_body;
+extern const body kenji_basic_silhouette_body;
+extern const body kenji_basicnaked_silhouette_body;
 
 // Per-(group × emotion) variants.
 extern const variant kenji_basic_neutral;
@@ -26,6 +28,8 @@ extern const variant kenji_basic_close_tsun;
 extern const variant kenji_basic_close_happy;
 extern const variant kenji_basic_close_neutral;
 extern const variant kenji_rage_close_rage;
+extern const variant kenji_basic_silhouette_neutral;
+extern const variant kenji_basicnaked_silhouette_neutral;
 
 }  // namespace ks::smart_characters::kenji
 

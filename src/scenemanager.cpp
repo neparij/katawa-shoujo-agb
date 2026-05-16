@@ -71,7 +71,15 @@
 #include "openings/act2_lilly.cpp.h"
 #include "openings/act2_rin.cpp.h"
 #include "openings/act2_shizune.cpp.h"
+#include "openings/act3_emi.cpp.h"
+#include "openings/act3_hanako.cpp.h"
+#include "openings/act3_lilly.cpp.h"
+#include "openings/act3_rin.cpp.h"
 #include "openings/act3_shizune.cpp.h"
+#include "openings/act4_emi.cpp.h"
+#include "openings/act4_hanako.cpp.h"
+#include "openings/act4_lilly.cpp.h"
+#include "openings/act4_rin.cpp.h"
 #include "openings/act4_shizune.cpp.h"
 #include "openings/op1.h"
 #include "shaders/paletted_color_shader.h"
@@ -80,7 +88,7 @@
 
 namespace ks {
 
-BN_DATA_EWRAM bn::string<1024> message;
+BN_DATA_EWRAM bn::string<4096> message;
 BN_DATA_EWRAM bn::string<128> message_doublespeak_a;
 BN_DATA_EWRAM bn::string<128> message_doublespeak_b;
 BN_DATA_EWRAM bn::vector<bn::string<128>, 5> answers_messages;
@@ -334,9 +342,14 @@ void SceneManager::set_huge_background(const huge_background_meta& bg, const int
 
 void SceneManager::hide_background(const scene_transition_t transition, const int dissolve_time) {
     reset_backgrounds_visuals();
+    background_visual.palette_variant = PALETTE_VARIANT_DEFAULT;
+    if (transition == SCENE_TRANSITION_LOCATIONCHANGE) {
+        background_visual.transition = SCENE_TRANSITION_NONE;
+        background_visual.dissolve_time = 60;
+        return;
+    }
     background_visual.transition = transition;
     background_visual.dissolve_time = dissolve_time;
-    background_visual.palette_variant = PALETTE_VARIANT_DEFAULT;
 }
 
 void SceneManager::set_background_position(const int position_x, const int position_y) {
@@ -480,7 +493,7 @@ void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned i
     if (is_loading) {
         return;
     }
-    bn::string<32> char_name;
+    bn::string<64> char_name;
     textdb::get_tl(actor_tl_key, char_name);
     const character_definition current = definitions::base.with_name(char_name.c_str());
     return show_dialog(current, tl_key);
@@ -1077,13 +1090,8 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         transition_fadeout(bn::affine_bg_items::test_flashback, 1,  false);
         return;
     }
-    if (transition == SCENE_TRANSITION_SHUTEYE || transition == SCENE_TRANSITION_SHUTEYEFAST) {
-        transition_fadeout(bn::affine_bg_items::test_eyes, transition == SCENE_TRANSITION_SHUTEYE ? 2 : 20,  false);
-        // background_visual.bg_item.reset();
-        background_visual.visible_bg_item.reset();
-        return;
-    }
-    if (transition == SCENE_TRANSITION_OPENEYE || transition == SCENE_TRANSITION_OPENEYEFAST) {
+    if (transition == SCENE_TRANSITION_FLASHBACK) {
+        // TODO: Correct version of flashback transition
         if (to.has_value()) {
             BN_LOG("TO: HAS VALUE");
             background_visual.visible_bg_item.reset();
@@ -1091,12 +1099,43 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
-            // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
             if (next_event.has_value()) {
                 (*next_event)->init();
             }
         }
-        transition_fadein(bn::affine_bg_items::test_eyes, transition == SCENE_TRANSITION_OPENEYE ? 2 : 8,  false);
+        transition_fadein(bn::affine_bg_items::test_flashback, 1,  false);
+        return;
+    }
+    if (transition == SCENE_TRANSITION_SHUTEYE || transition == SCENE_TRANSITION_SHUTEYEFAST) {
+        transition_fadeout(bn::affine_bg_items::test_eyes, transition == SCENE_TRANSITION_SHUTEYE ? 2 : 20,  false);
+        // background_visual.bg_item.reset();
+        background_visual.visible_bg_item.reset();
+        return;
+    }
+    if (transition == SCENE_TRANSITION_OPENEYE || transition == SCENE_TRANSITION_OPENEYEFAST || transition == SCENE_TRANSITION_OPENEYE_SHOCK) {
+        if (to.has_value()) {
+            BN_LOG("TO: HAS VALUE");
+            background_visual.visible_bg_item.reset();
+            ks::globals::main_update();
+            background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
+            background_visual.visible_bg_item->set_priority(3);
+            background_visual.visible_bg_item->set_z_order(10);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            if (next_event.has_value()) {
+                (*next_event)->init();
+            }
+        }
+        // Default: 2.0 sec
+        int transition_speed = 2;
+        if (transition == SCENE_TRANSITION_OPENEYEFAST) {
+            // fast: 0.5 sec
+            transition_speed = 8;
+        } else if (transition == SCENE_TRANSITION_OPENEYE_SHOCK) {
+            // shock: 0.8 sec
+            transition_speed = 12;
+        }
+        transition_fadein(bn::affine_bg_items::test_eyes, transition_speed,  false);
         return;
     }
     if (transition == SCENE_TRANSITION_HANDS_IN) {
@@ -1113,7 +1152,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
-            // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
             if (next_event.has_value()) {
                 (*next_event)->init();
             }
@@ -1133,7 +1172,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
-            // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
             if (next_event.has_value()) {
                 (*next_event)->init();
             }
@@ -1152,7 +1191,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
-            // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
             if (next_event.has_value()) {
                 (*next_event)->init();
             }
@@ -1169,7 +1208,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
-            // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
             if (next_event.has_value()) {
                 (*next_event)->init();
             }
@@ -1185,7 +1224,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
         background_visual.visible_bg_item->set_priority(3);
         background_visual.visible_bg_item->set_z_order(10);
-        // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+        apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
         transition_fadein(bn::affine_bg_items::test_clockwipe, 2, false);
         return;
     }
@@ -1206,7 +1245,7 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
-            // TODO: apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
             if (next_event.has_value()) {
                 (*next_event)->init();
             }
@@ -1215,8 +1254,8 @@ void SceneManager::perform_transition(const scene_transition_t transition, const
         fade_reset();
         return;
     }
-    BN_ERROR("Transition not implemented: ", transition);
-    // BN_LOG("Transition not implemented: ", transition);
+    // BN_ERROR("Transition not implemented: ", transition);
+    BN_LOG("Transition not implemented: ", transition);
 }
 
 void SceneManager::perform_transition(const scene_transition_t transition) {
@@ -1570,8 +1609,7 @@ void SceneManager::update_visuals() {
                 background_visual.visible_fg_item->set_priority(3);
                 background_visual.visible_fg_item->set_z_order(9);
                 background_visual.visible_fg_item->set_blending_enabled(true);
-                // TODO: UNCOMMENT!
-                // apply_palette_variant(secondary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+                apply_palette_variant(background_visual.visible_fg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
                 bn::blending::set_transparency_alpha(bn::fixed(0));
                 blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
                 while (!blend_action->done()) {
@@ -1590,8 +1628,7 @@ void SceneManager::update_visuals() {
                 background_visual.visible_bg_item->set_priority(3);
                 background_visual.visible_bg_item->set_z_order(10);
                 ks::globals::main_update();
-                // TODO: UNCOMMENT!
-                // apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+                apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
                 if (next_event.has_value()) {
                     background_visual.active_event = bn::move(next_event);
                     (*background_visual.active_event)->init();
@@ -1619,8 +1656,7 @@ void SceneManager::update_visuals() {
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
-            // TODO: UNCOMMENT!
-            // apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+            apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
             if (next_event.has_value()) {
                 background_visual.active_event = bn::move(next_event);
                 (*background_visual.active_event)->init();
@@ -1646,8 +1682,7 @@ void SceneManager::update_visuals() {
         background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
         background_visual.visible_bg_item->set_priority(3);
         background_visual.visible_bg_item->set_z_order(10);
-        // TODO: UNCOMMENT!
-        // apply_palette_variant(primary_background.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
+        apply_palette_variant(background_visual.visible_bg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
         if (next_event.has_value()) {
             background_visual.active_event = bn::move(next_event);
             (*background_visual.active_event)->init();
@@ -1951,17 +1986,41 @@ void SceneManager::show_title(const title_card_t tc) {
             perform_render_video(video_tc_act2_emi_ulcv, "video_tc_act2_emi.ulc", globals::colors::WHITE);
             ActOpening2Emi().run();
             break;
+        case TC_ACT3_EMI:
+            ActOpening3Emi().run();
+            break;
+        case TC_ACT4_EMI:
+            ActOpening4Emi().run();
+            break;
         case TC_ACT2_HANAKO:
             perform_render_video(video_tc_act2_hanako_ulcv, "video_tc_act2_hanako.ulc", globals::colors::WHITE);
             ActOpening2Hanako().run();
+            break;
+        case TC_ACT3_HANAKO:
+            ActOpening3Hanako().run();
+            break;
+        case TC_ACT4_HANAKO:
+            ActOpening4Hanako().run();
             break;
         case TC_ACT2_LILLY:
             perform_render_video(video_tc_act2_lilly_ulcv, "video_tc_act2_lilly.ulc", globals::colors::WHITE);
             ActOpening2Lilly().run();
             break;
+        case TC_ACT3_LILLY:
+            ActOpening3Lilly().run();
+            break;
+        case TC_ACT4_LILLY:
+            ActOpening4Lilly().run();
+            break;
         case TC_ACT2_RIN:
             perform_render_video(video_tc_act2_rin_ulcv, "video_tc_act2_rin.ulc", globals::colors::WHITE);
             ActOpening2Rin().run();
+            break;
+        case TC_ACT3_RIN:
+            ActOpening3Rin().run();
+            break;
+        case TC_ACT4_RIN:
+            ActOpening4Rin().run();
             break;
         case TC_ACT2_SHIZUNE:
             perform_render_video(video_tc_act2_shizune_ulcv, "video_tc_act2_shizune.ulc", globals::colors::WHITE);
@@ -2065,9 +2124,18 @@ void SceneManager::pause(const int ticks) {
 }
 
 void SceneManager::timeskip() {
+    if (background_visual.visible_bg_item.has_value()) {
+        // BN_ERROR("All BGS should be disabled at the timeskip event!!!");
+        // TODO: Also check for hiding characters!!!
+        IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 60));
+        IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
+        IF_NOT_EXIT(ks::SceneManager::update_visuals());
+    }
+
     if (is_loading) {
         return;
     }
+    BN_LOG("Timeskip...");
 
     music_stop(120);
     sfx_stop(SOUND_CHANNEL_SOUND, 120);
@@ -2094,7 +2162,7 @@ void SceneManager::timeskip() {
     pause(112);
 }
 
-void SceneManager::apply_palette_variant(const bn::regular_bg_ptr &bg,
+void SceneManager::apply_palette_variant(const background_ptr &bg,
                                          const bn::span<const bn::color> &original_palette,
                                          const palette_variant_t palette_variant) {
     if (palette_variant == PALETTE_VARIANT_DEFAULT) {
@@ -2171,7 +2239,13 @@ inline shader_data SceneManager::init_transition_shader(const bn::affine_bg_item
 
     BN_LOG("BG tiles free blocks: ", bn::bg_tiles::available_blocks_count(),
            " | BG maps free blocks: ", bn::bg_maps::available_blocks_count());
-    ks::transition_bg = transition_item.create_bg(0, 0);
+    ks::transition_bg = transition_item.create_bg_optional(0, 0);
+    if (!ks::transition_bg.has_value()) {
+        // BN_ERROR("Failed to allocate transition BG");
+        BN_LOG("Failed to allocate transition BG");
+        data.vram_ptr = nullptr;
+        return data;
+    }
     bn::bg_blocks_manager::set_allow_tiles_offset(allow_offset);
 
 
@@ -2221,6 +2295,10 @@ void SceneManager::transition_fadein(const bn::affine_bg_item &transition_item, 
     const auto shader = init_transition_shader(transition_item, false);
     VBlankIntrWait();
 
+    if (shader.vram_ptr == nullptr) {
+        // BN_ERROR("Failed to allocate transition shader");
+        return;
+    }
     BN_LOG("Start Transition Fadein");
 
     if (reverse) {
@@ -2243,6 +2321,10 @@ void SceneManager::transition_fadeout(const bn::affine_bg_item &transition_item,
     const auto shader = init_transition_shader(transition_item, true);
     VBlankIntrWait();
 
+    if (shader.vram_ptr == nullptr) {
+        // BN_ERROR("Failed to allocate transition shader");
+        return;
+    }
     BN_LOG("Start Transition Fadeout");
 
     if (reverse) {

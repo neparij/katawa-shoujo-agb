@@ -70,13 +70,35 @@ def fixed_literal(value: float) -> str:
     """
     return f"bn::fixed({value:g})"
 
-def get_paletted_variant(variant: str) -> (str, str):
+def get_bg_paletted_variant(bg_name: str, bg_names : None|List[str] = None) -> (str, str):
+    # This is a common logic.
+    if bg_names is None:
+        bg_names = []
+    if bg_name in bg_names:
+        return bg_name, "PALETTE_VARIANT_DEFAULT"
+    elif bg_name.endswith("_ss"):
+        return bg_name.removesuffix("_ss"), "PALETTE_VARIANT_SUNSET"
+    elif bg_name.endswith("_ni"):
+        return bg_name.removesuffix("_ni"), "PALETTE_VARIANT_NIGHT"
+    elif bg_name.endswith("_rn"):
+        return bg_name.removesuffix("_rn"), "PALETTE_VARIANT_RAIN"
+    else:
+        print(f"Warning: Unknown bg_name: {bg_name}")
+        return bg_name, "PALETTE_VARIANT_DEFAULT"
+
+
+def get_sprite_paletted_variant(variant: str) -> (str, str):
+    if variant is None:
+        print(f"Warning: Unknown variant: {variant}")
+        return variant, "PALETTE_VARIANT_DEFAULT"
     if variant.endswith("_ss"):
         return variant.removesuffix("_ss"), "PALETTE_VARIANT_SPRITE_SUNSET"
     elif variant.endswith("_ni"):
         return variant.removesuffix("_ni"), "PALETTE_VARIANT_SPRITE_NIGHT"
     elif variant.endswith("_rn"):
         return variant.removesuffix("_rn"), "PALETTE_VARIANT_SPRITE_RAIN"
+    elif variant.endswith("_fb"):
+        return variant.removesuffix("_fb"), "PALETTE_VARIANT_SPRITE_PAST"
     else:
         return variant, "PALETTE_VARIANT_DEFAULT"
 
@@ -175,22 +197,32 @@ def unpack_from_12bits(data: bytes) -> bytes:
 
 def encode_token_biased(token_id: int) -> bytes:
     """
-    Aggressive variable-length encoding for SPM token IDs (1..2047).
+    Aggressive variable-length encoding for SPM token IDs (1..65535).
 
     - 1 byte:  token_id in [1..191]  -> [0x01..0xBF]
     - 2 bytes: token_id in [192..2047] encoded like 2-byte UTF-8:
         b0 = 0xC0 | (token_id >> 6)          (0xC0..0xDF)
         b1 = 0x80 | (token_id & 0x3F)        (0x80..0xBF)
+    - 3 bytes: token_id in [2048..65535] encoded like 3-byte UTF-8:
+        b0 = 0xE0 | (token_id >> 12)         (0xE0..0xEF)
+        b1 = 0x80 | ((token_id >> 6) & 0x3F) (0x80..0xBF)
+        b2 = 0x80 | (token_id & 0x3F)        (0x80..0xBF)
 
     This guarantees the first byte is never 0xFF, so `0xFF 0xFF` remains
     a unique command prefix in the stream.
     """
-    if token_id <= 0 or token_id > 2047:
+    if token_id <= 0 or token_id > 0xFFFF:
         raise ValueError(f"token_id out of range: {token_id}")
     if token_id < 0xC0:
         return bytes([token_id])
+    if token_id <= 0x07FF:
+        return bytes([
+            0xC0 | ((token_id >> 6) & 0x1F),
+            0x80 | (token_id & 0x3F),
+        ])
     return bytes([
-        0xC0 | ((token_id >> 6) & 0x1F),
+        0xE0 | ((token_id >> 12) & 0x0F),
+        0x80 | ((token_id >> 6) & 0x3F),
         0x80 | (token_id & 0x3F),
     ])
 

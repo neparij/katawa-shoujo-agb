@@ -63,15 +63,21 @@ namespace ks {
 
             const int chunked_lines_from = (_text_parser.fast_ends_on_line() / LinesPerPage) * LinesPerPage;
             const int chunked_lines_to = _text_parser.fast_ends_on_line();
-            const bool instant_render = user_skip || user_advance || force_render;
-            for (int i = chunked_lines_from; i <= chunked_lines_to; i++) {
-                // Never render per-character when user is skipping or we're forcing render,
-                // otherwise we can exhaust sprite font tiles on long lines.
-                draw_line(i, !instant_render && i == chunked_lines_to);
+            // const bool instant_render = user_skip || user_advance || force_render;
+            // for (int i = chunked_lines_from; i <= chunked_lines_to; i++) {
+            //     // Never render per-character when user is skipping or we're forcing render,
+            //     // otherwise we can exhaust sprite font tiles on long lines.
+            //     draw_line(i, !instant_render && i == chunked_lines_to);
+            // }
+            // current_line_index = chunked_lines_to;
+            // waiting_for_input = instant_render;
+            // BN_LOG("fast done");
+            for (int i = chunked_lines_from; i < chunked_lines_to; i++) {
+                draw_line(i, false);
             }
+            draw_line(chunked_lines_to, true);
 
             current_line_index = chunked_lines_to;
-            waiting_for_input = instant_render;
             BN_LOG("fast done");
         } else {
             if (user_skip || user_advance || force_render) {
@@ -221,17 +227,29 @@ namespace ks {
                         }
                     } else {
                         if (_infinite_render) {
-                            tg->generate(
+                            // TODO: SOMEHOW but we need to render all the text. fuck....
+                            tg->generate_optional(
                                 _text_start_position.x() + x_offset,
                                 _text_start_position.y() + render_offset,
                                 cmd.view,
                                 text_chunk_sprites);
+                            // tg->generate(
+                            //     _text_start_position.x() + x_offset,
+                            //     _text_start_position.y() + render_offset,
+                            //     cmd.view,
+                            //     text_chunk_sprites);
                         } else {
-                            tg->generate(
+                            // TODO: SOMEHOW but we need to render all the text. fuck....
+                            tg->generate_optional(
                                 _text_start_position.x() + x_offset,
                                 _text_start_position.y() + (line_index % LinesPerPage) * 12,
                                 cmd.view,
                                 text_chunk_sprites);
+                            // tg->generate(
+                            //     _text_start_position.x() + x_offset,
+                            //     _text_start_position.y() + (line_index % LinesPerPage) * 12,
+                            //     cmd.view,
+                            //     text_chunk_sprites);
                         }
                     }
                     x_offset += tg->width(cmd.view);

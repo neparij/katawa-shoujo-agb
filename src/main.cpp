@@ -32,8 +32,18 @@
 #include "scripts/script_a1_thursday.h"
 #include "scripts/script_a1_tuesday.h"
 #include "scripts/script_a1_wednesday.h"
+#include "scripts/script_a2_emi.h"
+#include "scripts/script_a2_hanako.h"
+#include "scripts/script_a2_lilly.h"
+#include "scripts/script_a2_rin.h"
+#include "scripts/script_a3_emi.h"
+#include "scripts/script_a4_emi.h"
 #include "scripts/script_a2_shizune.h"
+#include "scripts/script_a3_hanako.h"
+#include "scripts/script_a3_lilly.h"
 #include "scripts/script_a3_shizune.h"
+#include "scripts/script_a4_hanako.h"
+#include "scripts/script_a4_lilly.h"
 #include "scripts/script_a4_shizune.h"
 
 using size_type = int;
@@ -61,13 +71,13 @@ inline void game(const bool is_new_game) {
     if (ks::progress.force_route == FR_EMI) {
         // video: tc_act2_emi
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_EMI););
-        // tl::script_a2_emi()();
-        // video: tc_act3_emi
-        // tl::script_a3_emi()();
+        ks::ScriptA2Emi::a2_emi();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT3_EMI););
+        ks::ScriptA3Emi::a3_emi();
         if (ks::progress.have_a_minute && ks::progress.talk_to_her_mom || ks::progress.let_misha_know) {
             // GOOD ENDING
-            // video: tc_act4_emi
-            // tl::script_a4_emi()();
+            IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT4_EMI););
+            ks::ScriptA4Emi::a4_emi();
             // credits: credits_emi
         } else {
             // BAD ENDING
@@ -75,11 +85,11 @@ inline void game(const bool is_new_game) {
     } else if (ks::progress.force_route == FR_HANAKO) {
         // video: tc_act2_hanako
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_HANAKO););
-        // tl::script_a2_hanako()();
-        // video: tc_act3_hanako
-        // tl::script_a3_hanako()();
-        // video: tc_act4_hanako
-        // tl::script_a4_hanako()();
+        ks::ScriptA2Hanako::a2_hanako();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT3_HANAKO););
+        ks::ScriptA3Hanako::a3_hanako();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT4_HANAKO););
+        ks::ScriptA4Hanako::a4_hanako();
         if (ks::progress.go_to_the_city && ks::progress.agree_with_lilly) {
             // GOOD ENDING
             // credits: credits_hanako
@@ -91,27 +101,27 @@ inline void game(const bool is_new_game) {
     } else if (ks::progress.force_route == FR_LILLY) {
         // video: tc_act2_lilly
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_LILLY););
-        // tl::script_a2_lilly()();
-        // video: tc_act3_lilly
-        // tl::script_a3_lilly()();
-        // video: tc_act4_lilly
-        // tl::script_a4_lilly()();
+        ks::ScriptA2Lilly::a2_lilly();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT3_LILLY););
+        ks::ScriptA3Lilly::a3_lilly();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT4_LILLY););
+        ks::ScriptA4Lilly::a4_lilly();
         if (ks::progress.want_true && ks::progress.address_it && ks::progress.mention_the_letter) {
             // GOOD ENDING
             // credits: credits_lilly
+            // TODO: a4_lilly_forwards should be after-credits scene as in original KS v1.3
         } else {
             // BAD ENDING
         }
     } else if (ks::progress.force_route == FR_RIN) {
         // video: tc_act2_rin
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_RIN););
-        // tl::script_a2_rin()();
-        // video: tc_act3_rin
-        // tl::script_a3_rin()();
-        // video: tc_act4_rin
+        ks::ScriptA2Rin::a2_rin();
+        IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT3_RIN););
+        // ks::ScriptA3Rin::a3_rin();
         if (!ks::progress.explain) {
-            // video: tc_act4_rin
-            // tl::script_a4_rin()();
+            IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT4_RIN););
+            // ks::ScriptA4Rin::a4_rin();
             if (ks::progress.is_true) {
                 // TRUE ENDING
             } else {
@@ -122,7 +132,6 @@ inline void game(const bool is_new_game) {
             // BAD ENDING
         }
     } else if (ks::progress.force_route == FR_SHIZU) {
-        // video: tc_act2_shizune
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT2_SHIZUNE););
         ks::ScriptA2Shizune::a2_shizune();
         IF_NOT_EXIT(ks::SceneManager::show_title(TC_ACT3_SHIZUNE););

@@ -34,8 +34,13 @@ class SPMPacker:
             tokens.append(token(offset=offset, value=piece))
             offset += len(piece.encode('utf-8')) + 1
 
+        if len(tokens) >= 0x10000:
+            raise Exception(f"SPM token count for locale '{self.locale}' exceeds maximum of 65535")
+
         os.makedirs(os.path.dirname(out_file), exist_ok=True)
         with open(out_file, 'wb') as f:
+            # Write token count (little-endian uint16), then offset table and token values.
+            f.write(len(tokens).to_bytes(2, byteorder='little'))
             # Write offset table
             for t in tokens:
                 f.write(t.offset.to_bytes(2, byteorder='little'))
