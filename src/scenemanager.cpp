@@ -88,6 +88,19 @@
 
 namespace ks {
 
+namespace {
+constexpr bool scenario_exited() {
+    return globals::exit_scenario;
+}
+
+#define SCENARIO_RETURN_IF_EXIT() \
+    do {                          \
+        if(scenario_exited()) {   \
+            return;               \
+        }                         \
+    } while(0)
+} // namespace
+
 BN_DATA_EWRAM bn::string<4096> message;
 BN_DATA_EWRAM bn::string<128> message_doublespeak_a;
 BN_DATA_EWRAM bn::string<128> message_doublespeak_b;
@@ -169,6 +182,7 @@ void SceneManager::free_resources() {
 }
 
 void SceneManager::set(const ks::SceneManager instance) {
+    SCENARIO_RETURN_IF_EXIT();
     free_resources();
     while (character_visuals.size() < character_visuals.max_size()) {
         character_visuals.push_back(character_visuals_ptr());
@@ -188,6 +202,7 @@ void SceneManager::set(const ks::SceneManager instance) {
 }
 
 void SceneManager::set_textdb(const uint8_t *db) {
+    SCENARIO_RETURN_IF_EXIT();
     textdb::set(db);
     if (!is_loading) {
         textdb::free();
@@ -200,6 +215,7 @@ void SceneManager::reload_textdb() {
 }
 
 void SceneManager::init_savedata(ks::saves::SaveSlotProgressData &value) {
+    SCENARIO_RETURN_IF_EXIT();
     if (!is_loading) {
         value.reproduction.answer_indices.fill(0);
         value.reproduction.line_hash = 0;
@@ -209,14 +225,17 @@ void SceneManager::init_savedata(ks::saves::SaveSlotProgressData &value) {
 }
 
 void SceneManager::set_script(const script_t script) {
+    SCENARIO_RETURN_IF_EXIT();
     progress.metadata.script = script;
 }
 
 void SceneManager::set_label(const label_t label) {
+    SCENARIO_RETURN_IF_EXIT();
     progress.metadata.label = label;
 }
 
 void SceneManager::set_line_hash(const unsigned int line_hash) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         if (savedata_progress.reproduction.line_hash == line_hash || savedata_progress.reproduction.line_hash == 0) {
             is_loading = false;
@@ -288,6 +307,7 @@ void SceneManager::reset_backgrounds_visuals() {
 }
 
 void SceneManager::set_background(const background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time, const palette_variant_t palette_variant) {
+    SCENARIO_RETURN_IF_EXIT();
     next_event.reset();
     reset_backgrounds_visuals();
 
@@ -316,6 +336,7 @@ void SceneManager::set_background(const background_meta& bg, const int position_
 }
 
 void SceneManager::set_huge_background(const huge_background_meta& bg, const int position_x, const int position_y, const scene_transition_t transition, const int dissolve_time, const palette_variant_t palette_variant) {
+    SCENARIO_RETURN_IF_EXIT();
     // TODO: Check the duplicated code with set_background
     next_event.reset();
     reset_backgrounds_visuals();
@@ -341,6 +362,7 @@ void SceneManager::set_huge_background(const huge_background_meta& bg, const int
 }
 
 void SceneManager::hide_background(const scene_transition_t transition, const int dissolve_time) {
+    SCENARIO_RETURN_IF_EXIT();
     reset_backgrounds_visuals();
     background_visual.palette_variant = PALETTE_VARIANT_DEFAULT;
     if (transition == SCENE_TRANSITION_LOCATIONCHANGE) {
@@ -353,11 +375,13 @@ void SceneManager::hide_background(const scene_transition_t transition, const in
 }
 
 void SceneManager::set_background_position(const int position_x, const int position_y) {
+    SCENARIO_RETURN_IF_EXIT();
     background_visual.position_x = position_x;
     background_visual.position_y = position_y;
 }
 
 void SceneManager::set_background_transition(const scene_transition_t transition) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -380,14 +404,17 @@ void SceneManager::set_background_transition(const scene_transition_t transition
 }
 
 void SceneManager::enable_fill(const bn::color color) {
+    SCENARIO_RETURN_IF_EXIT();
     background_visual.fill_color = color;
 }
 
 void SceneManager::disable_fill() {
+    SCENARIO_RETURN_IF_EXIT();
     background_visual.fill_color.reset();
 }
 
 void SceneManager::set_foreground(const vfx_meta& fg, const int position_x, const int position_y, const int dissolve_time) {
+    SCENARIO_RETURN_IF_EXIT();
     reset_backgrounds_visuals(); // TODO: remove this line
 
     if (fg.seen_bitmask != DISPLAYABLE_BITMASK_NONE && globals::in_game) {
@@ -402,6 +429,7 @@ void SceneManager::set_foreground(const vfx_meta& fg, const int position_x, cons
 }
 
 void SceneManager::hide_foreground(const int dissolve_time) {
+    SCENARIO_RETURN_IF_EXIT();
     // TODO: Support foregrounds (currently using in gallery only for items)
     reset_backgrounds_visuals();
     background_visual.dissolve_time = dissolve_time;
@@ -429,6 +457,7 @@ inline void SceneManager::process_menu_states(const gameState_t &state) {
 
 
 void SceneManager::set_event(const background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
+    SCENARIO_RETURN_IF_EXIT();
     set_background(bg, 0, 0, transition, dissolve_time, PALETTE_VARIANT_DEFAULT);
     for (const auto& visual : character_visuals) {
         if (visual.character != CHARACTER_NONE) {
@@ -440,6 +469,7 @@ void SceneManager::set_event(const background_meta& bg, const CustomEvent& event
 }
 
 void SceneManager::set_event(const huge_background_meta& bg, const CustomEvent& event, const scene_transition_t transition, const int dissolve_time) {
+    SCENARIO_RETURN_IF_EXIT();
     set_huge_background(bg, 0, 0, transition, dissolve_time, PALETTE_VARIANT_DEFAULT);
     for (const auto& visual : character_visuals) {
         if (visual.character != CHARACTER_NONE) {
@@ -450,11 +480,13 @@ void SceneManager::set_event(const huge_background_meta& bg, const CustomEvent& 
 }
 
 void SceneManager::set_event_state(const int state) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_ASSERT(background_visual.active_event.has_value(), "No active event to set state");
     (*background_visual.active_event)->set_state(state);
 }
 
 void SceneManager::show_dialog(const character_definition& actor, const unsigned int tl_key) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -489,6 +521,7 @@ void SceneManager::show_dialog(const character_definition& actor, const unsigned
 }
 
 void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned int tl_key) {
+    SCENARIO_RETURN_IF_EXIT();
     // TODO: Fix the bug with language change with custom actor name
     if (is_loading) {
         return;
@@ -500,6 +533,7 @@ void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned i
 }
 
 void SceneManager::show_doublespeak(const character_definition &actor_left, unsigned int tl_key_left, const character_definition &actor_right, unsigned int tl_key_right) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -536,6 +570,7 @@ void SceneManager::show_doublespeak(const character_definition &actor_left, unsi
 }
 
 void SceneManager::show_dialog_question(const bn::vector<ks::answer_ptr, 5>& answers) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -592,10 +627,12 @@ int SceneManager::get_dialog_question_answer() {
 }
 
 void SceneManager::nvl_clear() {
+    SCENARIO_RETURN_IF_EXIT();
     dialog_novel.clear_messages();
 }
 
 void SceneManager::nvl_hide() {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -603,6 +640,7 @@ void SceneManager::nvl_hide() {
 }
 
 void SceneManager::nvl_show(const unsigned int tl_key) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -785,6 +823,7 @@ void SceneManager::show_character(const character_t character,
                                   const bn::fixed xanchor,
                                   const bn::fixed ypos,
                                   const bn::fixed yanchor) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Show character: ", character,
            " xpos: ", xpos, " xanchor: ", xanchor,
            " ypos: ", ypos, " yanchor: ", yanchor);
@@ -873,6 +912,7 @@ void SceneManager::show_character(const character_t character,
 void SceneManager::show_character(const character_t character,
                                   const ks::smart_characters::variant& var,
                                   const palette_variant_t palette_variant) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Show character: ", character, " (no position change)");
     const auto character_index = get_character_visual_index(character, true);
 
@@ -941,6 +981,7 @@ void SceneManager::set_character_position(const character_t character,
                                           const bn::fixed xanchor,
                                           const bn::fixed ypos,
                                           const bn::fixed yanchor) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Set character position: ", character,
            " xpos: ", xpos, " xanchor: ", xanchor,
            " ypos: ", ypos, " yanchor: ", yanchor);
@@ -1014,6 +1055,7 @@ void SceneManager::set_character_position(const character_t character,
 }
 
 void SceneManager::hide_character(const character_t character, const bool need_update, const bool remove) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Hide character : ", character);
     const auto character_index = get_character_visual_index(character, false);
     if (character_index < 0) {
@@ -1078,6 +1120,7 @@ void SceneManager::hide_character(const character_t character, const bool need_u
 }
 
 void SceneManager::hide_character(const character_t character) {
+    SCENARIO_RETURN_IF_EXIT();
     hide_character(character, true, true);
 }
 
@@ -1277,6 +1320,7 @@ void SceneManager::update_transitions() {
 
 
 void SceneManager::update_visuals() {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         // Do not apply transitions while in loading
         background_visual.transition = SCENE_TRANSITION_NONE;
@@ -1459,6 +1503,7 @@ void SceneManager::update_visuals() {
         dialog_novel.hide(true);
         dialog_default.hide(true);
         dialog_doublespeak.hide(true);
+        ks::globals::main_update();
     }
 
     /// HIDE CHARACTERS (WITH ALPHA FADE)
@@ -1497,7 +1542,7 @@ void SceneManager::update_visuals() {
             smart_characters_manager::commit();
             ks::globals::main_update();
             blend_action = bn::blending_transparency_alpha_to_action(20, bn::fixed(0));
-            while (!blend_action->done()) {
+            while (!scenario_exited() && !blend_action->done()) {
                 blend_action->update();
                 globals::main_update();
             }
@@ -1562,7 +1607,7 @@ void SceneManager::update_visuals() {
             background_visual.visible_bg_item->set_blending_enabled(true);
             bn::blending::set_transparency_alpha(bn::fixed(1));
             blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 0.0);
-            while (!blend_action->done()) {
+            while (!scenario_exited() && !blend_action->done()) {
                 blend_action->update();
                 globals::main_update();
             }
@@ -1612,7 +1657,7 @@ void SceneManager::update_visuals() {
                 apply_palette_variant(background_visual.visible_fg_item.value(), background_visual.bg_item->palette_item().colors_ref(), background_visual.palette_variant);
                 bn::blending::set_transparency_alpha(bn::fixed(0));
                 blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
-                while (!blend_action->done()) {
+                while (!scenario_exited() && !blend_action->done()) {
                     blend_action->update();
                     globals::main_update();
                 }
@@ -1700,7 +1745,7 @@ void SceneManager::update_visuals() {
             background_visual.visible_bg_item->set_blending_enabled(true);
             bn::blending::set_transparency_alpha(bn::fixed(0));
             blend_action = bn::blending_transparency_alpha_to_action(background_visual.dissolve_time, 1.0);
-            while (!blend_action->done()) {
+            while (!scenario_exited() && !blend_action->done()) {
                 blend_action->update();
                 globals::main_update();
             }
@@ -1781,7 +1826,7 @@ void SceneManager::update_visuals() {
             smart_characters_manager::commit();
             ks::globals::main_update();
             blend_action = bn::blending_transparency_alpha_to_action(20, bn::fixed(1));
-            while (!blend_action->done()) {
+            while (!scenario_exited() && !blend_action->done()) {
                 blend_action->update();
                 smart_characters_manager::tick();
                 smart_characters_manager::commit();
@@ -1850,7 +1895,7 @@ void SceneManager::update_visuals() {
     /// then `globals::main_update()` to render & let V-Blank tile
     /// uploads land. Loop until nothing's running.
     in_progress = true;
-    while (in_progress && (blend_action.has_value() || !bg_moves.empty()
+    while (!scenario_exited() && in_progress && (blend_action.has_value() || !bg_moves.empty()
                            || smart_characters_manager::is_animating())) {
         in_progress = false;
         if (blend_action.has_value() && !blend_action->done()) {
@@ -1882,10 +1927,12 @@ void SceneManager::update_visuals() {
 }
 
 void SceneManager::music_play(const music_t music) {
+    SCENARIO_RETURN_IF_EXIT();
     music_play(music, 0);
 }
 
 void SceneManager::music_play(const music_t music, const int fade) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Play Music ", ks::sound_manager::get_music_filename(music), " with fade ", fade);
     ks::sound_manager::stop<SOUND_CHANNEL_MUSIC>();
     ks::sound_manager::play(music);
@@ -1899,10 +1946,12 @@ void SceneManager::music_play(const music_t music, const int fade) {
 }
 
 void SceneManager::music_stop() {
+    SCENARIO_RETURN_IF_EXIT();
     music_stop(0);
 }
 
 void SceneManager::music_stop(const int fade) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Stop GSM with fade ", fade);
     if (fade > 0 && !is_loading) {
         ks::sound_manager::set_fadeout_action<SOUND_CHANNEL_MUSIC>(fade);
@@ -1912,10 +1961,12 @@ void SceneManager::music_stop(const int fade) {
 }
 
 void SceneManager::sfx_play(const char* filename, const sound_channel_t channel) {
+    SCENARIO_RETURN_IF_EXIT();
     sfx_play(filename, channel, 0);
 }
 
 void SceneManager::sfx_play(const char* filename, const sound_channel_t channel, const int fade) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Play SFX ", filename, " on channel ", channel, " with fade ", fade);
     if (channel == SOUND_CHANNEL_SOUND) {
         ks::sound_manager::stop<SOUND_CHANNEL_SOUND>();
@@ -1935,10 +1986,12 @@ void SceneManager::sfx_play(const char* filename, const sound_channel_t channel,
 }
 
 void SceneManager::sfx_stop(const sound_channel_t channel) {
+    SCENARIO_RETURN_IF_EXIT();
     sfx_stop(channel, 0);
 }
 
 void SceneManager::sfx_stop(const sound_channel_t channel, const int fade) {
+    SCENARIO_RETURN_IF_EXIT();
     BN_LOG("Stop SFX on channel ", channel, " with fade ", fade);
     if (channel == SOUND_CHANNEL_SOUND) {
         if (fade > 0 && !is_loading) {
@@ -1958,6 +2011,7 @@ void SceneManager::sfx_stop(const sound_channel_t channel, const int fade) {
 }
 
 void SceneManager::show_title(const title_card_t tc) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -2042,6 +2096,7 @@ void SceneManager::show_title(const title_card_t tc) {
 }
 
 void SceneManager::show_op1() {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -2075,6 +2130,7 @@ void SceneManager::show_op1() {
 }
 
 void SceneManager::show_video(const uint8_t* video_file, const char* audio_file) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -2112,6 +2168,7 @@ void SceneManager::exit_scenario_from_ingame_menu() {
 }
 
 void SceneManager::pause(const int ticks) {
+    SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
@@ -2119,17 +2176,21 @@ void SceneManager::pause(const int ticks) {
         return;
     }
     for(int tick = 0; tick <= ticks; ++tick) {
+        if(scenario_exited()) {
+            return;
+        }
         ks::globals::main_update();
     }
 }
 
 void SceneManager::timeskip() {
+    SCENARIO_RETURN_IF_EXIT();
     if (background_visual.visible_bg_item.has_value()) {
         // BN_ERROR("All BGS should be disabled at the timeskip event!!!");
         // TODO: Also check for hiding characters!!!
-        IF_NOT_EXIT(ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 60));
-        IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::BLACK));
-        IF_NOT_EXIT(ks::SceneManager::update_visuals());
+        hide_background(SCENE_TRANSITION_NONE, 60);
+        enable_fill(globals::colors::BLACK);
+        update_visuals();
     }
 
     if (is_loading) {

@@ -69,6 +69,9 @@ constexpr character_definition n = base;
 //TODO: centered???
 constexpr character_definition centered = base;
 
+//TODO: centered BOLD/BLACK???
+constexpr character_definition centered_b = base;
+
 //TODO: extend
 constexpr character_definition extend = base;
 

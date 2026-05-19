@@ -59,25 +59,16 @@ IGNORE_METAS = [
 ]
 
 BG_INCLUDE_VFX_IMAGES = [
-    "mural_start",
-    "mural",
-    "mural_unfinished",
-    "icecream",
-    "braille",
-    "hanako_eye",
-    "worrytree",
-    "dandelion"
-]
-
-EVENTS_INCLUDE_THUMB_IMAGES = [
-    "mural_start",
-    "mural",
-    "mural_unfinished",
-    "icecream",
-    "braille",
-    "hanako_eye",
-    "worrytree",
-    "dandelion"
+    "mural_start.jpg",
+    "mural.jpg",
+    "mural_unfinished.jpg",
+    "icecream.jpg",
+    "braille.jpg",
+    "hanako_eye.jpg",
+    "worrytree.jpg",
+    "dandelion.jpg",
+    "gallery_atelier_close.jpg",
+    "rin_doodle.png"
 ]
 
 DISPLAYABLE_BITMASK_MAP = {
@@ -525,7 +516,7 @@ def resize_backgrounds():
 
     image_files = []
     image_files += [f"{bgs_directory}/{f}" for f in os.listdir(bgs_directory) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-    image_files += [f"{vfx_directory}/{f}.jpg" for f in BG_INCLUDE_VFX_IMAGES]
+    image_files += [f"{vfx_directory}/{f}" for f in BG_INCLUDE_VFX_IMAGES]
 
     resize_images(image_files, output_directory, quantize_palettes=8, only_metadata=ONLY_METADATA, only_missing=ONLY_MISSING, metadata_type="bg")
     # resize_images_in_directory(input_directory, quantize=False, unquant_colors=16 * 8)

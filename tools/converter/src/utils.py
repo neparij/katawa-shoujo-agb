@@ -43,6 +43,16 @@ CTL_COLOR_START = b'\x08'
 CTL_COLOR_END = b'\x09'
 CTL_NEWLINE = b'\x0A'
 
+# Index 0 = default (main). Must match ks::globals::text_palettes::colored() on GBA.
+RENPY_COLOR_TO_PALETTE_INDEX = {
+  # TODO: verify #fff matches default dialog text on every background (centered_b, NVL, etc.)
+    'fff': 0,
+    'ffffff': 0,
+    'ff0000': 2,
+    'f00': 2,
+    'ff2aaa': 3,
+}
+
 def sanitize_function_name(text):
     return re.sub(r"[^a-zA-Z0-9_]", "", text.replace(" ", "_").lower())
 
@@ -135,6 +145,22 @@ def add_translations_optional(tl_list: List[Dict[str,str]], values: Dict[str,str
 def get_textdb_name(script_filename: str) -> str:
     return script_filename.split(".")[0].removeprefix("script_")
 
+def _normalize_renpy_color(color_spec: str) -> str:
+    normalized = color_spec.strip().lower().removeprefix('#')
+    if len(normalized) == 3:
+        normalized = ''.join(ch * 2 for ch in normalized)
+    return normalized
+
+
+def _renpy_color_palette_index(color_spec: str) -> int:
+    normalized = _normalize_renpy_color(color_spec)
+    index = RENPY_COLOR_TO_PALETTE_INDEX.get(normalized)
+    if index is None:
+        print(f"Warning: unknown Ren'Py text color {color_spec!r}, using default palette")
+        return 0
+    return index
+
+
 def bytecode_format(text: str, cmd_start_bytes: int = 1) -> bytes:
     """
     :param text: The input text.
@@ -142,6 +168,12 @@ def bytecode_format(text: str, cmd_start_bytes: int = 1) -> bytes:
     :return: The text formatted with control characters as bytes.
     """
     cmd = CMD_START * cmd_start_bytes
+
+    if text.startswith('{color=') and text.endswith('}'):
+        palette_index = _renpy_color_palette_index(text[7:-1])
+        return cmd + CTL_COLOR_START + bytes([palette_index])
+    if text == '{/color}':
+        return cmd + CTL_COLOR_END
 
     data = text.encode("utf-8")
     data = data.replace(b"{fast}", cmd + CTL_FAST)
@@ -157,7 +189,6 @@ def bytecode_format(text: str, cmd_start_bytes: int = 1) -> bytes:
     )
     data = data.replace(b"{nw}", cmd + CTL_NOWAIT)
     data = data.replace(b"{newline}", cmd + CTL_NEWLINE)
-    # TODO: Support colors
 
     return data
 

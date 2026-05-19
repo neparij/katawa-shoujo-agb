@@ -27,12 +27,6 @@
 #include "smart_character_bg.h"  // for ks::smart_characters::variant
 
 
-#define IF_NOT_EXIT(step)                         \
-if (ks::globals::exit_scenario) {                 \
-    return;                                       \
-}                                                 \
-step;
-
 #define SKIP_IF_LOAD_ANOTHER_SCENE(val)           \
 if (ks::is_loading) {                             \
     if (ks::progress.metadata.script != val) {    \

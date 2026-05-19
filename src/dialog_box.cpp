@@ -171,22 +171,29 @@ namespace ks {
         bn::sprite_text_generator *tg = &_default_text_generator.value();
         int x_offset = 0;
         bool line_found = false;
+        bool bold_flag = false;
+        bn::sprite_palette_item line_palette = globals::text_palettes::original;
         text_wait_map.clear();
 
         for (const auto &cmd: _text_parser.commands()) {
             if (cmd.command == RC_START_LINE && cmd.param == line_index) {
                 line_found = true;
                 tg = &_default_text_generator.value();
+                bold_flag = false;
+                line_palette = globals::text_palettes::original;
             } else if (line_found) {
                 if (cmd.command == RC_START_LINE) {
                     break;
                 }
                 if (cmd.command == RC_SET_FONT) {
                     if (cmd.param == 0) {
-                        tg->set_palette_item(globals::text_palettes::original);
+                        bold_flag = false;
                     } else if (cmd.param == 1) {
-                        tg->set_palette_item(globals::text_palettes::bold(globals::text_palettes::original));
+                        bold_flag = true;
                     }
+                }
+                if (cmd.command == RC_SET_PALETTE) {
+                    line_palette = globals::text_palettes::colored(static_cast<unsigned char>(cmd.param));
                 }
                 if (cmd.command == RC_FAST) {
                     fast = false;
@@ -204,7 +211,9 @@ namespace ks {
                 if (cmd.command == RC_TEXT_OUT) {
                     tg->set_left_alignment();
                     tg->set_one_sprite_per_character(one_sprite_per_character);
-                    tg->set_palette_item(globals::text_palettes::original);
+                    tg->set_palette_item(bold_flag
+                        ? globals::text_palettes::bold(line_palette)
+                        : line_palette);
                     if (one_sprite_per_character) {
                         if (_infinite_render) {
                             tg->generate(

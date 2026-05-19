@@ -163,6 +163,8 @@
 #include "background_metas/hanako_eye.h"
 #include "background_metas/worrytree.h"
 #include "background_metas/dandelion.h"
+#include "background_metas/gallery_atelier_close.h"
+#include "background_metas/rin_doodle.h"
 #include "background_metas/lilly_airport.h"
 #include "background_metas/hanako_missionary_underwear.h"
 #include "background_metas/hanako_park_look.h"
@@ -743,6 +745,8 @@ namespace ks::background_metas {
             case 0xD043743F: return hanako_eye.thumbnail;
             case 0x702457A5: return worrytree.thumbnail;
             case 0xC2F79D98: return dandelion.thumbnail;
+            case 0x60272054: return gallery_atelier_close.thumbnail;
+            case 0x48ACBAED: return rin_doodle.thumbnail;
             case 0x5272ECA0: return lilly_airport.thumbnail;
             case 0xF70B4944: return hanako_missionary_underwear.thumbnail;
             case 0xFFA32A75: return hanako_park_look.thumbnail;

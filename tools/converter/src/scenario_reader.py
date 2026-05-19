@@ -864,20 +864,43 @@ def rewrite_motion_background(bg_name: str) -> str:
             .replace("hana_library_gasp_std", "hana_library_gasp")
             .replace("hana_library_smile_std", "hana_library_smile")
             .replace("lilly_airport_end_fb", "lilly_airport_end") # TODO: Paletted variants for backgrounds
+
             .replace("kenji_rooftop_kenji", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop_large", "kenji_rooftop") # TODO: Kenji alcotrip event
             .replace("kenji_rooftop", "kenji_rooftop") # TODO: Kenji alcotrip event
+
             .replace("shizu_roof2_towardsnormal", "shizu_roof_towardsnormal") # TODO: Shizu roof event
             .replace("shizu_roof2_towardsangry", "shizu_roof_towardsangry") # TODO: Shizu roof event
             .replace("shizu_roof2", "shizu_roof_hisao2") # TODO: Shizu roof event
             .replace("shizu_roof2_smile", "shizu_roof_smile") # TODO: Shizu roof event
+
             .replace("shizu_goodend_pan", "shizu_goodend") # TODO: Shizu goodend event
+
             .replace("emi_run_face_ss", "emi_run_face") # TODO: Emi run face paletted variant
+
             .replace("hanako_cry_closed_fb", "hanako_cry_closed") # TODO: Hanako cry paletted variant
+
             .replace("hanako_billiards_distant_med", "hanako_billiards_distant") # TODO: Hanako billiard event
             .replace("hanako_billiards_serious_med", "hanako_billiards_serious") # TODO: Hanako billiard event
             .replace("hanako_billiards_smile_med", "hanako_billiards_smile") # TODO: Hanako billiard event
             .replace("hanako_billiards_timid_med", "hanako_billiards_timid") # TODO: Hanako billiard event
+
+            .replace("rin_nap_total_awind_tears", "rin_nap_total_wind") # TODO: Rin nap event
+            .replace("rin_nap_close_awind_tears", "rin_nap_close_wind") # TODO: Rin nap event
+            .replace("rin_nap_total_awind", "rin_nap_total_wind") # TODO: Rin nap event
+            .replace("rin_nap_close_awind", "rin_nap_close_wind") # TODO: Rin nap event
+            .replace("rin_nap_total_tears", "rin_nap_total") # TODO: Rin nap event
+            .replace("rin_nap_close_tears", "rin_nap_close") # TODO: Rin nap event
+
+            .replace("rin_doodle_all", "rin_doodle") # TODO: Rin doodle event
+
+            .replace("rin_h2_pan_surprise", "rin_h2_l_pan") # TODO: Rin cunnilingus event
+            .replace("rin_h2_pan_away", "rin_h2_l_pan") # TODO: Rin cunnilingus event
+            .replace("rin_h2_pan_closed", "rin_h2_l_pan") # TODO: Rin cunnilingus event
+            .replace("rin_h2_nopan_closed", "rin_h2_l_nopan") # TODO: Rin cunnilingus event
+            .replace("rin_h2_hisao_closed", "rin_h2_l_hisao") # TODO: Rin cunnilingus event
+            .replace("rin_h2_hisao_away", "rin_h2_l_hisao") # TODO: Rin cunnilingus event
+            .replace("rin_h2_hisao_surprise", "rin_h2_l_hisao") # TODO: Rin cunnilingus event
 
             .replace("hisaobird_", "bird_")
             .replace("hisao_mirror_800", "hisao_mirror")
@@ -1315,6 +1338,26 @@ def scenario_rewrites(scenario_file, content):
             "            with None",
             # WITH
             "\n"
+        ).replace(
+            "        show emi happybounce\n"
+            "\n"
+            "        pause 0.5",
+            # WITH TODO: Emi bouncing animation
+            "\n"
+        ).replace(
+            "            show ev watch_worn_330:\n"
+            "                truecenter\n"
+            "                ypos 0.7\n"
+            "                easein 1.0 truecenter\n"
+            "            show bg school_dormhisao_blurred_ni\n"
+            "            with Dissolve(1.0)",
+            # WITH TODO: Watch worn event?
+            "\n"
+        ).replace(
+            "            hide ev watch_worn_330\n"
+            "            with None",
+            # WITH TODO: Watch worn event?
+            "\n"
         )
 
     if scenario_name == "script-a4-rin":
@@ -1339,6 +1382,106 @@ def scenario_rewrites(scenario_file, content):
             "            with None",
             # WITH
             "\n"
+        ).replace(
+            "            show evbg rin_goodend_base zorder -1:\n"
+            "                xalign 0.0\n"
+            "                1.0\n"
+            "                easein 20.0 xalign 1.0\n"
+            "            show rin goodend_1:\n"
+            "                xalign -0.5\n"
+            "                1.0\n"
+            "                easein 20.0 xalign 1.0\n"
+            "            show evfg rin_goodend:\n"
+            "                xalign -1.0\n"
+            "                1.0\n"
+            "                easein 20.0 xalign 1.0\n"
+            "            hide bg\n"
+            "            with whiteout",
+            # WITH TODO: Rin Good End Event.
+            "            show ev rin_goodend_1\n"
+            "            with whiteout",
+        ).replace(
+            "            show evbg at right\n"
+            "            show rin goodend_1b at right\n"
+            "            show evfg at right\n"
+            "            with charachangealways",
+            # WITH TODO: Rin Good End Event.
+            "            show ev rin_goodend_1b\n"
+            "            with charachangealways"
+        ).replace(
+            "            show rin goodend_2\n"
+            "            with charachangeev",
+            # WITH TODO: Rin Good End Event.
+            "            show ev rin_goodend_2\n"
+            "            with charachangeev"
+        ).replace(
+            "            show evbg:\n"
+            "                acdc_warp 12.0 zoom 1.15\n"
+            "            show rin goodend_2_hires:\n"
+            "                zoom 0.769\n"
+            "                acdc_warp 12.0 yalign 0.0 zoom 1.0\n"
+            "            show evfg:\n"
+            "                acdc_warp 12.0 yalign 0.0 zoom 1.45\n"
+            "            with None",
+            # WITH TODO: Rin Good End Event.
+            "\n"
+        ).replace(
+            "            scene ev rin_pair_base_clothes\n"
+            "            show rp_hisao normal at truecenter\n"
+            "            show rp_rin normal at truecenter\n"
+            "            with whiteout",
+            # WITH TODO: Rin-Hisao pair Event
+            "            scene ev rin_pair_base\n"
+            "            with whiteout"
+        ).replace(
+            "            show rp_hisao frown\n"
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            show rp_rin talk\n"            
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            show rp_hisao smile\n"
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            show rp_rin smile\n"
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            show rp_rin frown\n"
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            show rp_hisao normal\n"
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            show rp_rin normal\n"
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            show rp_rin closed\n"
+            "            with charachangeev",
+            # WITH TODO: Rin-Hisao pair Event,
+            "\n"
+        ).replace(
+            "            nvl clear\n"
+            "\n"
+            "            show bg:\n"
+            "                \"bg school_nomiya_ss\" with Dissolve(8.0)\n"
+            "            show rin:\n"
+            "                \"rin negative_crying_superclose_ss\" with Dissolve(8.0)",
+            # WITH (fix) TODO: bg change to Sunset during novel!
+            "            nvl clear\n"
         )
 
     if scenario_name == "script-a2-lilly":

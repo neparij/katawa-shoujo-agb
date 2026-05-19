@@ -202,13 +202,18 @@ class CharacterDisplayableReplacements:
 
     @staticmethod
     def kenji(displayable_name: str) -> str:
+        if "silhouette" in displayable_name:
+            if displayable_name.endswith("_naked"):
+                # TODO: check the naked flag
+                return "kenji_basicnaked_neutral_silhouette"
+            else:
+                return "kenji_basic_neutral_silhouette"
+
         return (displayable_name
                 .replace("happy", "basic_happy")
                 .replace("neutral", "basic_neutral")
                 .replace("tsun", "basic_tsun")
                 .replace("rage", "rage_rage")
-                .replace("silhouette", "basic_neutral_silhouette")
-                .replace("silhouette_naked", "basicnaked_neutral_silhouette")
                 )
 
     @staticmethod
@@ -265,7 +270,7 @@ class CharacterDisplayableReplacements:
                 .replace("basic_deadpan_superclose", "scbasic_deadpan_close")
                 .replace("basic_deadpannormal_superclose", "scbasic_deadpannormal_close")
                 .replace("basic_lucid_superclose", "scbasic_lucid_close")
-                .replace("basic_crying_superclose_ss", "scbasic_crying_close_ss")
+                .replace("basic_crying_superclose", "scbasic_crying_close")
                 .replace("relaxed_doubt_superclose", "screlaxed_doubt_close")
                 .replace("relaxed_sleepy_superclose", "screlaxed_sleepy_close")
                 .replace("relaxed_surprised_superclose", "screlaxed_surprised_close")
