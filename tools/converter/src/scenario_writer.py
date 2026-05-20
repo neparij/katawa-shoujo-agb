@@ -526,14 +526,14 @@ class ScenarioWriter:
                     # Remove \n sequences from the beginning of the line
                     fixed_text = re.sub(r'^\n+', '', fixed_text)
                     dialog.message[locale] = fixed_text
-                return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'ks::SceneManager::nvl_show({tl_index});']
+                return [f'ks::SceneManager::nvl_show(0x{hashed_id}, {tl_index});']
             else:
-                return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index});']
+                return [f'ks::SceneManager::show_dialog(0x{hashed_id}, ks::definitions::{dialog.actor_ref}, {tl_index});']
         elif dialog.actor:
             actor_tl_index = add_translations_optional(self.tl_dict, dialog.actor)
-            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'ks::SceneManager::show_dialog({actor_tl_index}, {tl_index});']
+            return [f'ks::SceneManager::show_dialog(0x{hashed_id}, {actor_tl_index}, {tl_index});']
         else:
-            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index});']
+            return [f'ks::SceneManager::show_dialog(0x{hashed_id}, ks::definitions::no_char, {tl_index});']
 
     def process_sequence_doublespeak(self, group: SequenceGroup, ds: DoubleSpeakItem) -> List[str]:
         for locale, text in ds.message_left.items():
@@ -545,8 +545,7 @@ class ScenarioWriter:
 
         hashed_id = hashlib.md5(ds.id.encode()).hexdigest()[:8].upper()
         return [
-            f'ks::SceneManager::set_line_hash(0x{hashed_id});',
-            f'ks::SceneManager::show_doublespeak(ks::definitions::{ds.actor_left_ref}, {tl_index_left}, ks::definitions::{ds.actor_right_ref}, {tl_index_right});'
+            f'ks::SceneManager::show_doublespeak(0x{hashed_id}, ks::definitions::{ds.actor_left_ref}, {tl_index_left}, ks::definitions::{ds.actor_right_ref}, {tl_index_right});'
         ]
 
     def process_sequence_nvl_clear(self, group: SequenceGroup, nvl_clear: NovelClearItem) -> List[str]:

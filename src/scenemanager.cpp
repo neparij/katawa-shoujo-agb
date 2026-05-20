@@ -485,42 +485,113 @@ void SceneManager::set_event_state(const int state) {
     (*background_visual.active_event)->set_state(state);
 }
 
-void SceneManager::show_dialog(const character_definition& actor, const unsigned int tl_key) {
+namespace {
+    void show_dialog_impl(const character_definition& actor, const unsigned int tl_key) {
+        while (!ks::globals::exit_scenario) {
+            if (globals::state == GS_GAME) {
+                ks::textdb::get_tl(tl_key, message);
+                dialog_default.set_actor(actor);
+                dialog_default.proceed_message();
+
+                dialog_novel.hide(true);
+                dialog_doublespeak.hide(true);
+                dialog_default.show(true);
+
+                while (!dialog_default.is_finished() && !bn::keypad::start_pressed()) {
+                    dialog_default.update();
+                    ks::globals::main_update();
+                }
+
+                if (bn::keypad::start_pressed()) {
+                    globals::state = GS_GAME_MENU;
+                    is_paused = true;
+                    SceneManager::update_visuals();
+                }
+            } else {
+                SceneManager::process_menu_states(globals::state);
+            }
+            if (dialog_default.is_finished()) {
+                break;
+            }
+        }
+    }
+
+    void show_doublespeak_impl(const character_definition& actor_left, unsigned int tl_key_left,
+                               const character_definition& actor_right, unsigned int tl_key_right) {
+        while (!ks::globals::exit_scenario) {
+            if (globals::state == GS_GAME) {
+                ks::textdb::get_tl(tl_key_left, message_doublespeak_a);
+                ks::textdb::get_tl(tl_key_right, message_doublespeak_b);
+
+                dialog_doublespeak.set_actors(actor_left, actor_right);
+                dialog_doublespeak.proceed_messages();
+
+                dialog_novel.hide(true);
+                dialog_default.hide(true);
+                dialog_doublespeak.show(true);
+
+                while (!dialog_doublespeak.is_finished() && !bn::keypad::start_pressed()) {
+                    dialog_doublespeak.update();
+                    ks::globals::main_update();
+                }
+
+                if (bn::keypad::start_pressed()) {
+                    globals::state = GS_GAME_MENU;
+                    is_paused = true;
+                    SceneManager::update_visuals();
+                }
+            } else {
+                SceneManager::process_menu_states(globals::state);
+            }
+            if (dialog_doublespeak.is_finished()) {
+                break;
+            }
+        }
+    }
+
+    void nvl_show_impl(const unsigned int tl_key) {
+        dialog_novel.add_tl_key(tl_key);
+
+        while (!ks::globals::exit_scenario) {
+            if (globals::state == GS_GAME) {
+                if (smart_characters_manager::active_bgs_count() > 0) {
+                    smart_characters_manager::evict_vram_for_backdrop();
+                }
+                dialog_default.hide(true);
+                dialog_doublespeak.hide(true);
+                dialog_novel.show(true);
+
+                while (!dialog_novel.is_finished() && !bn::keypad::start_pressed()) {
+                    dialog_novel.update();
+                    ks::globals::main_update();
+                }
+
+                if (bn::keypad::start_pressed()) {
+                    globals::state = GS_GAME_MENU;
+                    is_paused = true;
+                    SceneManager::update_visuals();
+                }
+            } else {
+                SceneManager::process_menu_states(globals::state);
+            }
+            if (dialog_novel.is_finished()) {
+                break;
+            }
+        }
+    }
+} // namespace
+
+void SceneManager::show_dialog(const unsigned int line_hash, const character_definition& actor, const unsigned int tl_key) {
+    set_line_hash(line_hash);
     SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
-
-    while (!ks::globals::exit_scenario) {
-        if (globals::state == GS_GAME) {
-            ks::textdb::get_tl(tl_key, message);
-            dialog_default.set_actor(actor);
-            dialog_default.proceed_message();
-
-            dialog_novel.hide(true);
-            dialog_doublespeak.hide(true);
-            dialog_default.show(true);
-
-            while (!dialog_default.is_finished() && !bn::keypad::start_pressed()) {
-                dialog_default.update();
-                ks::globals::main_update();
-            }
-
-            if (bn::keypad::start_pressed()) {
-                globals::state = GS_GAME_MENU;
-                is_paused = true;
-                update_visuals();
-            }
-        } else {
-            process_menu_states(globals::state);
-        }
-        if (dialog_default.is_finished()) {
-            break;
-        }
-    }
+    show_dialog_impl(actor, tl_key);
 }
 
-void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned int tl_key) {
+void SceneManager::show_dialog(const unsigned int line_hash, const unsigned int actor_tl_key, const unsigned int tl_key) {
+    set_line_hash(line_hash);
     SCENARIO_RETURN_IF_EXIT();
     // TODO: Fix the bug with language change with custom actor name
     if (is_loading) {
@@ -529,44 +600,18 @@ void SceneManager::show_dialog(const unsigned int actor_tl_key, const unsigned i
     bn::string<64> char_name;
     textdb::get_tl(actor_tl_key, char_name);
     const character_definition current = definitions::base.with_name(char_name.c_str());
-    return show_dialog(current, tl_key);
+    show_dialog_impl(current, tl_key);
 }
 
-void SceneManager::show_doublespeak(const character_definition &actor_left, unsigned int tl_key_left, const character_definition &actor_right, unsigned int tl_key_right) {
+void SceneManager::show_doublespeak(const unsigned int line_hash, const character_definition &actor_left,
+                                    unsigned int tl_key_left, const character_definition &actor_right,
+                                    unsigned int tl_key_right) {
+    set_line_hash(line_hash);
     SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
-
-    while (!ks::globals::exit_scenario) {
-        if (globals::state ==  GS_GAME) {
-            ks::textdb::get_tl(tl_key_left, message_doublespeak_a);
-            ks::textdb::get_tl(tl_key_right, message_doublespeak_b);
-
-            dialog_doublespeak.set_actors(actor_left, actor_right);
-            dialog_doublespeak.proceed_messages();
-
-            dialog_novel.hide(true);
-            dialog_default.hide(true);
-            dialog_doublespeak.show(true);
-
-            while (!dialog_doublespeak.is_finished() && !bn::keypad::start_pressed()) {
-                dialog_doublespeak.update();
-                ks::globals::main_update();
-            }
-
-            if (bn::keypad::start_pressed()) {
-                globals::state = GS_GAME_MENU;
-                is_paused = true;
-                update_visuals();
-            }
-        } else {
-            process_menu_states(globals::state);
-        }
-        if (dialog_doublespeak.is_finished()) {
-            break;
-        }
-    }
+    show_doublespeak_impl(actor_left, tl_key_left, actor_right, tl_key_right);
 }
 
 void SceneManager::show_dialog_question(const bn::vector<ks::answer_ptr, 5>& answers) {
@@ -639,41 +684,13 @@ void SceneManager::nvl_hide() {
     dialog_novel.hide(true);
 }
 
-void SceneManager::nvl_show(const unsigned int tl_key) {
+void SceneManager::nvl_show(const unsigned int line_hash, const unsigned int tl_key) {
+    set_line_hash(line_hash);
     SCENARIO_RETURN_IF_EXIT();
     if (is_loading) {
         return;
     }
-
-    dialog_novel.add_tl_key(tl_key);
-
-    while (!ks::globals::exit_scenario) {
-        if (globals::state == GS_GAME) {
-            if(smart_characters_manager::active_bgs_count() > 0)
-            {
-                smart_characters_manager::evict_vram_for_backdrop();
-            }
-            dialog_default.hide(true);
-            dialog_doublespeak.hide(true);
-            dialog_novel.show(true);
-
-            while (!dialog_novel.is_finished() && !bn::keypad::start_pressed()) {
-                dialog_novel.update();
-                ks::globals::main_update();
-            }
-
-            if (bn::keypad::start_pressed()) {
-                globals::state = GS_GAME_MENU;
-                is_paused = true;
-                update_visuals();
-            }
-        } else {
-            process_menu_states(globals::state);
-        }
-        if (dialog_novel.is_finished()) {
-            break;
-        }
-    }
+    nvl_show_impl(tl_key);
 }
 
 // Smooth-move duration applied by `set_character_position`. Mirrors the

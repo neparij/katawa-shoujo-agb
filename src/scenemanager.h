@@ -177,15 +177,16 @@ public:
 
     static void set_event_state(int state);
 
-    static void show_dialog(const ks::character_definition& actor, unsigned int tl_key);
-    static void show_dialog(unsigned int actor_tl_key, unsigned int tl_key);
-    static void show_doublespeak(const ks::character_definition& actor_left, unsigned int tl_key_left,
-                                 const ks::character_definition& actor_right, unsigned int tl_key_right);
+    static void show_dialog(unsigned int line_hash, const ks::character_definition& actor, unsigned int tl_key);
+    static void show_dialog(unsigned int line_hash, unsigned int actor_tl_key, unsigned int tl_key);
+    static void show_doublespeak(unsigned int line_hash, const ks::character_definition& actor_left,
+                                 unsigned int tl_key_left, const ks::character_definition& actor_right,
+                                 unsigned int tl_key_right);
     static void show_dialog_question(const bn::vector<ks::answer_ptr, 5>& answers);
     static int get_dialog_question_answer();
     static void nvl_clear();
     static void nvl_hide();
-    static void nvl_show(unsigned int tl_key);
+    static void nvl_show(unsigned int line_hash, unsigned int tl_key);
     /// Show / change a character. The variant carries the `body` (BG) and
     /// `face` (OBJ) pair plus the group hash used by save thumbnails.
     /// The 3-arg overload preserves the slot's current position (Ren'Py
