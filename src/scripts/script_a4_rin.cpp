@@ -8,6 +8,7 @@
 #include "smart_characters/emi.h"
 #include "smart_characters/muto.h"
 #include "smart_characters/misha.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_scienceroom.h"
 #include "background_metas/school_hallway3.h"
 #include "background_metas/school_classroomart.h"
@@ -108,7 +109,7 @@ namespace ks {
                 ks::SceneManager::show_dialog(0x910E49C6, ks::definitions::no, 17);
                 ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
                 ks::SceneManager::music_stop(240);
-                // TODO: Show crowd
+                ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
                 ks::SceneManager::update_visuals();
                 ks::SceneManager::show_dialog(0xB48BA67C, ks::definitions::no_char, 18);
                 ks::SceneManager::show_dialog(0xB80C77D7, ks::definitions::no_char, 19);
@@ -486,7 +487,7 @@ namespace ks {
             // renpy.music.set_volume(0.5, 0.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::set_background(ks::background_metas::gallery_int, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::music_play(MUSIC_EASE, 180);
             ks::SceneManager::show_dialog(0xAEE6BE7E, ks::definitions::no_char, 211);
@@ -503,12 +504,12 @@ namespace ks {
             ks::SceneManager::show_dialog(0xAD56CA73, ks::definitions::no_char, 220);
             // renpy.music.set_volume(1.0, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::gallery_exhibition, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA0EF124D, ks::definitions::no_char, 221);
             // renpy.music.set_volume(0.5, 1.0, channel="ambient"); TODO: unknown assignment
-            // TODO: Show transform crowd xpos=0.0 xanchor=0.0 ypos=1.0 yanchor=1.0
-            // TODO: Show transform crowd xpos=1.0 xanchor=1.0 ypos=1.0 yanchor=1.0
+            ks::SceneManager::set_displayable_position(bn::fixed(0), bn::fixed(0), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::set_displayable_position(bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::set_background_transition(SCENE_TRANSITION_LOCATIONCHANGE);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x561E32A0, ks::definitions::no_char, 222);
@@ -517,7 +518,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x29B51996, ks::definitions::no_char, 225);
             // renpy.music.set_volume(1.0, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::gallery_exhibition, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x3D1BE8F2, ks::definitions::no_char, 226);
             ks::SceneManager::show_dialog(0x54334B5F, ks::definitions::no_char, 227);
@@ -525,7 +526,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x2D18F967, ks::definitions::no_char, 229);
             ks::SceneManager::set_background(ks::background_metas::gallery_int, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::show_character(CHARACTER_SAE, ks::smart_characters::sae::sae_basic_smile, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x3EB31678, ks::definitions::no_char, 230);
             ks::SceneManager::show_dialog(0x6180AADE, ks::definitions::no_char, 231);
@@ -545,7 +546,7 @@ namespace ks {
             ks::SceneManager::set_character_position(CHARACTER_SAE, bn::fixed(0.75), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
             ks::SceneManager::set_background_position(8, 0);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(0), bn::fixed(0), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::hide_character(CHARACTER_SAE);
             ks::SceneManager::update_visuals();
@@ -597,7 +598,7 @@ namespace ks {
             ks::SceneManager::set_character_position(CHARACTER_EMICAS, bn::fixed(0.15), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
             ks::SceneManager::set_background_position(0, 0);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xE2EC6FC1, ks::definitions::no_char, 257);
             ks::SceneManager::set_character_position(CHARACTER_NOMIYA, bn::fixed(0.55), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
@@ -660,7 +661,7 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::update_visuals();
             ks::SceneManager::set_background_position(-8, 0);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::set_character_position(CHARACTER_NOMIYA, bn::fixed(0.25), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::set_character_position(CHARACTER_RIN, bn::fixed(0.55), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
@@ -716,7 +717,7 @@ namespace ks {
             ks::SceneManager::sfx_play("sfx_rustling.8ad", SOUND_CHANNEL_SOUND);
             ks::SceneManager::music_stop(60);
             ks::SceneManager::set_background(ks::background_metas::gallery_int, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::smart_characters::nomiya::nomiya_basic_serious, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::set_character_position(CHARACTER_NOMIYA, bn::fixed(0.25), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::show_character(CHARACTER_RIN, ks::smart_characters::rin::rin_negative_close_sad, PALETTE_VARIANT_DEFAULT);
@@ -3688,7 +3689,7 @@ namespace ks {
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::sfx_play("sfx_storebell.8ad", SOUND_CHANNEL_SOUND);
             ks::SceneManager::set_background(ks::background_metas::gallery_int, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::smart_characters::nomiya::nomiya_basic_talk, PALETTE_VARIANT_DEFAULT, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::show_character(CHARACTER_SAE, ks::smart_characters::sae::sae_basic_neutral, PALETTE_VARIANT_DEFAULT, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
@@ -3792,7 +3793,7 @@ namespace ks {
             ks::SceneManager::sfx_play("sfx_storebell.8ad", SOUND_CHANNEL_SOUND);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::set_background(ks::background_metas::gallery_int, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::smart_characters::nomiya::nomiya_basic_frown, PALETTE_VARIANT_DEFAULT, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::show_character(CHARACTER_SAE, ks::smart_characters::sae::sae_basic_doubt, PALETTE_VARIANT_DEFAULT, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
@@ -3837,7 +3838,7 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::set_character_position(CHARACTER_EMICAS, bn::fixed(0.15), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             // TODO: Show bg
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(0), bn::fixed(0), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::show_character(CHARACTER_NOMIYA, ks::smart_characters::nomiya::nomiya_basic_serious, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::set_character_position(CHARACTER_NOMIYA, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::show_character(CHARACTER_SAE, ks::smart_characters::sae::sae_basic_smile, PALETTE_VARIANT_DEFAULT);

@@ -13,6 +13,7 @@
 #include "smart_characters/emi.h"
 #include "smart_characters/rin.h"
 #include "smart_characters/muto.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_dormhisao.h"
 #include "background_metas/school_dormbathroom.h"
 #include "background_metas/school_scienceroom.h"
@@ -839,7 +840,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x3BACCE14, ks::definitions::no_char, 313);
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 120);
             ks::SceneManager::hide_character(CHARACTER_LILLY);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(0), bn::fixed(0), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::set_background_transition(SCENE_TRANSITION_SHORTTIMESKIP);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x2729F920, ks::definitions::no_char, 314);
@@ -872,7 +873,7 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA419CD99, ks::definitions::li, 324);
             ks::SceneManager::set_character_position(CHARACTER_LILLY, bn::fixed(0.25), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::set_background_position(-8, 0);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x9AE31852, ks::definitions::no_char, 325);
@@ -913,7 +914,7 @@ namespace ks {
             ks::SceneManager::set_character_position(CHARACTER_LILLY, bn::fixed(0.1), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::show_character(CHARACTER_AKIRA, ks::smart_characters::akira::akira_basic_smile, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::set_character_position(CHARACTER_AKIRA, bn::fixed(0.6), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::set_background_position(0, 0);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_character(CHARACTER_HIDEAKI, ks::smart_characters::hideaki::hideaki_basic_bored, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1));
@@ -1061,7 +1062,7 @@ namespace ks {
             ks::SceneManager::set_character_position(CHARACTER_AKIRA, bn::fixed(0), bn::fixed(1), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::set_character_position(CHARACTER_HIDEAKI, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::set_background_position(-8, 0);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::hide_character(CHARACTER_LILLY);
             ks::SceneManager::hide_character(CHARACTER_AKIRA);
@@ -2186,7 +2187,7 @@ namespace ks {
             ks::SceneManager::music_stop(180);
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xE619AE55, ks::definitions::no_char, 872);
             // renpy.music.set_volume(0.7, 0.5, channel="ambient"); TODO: unknown assignment
@@ -2801,7 +2802,7 @@ namespace ks {
             ks::SceneManager::music_stop(300);
             ks::SceneManager::show_dialog(0x9E743356, ks::definitions::no_char, 1155);
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 120);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             // TODO: Show bg
             ks::SceneManager::update_visuals();
@@ -3292,12 +3293,12 @@ namespace ks {
             // renpy.music.set_volume(0.7, 0.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::set_background(ks::background_metas::school_room32, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1), 0, true);
             ks::SceneManager::show_character(CHARACTER_LILLY, ks::smart_characters::lilly::lilly_basic3_surprised, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x7F564B93, ks::definitions::hi, 1328);
             ks::SceneManager::set_character_position(CHARACTER_LILLY, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::set_background_position(8, 0);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));

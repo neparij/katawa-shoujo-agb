@@ -19,6 +19,7 @@
 #include "gba_types.h"
 #include "savefile/save_file.h"
 #include "ext_bg_blocks_manager.h"
+#include "displayable_meta.h"
 #include "smart_characters_manager.h"
 #include "vfx_meta.h"
 #include "events/custom_event.h"
@@ -108,6 +109,39 @@ struct character_visuals_ptr
     bool will_show;
     bool will_hide;
 };
+
+/// Scene-layer VFX (crowd, …). Hardware lives in `displayable_manager`.
+struct displayable_visuals_ptr
+{
+    const displayable_meta* meta;
+    palette_variant_t       palette_variant;
+    bn::fixed               xpos;
+    bn::fixed               xanchor;
+    bn::fixed               ypos;
+    bn::fixed               yanchor;
+    int                     frame_index;
+    bool                    animate;
+    bool                    active;
+    bool                    will_show;
+    bool                    will_hide;
+};
+
+inline displayable_visuals_ptr make_default_displayable_visual()
+{
+    displayable_visuals_ptr v{};
+    v.meta            = nullptr;
+    v.palette_variant = PALETTE_VARIANT_DEFAULT;
+    v.xpos            = bn::fixed(0.5);
+    v.xanchor         = bn::fixed(0.5);
+    v.ypos            = bn::fixed(1.0);
+    v.yanchor         = bn::fixed(1.0);
+    v.frame_index     = 0;
+    v.animate         = true;
+    v.active          = false;
+    v.will_show       = false;
+    v.will_hide       = false;
+    return v;
+}
 
 struct answer_ptr
 {
@@ -228,6 +262,24 @@ public:
     static void hide_character(character_t character);
     static void hide_character(character_t character, bool need_update, bool remove);
 
+    static void show_displayable(const displayable_meta& meta,
+                                 palette_variant_t palette_variant,
+                                 int frame_index = 0,
+                                 bool animate = true);
+    static void show_displayable(const displayable_meta& meta,
+                                 palette_variant_t palette_variant,
+                                 bn::fixed xpos,
+                                 bn::fixed xanchor,
+                                 bn::fixed ypos,
+                                 bn::fixed yanchor,
+                                 int frame_index = 0,
+                                 bool animate = true);
+    static void hide_displayable();
+    static void set_displayable_position(bn::fixed xpos,
+                                         bn::fixed xanchor,
+                                         bn::fixed ypos,
+                                         bn::fixed yanchor);
+
     static void perform_transition(scene_transition_t transition, const bn::optional<ks::background_item>& to);
     static void perform_transition(scene_transition_t transition);
 
@@ -297,6 +349,7 @@ extern bn::optional<bn::affine_bg_ptr> transition_bg;
 extern bn::optional<bn::color> fill_color;
 extern bn::optional<bn::unique_ptr<CustomEvent>> next_event;
 extern bn::vector<character_visuals_ptr, smart_characters_manager::MAX_CHARS> character_visuals;
+extern displayable_visuals_ptr displayable_visual;
 extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;

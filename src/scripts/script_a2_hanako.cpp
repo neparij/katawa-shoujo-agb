@@ -9,6 +9,7 @@
 #include "smart_characters/muto.h"
 #include "smart_characters/yuuko.h"
 #include "smart_characters/kenji.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_dormhisao.h"
 #include "background_metas/school_scienceroom.h"
 #include "background_metas/school_gate.h"
@@ -1076,7 +1077,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xB0AEB74F, ks::definitions::ha, 418);
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xCD4AE376, ks::definitions::no_char, 419);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 30);

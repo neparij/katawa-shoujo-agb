@@ -155,6 +155,7 @@ struct variant
     /// the face shape (derived from `face_size_*_cells`) and the
     /// shared palette. Eliminating ~256 B/face × ~400 faces of
     /// duplicated palette bytes shaved ~100 KB off the ROM.
+    /// `nullptr` with zero `face_size_*_cells` means body-only
     const bn::sprite_tiles_item*            face_tiles;
     int                                     face_offset_x_cells;
     int                                     face_offset_y_cells;

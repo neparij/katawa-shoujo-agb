@@ -9,6 +9,7 @@
 #include "smart_characters/miki.h"
 #include "smart_characters/yuuko.h"
 #include "smart_characters/muto.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_scienceroom.h"
 #include "background_metas/hanako_emptyclassroom_bg.h"
 #include "background_metas/school_cafeteria.h"
@@ -106,7 +107,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xC306DAAC, ks::definitions::mi, 14);
             ks::SceneManager::show_dialog(0x86E5CBAA, ks::definitions::hi, 15);
             ks::SceneManager::set_background(ks::background_metas::school_cafeteria, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             // renpy.music.set_volume(1.0, 0.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
@@ -118,7 +119,7 @@ namespace ks {
             ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_smile, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_smile, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
-            // TODO: Hide crowd
+            ks::SceneManager::hide_displayable();
             ks::SceneManager::update_visuals();
             // renpy.music.set_volume(0.4, 7.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::show_dialog(0x2BB4C22B, ks::definitions::no_char, 21);

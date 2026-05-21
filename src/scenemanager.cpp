@@ -35,6 +35,7 @@
 // #include "bn_sprite_items_ui_ingame_menu_se.h"
 // #include "bn_sprite_items_ui_ingame_menu_sw.h"
 #include "bn_sprite_palettes.h"
+#include "displayable_manager.h"
 #include "globals.h"
 #include "ingametimer.h"
 #include "sound_manager.h"
@@ -122,6 +123,7 @@ bn::optional<bn::color> fill_color;
 
 bn::optional<bn::unique_ptr<CustomEvent>> next_event;
 EWRAM_BSS bn::vector<character_visuals_ptr, smart_characters_manager::MAX_CHARS> character_visuals;
+EWRAM_BSS displayable_visuals_ptr                         displayable_visual{};
 EWRAM_BSS background_visuals_ptr background_visual;
 
 bn::rect_window left_window = bn::rect_window::external();
@@ -143,6 +145,38 @@ EWRAM_BSS bn::vector<bn::sprite_ptr, 128> animated_text_sprites;
 // can reach it (the definition lives further down with the rest of the
 // `show_character` family helpers).
 static void _apply_smart_character(character_visuals_ptr& slot);
+static void _sync_displayable_to_manager();
+
+/// Drop scene VFX when the backdrop changes (same beats as hiding chars on
+/// location change / dissolve). Without this, `show_displayable` during a
+/// load replay can leave `displayable_visual.active` true long after the
+/// last `hide_displayable`, starving smart-character tile VRAM on the
+/// first post-load `update_visuals`.
+static void _clear_displayable_on_scene_change()
+{
+    if(! displayable_visual.active && ! displayable_manager::is_active())
+    {
+        return;
+    }
+    if(! is_loading)
+    {
+        displayable_manager::hide();
+        displayable_manager::commit();
+    }
+    displayable_visual = make_default_displayable_visual();
+}
+
+static void _evict_vram_for_backdrop()
+{
+    if(displayable_manager::is_active())
+    {
+        displayable_manager::evict_vram();
+    }
+    if(smart_characters_manager::active_bgs_count() > 0)
+    {
+        smart_characters_manager::evict_vram_for_backdrop();
+    }
+}
 
 void SceneManager::free_resources() {
     BN_LOG("Free resources...");
@@ -162,6 +196,8 @@ void SceneManager::free_resources() {
     // shared-pool slots they occupy). Subsequent `show_character` calls
     // will re-create them inside the same shared VRAM pool.
     smart_characters_manager::destroy_all();
+    displayable_manager::destroy_all();
+    displayable_visual = make_default_displayable_visual();
     for (auto &visual : character_visuals) {
         visual.character        = CHARACTER_NONE;
         visual.variant_ptr      = nullptr;
@@ -192,6 +228,8 @@ void SceneManager::set(const ks::SceneManager instance) {
     // arrays the smart-character system uses are allocated once here.
     // Idempotent — `init()` is a no-op on repeat calls.
     smart_characters_manager::init();
+    displayable_manager::init();
+    displayable_visual = make_default_displayable_visual();
 
     BN_LOG("RESET SCENE");
     scene.reset();
@@ -269,6 +307,17 @@ void SceneManager::set_line_hash(const unsigned int line_hash) {
                 }
             }
 
+            if(displayable_visual.active && displayable_visual.meta)
+            {
+                _sync_displayable_to_manager();
+            }
+            else
+            {
+                displayable_manager::destroy_all();
+            }
+            displayable_visual.will_show = false;
+            displayable_visual.will_hide = false;
+
             update_visuals();
         }
     }
@@ -332,6 +381,7 @@ void SceneManager::set_background(const background_meta& bg, const int position_
                 hide_character(visual.character, false, true);
             }
         }
+        _clear_displayable_on_scene_change();
     }
 }
 
@@ -358,6 +408,7 @@ void SceneManager::set_huge_background(const huge_background_meta& bg, const int
                 hide_character(visual.character, false, true);
             }
         }
+        _clear_displayable_on_scene_change();
     }
 }
 
@@ -554,9 +605,7 @@ namespace {
 
         while (!ks::globals::exit_scenario) {
             if (globals::state == GS_GAME) {
-                if (smart_characters_manager::active_bgs_count() > 0) {
-                    smart_characters_manager::evict_vram_for_backdrop();
-                }
+                _evict_vram_for_backdrop();
                 dialog_default.hide(true);
                 dialog_doublespeak.hide(true);
                 dialog_novel.show(true);
@@ -1141,6 +1190,102 @@ void SceneManager::hide_character(const character_t character) {
     hide_character(character, true, true);
 }
 
+static void _sync_displayable_to_manager()
+{
+    if(! displayable_visual.active || ! displayable_visual.meta)
+    {
+        return;
+    }
+    displayable_manager::show(*displayable_visual.meta,
+                              displayable_visual.palette_variant,
+                              displayable_visual.xpos,
+                              displayable_visual.xanchor,
+                              displayable_visual.ypos,
+                              displayable_visual.yanchor,
+                              displayable_visual.frame_index,
+                              displayable_visual.animate);
+}
+
+void SceneManager::show_displayable(const displayable_meta& meta,
+                                    const palette_variant_t palette_variant,
+                                    const int frame_index,
+                                    const bool animate)
+{
+    show_displayable(meta, palette_variant,
+                     bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1),
+                     frame_index, animate);
+}
+
+void SceneManager::show_displayable(const displayable_meta& meta,
+                                    const palette_variant_t palette_variant,
+                                    const bn::fixed xpos,
+                                    const bn::fixed xanchor,
+                                    const bn::fixed ypos,
+                                    const bn::fixed yanchor,
+                                    const int frame_index,
+                                    const bool animate)
+{
+    SCENARIO_RETURN_IF_EXIT();
+    BN_LOG("Show displayable");
+
+    displayable_visual.meta            = &meta;
+    displayable_visual.palette_variant = palette_variant;
+    displayable_visual.xpos            = xpos;
+    displayable_visual.xanchor         = xanchor;
+    displayable_visual.ypos            = ypos;
+    displayable_visual.yanchor         = yanchor;
+    displayable_visual.frame_index     = frame_index;
+    displayable_visual.animate         = animate;
+    displayable_visual.active          = true;
+    displayable_visual.will_show       = true;
+    displayable_visual.will_hide       = false;
+
+    // VRAM commit happens in `update_visuals` after the backdrop is ready.
+}
+
+void SceneManager::hide_displayable()
+{
+    SCENARIO_RETURN_IF_EXIT();
+    BN_LOG("Hide displayable");
+
+    if(is_loading)
+    {
+        displayable_visual = make_default_displayable_visual();
+        return;
+    }
+
+    displayable_visual.will_show = false;
+    displayable_visual.will_hide = true;
+}
+
+void SceneManager::set_displayable_position(const bn::fixed xpos,
+                                          const bn::fixed xanchor,
+                                          const bn::fixed ypos,
+                                          const bn::fixed yanchor)
+{
+    SCENARIO_RETURN_IF_EXIT();
+    if(! displayable_visual.active)
+    {
+        return;
+    }
+
+    displayable_visual.xpos    = xpos;
+    displayable_visual.xanchor = xanchor;
+    displayable_visual.ypos    = ypos;
+    displayable_visual.yanchor = yanchor;
+
+    if(is_loading)
+    {
+        return;
+    }
+
+    if(displayable_manager::is_active())
+    {
+        _sync_displayable_to_manager();
+        displayable_manager::commit();
+    }
+}
+
 void SceneManager::perform_transition(const scene_transition_t transition, const bn::optional<background_item>& to) {
     bn::blending::set_transparency_alpha(1.0);
     // while (!bn::keypad::start_pressed()) {
@@ -1325,6 +1470,13 @@ void SceneManager::perform_transition(const scene_transition_t transition) {
 void SceneManager::update() {
     if (background_visual.active_event.has_value()) {
         (*background_visual.active_event)->update();
+    }
+
+    // Scene VFX animation between `update_visuals` beats (dialog loops).
+    if(! is_loading && displayable_manager::is_active())
+    {
+        displayable_manager::tick();
+        displayable_manager::commit();
     }
 }
 
@@ -1513,6 +1665,25 @@ void SceneManager::update_visuals() {
         }
     }
 
+    const bool displayable_force_hide =
+        !is_scene_visible || is_paused || background_want_transition;
+    if(displayable_force_hide && displayable_visual.active)
+    {
+        displayable_visual.will_show = false;
+        displayable_visual.will_hide = true;
+    }
+
+    // Backdrop dissolve/swap needs extra BG VRAM. Evict the hardware layer
+    // but keep `displayable_visual` (will_show) — reshown after SHOW BACKGROUND.
+    // Frame animation only runs from `SceneManager::update()`, not here.
+    const bool displayable_backdrop_vram =
+        background_want_change || background_want_hide || background_want_show;
+    if(displayable_backdrop_vram && displayable_visual.active
+       && displayable_visual.meta && ! displayable_visual.will_hide)
+    {
+        displayable_manager::evict_vram();
+    }
+
     /// HIDE DIALOGS (WITH DISSOLVE)
     if (background_want_dissolve || background_want_transition || characters_want_show || characters_want_hide ||
         is_paused || (background_want_show && next_event_is_blendable)) {
@@ -1607,6 +1778,14 @@ void SceneManager::update_visuals() {
         }
     }
 
+    /// HIDE SCENE DISPLAYABLES (free VRAM before backdrop work)
+    if(displayable_visual.will_hide)
+    {
+        displayable_manager::hide();
+        displayable_manager::commit();
+        displayable_visual = make_default_displayable_visual();
+    }
+
     /// HIDE BACKGROUNDS (WITH DISSOLVE)
     if (background_want_hide) {
         if (background_visual.active_event.has_value()) {
@@ -1661,10 +1840,7 @@ void SceneManager::update_visuals() {
             BN_LOG("Update visuals: Change background with dissolve");
 
             background_visual.visible_fg_item.reset();
-            if(smart_characters_manager::active_bgs_count() > 0)
-            {
-                smart_characters_manager::evict_vram_for_backdrop();
-            }
+            _evict_vram_for_backdrop();
             background_visual.visible_fg_item = background_visual.bg_item->create_bg_optional(background_visual.position_x, background_visual.position_y);
             // background_visual.visible_fg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             if (background_visual.visible_fg_item.has_value()) {
@@ -1682,10 +1858,7 @@ void SceneManager::update_visuals() {
                 background_visual.visible_bg_item.reset();
                 background_visual.visible_fg_item.reset();
 
-                if(smart_characters_manager::active_bgs_count() > 0)
-                {
-                    smart_characters_manager::evict_vram_for_backdrop();
-                }
+                _evict_vram_for_backdrop();
                 background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
                 background_visual.visible_bg_item->set_priority(3);
                 background_visual.visible_bg_item->set_z_order(10);
@@ -1711,10 +1884,7 @@ void SceneManager::update_visuals() {
         } else if (!background_want_dissolve || background_change_fallback) {
             BN_LOG("Update visuals: Change background instantly");
             background_visual.visible_bg_item.reset();
-            if(smart_characters_manager::active_bgs_count() > 0)
-            {
-                smart_characters_manager::evict_vram_for_backdrop();
-            }
+            _evict_vram_for_backdrop();
             background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
             background_visual.visible_bg_item->set_priority(3);
             background_visual.visible_bg_item->set_z_order(10);
@@ -1736,10 +1906,7 @@ void SceneManager::update_visuals() {
     /// SHOW BACKGROUNDS (WITH DISSOLVE)
     if (background_want_show) {
         BN_LOG("Update visuals: Show background");
-        if(smart_characters_manager::active_bgs_count() > 0)
-        {
-            smart_characters_manager::evict_vram_for_backdrop();
-        }
+        _evict_vram_for_backdrop();
         background_visual.visible_bg_item.reset();
         background_visual.visible_bg_item = background_visual.bg_item->create_bg(background_visual.position_x, background_visual.position_y);
         background_visual.visible_bg_item->set_priority(3);
@@ -1775,6 +1942,16 @@ void SceneManager::update_visuals() {
         }
 
         // background_visual.visible_bg_item = background_visual.bg_item;
+    }
+
+    /// SHOW SCENE DISPLAYABLES (after backdrop is on screen)
+    if(displayable_visual.active && displayable_visual.meta)
+    {
+        displayable_manager::restore_after_backdrop();
+        _sync_displayable_to_manager();
+        displayable_visual.will_show = false;
+        displayable_manager::commit();
+        ks::globals::main_update();
     }
 
     /// STILL HAVE TRANSITIONS? PERFORM IT ANYWAY (example: PASSOUTP1)
@@ -1908,21 +2085,26 @@ void SceneManager::update_visuals() {
     ks::globals::main_update();
 
     /// Drive in-flight animations: bg move, dissolve blend, character
-    /// smooth-move tweens. Each frame: advance each running action,
-    /// then `globals::main_update()` to render & let V-Blank tile
-    /// uploads land. Loop until nothing's running.
+    /// smooth-move tweens. Displayable frame cycling is *not* here — see
+    /// `SceneManager::update()`. Erase finished bg_moves so `!empty()` does
+    /// not keep the loop alive after the tween completes.
     in_progress = true;
-    while (!scenario_exited() && in_progress && (blend_action.has_value() || !bg_moves.empty()
-                           || smart_characters_manager::is_animating())) {
+    while (!scenario_exited() && in_progress
+           && (blend_action.has_value()
+               || ! bg_moves.empty()
+               || smart_characters_manager::is_animating())) {
         in_progress = false;
         if (blend_action.has_value() && !blend_action->done()) {
             blend_action->update();
             in_progress = true;
         }
-        for (auto& action : bg_moves) {
-            if (!action.done()) {
-                action.update();
+        for (auto it = bg_moves.begin(); it != bg_moves.end(); ) {
+            if (it->done()) {
+                it = bg_moves.erase(it);
+            } else {
+                it->update();
                 in_progress = true;
+                ++it;
             }
         }
         if (smart_characters_manager::is_animating()) {
@@ -1932,6 +2114,7 @@ void SceneManager::update_visuals() {
         }
         globals::main_update();
     }
+    bg_moves.clear();
     blend_action.reset();
 
     if (!background_visual.fill_color.has_value()) {

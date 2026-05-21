@@ -12,6 +12,7 @@
 #include "smart_characters/misha.h"
 #include "smart_characters/nurse.h"
 #include "smart_characters/akira.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_miyagi_ss.h"
 #include "background_metas/school_hallway2.h"
 #include "background_metas/suburb_shanghaiint.h"
@@ -3171,7 +3172,7 @@ namespace ks {
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
             // renpy.music.set_volume(0.5, 10.0, channel="music"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::city_karaokeext, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_NIGHT);
-            // TODO: Show crowd_ni
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::show_character(CHARACTER_AKIRA, ks::smart_characters::akira::akira_basic_smile, PALETTE_VARIANT_SPRITE_NIGHT);
             ks::SceneManager::set_character_position(CHARACTER_AKIRA, bn::fixed(0.39), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::show_character(CHARACTER_LILLY, ks::smart_characters::lilly::lilly_cane_cas_listen, PALETTE_VARIANT_SPRITE_NIGHT);
@@ -3212,7 +3213,7 @@ namespace ks {
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
             // renpy.music.set_volume(1.0, 10.0, channel="music"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::city_clubint, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             // renpy.music.set_volume(0.8, 0.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
@@ -3225,7 +3226,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x2549C0BD, ks::definitions::no_char, 1386);
             // renpy.music.set_volume(0.5, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::show_character(CHARACTER_AKIRA, ks::smart_characters::akira::akira_basic_smile, PALETTE_VARIANT_DEFAULT);
-            // TODO: Hide crowd
+            ks::SceneManager::hide_displayable();
             ks::SceneManager::update_visuals();
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x7D0C77CF, ks::definitions::no_char, 1387);
@@ -3740,7 +3741,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x26761BEE, ks::definitions::no_char, 1595);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 120);
             ks::SceneManager::set_background(ks::background_metas::city_street2, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             // renpy.music.set_volume(1.0, 0.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 120);
@@ -3771,7 +3772,7 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xB0AEB74F, ks::definitions::ha, 1609);
             ks::SceneManager::set_background(ks::background_metas::city_street1, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xCAA652F8, ks::definitions::no_char, 1610);
             ks::SceneManager::show_dialog(0x5F8B188A, ks::definitions::no_char, 1611);

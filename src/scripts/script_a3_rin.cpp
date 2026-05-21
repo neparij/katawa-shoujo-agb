@@ -8,6 +8,7 @@
 #include "smart_characters/sae.h"
 #include "smart_characters/emi.h"
 #include "smart_characters/yuuko.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_scienceroom.h"
 #include "background_metas/school_hallway3.h"
 #include "background_metas/school_classroomart.h"
@@ -521,7 +522,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xDFA9EBAC, ks::definitions::no_char, 180);
             ks::SceneManager::sfx_play("sfx_normalbell.8ad", SOUND_CHANNEL_SOUND);
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 18);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x180B1B04, ks::definitions::no_char, 181);
             ks::SceneManager::show_dialog(0xDD441E61, ks::definitions::no_char, 182);
@@ -729,7 +730,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x21F3953F, ks::definitions::no_char, 283);
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
             ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xEAB970C4, ks::definitions::no_char, 284);
             ks::SceneManager::show_character(CHARACTER_EMI, ks::smart_characters::emi::emi_basic_closedgrin, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
@@ -1006,7 +1007,7 @@ namespace ks {
             bn::vector<ks::answer_ptr, 5> answers;
             int answer;
             ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xAE701789, ks::definitions::no_char, 408);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);

@@ -16,6 +16,7 @@ class SequenceType(Enum):
     RETURN = "return"
     RUN_LABEL = "run_label"
     SHOW = "show"
+    SHOW_DISPLAYABLE = "show_displayable"
     SHOW_TRANSFORM = "show_transform"
     BACKGROUND_TRANSFORM = "background_transform"
     BACKGROUND_TRANSITION = "background_transition"

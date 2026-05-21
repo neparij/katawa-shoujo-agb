@@ -46,6 +46,8 @@
 
 #include "smart_characters_manager.h"
 
+#include "displayable_manager.h"
+
 #include <cstdint>
 #include <cstring>
 
@@ -342,6 +344,7 @@ struct bg_slot
 bool                                 g_initialized = false;
 bn::array<char_state, MAX_CHARS>     g_chars;
 bn::array<bg_slot,    MAX_BGS>       g_bgs;
+int                   g_physical_bg_budget = MAX_BGS;
 
 BN_DATA_EWRAM_BSS char_trim_buffers  g_char_trim[MAX_CHARS];
 
@@ -468,6 +471,8 @@ void _do_copy_char(const pending_upload& snap);
 
 void process_pending_uploads()
 {
+    displayable_manager::process_pending_tile_uploads();
+
     for(pending_upload& p : g_pending)
     {
         if(p.char_idx < 0) continue;
@@ -607,7 +612,7 @@ void _ensure_shared_resources()
         // Allocate as many tiles as possible while reserving map blocks.
         constexpr int BN_TILES_PER_BLOCK = 64; // 2KB / 32 bytes
         const int free_blocks_now = bn::bg_tiles::available_blocks_count();
-        const int reserve_map_blocks = MAX_BGS;
+        const int reserve_map_blocks = g_physical_bg_budget;
         const int blocks_for_tiles = bn::max(0, free_blocks_now - reserve_map_blocks);
 
         const int max_bn_tiles_from_blocks = blocks_for_tiles * BN_TILES_PER_BLOCK;
@@ -1098,7 +1103,7 @@ void _global_layout()
 
 int _allocate_bg_slot()
 {
-    for(int i = 0; i < MAX_BGS; ++i)
+    for(int i = 0; i < g_physical_bg_budget; ++i)
     {
         if(! g_bgs[i].active)
         {
@@ -1231,7 +1236,7 @@ bool _try_find_existing_host(int char_idx, int avoid_bg,
 {
     const char_state& ch = g_chars[char_idx];
     int best_bg = -1, best_count = -1, best_dx = 0, best_dy = 0;
-    for(int i = 0; i < MAX_BGS; ++i)
+    for(int i = 0; i < g_physical_bg_budget; ++i)
     {
         if(i == avoid_bg) continue;
         if(! g_bgs[i].active) continue;
@@ -1395,6 +1400,17 @@ void _sync_face_sprites()
         const int dx = bg.char_dx_cells[slot];
         const int dy = bg.char_dy_cells[slot];
         const smart_characters::variant& var = *ch.var;
+
+        // TODO: verify this is correct
+        if(var.face_tiles == nullptr
+                || var.face_size_x_cells <= 0
+                || var.face_size_y_cells <= 0)
+        {
+            ch.face.reset();
+            ch.face_var_applied = nullptr;
+            continue;
+        }
+
         const bn::fixed sx = _face_sprite_x(bg, dx, var);
         const bn::fixed sy = _face_sprite_y(bg, dy, var);
 
@@ -2324,6 +2340,11 @@ void set_palette_variant(palette_variant_t variant)
 palette_variant_t current_palette_variant()
 {
     return g_palette_variant;
+}
+
+void set_physical_bg_budget(int count)
+{
+    g_physical_bg_budget = bn::max(0, bn::min(count, MAX_BGS));
 }
 
 }  // namespace ks::smart_characters_manager

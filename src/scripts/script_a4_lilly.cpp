@@ -12,6 +12,7 @@
 #include "smart_characters/muto.h"
 #include "smart_characters/yuuko.h"
 #include "smart_characters/hideaki.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_scienceroom.h"
 #include "background_metas/school_hallway2.h"
 #include "background_metas/lilly_tearoom.h"
@@ -3875,7 +3876,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x16C63775, ks::definitions::hi, 1790);
             ks::SceneManager::show_dialog(0xA91E4BC2, ks::definitions::no_char, 1791);
             ks::SceneManager::set_background(ks::background_metas::city_street4_ni, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd_ni
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 120);
             ks::SceneManager::show_dialog(0xDCF13E3D, ks::definitions::no_char, 1792);
@@ -3891,7 +3892,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x6FA686D5, ks::definitions::no_char, 1802);
             ks::SceneManager::show_dialog(0x32A40D59, ks::definitions::no_char, 1803);
             ks::SceneManager::set_background(ks::background_metas::hosp_ext, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_NIGHT);
-            // TODO: Show crowd_ni
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::sfx_play("sfx_heartslow.8ad", SOUND_CHANNEL_SOUND);
             // TODO: Show heartattack
@@ -3920,8 +3921,8 @@ namespace ks {
             ks::SceneManager::show_dialog(0x07865413, ks::definitions::hi, 1815);
             ks::SceneManager::show_dialog(0x4BB159A0, ks::definitions::no_char, 1816);
             ks::SceneManager::set_background(ks::background_metas::hosp_ext, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_NIGHT);
-            // TODO: Show crowd_ni
-            // TODO: Show transform crowd_ni xpos=0.5 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
+            ks::SceneManager::set_displayable_position(bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
             ks::SceneManager::sfx_play("sfx_impact.8ad", SOUND_CHANNEL_SOUND);
             ks::SceneManager::show_dialog(0xD21143B6, ks::definitions::hi, 1817);
@@ -4052,13 +4053,13 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x238BD4C2, ks::definitions::no_char, 1858);
             ks::SceneManager::set_background(ks::background_metas::hosp_ext, 0, 0, SCENE_TRANSITION_FLASH, 0, PALETTE_VARIANT_PAST_NIGHT);
-            // TODO: Show crowd_still1_fb
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_SPRITE_PAST, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1), 0, false);
             // TODO: Show noiseoverlay
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4FAC73E9, ks::definitions::no_char, 1859);
             ks::SceneManager::set_background(ks::background_metas::hosp_ext, 0, 0, SCENE_TRANSITION_FLASH, 0, PALETTE_VARIANT_PAST_NIGHT);
-            // TODO: Show crowd_still2_fb
-            // TODO: Show transform crowd_still2_fb xpos=0.5 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_SPRITE_PAST, 1, false);
+            ks::SceneManager::set_displayable_position(bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             // TODO: Show noiseoverlay
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x21A938F7, ks::definitions::no_char, 1860);

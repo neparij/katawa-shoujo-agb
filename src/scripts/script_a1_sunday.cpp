@@ -10,6 +10,7 @@
 #include "smart_characters/yuuko.h"
 #include "smart_characters/shizu.h"
 #include "smart_characters/misha.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_dormhisao.h"
 #include "background_metas/school_dormhallway.h"
 #include "background_metas/school_courtyard.h"
@@ -195,7 +196,7 @@ namespace ks {
             ks::SceneManager::music_play(MUSIC_SOOTHING, 60);
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
             ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xDD9EC00B, ks::definitions::no_char, 78);
             ks::SceneManager::show_dialog(0x1E3224B8, ks::definitions::no_char, 79);
@@ -372,7 +373,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x516DD082, ks::definitions::no_char, 183);
             // renpy.music.set_volume(1.0, 2.0, "ambient"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x0E5B84A9, ks::definitions::no_char, 184);
             ks::SceneManager::music_stop(360);
@@ -660,7 +661,7 @@ namespace ks {
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 18);
             ks::SceneManager::music_play(MUSIC_SOOTHING, 30);
             ks::SceneManager::set_background(ks::background_metas::school_dormext_full, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xE64EDC74, ks::definitions::no_char, 328);
             ks::SceneManager::show_dialog(0xFC2B1DF8, ks::definitions::no_char, 329);
@@ -682,7 +683,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xB952CBB8, ks::definitions::no_char, 344);
             ks::SceneManager::show_dialog(0x4BAE8C83, ks::definitions::no_char, 345);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
-            // TODO: Hide crowd
+            ks::SceneManager::hide_displayable();
             ks::SceneManager::show_character(CHARACTER_RIN, ks::smart_characters::rin::rin_relaxed_boredom, PALETTE_VARIANT_DEFAULT, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x5CDD8CC6, ks::definitions::no_char, 346);
@@ -1031,7 +1032,7 @@ namespace ks {
             // renpy.music.set_volume(0.5, 0.0, "ambient"); TODO: unknown assignment
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
             ks::SceneManager::set_background(ks::background_metas::school_dormext_full_ss, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd_ss
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xAE1E9687, ks::definitions::no_char, 521);
             ks::SceneManager::show_dialog(0xA80A7C7C, ks::definitions::no_char, 522);
@@ -1449,13 +1450,13 @@ namespace ks {
             ks::SceneManager::music_stop(600);
             // renpy.music.set_volume(1.0,1.0, "ambient"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xFD6024A3, ks::definitions::no_char, 723);
             ks::SceneManager::show_dialog(0x4348291C, ks::definitions::no_char, 724);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::set_background(ks::background_metas::school_hallway2, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 30);
             ks::SceneManager::show_dialog(0x350076C2, ks::definitions::no_char, 725);
@@ -1465,7 +1466,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x187DCF1D, ks::definitions::no_char, 729);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 300);
             ks::SceneManager::show_dialog(0x92C670A1, ks::definitions::no_char, 730);
-            // TODO: Hide crowd
+            ks::SceneManager::hide_displayable();
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x02D02396, ks::definitions::no_char, 731);
             ks::SceneManager::show_dialog(0x8D0B2282, ks::definitions::no_char, 732);
@@ -2341,7 +2342,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x12BC04C6, ks::definitions::no_char, 1101);
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
             ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::music_play(MUSIC_RUNNING);
             ks::SceneManager::show_dialog(0x8D5122EF, ks::definitions::no_char, 1102);
@@ -2519,7 +2520,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x053C0DC0, ks::definitions::mi, 1164);
             // renpy.music.set_volume(1.0,2.0, "ambient"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::school_courtyard_ss, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd_ss
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::music_play(MUSIC_EASE, 360);
             ks::SceneManager::show_dialog(0x80C463FC, ks::definitions::no_char, 1165);
@@ -2814,7 +2815,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xC899F50F, ks::definitions::mi, 1281);
             ks::SceneManager::show_dialog(0x2A39E74D, ks::definitions::no_char, 1282);
             ks::SceneManager::set_background(ks::background_metas::school_courtyard_ni, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd_ni
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             // renpy.music.set_volume(1.0,2.0, "ambient"); TODO: unknown assignment
             ks::SceneManager::show_dialog(0x4E47321F, ks::definitions::no_char, 1283);
@@ -3030,7 +3031,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x4FAA1F78, ks::definitions::no_char, 1389);
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 18);
             ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x08D2BAAE, ks::definitions::no_char, 1390);
             ks::SceneManager::show_dialog(0xD4BF2DA3, ks::definitions::no_char, 1391);
@@ -3072,11 +3073,11 @@ namespace ks {
             ks::SceneManager::show_dialog(0xF60AD620, ks::definitions::no_char, 1417);
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 18);
             ks::SceneManager::set_background(ks::background_metas::school_lobby, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x6C6C5B13, ks::definitions::no_char, 1418);
             ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x363C8E93, ks::definitions::no_char, 1419);
             ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
@@ -3469,7 +3470,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x7E59D0BF, ks::definitions::no_char, 1586);
             // renpy.music.set_volume(1.0, 1.0, channel="ambient"); TODO: unknown assignment
             // TODO: Show bg
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::set_background_transition(SCENE_TRANSITION_LOCATIONCHANGE);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xF48F21F1, ks::definitions::no_char, 1587);
@@ -3495,7 +3496,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x9440983F, ks::definitions::no_char, 1602);
             // renpy.music.set_volume(1.0, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xB3035264, ks::definitions::no_char, 1603);
             ks::SceneManager::show_dialog(0x6C4FE1CE, ks::definitions::no_char, 1604);
@@ -3567,7 +3568,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xEDE916D6, ks::definitions::li, 1642);
             // renpy.music.set_volume(1.0, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::set_background(ks::background_metas::school_courtyard, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x17FE158B, ks::definitions::no_char, 1643);
             ks::SceneManager::show_dialog(0x27EEA6B4, ks::definitions::no_char, 1644);

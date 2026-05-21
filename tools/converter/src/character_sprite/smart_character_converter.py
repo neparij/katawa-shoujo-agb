@@ -87,7 +87,8 @@ BODY_Y_CROP_PX   = 120
 BODY_TARGET_H_PX = 160
 
 
-def _compute_render_size_px(source_png: str, y_offset: int) -> tuple[int, int]:
+def _compute_render_size_px(source_png: str, y_offset: int,
+                            y_crop: int = BODY_Y_CROP_PX) -> tuple[int, int]:
     """Pose-stable rendered displayable size in canvas pixels.
 
     Mirrors `ImageTools.resize` exactly: crop the source by `y_crop` (with
@@ -103,7 +104,7 @@ def _compute_render_size_px(source_png: str, y_offset: int) -> tuple[int, int]:
     """
     with Image.open(source_png) as img:
         source_w, source_h = img.size
-    cropped_h = source_h - BODY_Y_CROP_PX
+    cropped_h = source_h - y_crop
     if cropped_h <= 0:
         # Defensive: y_crop ≥ source height means the resize step also
         # bails; report a sensible fallback so body emission keeps going.
@@ -129,11 +130,13 @@ TILES_PER_SLAB = 1024
 def render_body_bmp(source_png: str, output_bmp: str, *,
                     y_offset: int, y_crop: int,
                     tint: list | None,
-                    cutout_offset_px: tuple[int, int],
-                    cutout_size_px: tuple[int, int]) -> None:
+                    cutout_offset_px: tuple[int, int] | None,
+                    cutout_size_px: tuple[int, int] | None) -> None:
     """Render the shared body BG for a group into a 256×256 8bpp BMP using
     `pal_char_bg`, with the face cells stamped transparent so the emotion
     sprite can be alpha-composited on top at runtime.
+
+    When `cutout_*` are ``None`` the full frame is kept (VFX / crowd).
 
     Skips the (slow) tilequant / imgdither pass if `output_bmp` is newer
     than the source PNG.
@@ -141,9 +144,12 @@ def render_body_bmp(source_png: str, output_bmp: str, *,
     if (os.path.exists(output_bmp)
             and os.path.getmtime(output_bmp) >= os.path.getmtime(source_png)):
         return
-    print(f"  render body: {os.path.basename(source_png)}  "
-          f"cutout=({cutout_offset_px[0]},{cutout_offset_px[1]}) "
-          f"size=({cutout_size_px[0]}x{cutout_size_px[1]})")
+    if cutout_offset_px and cutout_size_px:
+        cutout_msg = (f"cutout=({cutout_offset_px[0]},{cutout_offset_px[1]}) "
+                      f"size=({cutout_size_px[0]}x{cutout_size_px[1]})")
+    else:
+        cutout_msg = "cutout=none"
+    print(f"  render body: {os.path.basename(source_png)}  {cutout_msg}")
     ImageTools.resize_character_background(
         source_png, output_bmp,
         y_offset=y_offset,
@@ -511,6 +517,16 @@ class GroupContext:
         return (self.face_size_cells[0] * 8, self.face_size_cells[1] * 8)
 
     @property
+    def has_face_overlay(self) -> bool:
+        """True when this group composites a separate emotion OBJ on the body.
+
+        VFX-only characters (e.g. `crowd`) set `base_emotion_size` to
+        `[0, 0]` and ship a single full-frame sprite — no face cut-out
+        and no per-emotion OBJ tiles.
+        """
+        return self.face_size_cells[0] > 0 and self.face_size_cells[1] > 0
+
+    @property
     def tint_arg(self) -> list | None:
         t = self.silhouette_tint
         return [t, t, t] if t is not None else None
@@ -631,7 +647,9 @@ def write_tileset_sources(header_path: str, source_path: str,
         f.write("}  // namespace ks::smart_characters::" + tileset_key + "\n\n")
         f.write(f"#endif  // {h_guard}\n")
 
-    sprite_includes = sorted({v["sprite_item_name"] for v in variants})
+    sprite_includes = sorted({
+        v["sprite_item_name"] for v in variants if v.get("sprite_item_name")
+    })
     # Thumbnails live alongside face sprites under each character's
     # `graphics/characters/<char>/` folder and produce
     # `bn::sprite_tiles_items::<char>_thumb_*` symbols too.
@@ -712,10 +730,14 @@ def write_tileset_sources(header_path: str, source_path: str,
             sym = v["symbol"]
             fox, foy = ctx.face_offset_cells
             fsx, fsy = ctx.face_size_cells
+            face_tiles_ref = (
+                f"&bn::sprite_tiles_items::{v['sprite_item_name']}"
+                if v.get("sprite_item_name") else "nullptr"
+            )
             f.write(
                 f"const variant {sym} = {{\n"
                 f"    /* body                */ &{ctx.body_symbol},\n"
-                f"    /* face_tiles          */ &bn::sprite_tiles_items::{v['sprite_item_name']},\n"
+                f"    /* face_tiles          */ {face_tiles_ref},\n"
                 f"    /* face_offset_x_cells */ {fox},\n"
                 f"    /* face_offset_y_cells */ {foy},\n"
                 f"    /* face_size_x_cells   */ {fsx},\n"
@@ -796,13 +818,15 @@ class SmartCharacterConverter:
                 body_bmp = os.path.join(
                     cache_dir, f"{char_name}_{group_key}_body.bmp"
                 )
+                cutout_offset = ctx.face_offset_px if ctx.has_face_overlay else None
+                cutout_size = ctx.face_size_px if ctx.has_face_overlay else None
                 render_body_bmp(
                     base_png, body_bmp,
                     y_offset=ctx.y_offset,
                     y_crop=ctx.y_crop,
                     tint=ctx.tint_arg,
-                    cutout_offset_px=ctx.face_offset_px,
-                    cutout_size_px=ctx.face_size_px,
+                    cutout_offset_px=cutout_offset,
+                    cutout_size_px=cutout_size,
                 )
 
                 # Save-game thumbnail: 32×32 mini body+face. Lives next
@@ -886,26 +910,28 @@ class SmartCharacterConverter:
                         f"for {ctx.char_name}/{ctx.group_key}/{emotion}"
                     )
 
-                sprite_item_name = ctx.sprite_item_name(emotion)
-                # Each face sprite lives in its own character's folder,
-                # not the tileset owner's, so e.g. `emicas_spr_*.bmp` and
-                # `emiwheel_spr_*.bmp` (both on tileset `emi`) end up in
-                # `graphics/characters/emicas/` and `.../emiwheel/`.
-                face_dir = os.path.join(characters_root, ctx.char_name)
-                os.makedirs(face_dir, exist_ok=True)
-                face_bmp  = os.path.join(face_dir, f"{sprite_item_name}.bmp")
-                face_json = os.path.join(face_dir, f"{sprite_item_name}.json")
-                render_face_bmp(
-                    sprite_src, face_bmp,
-                    y_offset=ctx.y_offset,
-                    y_crop=ctx.y_crop,
-                    tint=ctx.tint_arg,
-                    sprite_offset_px=ctx.face_offset_px,
-                    sprite_size_px=ctx.face_size_px,
-                )
-                if (not os.path.exists(face_json)
-                        or os.path.getmtime(face_json) < os.path.getmtime(face_bmp)):
-                    write_face_sprite_json(face_json)
+                sprite_item_name = None
+                if ctx.has_face_overlay:
+                    sprite_item_name = ctx.sprite_item_name(emotion)
+                    # Each face sprite lives in its own character's folder,
+                    # not the tileset owner's, so e.g. `emicas_spr_*.bmp` and
+                    # `emiwheel_spr_*.bmp` (both on tileset `emi`) end up in
+                    # `graphics/characters/emicas/` and `.../emiwheel/`.
+                    face_dir = os.path.join(characters_root, ctx.char_name)
+                    os.makedirs(face_dir, exist_ok=True)
+                    face_bmp  = os.path.join(face_dir, f"{sprite_item_name}.bmp")
+                    face_json = os.path.join(face_dir, f"{sprite_item_name}.json")
+                    render_face_bmp(
+                        sprite_src, face_bmp,
+                        y_offset=ctx.y_offset,
+                        y_crop=ctx.y_crop,
+                        tint=ctx.tint_arg,
+                        sprite_offset_px=ctx.face_offset_px,
+                        sprite_size_px=ctx.face_size_px,
+                    )
+                    if (not os.path.exists(face_json)
+                            or os.path.getmtime(face_json) < os.path.getmtime(face_bmp)):
+                        write_face_sprite_json(face_json)
 
                 variants.append({
                     "ctx": ctx,

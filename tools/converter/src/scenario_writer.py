@@ -31,7 +31,9 @@ from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
 from src.dto.show_item import ShowItem, ShowPosition
+from src.dto.show_displayable_item import ShowDisplayableItem
 from src.dto.show_transform_item import ShowTransformItem
+from src.displayable_utils import crowd_frame_index, crowd_animate, is_displayable_sprite
 from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
@@ -170,6 +172,7 @@ class ScenarioWriter:
         # contains every (character × pose × outfit × close) group + emotion
         # used by this script that maps to that tileset.
         self.smart_character_tilesets: List[str] = []
+        self.displayables: List[str] = []
         self.events = []
         self.music = []
         self.videos = []
@@ -190,6 +193,8 @@ class ScenarioWriter:
         ]
         for tileset in self.smart_character_tilesets:
             includes.append(include_header(tileset, "smart_characters/"))
+        for name in self.displayables:
+            includes.append(include_header(name, "displayables/"))
         for background in self.backgrounds:
             includes.append(include_header(background, "background_metas/"))
         for event in self.events:
@@ -443,6 +448,8 @@ class ScenarioWriter:
             return self.process_sequence_run_label(group, cast(RunLabelItem, sequence))
         elif sequence.type == SequenceType.SHOW:
             return self.process_sequence_show(group, cast(ShowItem, sequence))
+        elif sequence.type == SequenceType.SHOW_DISPLAYABLE:
+            return self.process_sequence_show_displayable(group, cast(ShowDisplayableItem, sequence))
         elif sequence.type == SequenceType.HIDE:
             return self.process_sequence_hide(group, cast(HideItem, sequence))
         elif sequence.type == SequenceType.BACKGROUND_TRANSFORM:
@@ -600,6 +607,55 @@ class ScenarioWriter:
         print(f"{group.name} ({group.type}) >>> Run Label (direct) {callback}")
         return [f'{class_name}::{callback}(); // DIRECT CALL']
 
+    def _renpy_show_position(self, position: ShowPosition) -> Tuple[float, float, float, float] | None:
+        if position == ShowPosition.TWOLEFT:
+            return (0.3, 0.5, 1.0, 1.0)
+        if position == ShowPosition.TWORIGHT:
+            return (0.7, 0.5, 1.0, 1.0)
+        if position == ShowPosition.CLOSELEFT:
+            return (0.25, 0.5, 1.0, 1.0)
+        if position == ShowPosition.CLOSERIGHT:
+            return (0.75, 0.5, 1.0, 1.0)
+        if position == ShowPosition.OFFSCREENLEFT:
+            return (-0.25, 1.0, 1.0, 1.0)
+        if position == ShowPosition.OFFSCREENRIGHT:
+            return (1.25, 0.0, 1.0, 1.0)
+        if position == ShowPosition.LEFT:
+            return (0.0, 0.0, 1.0, 1.0)
+        if position == ShowPosition.RIGHT:
+            return (1.0, 1.0, 1.0, 1.0)
+        if position == ShowPosition.CENTER:
+            return (0.5, 0.5, 1.0, 1.0)
+        if position == ShowPosition.DEFAULT:
+            return None
+        raise TypeError("Unknown ShowPosition type")
+
+    def process_sequence_show_displayable(self, group: SequenceGroup,
+                                          show: ShowDisplayableItem) -> List[str]:
+        if show.name != "crowd":
+            raise TypeError(f"Unknown displayable: {show.name}")
+
+        if show.name not in self.displayables:
+            self.displayables.append(show.name)
+
+        meta = "ks::displayables::crowd"
+        frame_index = crowd_frame_index(show.subvariant)
+        animate = "true" if crowd_animate(show.subvariant) else "false"
+        pal = show.palette_variant
+        renpy_pos = self._renpy_show_position(show.position)
+
+        if renpy_pos is not None:
+            xpos, xanchor, ypos, yanchor = renpy_pos
+            return [
+                f"ks::SceneManager::show_displayable({meta}, {pal}, "
+                f"{fixed_literal(xpos)}, {fixed_literal(xanchor)}, "
+                f"{fixed_literal(ypos)}, {fixed_literal(yanchor)}, "
+                f"{frame_index}, {animate});"
+            ]
+        return [
+            f"ks::SceneManager::show_displayable({meta}, {pal}, {frame_index}, {animate});"
+        ]
+
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
         # if not show.sprite in self.sprites:
         #     self.sprites.append(show.sprite)
@@ -627,32 +683,7 @@ class ScenarioWriter:
             # screen-mapping). All resolution to actual pixels happens
             # in `SceneManager::_resolve_pixel_position` against the
             # variant's body width — see scenemanager.cpp comments.
-            renpy_pos: Tuple[float, float, float, float] | None = None
-            if show.position == ShowPosition.TWOLEFT:
-                renpy_pos = (0.3, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.TWORIGHT:
-                renpy_pos = (0.7, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.CLOSELEFT:
-                renpy_pos = (0.25, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.CLOSERIGHT:
-                renpy_pos = (0.75, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.OFFSCREENLEFT:
-                # Far off the left edge: anchor at right edge of body
-                # so the whole body is offscreen.
-                renpy_pos = (-0.25, 1.0, 1.0, 1.0)
-            elif show.position == ShowPosition.OFFSCREENRIGHT:
-                renpy_pos = (1.25, 0.0, 1.0, 1.0)
-            elif show.position == ShowPosition.LEFT:
-                # Inside the screen, anchored at left edge of body.
-                renpy_pos = (0.0, 0.0, 1.0, 1.0)
-            elif show.position == ShowPosition.RIGHT:
-                renpy_pos = (1.0, 1.0, 1.0, 1.0)
-            elif show.position == ShowPosition.CENTER:
-                renpy_pos = (0.5, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.DEFAULT:
-                renpy_pos = None  # keep slot's current transform
-            else:
-                raise TypeError("Unknown ShowPosition type")
+            renpy_pos = self._renpy_show_position(show.position)
 
             result = []
 
@@ -804,6 +835,8 @@ class ScenarioWriter:
         # if hide.sprite == "black":
         if is_color_filled_bg(hide.sprite):
             return [f'ks::SceneManager::disable_fill();']
+        elif is_displayable_sprite(hide.sprite):
+            return ["ks::SceneManager::hide_displayable();"]
         elif hide.sprite not in CHARACTERS:
             return [f'// TODO: Hide {hide.sprite}']
         else:
@@ -830,6 +863,12 @@ class ScenarioWriter:
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         print(show_transform)
+        if is_displayable_sprite(show_transform.sprite):
+            return [
+                f'ks::SceneManager::set_displayable_position('
+                f'{fixed_literal(show_transform.xpos)}, {fixed_literal(show_transform.xanchor)}, '
+                f'{fixed_literal(show_transform.ypos)}, {fixed_literal(show_transform.yanchor)});'
+            ]
         if show_transform.sprite not in CHARACTERS:
             return [
                 f'// TODO: Show transform {show_transform.sprite} '

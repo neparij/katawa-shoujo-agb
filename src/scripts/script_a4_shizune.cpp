@@ -9,6 +9,7 @@
 #include "smart_characters/jigoro.h"
 #include "smart_characters/kenji.h"
 #include "smart_characters/lilly.h"
+#include "displayables/crowd.h"
 #include "background_metas/school_library.h"
 #include "background_metas/school_council.h"
 #include "background_metas/school_dormhisao.h"
@@ -1015,14 +1016,14 @@ namespace ks {
             ks::SceneManager::set_background(ks::background_metas::school_lobby, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::show_character(CHARACTER_MISHASHORT, ks::smart_characters::misha::mishashort_perky_confused, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::set_character_position(CHARACTER_MISHASHORT, bn::fixed(0.6), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4BBC35A1, ks::definitions::no_char, 393);
             ks::SceneManager::show_dialog(0x715184D8, ks::definitions::no_char, 394);
             ks::SceneManager::show_dialog(0x81A7AC01, ks::definitions::no_char, 395);
             ks::SceneManager::show_dialog(0xEDBB8BE2, ks::definitions::no_char, 396);
             ks::SceneManager::show_character(CHARACTER_MISHASHORT, ks::smart_characters::misha::mishashort_hips_smile, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x191B0DE7, ks::definitions::no_char, 397);
             ks::SceneManager::show_character(CHARACTER_MISHASHORT, ks::smart_characters::misha::mishashort_hips_grin, PALETTE_VARIANT_DEFAULT);
@@ -2483,7 +2484,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x7E6C0D6E, ks::definitions::no_char, 1040);
             ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 120);
             ks::SceneManager::set_background(ks::background_metas::school_lobby, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x06750346, ks::definitions::no_char, 1041);
             ks::SceneManager::show_dialog(0x0501C307, ks::definitions::no_char, 1042);
@@ -2669,14 +2670,14 @@ namespace ks {
             ks::SceneManager::show_dialog(0x799576ED, ks::definitions::no_char, 1124);
             ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 180);
             ks::SceneManager::set_background(ks::background_metas::school_gate, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
-            // TODO: Show crowd
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
             ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_blank, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xCC06BCE7, ks::definitions::no_char, 1125);
             // renpy.music.set_volume(0.3, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_adjust_frown, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
-            // TODO: Hide crowd
+            ks::SceneManager::hide_displayable();
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x00593CFC, ks::definitions::no_char, 1126);
             ks::SceneManager::show_dialog(0x0391234B, ks::definitions::no_char, 1127);

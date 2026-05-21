@@ -13,6 +13,7 @@ from src.spm_packer import SPMPacker
 from src.spm_writer import SPMWriter
 from src.translation.translation_container import TranslationContainer
 from src.translation_reader import TranslationReader
+from src.displayable_converter import convert_all_displayables
 
 
 def main():
@@ -122,6 +123,26 @@ def main():
         "--locales",
         required=True,
         help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
+    )
+
+    displayables_parser = subparsers.add_parser(
+        "displayables",
+        help="Scene displayable BG assets (crowd, …); tile opts in displayable_specs.py",
+    )
+    displayables_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to KS:RE sources",
+    )
+    displayables_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources",
+    )
+    displayables_parser.add_argument(
+        "--names",
+        required=False,
+        help="Displayable keys, comma separated (default: all in displayable_specs.py)",
     )
 
     args = parser.parse_args()
@@ -271,6 +292,11 @@ def main():
         for locale in locales:
             spm_packer = SPMPacker(spm_path, tl_path, locale)
             spm_packer.pack()
+
+    if args.command == "displayables":
+        sprites_dir = os.path.join(args.source, "game")
+        names = args.names.split(",") if args.names else None
+        convert_all_displayables(sprites_dir, args.outdir, names)
 
 
 if __name__ == "__main__":

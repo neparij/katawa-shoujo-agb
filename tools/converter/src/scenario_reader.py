@@ -25,6 +25,8 @@ from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceType, SequenceItem
 from src.dto.show_item import ShowEvent, ShowItem, ShowPosition
+from src.dto.show_displayable_item import ShowDisplayableItem
+from src.displayable_utils import is_displayable_sprite, split_displayable_sprite, displayable_palette_variant
 from src.dto.show_transform_item import ShowTransformItem
 from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect, SoundChannel
@@ -160,6 +162,7 @@ class ScenarioReader:
         # TODO: process show sequence with "at" clause here!
 
         if (has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW) or
+                has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW_DISPLAYABLE) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.HIDE) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.SHOW_TRANSFORM) or
                 has_sequence_item_with_type(self.linepack_events, SequenceType.BACKGROUND_TRANSITION) or
@@ -546,6 +549,15 @@ class ScenarioReader:
                 position = ShowPosition.CENTER
             else:
                 position = ShowPosition.DEFAULT
+
+            if is_displayable_sprite(sprite_name):
+                base_name, subvariant = split_displayable_sprite(sprite_name)
+                palette_variant = displayable_palette_variant(subvariant)
+                self.stack.current().add_sequence_item(
+                    self.linepack_events,
+                    ShowDisplayableItem(base_name, subvariant, event_type, position, palette_variant))
+                self._hack_latest_sprite_name = base_name
+                return
 
             variant_name, palette_variant = get_sprite_paletted_variant(variant_name)
             self.stack.current().add_sequence_item(self.linepack_events, ShowItem(sprite_name, variant_name, event_type, position, palette_variant))

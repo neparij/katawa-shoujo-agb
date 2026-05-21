@@ -273,6 +273,10 @@ void set_palette_variant(palette_variant_t variant);
 /// Diagnostics: how many physical BGs are currently active.
 [[nodiscard]] int active_bgs_count();
 
+/// Limit how many physical BG slots the packer may allocate (scene
+/// displayables reserve layers — see `displayable_manager`).
+void set_physical_bg_budget(int count);
+
 /// Diagnostics: combined working-set size (in 8bpp visual tiles) of every
 /// character hosted by the *i*-th active BG.
 [[nodiscard]] int active_bg_tile_count(int active_bg_index);
