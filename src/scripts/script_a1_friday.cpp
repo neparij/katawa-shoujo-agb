@@ -24,7 +24,6 @@
 #include "background_metas/school_staircase1.h"
 #include "background_metas/school_roof.h"
 #include "background_metas/school_library.h"
-#include "background_metas/hana_library_read.h"
 #include "background_metas/school_library_ss.h"
 #include "background_metas/school_courtyard_ss.h"
 #include "background_metas/school_dormhisao_ss.h"
@@ -42,6 +41,7 @@
 #include "background_metas/school_nursehall.h"
 #include "background_metas/school_courtyard.h"
 #include "background_metas/school_dormext_half_ni.h"
+#include "composite_background_metas/hana_library.h"
 namespace ks {
         void ScriptA1Friday::a1_friday_exercise() {
             if (ks::globals::exit_scenario) return;
@@ -1043,7 +1043,7 @@ namespace ks {
             ks::SceneManager::music_stop(300);
             ks::SceneManager::show_dialog(0x5394432B, ks::definitions::no_char, 396);
             ks::SceneManager::show_dialog(0x833324EA, ks::definitions::no_char, 397);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xF2A663DD, ks::definitions::no_char, 398);
             ks::SceneManager::set_background(ks::background_metas::school_library_ss, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);

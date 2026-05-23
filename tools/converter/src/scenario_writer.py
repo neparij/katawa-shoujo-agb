@@ -34,6 +34,7 @@ from src.dto.show_item import ShowItem, ShowPosition
 from src.dto.show_displayable_item import ShowDisplayableItem
 from src.dto.show_transform_item import ShowTransformItem
 from src.displayable_utils import crowd_frame_index, crowd_animate, is_displayable_sprite
+from src.composite_specs import composite_meta_symbol_for, composite_huge_meta_symbol_for
 from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
@@ -167,6 +168,8 @@ class ScenarioWriter:
         self.tl_dict: List[Dict[str, str]] = []
 
         self.backgrounds = []
+        self.composite_backgrounds: List[str] = []
+        self.composite_huge_backgrounds: List[str] = []
         # Tileset buckets used by smart_characters in this script. Each entry
         # corresponds to one `#include "smart_characters/<tileset>.h"` and
         # contains every (character × pose × outfit × close) group + emotion
@@ -197,6 +200,10 @@ class ScenarioWriter:
             includes.append(include_header(name, "displayables/"))
         for background in self.backgrounds:
             includes.append(include_header(background, "background_metas/"))
+        for symbol in self.composite_backgrounds:
+            includes.append(include_header(symbol, "composite_background_metas/"))
+        for symbol in self.composite_huge_backgrounds:
+            includes.append(include_header(symbol, "composite_huge_background_metas/"))
         for event in self.events:
             includes.append(include_header(f"{to_snake_case(event).removesuffix("_event")}.cpp", "../events/"))
         for video in self.videos:
@@ -477,21 +484,39 @@ class ScenarioWriter:
             return [f'// {assignment.content}; TODO: unknown assignment']
         # return [f'// scene.add_sequence(ks::AssignmentItem("{assignment.content}"));']
 
+    def _background_meta_namespace(self, meta_name: str) -> str:
+        huge_symbol = composite_huge_meta_symbol_for(meta_name)
+        if huge_symbol is not None:
+            if huge_symbol not in self.composite_huge_backgrounds:
+                self.composite_huge_backgrounds.append(huge_symbol)
+            return f"ks::composite_huge_background_metas::{meta_name}"
+        composite_symbol = composite_meta_symbol_for(meta_name)
+        if composite_symbol is not None:
+            if composite_symbol not in self.composite_backgrounds:
+                self.composite_backgrounds.append(composite_symbol)
+            return f"ks::composite_background_metas::{meta_name}"
+        if meta_name not in self.backgrounds and not is_color_filled_bg(meta_name):
+            self.backgrounds.append(meta_name)
+        return f"ks::background_metas::{meta_name}"
+
     def process_sequence_custom_event(self, group: SequenceGroup, ev: CustomEventItem) -> List[str]:
-        # if not ev.background in self.backgrounds:
-        #     self.backgrounds.append(ev.background)
         if not ev.event in self.events:
             self.events.append(ev.event)
+        if not ev.background:
+            return [f'ks::SceneManager::queue_event({ev.event}());']
+        meta_ref = self._background_meta_namespace(ev.background)
+        huge_symbol = composite_huge_meta_symbol_for(ev.background)
+        if huge_symbol is not None:
+            return [
+                f'ks::SceneManager::set_event({meta_ref}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)});']
         return [
-            f'ks::SceneManager::set_event(ks::background_metas::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)});']
-            # f'ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)});']
+            f'ks::SceneManager::set_event({meta_ref}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)});']
 
     def process_sequence_custom_event_state(self, group: SequenceGroup, ev: CustomEventStateItem) -> List[str]:
         return [f'ks::SceneManager::set_event_state({ev.state});']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
-        if not bg.background in self.backgrounds and not is_color_filled_bg(bg.background):
-            self.backgrounds.append(bg.background)
+        meta_ref = self._background_meta_namespace(bg.background)
 
         if bg.position == BgShowPosition.BGLEFT:
             position = (8, 0)
@@ -510,7 +535,9 @@ class ScenarioWriter:
                 f'ks::SceneManager::enable_fill(ks::globals::colors::{bg.background.upper()});'
             ]
         else:
-            return [f'ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, {bg.palette_variant});']
+            huge_symbol = composite_huge_meta_symbol_for(bg.background)
+            setter = "set_huge_background" if huge_symbol is not None else "set_background"
+            return [f'ks::SceneManager::{setter}({meta_ref}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, {bg.palette_variant});']
 
     def process_sequence_condition(self, group: SequenceGroup, condition: ConditionItem) -> List[str]:
         return self.emit_condition_block(group, condition, indent=0)

@@ -9,6 +9,7 @@
 #include "gba_flash.h"
 #include "save_migrations.h"
 #include "../globals.h"
+#include "../utils/scenario_reader.h"
 
 #define INTEGRITY_VERSION INTEGRITY_VERSION_V2
 #define INTEGRITY_TAG "KATAWASHOUJOAGB"
@@ -56,6 +57,7 @@ void ks::saves::save(SaveFileData *data_ptr) {
 
 bool ks::saves::initialize() {
     BN_LOG("Initializing saves (", SAVE_TYPE_STRING, ")...");
+    ks::textdb::request_release();
     auto *save_data = static_cast<SaveFileData *>(bn::memory::ewram_alloc(sizeof(SaveFileData)));
 
 #if SAVE_TYPE == SAVE_TYPE_FLASH
@@ -398,6 +400,8 @@ void ks::saves::flash_write_offset(const Type& source, int offset) {
     const int end_sector_start = end_offset & ~(FLASH_SECTOR_SIZE_4KB - 1);  // Last sector start
 
     BN_LOG("Sector start ", sector_start, " offset ", sector_offset, " end sector start ", end_sector_start);
+
+    ks::textdb::request_release();
 
     // Process the first sector
     const auto flash_buffer = (u8 *)(bn::memory::ewram_alloc(FLASH_SECTOR_SIZE_4KB));

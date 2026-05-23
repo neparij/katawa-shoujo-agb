@@ -53,6 +53,19 @@ static inline int floor_div(const int a, const int b) {
     return a >= 0 ? a / b : (a - b + 1) / b;
 }
 
+static inline int huge_bg_tile_offset_for_axis(const int bg_px, const int previous_bg_px,
+                                               const bool initialized)
+{
+    int tile = floor_div(bg_px, 8);
+    // When scrolling up/left (bg_px decreasing), floor(bg/8) switches one pixel
+    // before the hardware scroll reaches the new strip — keep the old origin
+    // for one more pixel so the opposite edge does not show a stale tile row.
+    if(initialized && bg_px < previous_bg_px) {
+        tile = floor_div(bg_px + 1, 8);
+    }
+    return tile;
+}
+
 // --- Fixed point ---
 #define FIX_SHIFT   8
 #define FIX_SCALE   (1 << FIX_SHIFT)

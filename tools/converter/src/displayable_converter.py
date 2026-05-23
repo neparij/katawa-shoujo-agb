@@ -52,7 +52,7 @@ def convert_displayable(spec: DisplayableAssetSpec,
     if not os.path.exists(palette_bmp):
         raise FileNotFoundError(palette_bmp)
 
-    out_dir = os.path.join(project_root, "graphics", "displayables", spec.symbol)
+    out_dir = os.path.join(project_root, "graphics", "displayables")
     os.makedirs(out_dir, exist_ok=True)
 
     render_w, render_h = 0, BODY_TARGET_H_PX

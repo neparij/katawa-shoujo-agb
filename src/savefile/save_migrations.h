@@ -7,6 +7,7 @@
 #include "bn_memory.h"
 #include "definitions.h"
 #include "save_file.h"
+#include "../utils/scenario_reader.h"
 
 namespace ks {
     namespace saves {
@@ -31,6 +32,7 @@ namespace ks {
 
         inline void migrate(SaveFileData *save_data) {
             if (save_data->integrity_begin.version == INTEGRITY_VERSION_V1) {
+                ks::textdb::request_release();
                 auto *v1 = static_cast<SaveFileDataV1 *>(bn::memory::ewram_alloc(sizeof(SaveFileDataV1)));
                 load<SaveFileDataV1>(v1);
                 migrate_from_v1(v1, save_data);

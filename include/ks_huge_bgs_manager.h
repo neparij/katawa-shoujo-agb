@@ -10,6 +10,8 @@ namespace ks::huge_bgs_manager {
 
     void push(huge_bg* bg);
     void pop(huge_bg* bg);
+    void replace(huge_bg* from, huge_bg* to);
+    [[nodiscard]] bool can_push();
     void update();
 }
 

@@ -42,8 +42,6 @@
 #include "background_metas/school_road.h"
 #include "background_metas/suburb_roadcenter.h"
 #include "background_metas/suburb_park.h"
-#include "background_metas/picnic_normal.h"
-#include "background_metas/picnic_rain.h"
 #include "background_metas/suburb_shanghaiext.h"
 #include "background_metas/suburb_shanghaiint.h"
 #include "background_metas/school_dormext_full.h"
@@ -59,11 +57,9 @@
 #include "background_metas/emi_bed_normal.h"
 #include "background_metas/emi_bed_frown.h"
 #include "background_metas/emi_bed_smile.h"
-#include "background_metas/emi_sleep_unsure.h"
-#include "background_metas/emi_sleep_normal.h"
-#include "background_metas/emi_sleep_weep.h"
-#include "background_metas/emi_sleep_cry.h"
 #include "background_metas/emi_firstkiss.h"
+#include "composite_background_metas/picnic.h"
+#include "composite_background_metas/emi_sleep.h"
 namespace ks {
         void ScriptA2Emi::a2_emi_morning_run() {
             if (ks::globals::exit_scenario) return;
@@ -3200,7 +3196,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xD3BAF1CB, ks::definitions::rin, 1422);
             ks::SceneManager::show_dialog(0x0634175A, ks::definitions::no_char, 1423);
             ks::SceneManager::show_dialog(0xE6F37326, ks::definitions::no_char, 1424);
-            ks::SceneManager::set_background(ks::background_metas::picnic_normal, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::picnic_normal, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xBF105CCB, ks::definitions::no_char, 1425);
             ks::SceneManager::show_dialog(0x9EDA84CA, ks::definitions::no_char, 1426);
@@ -3208,7 +3204,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xF83E129E, ks::definitions::no_char, 1428);
             ks::SceneManager::music_stop(120);
             ks::SceneManager::sfx_play("sfx_thunder.8ad", SOUND_CHANNEL_SOUND);
-            ks::SceneManager::set_background(ks::background_metas::picnic_rain, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::picnic_rain, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             // renpy.music.set_volume(0.2, 0.5, channel="ambient"); TODO: unknown assignment
             // TODO: Show rain
@@ -4364,7 +4360,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x7A68BC61, ks::definitions::no_char, 1975);
             ks::SceneManager::show_dialog(0xDB7AA434, ks::definitions::no_char, 1976);
             ks::SceneManager::music_play(MUSIC_COMFORT, 540);
-            ks::SceneManager::set_background(ks::background_metas::emi_sleep_unsure, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::emi_sleep_unsure, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA87BE48D, ks::definitions::no_char, 1977);
             ks::SceneManager::show_dialog(0x66A73DC5, ks::definitions::hi, 1978);
@@ -4375,12 +4371,12 @@ namespace ks {
             ks::SceneManager::show_dialog(0x88419EAB, ks::definitions::no_char, 1982);
             ks::SceneManager::show_dialog(0x6E646994, ks::definitions::no_char, 1983);
             ks::SceneManager::show_dialog(0xBA75C490, ks::definitions::no_char, 1984);
-            ks::SceneManager::set_background(ks::background_metas::emi_sleep_normal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::emi_sleep_normal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x9EC664EC, ks::definitions::hi, 1985);
             ks::SceneManager::show_dialog(0xF661F6CD, ks::definitions::no_char, 1986);
             ks::SceneManager::show_dialog(0xA896BED7, ks::definitions::no_char, 1987);
-            ks::SceneManager::set_background(ks::background_metas::emi_sleep_weep, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::emi_sleep_weep, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x9D7F5E23, ks::definitions::no_char, 1988);
             ks::SceneManager::show_dialog(0xDD186AB9, ks::definitions::no_char, 1989);
@@ -4390,7 +4386,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x7835C88C, ks::definitions::no_char, 1993);
             ks::SceneManager::show_dialog(0xFCFBC7E3, ks::definitions::no_char, 1994);
             ks::SceneManager::show_dialog(0xADCC37C6, ks::definitions::no_char, 1995);
-            ks::SceneManager::set_background(ks::background_metas::emi_sleep_cry, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::emi_sleep_cry, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xF4EDBD62, ks::definitions::emi, 1996);
             ks::SceneManager::show_dialog(0xB21C3CDA, ks::definitions::no_char, 1997);

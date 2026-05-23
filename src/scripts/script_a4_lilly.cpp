@@ -62,9 +62,6 @@
 #include "background_metas/lilly_touch_cas.h"
 #include "background_metas/school_gate_ni.h"
 #include "background_metas/school_library_ss.h"
-#include "background_metas/hana_library.h"
-#include "background_metas/hana_library_read.h"
-#include "background_metas/hana_library_smile.h"
 #include "background_metas/school_gardens_ni.h"
 #include "background_metas/school_courtyard_ni.h"
 #include "background_metas/shizu_houseext_ni.h"
@@ -80,6 +77,7 @@
 #include "background_metas/lilly_hospital.h"
 #include "background_metas/lilly_hilltop.h"
 #include "background_metas/lilly_goodend.h"
+#include "composite_background_metas/hana_library.h"
 namespace ks {
         void ScriptA4Lilly::a4_lilly_slow_steps() {
             if (ks::globals::exit_scenario) return;
@@ -3636,15 +3634,15 @@ namespace ks {
             ks::SceneManager::show_dialog(0x3C4E8776, ks::definitions::no_char, 1651);
             ks::SceneManager::show_dialog(0xE560010A, ks::definitions::no_char, 1652);
             ks::SceneManager::show_dialog(0xCBDA57DE, ks::definitions::no_char, 1653);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x50FC3042, ks::definitions::no_char, 1654);
             ks::SceneManager::show_dialog(0x5EDBE599, ks::definitions::no_char, 1655);
             ks::SceneManager::show_dialog(0x5DD2C225, ks::definitions::no_char, 1656);
             ks::SceneManager::show_dialog(0xBEC75538, ks::definitions::hi, 1657);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x5EF58ADC, ks::definitions::ha, 1658);
             ks::SceneManager::show_dialog(0x4663989B, ks::definitions::hi, 1659);
@@ -3657,7 +3655,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xD917D4C8, ks::definitions::hi, 1666);
             ks::SceneManager::show_dialog(0x43AD3CCD, ks::definitions::ha, 1667);
             ks::SceneManager::show_dialog(0x12667426, ks::definitions::hi, 1668);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_smile, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_smile, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xB76EB9D6, ks::definitions::no_char, 1669);
             ks::SceneManager::show_dialog(0x8D832DFF, ks::definitions::ha, 1670);

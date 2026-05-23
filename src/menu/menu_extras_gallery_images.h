@@ -22,6 +22,21 @@
 #include "../events/hisao_class_start.cpp.h"
 #include "../events/other_iwanako.cpp.h"
 
+#include "../events/rin_wet_pan_down.cpp.h"
+#include "../events/rin_wet_arms.cpp.h"
+#include "composite_huge_background_metas/rin_wet_pan.h"
+#include "composite_huge_background_metas/rin_wet_arms.h"
+#include "composite_background_metas/emi_sleep.h"
+#include "composite_background_metas/picnic.h"
+#include "composite_background_metas/hana_library.h"
+#include "composite_background_metas/shizu_shanghai.h"
+#include "composite_background_metas/shizu_undressing.h"
+#include "composite_background_metas/shizu_straddle.h"
+#include "composite_background_metas/shizu_table.h"
+#include "composite_background_metas/shizune_hcg_tied.h"
+#include "composite_huge_background_metas/shizu_straddle_open.h"
+#include "../events/shizu_straddle_open.cpp.h"
+
 #define GALLERY_IMAGE_ELEMENTS 7
 #define GALLERY_CUSTOM_EVENTS_ELEMENTS 3
 #define GALLERY_DISSOLVE_TIME 30
@@ -121,7 +136,27 @@ namespace ks::menu {
             }
         }
 
+        static __attribute__((always_inline)) void show_bg(const composite_background_meta &bg) {
+            BN_ASSERT(bg.seen_bitmask != DISPLAYABLE_BITMASK_NONE, "Background seen_bitmask is NONE");
+            if (globals::states.is_seen_displayable(bg.seen_bitmask)) {
+                SceneManager::set_background(bg, 0, 0, SCENE_TRANSITION_NONE, GALLERY_DISSOLVE_TIME,
+                                             PALETTE_VARIANT_DEFAULT);
+                process();
+            }
+        }
+
         static __attribute__((always_inline)) void show_event(const background_meta &bg, const CustomEvent &event,
+                                                              const scene_transition_t transition,
+                                                              const int dissolve_time) {
+            if (globals::states.is_seen_displayable(bg.seen_bitmask) ||
+                globals::states.is_seen_displayable(event.get_displayable_bitmask())) {
+                SceneManager::set_event(bg, event, transition, dissolve_time);
+                process();
+            }
+        }
+
+        static __attribute__((always_inline)) void show_event(const composite_huge_background_meta &bg,
+                                                              const CustomEvent &event,
                                                               const scene_transition_t transition,
                                                               const int dissolve_time) {
             if (globals::states.is_seen_displayable(bg.seen_bitmask) ||

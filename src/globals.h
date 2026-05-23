@@ -29,6 +29,9 @@
 #define KS_SHOW_4LS_INTRO true
 
 namespace ks::globals {
+    /// When true, composite BG decompress always calls `textdb::request_release()` first.
+    inline constexpr bool ALWAYS_REDUCE_TEXTDB = true;
+
     struct system_stats_t {
         char magic[16] = { 'K', 'S', 'G', 'B', 'A', 'S', 'Y', 'S', 'S', 'T', 'A', 'T', 'S', 0, 0, 0 };
         uint32_t last_used_cpu;

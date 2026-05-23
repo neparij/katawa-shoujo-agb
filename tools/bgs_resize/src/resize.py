@@ -43,7 +43,79 @@ IGNORE_IMAGES = [
     "lilly_shizu_showdown_full",
     "lilly_shizu_showdown_large",
     "hanako_fw",
-    "hanako_fw_flash"
+    "hanako_fw_flash",
+    "rin_wet_pan_down",
+    "rin_wet_arms",
+    "rin_h_closed",
+    "rin_h_left",
+    "rin_h_normal",
+    "rin_h_right",
+    "rin_h_strain",
+    "rin_h_closed_close",
+    "rin_h_left_close",
+    "rin_h_normal_close",
+    "rin_h_right_close",
+    "rin_h_strain_close",
+    "rin_h2_l_pan",
+    "rin_h2_l_nopan",
+    "rin_h2_l_hisao",
+    "rin_h2_u_surprise",
+    "rin_h2_u_away",
+    "rin_h2_u_closed",
+    "rin_goodend_base",
+    "rin_goodend_1",
+    "rin_goodend_1b",
+    "rin_goodend_2",
+    "rin_goodend_fg",
+    "rin_goodend_2_hires",
+    "rin_pair_base",
+    "rin_pair_hisao_clothes",
+    "rin_pair_hisao_smile",
+    "rin_pair_hisao_frown",
+    "rin_pair_rin_talk",
+    "rin_pair_rin_smile",
+    "rin_pair_rin_frown",
+    "rin_pair_rin_closed",
+    "emi_sleep_normal",
+    "emi_sleep_unsure",
+    "emi_sleep_weep",
+    "emi_sleep_cry",
+    "picnic_normal",
+    "picnic_rain",
+    "hana_library",
+    "hana_library_read",
+    "hana_library_gasp",
+    "hana_library_smile",
+    "shizu_shanghai",
+    "shizu_shanghai_boredlaugh",
+    "shizu_shanghai_borednormal",
+    "shizu_shanghai_normallaugh",
+    "shizu_shanghai_smirklaugh",
+    "shizu_shanghai_smirknormal",
+    "shizu_undressing_clothed_stare",
+    "shizu_undressing_clothed_kiss",
+    "shizu_undressing_clothed_blush",
+    "shizu_undressing_unclothed_closed",
+    "shizu_undressing_unclothed_blush",
+    "shizu_undressing_unclothed_kiss",
+    "shizu_undressing_unclothed_talk",
+    "shizu_straddle_open",
+    "shizu_straddle_tease",
+    "shizu_straddle_closed",
+    "shizu_straddle_smile",
+    "shizu_straddle_come",
+    "shizu_table_smile",
+    "shizu_table_normal",
+    "shizu_table_comeopen",
+    "shizu_table_comeclosed",
+    "shizune_hcg_tied_smile",
+    "shizune_hcg_tied_blush",
+    "shizune_hcg_tied_stare",
+    "shizune_hcg_tied_close",
+    "shizune_hcg_tied_kinky3",
+    "shizune_hcg_tied_kinky2",
+    "shizune_hcg_tied_kinky1",
+    "shizune_hcg_tied_hisao2",
 ]
 
 CUSTOM_PALETTE_IMAGES = {
@@ -132,12 +204,17 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
 
     for image_file in image_files:
         output_file_name = f"{os.path.splitext(os.path.basename(image_file))[0]}.bmp"  # Save as BMP
+        output_basename = os.path.splitext(output_file_name)[0]
         output_path = os.path.join(output_dir, output_file_name)
         output_meta_path = os.path.join(output_dir, "thumbs", f"thumb_{output_file_name}")
 
+        if output_basename in IGNORE_IMAGES:
+            print(f"Skipping {image_file} as it is in the ignore list.")
+            continue
+
         if metadata_type in ["bg"]:
             thumb_exists = os.path.exists(output_meta_path)
-            thumb_json_exists = os.path.exists(os.path.join(output_dir, "thumbs", f"thumb_{os.path.splitext(output_file_name)[0]}.json"))
+            thumb_json_exists = os.path.exists(os.path.join(output_dir, "thumbs", f"thumb_{output_basename}.json"))
             create_thumbnail = True
             if thumb_exists and thumb_json_exists:
                 create_thumbnail = not only_missing
@@ -146,17 +223,13 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
                     process_image_savefile_thumbnail(image_file, output_meta_path)
                 create_thumbnail_json_metadata(os.path.join(output_dir, "thumbs", "thumb_" + output_file_name))
 
-        if os.path.splitext(output_file_name)[0] in IGNORE_IMAGES:
-            print(f"Skipping {image_file} as it is in the ignore list.")
-            continue
-
-        if os.path.splitext(output_file_name)[0] in CUSTOM_PALETTE_IMAGES.keys():
-            quantize_palettes = CUSTOM_PALETTE_IMAGES[os.path.splitext(output_file_name)[0]]
+        if output_basename in CUSTOM_PALETTE_IMAGES.keys():
+            quantize_palettes = CUSTOM_PALETTE_IMAGES[output_basename]
             print(f"Using custom palette count {quantize_palettes} for {image_file}")
 
         try:
             image_exists = os.path.exists(output_path)
-            image_json_exists = os.path.exists(os.path.join(output_dir, f"{os.path.splitext(output_file_name)[0]}.json"))
+            image_json_exists = os.path.exists(os.path.join(output_dir, f"{output_basename}.json"))
             create_image = True
             if image_exists and image_json_exists:
                 create_image = not only_missing
@@ -170,11 +243,11 @@ def resize_images(image_files, output_dir, quantize=True, quantize_palettes=8, u
                         process_image(image_file, output_path, unquant_colors)
                     create_json_metadata(output_path, quantize, unquant_colors)
 
-            if os.path.splitext(output_file_name)[0] not in IGNORE_METAS and metadata_type is not None:
+            if output_basename not in IGNORE_METAS and metadata_type is not None:
                 if metadata_type == "bg":
-                    write_background_metadata(os.path.splitext(output_file_name)[0])
+                    write_background_metadata(output_basename)
                 elif metadata_type == "vfx":
-                    write_vfx_metadata(os.path.splitext(output_file_name)[0])
+                    write_vfx_metadata(output_basename)
         except Exception as e:
             print(f"Error processing {image_file}: {e}")
 
@@ -196,10 +269,10 @@ def process_image_quantized(input_path, output_path, quantize_palettes: int):
         gba_extra_height = int(160 * extra_height_percentage)
 
         if extra_width < 0:
-            print(f"[38;5;197m Source size: {source_image.width}x{source_image.height}, GBA size: 240x160⠀[33;0m")
-            print(f"[38;5;197m Extra width: {extra_width}, Extra height: {extra_height}⠀[33;0m")
-            print(f"[38;5;197m Extra width percentage: {extra_width_percentage}, Extra height percentage: {extra_height_percentage}⠀[33;0m")
-            print(f"[38;5;197m GBA extra width: {gba_extra_width}, GBA extra height: {gba_extra_height}⠀[33;0m")
+            print(f"[38;5;197m Source size: {source_image.width}x{source_image.height}, GBA size: 240x160?[33;0m")
+            print(f"[38;5;197m Extra width: {extra_width}, Extra height: {extra_height}?[33;0m")
+            print(f"[38;5;197m Extra width percentage: {extra_width_percentage}, Extra height percentage: {extra_height_percentage}?[33;0m")
+            print(f"[38;5;197m GBA extra width: {gba_extra_width}, GBA extra height: {gba_extra_height}?[33;0m")
             # raise Exception(f"Extra width is negative: {extra_width}")
             gba_extra_width = 0
             gba_extra_height = 0
@@ -225,9 +298,9 @@ def process_image_quantized(input_path, output_path, quantize_palettes: int):
     # Remove Semi-transparent pixels:
     arr = np.array(canvas)  # shape (h, w, 4)
     mask = arr[:, :, 3] > 127  # visible mask
-    # Visible → force alpha=255
+    # Visible ? force alpha=255
     arr[mask, 3] = 255
-    # Invisible → set to (0,0,0,0)
+    # Invisible ? set to (0,0,0,0)
     arr[~mask] = (0, 0, 0, 0)
     result = Image.fromarray(arr, "RGBA")
 

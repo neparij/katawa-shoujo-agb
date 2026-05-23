@@ -2,6 +2,8 @@
 #define BACKGROUND_META_H
 
 #include "ks_huge_bg_item.h"
+#include "composite_huge_bg_item.h"
+#include "regular_composite_bg_item.h"
 #include "seen_bitmask.h"
 
 namespace ks {
@@ -34,6 +36,42 @@ namespace ks {
         }
 
         huge_bg_item bg;
+        bn::regular_bg_item thumbnail;
+        const displayable_bitmask_t seen_bitmask;
+        const unsigned int hash;
+    };
+
+    class composite_background_meta {
+    public:
+        constexpr composite_background_meta(const regular_composite_bg_item& bg_item,
+                                            const bn::regular_bg_item& thumbnail_item,
+                                            const displayable_bitmask_t seen_bitmask_id,
+                                            const unsigned int hash_id)
+            : bg{bg_item},
+              thumbnail{thumbnail_item},
+              seen_bitmask{seen_bitmask_id},
+              hash{hash_id} {
+        }
+
+        regular_composite_bg_item bg;
+        bn::regular_bg_item thumbnail;
+        const displayable_bitmask_t seen_bitmask;
+        const unsigned int hash;
+    };
+
+    class composite_huge_background_meta {
+    public:
+        constexpr composite_huge_background_meta(const composite_huge_bg_item& bg_item,
+                                                 const bn::regular_bg_item& thumbnail_item,
+                                                 const displayable_bitmask_t seen_bitmask_id,
+                                                 const unsigned int hash_id)
+            : bg{bg_item},
+              thumbnail{thumbnail_item},
+              seen_bitmask{seen_bitmask_id},
+              hash{hash_id} {
+        }
+
+        composite_huge_bg_item bg;
         bn::regular_bg_item thumbnail;
         const displayable_bitmask_t seen_bitmask;
         const unsigned int hash;

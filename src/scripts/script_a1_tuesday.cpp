@@ -23,11 +23,9 @@
 #include "background_metas/tearoom_lillyhisao_sunset.h"
 #include "background_metas/school_miyagi_ss.h"
 #include "background_metas/school_library_ss.h"
-#include "background_metas/hana_library_read.h"
-#include "background_metas/hana_library_gasp.h"
 #include "background_metas/school_dormhallway.h"
 #include "background_metas/school_dormhisao_ss.h"
-#include "background_metas/hana_library.h"
+#include "composite_background_metas/hana_library.h"
 namespace ks {
         void ScriptA1Tuesday::a1_tuesday_smalltalk() {
             if (ks::globals::exit_scenario) return;
@@ -993,7 +991,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x8733997C, ks::definitions::no_char, 412);
             ks::SceneManager::show_dialog(0xFCB1FCA4, ks::definitions::no_char, 413);
             ks::SceneManager::show_dialog(0xCC631E01, ks::definitions::no_char, 414);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::music_play(MUSIC_ANOTHER, 240);
             ks::SceneManager::show_dialog(0x6EAE5095, ks::definitions::no_char, 415);
@@ -1002,7 +1000,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x34857CB1, ks::definitions::no_char, 418);
             ks::SceneManager::show_dialog(0x482C651A, ks::definitions::no_char, 419);
             ks::SceneManager::show_dialog(0x8A21B441, ks::definitions::no_char, 420);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_gasp, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_gasp, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xBFB5B59D, ks::definitions::no_char, 421);
             ks::SceneManager::show_dialog(0x3246E026, ks::definitions::no_char, 422);
@@ -1498,7 +1496,7 @@ namespace ks {
                 ks::SceneManager::show_dialog(0x72E50646, ks::definitions::hi, 654);
                 ks::SceneManager::show_dialog(0xE8BB4F03, ks::definitions::no_char, 25);
             }
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xF3DBD14C, ks::definitions::no_char, 655);
             ks::SceneManager::show_dialog(0xAB9FCA04, ks::definitions::hi, 656);
@@ -1544,15 +1542,15 @@ namespace ks {
             ks::SceneManager::show_dialog(0xE4D5D524, ks::definitions::no_char, 681);
             ks::SceneManager::show_dialog(0x62887C1D, ks::definitions::hi, 682);
             ks::SceneManager::show_dialog(0xF18C4B98, ks::definitions::no_char, 683);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x9D1E7573, ks::definitions::ha_, 684);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x3E763D02, ks::definitions::no_char, 685);
             ks::SceneManager::show_dialog(0xF5295D63, ks::definitions::no_char, 686);
             ks::SceneManager::show_dialog(0xECE73CC5, ks::definitions::hi, 687);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x24E73709, ks::definitions::no_char, 688);
             ks::SceneManager::show_dialog(0x221FC74C, ks::definitions::ha_, 689);
@@ -1567,22 +1565,22 @@ namespace ks {
             ks::SceneManager::show_dialog(0xAC3A64B8, ks::definitions::hi, 695);
             ks::SceneManager::show_dialog(0x8FCF231C, ks::definitions::no_char, 696);
             ks::SceneManager::show_dialog(0x81058101, ks::definitions::no_char, 25);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x706B95FD, ks::definitions::no_char, 697);
             ks::SceneManager::show_dialog(0x8B1EA7B9, ks::definitions::no_char, 698);
             ks::SceneManager::show_dialog(0xCAB5FA6C, ks::definitions::no_char, 699);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x807C4EDA, ks::definitions::no_char, 700);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xE51F47DD, ks::definitions::no_char, 701);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x102D7C4C, ks::definitions::no_char, 702);
             ks::SceneManager::sfx_play("sfx_impact.8ad", SOUND_CHANNEL_SOUND);

@@ -6,6 +6,7 @@ import tempfile
 from time import sleep
 from typing import List, cast, Dict
 
+from src.scenario_helpers.rin_pair_layers import RinPairLayerState
 from src.dto.assignment_item import AssignmentItem
 from src.dto.background_item import BackgroundItem, BgShowPosition, BgTransition
 from src.dto.background_transform_item import BackgroundTransformItem
@@ -51,6 +52,7 @@ class ScenarioReader:
         self._hack_latest_sprite_name = None
         self.linepack_events : List[SequenceItem] = []
         self.bgs_images_cache : List[str] = []
+        self._rin_pair = RinPairLayerState()
 
     def set_bgs_images_cache(self, bgs_images_cache):
         self.bgs_images_cache = bgs_images_cache
@@ -352,8 +354,8 @@ class ScenarioReader:
                     literal_match = re.match(r'^"(.*)"$', dialog_expr)
                     if literal_match:
                         literal_text = literal_match.group(1)
-                        if literal_text in ["…"]:
-                            # For plain literals (for example "…"), keep source text
+                        if literal_text in ["\u2026"]:
+                            # For plain literals (for example U+2026), keep source text
                             # if the string table does not contain a translation entry.
                             print(f"[38;5;208m Warning: Literal text \"{literal_text}\" not found in translation table for locale {locale}?[33;0m")
                             return translation.strings.get(literal_text, literal_text)
@@ -413,10 +415,31 @@ class ScenarioReader:
             self._hack_latest_sprite_name = None  # TODO: Remove after "Friday"-hack
             return
 
+        elif re.match(r"^show rp_(hisao|rin)\s+(\w+)", stripped_line):
+            match = re.match(r"^show rp_(hisao|rin)\s+(\w+)", stripped_line)
+            slot, expr = match.groups()
+            if slot == "hisao":
+                meta = self._rin_pair.set_hisao(expr)
+            else:
+                meta = self._rin_pair.set_rin(expr)
+            self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(meta))
+            self._hack_latest_sprite_name = None
+            return
+
         elif stripped_line.startswith("scene ev") or stripped_line.startswith("show ev"):
             parts = stripped_line.split()
             print(f" >> Scene ev: {parts}")
             event_bg_name = parts[2].removesuffix(":")
+            if event_bg_name == "rin_pair_base_clothes":
+                meta = self._rin_pair.reset_clothes_scene()
+                self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(meta))
+                self._hack_latest_sprite_name = None
+                return
+            if stripped_line.startswith("show ev") and event_bg_name == "rin_pair_base":
+                meta = self._rin_pair.set_clothes_off()
+                self.stack.current().add_sequence_item(self.linepack_events, BackgroundItem(meta))
+                self._hack_latest_sprite_name = None
+                return
             # REMOVES TEMP
             # TODO: use specs
             event_bg_name = rewrite_motion_background(event_bg_name)
@@ -631,9 +654,10 @@ class ScenarioReader:
                             return
                     self.stack.current().add_sequence_item(self.linepack_events, BackgroundTransitionItem(transition))
                     return
-            displayable_dissolve_match = re.match(r"^with Dissolve\s*\(([\d.]+)\)$", stripped_line)
+            displayable_dissolve_match = re.match(
+                r"^with Dissolve(move)?\s*\(([\d.]+)\)$", stripped_line, re.IGNORECASE)
             if displayable_dissolve_match:
-                dissolve_time = float(displayable_dissolve_match.group(1))
+                dissolve_time = float(displayable_dissolve_match.group(2))
                 for sequence in self.linepack_events:
                     if sequence.type == SequenceType.BACKGROUND:
                         sequence = cast(BackgroundItem, sequence)
@@ -649,7 +673,8 @@ class ScenarioReader:
                     or stripped_line.startswith("with charaenter")
                     or stripped_line.startswith("with charaexit")
                     or stripped_line.startswith("with characlose")
-                    or stripped_line.startswith("with charadistant")):
+                    or stripped_line.startswith("with charadistant")
+                    or stripped_line.startswith("with persistent.charachange")):
                 dissolve_time = float(1)
                 for sequence in self.linepack_events:
                     if sequence.type == SequenceType.BACKGROUND:
@@ -870,11 +895,11 @@ def get_bg_name_and_palette(bg_name: str, bg_names : None|List[str] = None) -> (
 
 def rewrite_motion_background(bg_name: str) -> str:
     # TODO: remove this method and allow motion backgrounds
-    return (bg_name
+    result = (bg_name
             .replace("hana_library_read_std", "hana_library_read")
-            .replace("hana_library_std", "hana_library")
             .replace("hana_library_gasp_std", "hana_library_gasp")
             .replace("hana_library_smile_std", "hana_library_smile")
+            .replace("hana_library_std", "hana_library_default")
             .replace("lilly_airport_end_fb", "lilly_airport_end") # TODO: Paletted variants for backgrounds
 
             .replace("kenji_rooftop_kenji", "kenji_rooftop") # TODO: Kenji alcotrip event
@@ -906,14 +931,6 @@ def rewrite_motion_background(bg_name: str) -> str:
 
             .replace("rin_doodle_all", "rin_doodle") # TODO: Rin doodle event
 
-            .replace("rin_h2_pan_surprise", "rin_h2_l_pan") # TODO: Rin cunnilingus event
-            .replace("rin_h2_pan_away", "rin_h2_l_pan") # TODO: Rin cunnilingus event
-            .replace("rin_h2_pan_closed", "rin_h2_l_pan") # TODO: Rin cunnilingus event
-            .replace("rin_h2_nopan_closed", "rin_h2_l_nopan") # TODO: Rin cunnilingus event
-            .replace("rin_h2_hisao_closed", "rin_h2_l_hisao") # TODO: Rin cunnilingus event
-            .replace("rin_h2_hisao_away", "rin_h2_l_hisao") # TODO: Rin cunnilingus event
-            .replace("rin_h2_hisao_surprise", "rin_h2_l_hisao") # TODO: Rin cunnilingus event
-
             .replace("hisaobird_", "bird_")
             .replace("hisao_mirror_800", "hisao_mirror")
 
@@ -925,6 +942,11 @@ def rewrite_motion_background(bg_name: str) -> str:
             # .replace("emi_knockeddown_largepullout", "emi_knockeddown")
             # .replace("emi_knockeddown_legs", "emi_knockeddown")
             )
+    if result == "hana_library":
+        return "hana_library_default"
+    if result == "shizu_shanghai":
+        return "shizu_shanghai_default"
+    return result
 
 def scenario_rewrites(scenario_file, content):
 
@@ -1149,6 +1171,19 @@ def scenario_rewrites(scenario_file, content):
             # WITH TODO: Emi bed event
             "        scene ev emi_bed_normal_f:\n"
             "        with Dissolve(1.0)",
+        ).replace(
+            "        scene ev picnic_normal:\n"
+            "            yalign 1.0\n"
+            "            easein 8.0 yalign 0.0\n"
+            "        with whiteout",
+            "        scene ev picnic_normal\n"
+            "        with whiteout",
+        ).replace(
+            "        show ev picnic_rain:\n"
+            "            yalign 0.0\n"
+            "        with charachangeev",
+            "        show ev picnic_rain\n"
+            "        with charachangeev",
         )
 
     if scenario_name == "script-a3-emi":
@@ -1381,8 +1416,24 @@ def scenario_rewrites(scenario_file, content):
         ).replace(
             "            show evh:\n"
             "                acdc_warp 8.0 yalign 0.8",
-            # WITH
-            "\n"
+            "            show ev rin_h2_scroll_y08\n",
+        ).replace(
+            "            scene evh rin_h2_pan_surprise:\n"
+            "                xalign 0.5 yalign 0.0\n"
+            "                ease 10.0 yalign 0.15\n",
+            "            scene ev rin_h2_pan_surprise\n",
+        ).replace(
+            "            show evh rin_h2_nopan_closed:\n"
+            "                yalign 0.8\n",
+            "            show ev rin_h2_nopan_closed_y08\n",
+        ).replace(
+            "            show evh rin_h2_hisao_closed:\n"
+            "                acdc_warp 16.0 yalign 0.15\n\n",
+            "            show ev rin_h2_hisao_closed_scroll\n\n",
+        ).replace(
+            "            show evh rin_h2_hisao_away:\n"
+            "                yalign 0.15\n",
+            "            show ev rin_h2_hisao_away_y015\n",
         ).replace(
             "            show evbg:\n"
             "                acdc_warp 12.0 zoom 1.15\n"
@@ -1438,54 +1489,6 @@ def scenario_rewrites(scenario_file, content):
             # WITH TODO: Rin Good End Event.
             "\n"
         ).replace(
-            "            scene ev rin_pair_base_clothes\n"
-            "            show rp_hisao normal at truecenter\n"
-            "            show rp_rin normal at truecenter\n"
-            "            with whiteout",
-            # WITH TODO: Rin-Hisao pair Event
-            "            scene ev rin_pair_base\n"
-            "            with whiteout"
-        ).replace(
-            "            show rp_hisao frown\n"
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
-            "            show rp_rin talk\n"            
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
-            "            show rp_hisao smile\n"
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
-            "            show rp_rin smile\n"
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
-            "            show rp_rin frown\n"
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
-            "            show rp_hisao normal\n"
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
-            "            show rp_rin normal\n"
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
-            "            show rp_rin closed\n"
-            "            with charachangeev",
-            # WITH TODO: Rin-Hisao pair Event,
-            "\n"
-        ).replace(
             "            nvl clear\n"
             "\n"
             "            show bg:\n"
@@ -1494,6 +1497,37 @@ def scenario_rewrites(scenario_file, content):
             "                \"rin negative_crying_superclose_ss\" with Dissolve(8.0)",
             # WITH (fix) TODO: bg change to Sunset during novel!
             "            nvl clear\n"
+        ).replace(
+            "            show evh rin_h_strain:\n"
+            "                truecenter\n"
+            "                zoom 1.2 subpixel True\n"
+            "                easein 20.0 zoom 1.0\n"
+            "            with charadistant",
+            "            show evh rin_h_strain\n"
+            "            with charadistant"
+        ).replace(
+            "            scene ev rin_wet_pan_down:\n"
+            "                center\n"
+            "                yalign 1.0\n"
+            "                easein 20.0 yalign 0.0\n"
+            "            with whiteout",
+            "            scene ev rin_wet_pan_down\n"
+            "            with whiteout",
+        ).replace(
+            "            show ev rin_wet_arms:\n"
+            "                center\n"
+            "                xalign 0.0\n"
+            "                linear 20.0 xalign 1.0\n"
+            "            with flash",
+            "            show ev rin_wet_arms\n"
+            "            with flash",
+        ).replace(
+            "            show ev rin_wet_face_down:\n"
+            "                center\n"
+            "                yalign 0.0\n"
+            "            with flash",
+            "            show ev rin_wet_face_down\n"
+            "            with flash",
         )
 
     if scenario_name == "script-a2-lilly":
@@ -1651,13 +1685,87 @@ def scenario_rewrites(scenario_file, content):
             "            zoom 1.0\n"
             "            \"evh shizune_hcg_tied_stare_small\"\n"
             "        with whiteout",
-            # WITH
-            "        scene evh shizune_hcg_tied_smile_small\n"
-            "        with whiteout"
+            "        scene ev shizune_hcg_tied_smile\n"
+            "        with whiteout",
+        ).replace(
+            "        scene evh shizune_hcg_tied_smile_small\n",
+            "        scene ev shizune_hcg_tied_smile\n",
+        ).replace(
+            "        scene evh shizune_hcg_tied_blush_small\n",
+            "        scene ev shizune_hcg_tied_blush\n",
+        ).replace(
+            "        scene evh shizune_hcg_tied_stare_small\n",
+            "        scene ev shizune_hcg_tied_stare\n",
+        ).replace(
+            "        show evh shizune_hcg_tied_kinky2_small\n",
+            "        show ev shizune_hcg_tied_kinky2\n",
+        ).replace(
+            "        show evh shizune_hcg_tied_kinky3_small\n",
+            "        show ev shizune_hcg_tied_kinky3\n",
+        ).replace(
+            "        scene evh shizune_hcg_tied_blush:\n"
+            "            yalign 0.0 xalign 0.8\n"
+            "        show evh_hi shizune_hcg_tied_hisao2:\n"
+            "            yalign 0.0 xalign 0.8\n"
+            "        with flash",
+            "        scene ev shizune_hcg_tied_blush_hisao2\n"
+            "        with flash",
+        ).replace(
+            "        scene evh shizune_hcg_tied_close_small\n"
+            "        show evh_hi shizune_hcg_tied_hisao2_small\n"
+            "        with charachangeev",
+            "        scene ev shizune_hcg_tied_close_hisao2\n"
+            "        with charachangeev",
+        ).replace(
+            "        scene evh shizune_hcg_tied_kinky2:\n"
+            "            zoom 1.0 yalign 0.1 xalign 0.7\n"
+            "            acdc_warp 6.0 xalign 0.9\n"
+            "        with flash",
+            "        scene ev shizune_hcg_tied_kinky2\n"
+            "        with flash",
+        ).replace(
+            "        scene evh shizune_hcg_tied_close_small\n"
+            "        with flash",
+            "        scene ev shizune_hcg_tied_close\n"
+            "        with flash",
+        ).replace(
+            "        show evh shizune_hcg_tied_kinky1_small\n"
+            "        show evh_hi shizune_hcg_tied_hisao2_small\n"
+            "        with charachangeev",
+            "        scene ev shizune_hcg_tied_kinky1_hisao2\n"
+            "        with charachangeev",
+        ).replace(
+            "        scene evh shizune_hcg_tied_close:\n"
+            "            yalign 0.1 xalign 0.8\n"
+            "        show evh_hi shizune_hcg_tied_hisao2:\n"
+            "            yalign 0.1 xalign 0.8\n"
+            "        with Dissolve(2.0)",
+            "        scene ev shizune_hcg_tied_close_hisao2\n"
+            "        with Dissolve(2.0)",
+        ).replace(
+            "        hide evh_hi\n"
+            "        with charachangeev",
+            "        scene ev shizune_hcg_tied_close\n"
+            "        with charachangeev",
+        ).replace(
+            "        scene evh shizune_hcg_tied_close_small:\n"
+            "            truecenter\n"
+            "            zoom 1.2\n"
+            "            easein 10.0 zoom 1.0\n"
+            "        with Dissolve(2.0)",
+            "        scene ev shizune_hcg_tied_close\n"
+            "        with Dissolve(2.0)",
         )
 
     if scenario_name == "script-a2-hanako":
         return content.replace(
+            "            show ev hana_library_read_std:\n"
+            "                zoom 1.0 truecenter\n"
+            "                easein 20.0 zoom 1.05\n"
+            "            with locationskip",
+            "            show ev hana_library_read_std\n"
+            "            with locationskip",
+        ).replace(
             "        show hanagown:\n"
             "            easeout 0.5 xpos 0.7 alpha 0.0\n"
             "\n"
@@ -1783,6 +1891,26 @@ def get_custom_event(bg_name: str) -> tuple[str, str] | tuple[None, None]:
     # DRUGS EVENT
     if bg_name == "drugs_event":
         return "event_drugs", "DrugsEvent"
+
+    # RIN H2 SCROLL EVENT
+    if bg_name == "rin_h2_pan_surprise":
+        return "rin_h2_pan_surprise", "RinH2PanSurpriseEvent"
+    elif bg_name == "rin_h2_nopan_closed_y08":
+        return "rin_h2_nopan_closed", "RinH2NopanClosedEvent"
+    elif bg_name == "rin_h2_scroll_y08":
+        return "", "RinH2ScrollEvent"
+    elif bg_name == "rin_h2_hisao_closed_scroll":
+        return "", "RinH2HisaoClosedEvent"
+    elif bg_name == "rin_h2_hisao_away_y015":
+        return "rin_h2_hisao_away", "RinH2HisaoAwayEvent"
+
+    if bg_name == "rin_wet_pan_down":
+        return "rin_wet_pan_down", "RinWetPanDownEvent"
+    elif bg_name == "rin_wet_arms":
+        return "rin_wet_arms", "RinWetArmsEvent"
+
+    if bg_name == "shizu_straddle_open":
+        return "shizu_straddle_open", "ShizuStraddleOpenEvent"
 
     # NIGHTSKY FIREWORKS
     if bg_name == "nightsky_fw":

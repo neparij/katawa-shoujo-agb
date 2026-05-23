@@ -43,27 +43,11 @@
 #include "background_metas/school_room34.h"
 #include "background_metas/school_nomiya.h"
 #include "background_metas/school_staircase2.h"
-#include "background_metas/rin_wet_pan_down.h"
-#include "background_metas/rin_wet_arms.h"
 #include "background_metas/rin_wet_face_down.h"
 #include "background_metas/rin_wet_towel_down.h"
 #include "background_metas/rin_wet_towel_up.h"
 #include "background_metas/rin_wet_towel_touch.h"
 #include "background_metas/rin_wet_face_up.h"
-#include "background_metas/rin_h2_l_pan.h"
-#include "background_metas/rin_h2_l_nopan.h"
-#include "background_metas/rin_h2_l_hisao.h"
-#include "background_metas/rin_pair_base.h"
-#include "background_metas/rin_h_closed.h"
-#include "background_metas/rin_h_left.h"
-#include "background_metas/rin_h_normal.h"
-#include "background_metas/rin_h_right.h"
-#include "background_metas/rin_h_closed_close.h"
-#include "background_metas/rin_h_strain_close.h"
-#include "background_metas/rin_h_strain.h"
-#include "background_metas/rin_h_normal_close.h"
-#include "background_metas/rin_h_right_close.h"
-#include "background_metas/rin_h_left_close.h"
 #include "background_metas/misc_sky.h"
 #include "background_metas/school_gardens.h"
 #include "background_metas/school_forest1.h"
@@ -71,11 +55,21 @@
 #include "background_metas/school_forest2.h"
 #include "background_metas/school_hilltop_border_summer.h"
 #include "background_metas/school_hilltop_summer.h"
-#include "background_metas/rin_goodend_1.h"
-#include "background_metas/rin_goodend_1b.h"
-#include "background_metas/rin_goodend_2.h"
 #include "background_metas/busride_ni.h"
 #include "background_metas/school_dormext_full_ni.h"
+#include "composite_background_metas/rin_pair.h"
+#include "composite_background_metas/rin_h.h"
+#include "composite_background_metas/rin_goodend.h"
+#include "composite_huge_background_metas/rin_wet_pan.h"
+#include "composite_huge_background_metas/rin_wet_arms.h"
+#include "composite_huge_background_metas/rin_h2.h"
+#include "../events/rin_wet_pan_down.cpp.h"
+#include "../events/rin_wet_arms.cpp.h"
+#include "../events/rin_h2_pan_surprise.cpp.h"
+#include "../events/rin_h2_scroll.cpp.h"
+#include "../events/rin_h2_nopan_closed.cpp.h"
+#include "../events/rin_h2_hisao_closed.cpp.h"
+#include "../events/rin_h2_hisao_away.cpp.h"
 namespace ks {
         void ScriptA4Rin::a4_rin_illusions_for_people() {
             if (ks::globals::exit_scenario) return;
@@ -2815,7 +2809,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xA5107872, ks::definitions::no_char, 1454);
             // renpy.music.set_volume(0.2, 1.0, channel="ambient"); TODO: unknown assignment
             ks::SceneManager::music_play(MUSIC_HEART, 30);
-            ks::SceneManager::set_background(ks::background_metas::rin_wet_pan_down, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_event(ks::composite_huge_background_metas::rin_wet_pan_down, RinWetPanDownEvent(), SCENE_TRANSITION_WHITEOUT, 0);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4ECC3B0B, ks::definitions::no_char, 1455);
             ks::SceneManager::show_dialog(0x6B5C33E9, ks::definitions::no_char, 1456);
@@ -2827,7 +2821,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xA50DFCDA, ks::definitions::no_char, 1462);
             ks::SceneManager::show_dialog(0x800167F8, ks::definitions::no_char, 1463);
             ks::SceneManager::show_dialog(0x0B22A897, ks::definitions::no_char, 1464);
-            ks::SceneManager::set_background(ks::background_metas::rin_wet_arms, 0, 0, SCENE_TRANSITION_FLASH, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_event(ks::composite_huge_background_metas::rin_wet_arms, RinWetArmsEvent(), SCENE_TRANSITION_FLASH, 0);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xBB7F0E74, ks::definitions::no_char, 1465);
             ks::SceneManager::show_dialog(0xC11BEE5A, ks::definitions::no_char, 1466);
@@ -2888,7 +2882,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x1376AD52, ks::definitions::no_char, 1502);
             ks::SceneManager::show_dialog(0x4CAB8CC8, ks::definitions::no_char, 1503);
             ks::SceneManager::show_dialog(0xF5E7055E, ks::definitions::no_char, 1504);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_pan, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_event(ks::composite_huge_background_metas::rin_h2_pan_surprise, RinH2PanSurpriseEvent(), SCENE_TRANSITION_WHITEOUT, 0);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xFA0631FA, ks::definitions::no_char, 1505);
             ks::SceneManager::show_dialog(0xAACCC266, ks::definitions::no_char, 1506);
@@ -2896,26 +2890,28 @@ namespace ks {
             ks::SceneManager::show_dialog(0x61BD9952, ks::definitions::no_char, 1508);
             ks::SceneManager::show_dialog(0x7C9D87A1, ks::definitions::no_char, 177);
             ks::SceneManager::show_dialog(0x9615DA59, ks::definitions::no_char, 1509);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_pan, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_huge_background(ks::composite_huge_background_metas::rin_h2_pan_away, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x709813BA, ks::definitions::no_char, 1510);
             ks::SceneManager::show_dialog(0x7B04EC99, ks::definitions::no_char, 1511);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_pan, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_huge_background(ks::composite_huge_background_metas::rin_h2_pan_closed, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x6F46165A, ks::definitions::no_char, 1512);
             ks::SceneManager::show_dialog(0xFDA56F98, ks::definitions::no_char, 1513);
+            ks::SceneManager::queue_event(RinH2ScrollEvent());
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA492B538, ks::definitions::no_char, 1514);
             ks::SceneManager::show_dialog(0x11370776, ks::definitions::no_char, 1515);
             ks::SceneManager::show_dialog(0xEE64D907, ks::definitions::no_char, 1516);
             ks::SceneManager::show_dialog(0xFFB8045B, ks::definitions::no_char, 1517);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_nopan, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_event(ks::composite_huge_background_metas::rin_h2_nopan_closed, RinH2NopanClosedEvent(), SCENE_TRANSITION_NONE, 15);
             ks::SceneManager::update_visuals();
             // renpy.music.play(music_heart, fadein=0.5, if_changed=True); TODO: unknown assignment
             ks::SceneManager::show_dialog(0xD8302E78, ks::definitions::no_char, 1518);
             ks::SceneManager::show_dialog(0x2F643C2C, ks::definitions::no_char, 1519);
             ks::SceneManager::show_dialog(0x28110B33, ks::definitions::no_char, 1520);
             ks::SceneManager::show_dialog(0x3D89146F, ks::definitions::no_char, 1521);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_hisao, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_huge_background(ks::composite_huge_background_metas::rin_h2_hisao_closed, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA37F9ACB, ks::definitions::no_char, 1522);
             ks::SceneManager::show_dialog(0xD7077F96, ks::definitions::no_char, 1523);
@@ -2931,7 +2927,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x26A0376F, ks::definitions::no_char, 1533);
             ks::SceneManager::show_dialog(0xE760C288, ks::definitions::no_char, 1534);
             ks::SceneManager::show_dialog(0x6448AF9B, ks::definitions::no_char, 1535);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_hisao, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::queue_event(RinH2HisaoClosedEvent());
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xE41A759F, ks::definitions::no_char, 1536);
             ks::SceneManager::show_dialog(0xBF98D6AF, ks::definitions::no_char, 1537);
@@ -2948,10 +2944,10 @@ namespace ks {
             ks::SceneManager::show_dialog(0x43214812, ks::definitions::no_char, 1546);
             ks::SceneManager::show_dialog(0xF44625DC, ks::definitions::no_char, 1547);
             ks::SceneManager::show_dialog(0x705A9FAC, ks::definitions::no_char, 1548);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_hisao, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_event(ks::composite_huge_background_metas::rin_h2_hisao_away, RinH2HisaoAwayEvent(), SCENE_TRANSITION_NONE, 15);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xF50ABF63, ks::definitions::no_char, 1549);
-            ks::SceneManager::set_background(ks::background_metas::rin_h2_l_hisao, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_huge_background(ks::composite_huge_background_metas::rin_h2_hisao_surprise, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x1790429A, ks::definitions::rin, 1550);
             ks::SceneManager::show_dialog(0xDDAB56CF, ks::definitions::rin, 1551);
@@ -2962,31 +2958,51 @@ namespace ks {
             ks::SceneManager::show_dialog(0x963FC976, ks::definitions::no_char, 1554);
             ks::SceneManager::show_dialog(0x1B60883F, ks::definitions::no_char, 1555);
             ks::SceneManager::music_play(MUSIC_ROMANCE, 600);
-            ks::SceneManager::set_background(ks::background_metas::rin_pair_base, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hn_rn, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hn_rn, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hn_rn, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xFEE97BF8, ks::definitions::no_char, 1556);
             ks::SceneManager::show_dialog(0x354B699A, ks::definitions::no_char, 1557);
             ks::SceneManager::show_dialog(0xD75A8A72, ks::definitions::no_char, 1558);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hf_rn, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xB5120ACB, ks::definitions::hi, 1559);
             ks::SceneManager::show_dialog(0xC17728CB, ks::definitions::no_char, 1560);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hf_rt, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x38008D1A, ks::definitions::rin, 1561);
             ks::SceneManager::show_dialog(0x931DF62A, ks::definitions::no_char, 1562);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hs_rt, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x6B2090AF, ks::definitions::hi, 1563);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hs_rs, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xB187BC75, ks::definitions::rin, 1564);
             ks::SceneManager::show_dialog(0x524AF41D, ks::definitions::no_char, 1565);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hs_rf, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x625A1ED0, ks::definitions::rin, 1566);
             ks::SceneManager::show_dialog(0x4725130B, ks::definitions::no_char, 1567);
             ks::SceneManager::show_dialog(0x55366B84, ks::definitions::no_char, 1568);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hn_rf, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x7C08DF4C, ks::definitions::hi, 1569);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_c_hn_rn, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x84A8B48A, ks::definitions::rin, 1570);
             ks::SceneManager::sfx_play("sfx_rustling.8ad", SOUND_CHANNEL_SOUND);
-            ks::SceneManager::set_background(ks::background_metas::rin_pair_base, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hn_rn, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4E403F35, ks::definitions::no_char, 1571);
             ks::SceneManager::show_dialog(0x61510245, ks::definitions::no_char, 1572);
             ks::SceneManager::show_dialog(0x768727AA, ks::definitions::no_char, 1573);
             ks::SceneManager::show_dialog(0xFCB08FB0, ks::definitions::no_char, 1574);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hn_rc, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x2C560A32, ks::definitions::no_char, 1575);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hf_rc, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x7370B981, ks::definitions::no_char, 1576);
             ks::SceneManager::show_dialog(0x32D19EE4, ks::definitions::hi, 1577);
             ks::SceneManager::show_dialog(0x9726407F, ks::definitions::no_char, 1578);
@@ -2994,10 +3010,16 @@ namespace ks {
             ks::SceneManager::show_dialog(0xA0E037A3, ks::definitions::no_char, 1580);
             ks::SceneManager::show_dialog(0x6B562A26, ks::definitions::no_char, 1581);
             ks::SceneManager::show_dialog(0x1D1CE01D, ks::definitions::no_char, 1582);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hf_rt, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xF2CC60F5, ks::definitions::rin, 1583);
             ks::SceneManager::show_dialog(0x17154E54, ks::definitions::no_char, 177);
             ks::SceneManager::show_dialog(0x304F98AF, ks::definitions::no_char, 1584);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hn_rt, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x61DC50B8, ks::definitions::hi, 1585);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hn_rs, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x1089BD98, ks::definitions::rin, 1586);
             ks::SceneManager::show_dialog(0x4347071A, ks::definitions::no_char, 1587);
             // renpy.music.set_volume(0.1, 1.0, channel="ambient"); TODO: unknown assignment
@@ -3024,10 +3046,16 @@ namespace ks {
             // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
             ks::SceneManager::nvl_clear();
             ks::SceneManager::nvl_hide();
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hf_rs, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x2862C628, ks::definitions::hi, 1604);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hf_rc, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x6AA04579, ks::definitions::rin, 1605);
             ks::SceneManager::show_dialog(0xA1A00F3C, ks::definitions::no_char, 1606);
             ks::SceneManager::show_dialog(0x5F1CF2CA, ks::definitions::no_char, 1607);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_pair_n_hf_rs, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x0610E580, ks::definitions::rin, 1608);
             ks::SceneManager::show_dialog(0x69AEE9E6, ks::definitions::no_char, 1609);
             ks::SceneManager::show_dialog(0x8AE50473, ks::definitions::no_char, 1610);
@@ -3038,12 +3066,12 @@ namespace ks {
             ks::SceneManager::show_dialog(0x43BFD530, ks::definitions::no_char, 1615);
             ks::SceneManager::show_dialog(0x7114601D, ks::definitions::no_char, 1616);
             ks::SceneManager::show_dialog(0x4B5677A8, ks::definitions::no_char, 1617);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_closed, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_closed, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x89DD04F5, ks::definitions::no_char, 1618);
             ks::SceneManager::show_dialog(0x4CAD042C, ks::definitions::rin, 1619);
             ks::SceneManager::show_dialog(0x483290A7, ks::definitions::no_char, 1620);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_left, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_left, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x09A7173B, ks::definitions::rin, 1621);
             ks::SceneManager::show_dialog(0xB166F89F, ks::definitions::no_char, 1622);
@@ -3051,25 +3079,25 @@ namespace ks {
             ks::SceneManager::show_dialog(0x6A48FDB9, ks::definitions::no_char, 1624);
             ks::SceneManager::show_dialog(0x7E60C045, ks::definitions::rin, 1625);
             ks::SceneManager::show_dialog(0x69679DE2, ks::definitions::hi, 1626);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_normal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_normal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xAC383590, ks::definitions::rin, 1627);
             ks::SceneManager::show_dialog(0xE247E3A5, ks::definitions::no_char, 1628);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_right, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_right, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x1B6FB4CC, ks::definitions::rin, 1629);
             ks::SceneManager::show_dialog(0xAA50F018, ks::definitions::no_char, 1630);
             ks::SceneManager::show_dialog(0x2B06A712, ks::definitions::no_char, 1631);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_closed_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_closed_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x0B6FA204, ks::definitions::rin, 1629);
             ks::SceneManager::show_dialog(0xD0404170, ks::definitions::no_char, 1632);
             ks::SceneManager::show_dialog(0xD948F169, ks::definitions::no_char, 1633);
             ks::SceneManager::show_dialog(0x1E34CE83, ks::definitions::no_char, 1634);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_strain_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_strain_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4401B0C2, ks::definitions::no_char, 1635);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_strain, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_strain, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xBA2695AE, ks::definitions::no_char, 1636);
             ks::SceneManager::show_dialog(0xC8782DEF, ks::definitions::no_char, 1637);
@@ -3083,30 +3111,30 @@ namespace ks {
             ks::SceneManager::show_dialog(0xDED73381, ks::definitions::no_char, 1645);
             ks::SceneManager::show_dialog(0x475F38E8, ks::definitions::no_char, 1646);
             ks::SceneManager::show_dialog(0xED012461, ks::definitions::no_char, 1647);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_normal_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_normal_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4FFBCDE5, ks::definitions::rin, 1648);
             ks::SceneManager::show_dialog(0x0A14C2FA, ks::definitions::no_char, 1649);
             ks::SceneManager::show_dialog(0x8D2CD613, ks::definitions::no_char, 1650);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_right_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_right_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x46A229E0, ks::definitions::no_char, 1651);
             ks::SceneManager::show_dialog(0x83DCDDE9, ks::definitions::rin, 1652);
             ks::SceneManager::show_dialog(0x64BE6B80, ks::definitions::hi, 1653);
             ks::SceneManager::show_dialog(0xE63737C3, ks::definitions::rin, 1654);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_left_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_left_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x60A5FA6F, ks::definitions::no_char, 1655);
             ks::SceneManager::show_dialog(0x84496460, ks::definitions::hi, 1656);
             ks::SceneManager::show_dialog(0x9C532E1C, ks::definitions::hi, 1657);
             ks::SceneManager::show_dialog(0xC703D43B, ks::definitions::hi, 1658);
             ks::SceneManager::show_dialog(0xD90659B8, ks::definitions::hi, 1659);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_closed_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_closed_close, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA7EBC41C, ks::definitions::no_char, 1660);
             ks::SceneManager::show_dialog(0x46641ABA, ks::definitions::no_char, 1661);
             ks::SceneManager::show_dialog(0x8BAE21CE, ks::definitions::no_char, 1662);
-            ks::SceneManager::set_background(ks::background_metas::rin_h_strain, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_h_strain, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x35291F79, ks::definitions::no_char, 1663);
             ks::SceneManager::show_dialog(0x2F18F053, ks::definitions::no_char, 1664);
@@ -3555,7 +3583,7 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x2FE21536, ks::definitions::rin, 1858);
             ks::SceneManager::music_play(MUSIC_TWINKLE, 120);
-            ks::SceneManager::set_background(ks::background_metas::rin_goodend_1, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_goodend_1, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xC63AE217, ks::definitions::no_char, 1859);
             ks::SceneManager::show_dialog(0xA7C37597, ks::definitions::no_char, 1860);
@@ -3585,7 +3613,7 @@ namespace ks {
             ks::SceneManager::nvl_clear();
             ks::SceneManager::show_dialog(0x89AECD28, ks::definitions::no_char, 1878);
             ks::SceneManager::show_dialog(0x94AD0F15, ks::definitions::no_char, 1879);
-            ks::SceneManager::set_background(ks::background_metas::rin_goodend_1b, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_goodend_1b, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x684652C4, ks::definitions::no_char, 1880);
             ks::SceneManager::show_dialog(0x8792B538, ks::definitions::no_char, 1881);
@@ -3596,7 +3624,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xD95EC13D, ks::definitions::no_char, 1886);
             ks::SceneManager::show_dialog(0x15BA8990, ks::definitions::no_char, 1887);
             ks::SceneManager::show_dialog(0x185498DD, ks::definitions::no_char, 1888);
-            ks::SceneManager::set_background(ks::background_metas::rin_goodend_2, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::rin_goodend_2, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xAEDE612A, ks::definitions::rin, 1889);
             ks::SceneManager::show_dialog(0xA4579092, ks::definitions::no_char, 1890);

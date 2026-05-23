@@ -16,9 +16,6 @@
 #include "background_metas/suburb_roadcenter.h"
 #include "background_metas/suburb_shanghaiext.h"
 #include "background_metas/suburb_shanghaiint.h"
-#include "background_metas/shizu_shanghai.h"
-#include "background_metas/shizu_shanghai_borednormal.h"
-#include "background_metas/shizu_shanghai_boredlaugh.h"
 #include "background_metas/school_lobby.h"
 #include "background_metas/school_miyagi.h"
 #include "background_metas/tearoom_everyone_noon.h"
@@ -30,6 +27,10 @@
 #include "background_metas/mural.h"
 #include "background_metas/school_dormext_start_ss.h"
 #include "background_metas/school_dormext_half_ni.h"
+#include "background_metas/emi_knockeddown_facepullout.h"
+#include "background_metas/emi_knockeddown_largepullout.h"
+#include "background_metas/emi_knockeddown_legs.h"
+#include "composite_background_metas/shizu_shanghai.h"
 #include "../events/emi_knockeddown_facepullout.cpp.h"
 #include "../events/emi_knockeddown_largepullout.cpp.h"
 #include "../events/emi_knockeddown_legs.cpp.h"
@@ -518,25 +519,25 @@ namespace ks {
             ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_panic, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x887EC0CF, ks::definitions::yu, 164);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xCB71EA0F, ks::definitions::shi, 10);
             ks::SceneManager::show_dialog(0x35A2D1E3, ks::definitions::mi, 165);
             ks::SceneManager::show_dialog(0xC6FC7F31, ks::definitions::no_char, 166);
             ks::SceneManager::show_dialog(0x8FCF6731, ks::definitions::hi, 167);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4B75261E, ks::definitions::no_char, 168);
             ks::SceneManager::show_dialog(0xF82F0C03, ks::definitions::shi, 10);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_boredlaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_boredlaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4C0050D9, ks::definitions::mi, 169);
             ks::SceneManager::show_dialog(0x6C0A56FA, ks::definitions::no_char, 170);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x778BF2C4, ks::definitions::mi, 171);
             ks::SceneManager::show_dialog(0x92F4C196, ks::definitions::hi, 172);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_boredlaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_boredlaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x09512CF3, ks::definitions::mi, 173);
             ks::SceneManager::set_background(ks::background_metas::suburb_shanghaiint, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
@@ -557,13 +558,13 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xFB5F8D4D, ks::definitions::no_char, 178);
             ks::SceneManager::show_dialog(0x5186B466, ks::definitions::no_char, 179);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_default, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x7DE77BBC, ks::definitions::shi, 10);
             ks::SceneManager::show_dialog(0x42BF9055, ks::definitions::mi, 180);
             ks::SceneManager::music_stop(180);
             ks::SceneManager::show_dialog(0xEAE5652B, ks::definitions::hi, 181);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x750E8DEF, ks::definitions::shi, 10);
             ks::SceneManager::show_dialog(0x2CE4C996, ks::definitions::mi, 182);

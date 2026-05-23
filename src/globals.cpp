@@ -11,13 +11,24 @@
 #include "fonts/fonts_common.h"
 #include "translation.h"
 #include "ingametimer.h"
+#include "background_ptr.h"
 #include "scenemanager.h"
 #include "sound_manager.h"
 #include "ks_huge_bgs_manager.h"
+#include "composite_huge_bg_runtime.h"
 #include "sound/sound_mixer.h"
 #include "utils/scenario_reader.h"
 
 namespace ks::globals {
+
+    namespace {
+        void _release_background_ewram(bn::optional<background_ptr> &bg) {
+            if (bg.has_value()) {
+                bg->release_decompressed_ewram_if_committed();
+            }
+        }
+    }
+
     void update_system_stats()  {
         system_stats.last_used_cpu = static_cast<uint32_t>((bn::core::last_cpu_usage() * 100).ceil_integer());
         system_stats.ewram_used = static_cast<uint32_t>(bn::memory::used_static_ewram() + bn::memory::used_alloc_ewram());
@@ -43,13 +54,23 @@ namespace ks::globals {
             BN_LOG("[WARN] Main update while loading!");
         }
 
-        if (bn::keypad::select_pressed()) {
-            ks::saves::log_progress(ks::progress);
+        if (bn::keypad::select_held()) {
+            if (bn::keypad::down_pressed()) {
+                ks::saves::log_progress(ks::progress);
+            }
+            if (bn::keypad::up_pressed()) {
+                ks::SceneManager::log_character_debug();
+            }
         }
 
-        huge_bgs_manager::update();
         SceneManager::update();
+        huge_bgs_manager::update();
+        composite_huge_bg_runtime::update_all();
         bn::core::update();
+
+        _release_background_ewram(background_visual.visible_bg_item);
+        _release_background_ewram(background_visual.visible_fg_item);
+
         sound_manager::update();
         update_konami_code();
 

@@ -26,7 +26,6 @@
 #include "background_metas/school_lobby.h"
 #include "background_metas/school_staircase2.h"
 #include "background_metas/school_hallway2.h"
-#include "background_metas/hana_library_read.h"
 #include "background_metas/school_library.h"
 #include "background_metas/school_stalls1_ni.h"
 #include "background_metas/school_gardens2_ni.h"
@@ -37,6 +36,7 @@
 #include "background_metas/school_road_ss.h"
 #include "background_metas/suburb_shanghaiext.h"
 #include "background_metas/suburb_shanghaiint.h"
+#include "background_metas/hanako_fw_base.h"
 #include "background_metas/suburb_shanghaiext_ni.h"
 #include "background_metas/suburb_roadcenter_ni.h"
 #include "background_metas/school_stalls1_ss.h"
@@ -48,6 +48,7 @@
 #include "background_metas/school_staircase1.h"
 #include "background_metas/school_roof.h"
 #include "background_metas/kenji_rooftop.h"
+#include "composite_background_metas/hana_library.h"
 #include "../events/nightsky_fireworks.cpp.h"
 #include "../events/hanako_fireworks.cpp.h"
 namespace ks {
@@ -1311,7 +1312,7 @@ namespace ks {
             ks::SceneManager::show_character(CHARACTER_LILLY, ks::smart_characters::lilly::lilly_cane_cheerful, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x9507BACC, ks::definitions::no_char, 665);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x0547F85E, ks::definitions::no_char, 666);
             ks::SceneManager::set_background(ks::background_metas::school_library, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);

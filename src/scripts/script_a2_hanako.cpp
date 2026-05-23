@@ -26,7 +26,6 @@
 #include "background_metas/school_hallway3.h"
 #include "background_metas/school_council.h"
 #include "background_metas/school_library.h"
-#include "background_metas/hana_library_read.h"
 #include "background_metas/school_library_ss.h"
 #include "background_metas/school_hallway2.h"
 #include "background_metas/school_cafeteria.h"
@@ -36,10 +35,9 @@
 #include "background_metas/school_dormlilly.h"
 #include "background_metas/school_dormhisao_ni.h"
 #include "background_metas/school_dormhallway.h"
-#include "background_metas/hana_library_smile.h"
-#include "background_metas/hana_library.h"
 #include "background_metas/hanako_crayon1.h"
 #include "background_metas/hanako_crayon2.h"
+#include "composite_background_metas/hana_library.h"
 namespace ks {
         void ScriptA2Hanako::a2_hanako_to_town_to_town() {
             if (ks::globals::exit_scenario) return;
@@ -1169,7 +1167,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0xF84B9F1F, ks::definitions::no_char, 460);
             ks::SceneManager::show_dialog(0x554FB2A7, ks::definitions::no_char, 461);
             ks::SceneManager::show_dialog(0xB721D749, ks::definitions::no_char, 462);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x5955E641, ks::definitions::no_char, 463);
             ks::SceneManager::show_dialog(0x4F55F693, ks::definitions::no_char, 464);
@@ -1995,13 +1993,13 @@ namespace ks {
             ks::SceneManager::show_dialog(0x7D71D2DD, ks::definitions::no_char, 834);
             ks::SceneManager::show_dialog(0xED58CB77, ks::definitions::no_char, 835);
             ks::SceneManager::show_dialog(0x0C0011DD, ks::definitions::no_char, 836);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x1A26F44F, ks::definitions::no_char, 837);
             ks::SceneManager::show_dialog(0x9DCF7900, ks::definitions::hi, 838);
             ks::SceneManager::show_dialog(0x4C720E75, ks::definitions::no_char, 839);
             ks::SceneManager::show_dialog(0x7353C69C, ks::definitions::no_char, 840);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_smile, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_smile, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xD4E922AD, ks::definitions::ha, 841);
             ks::SceneManager::show_dialog(0x1A95A2FE, ks::definitions::no_char, 842);
@@ -2012,7 +2010,7 @@ namespace ks {
             ks::SceneManager::show_dialog(0x0D80C4D7, ks::definitions::hi, 847);
             ks::SceneManager::show_dialog(0xB0AEB74F, ks::definitions::ha, 123);
             ks::SceneManager::show_dialog(0xD8D98F66, ks::definitions::no_char, 848);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x7AB05965, ks::definitions::no_char, 849);
             ks::SceneManager::show_dialog(0x8FCBAA27, ks::definitions::no_char, 850);
@@ -2022,9 +2020,9 @@ namespace ks {
             ks::SceneManager::music_stop(480);
             ks::SceneManager::show_dialog(0xD47E2FB2, ks::definitions::no_char, 853);
             ks::SceneManager::show_dialog(0xE311FCE1, ks::definitions::no_char, 854);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xF25A470B, ks::definitions::no_char, 855);
             ks::SceneManager::show_dialog(0xEB09BCE9, ks::definitions::no_char, 856);

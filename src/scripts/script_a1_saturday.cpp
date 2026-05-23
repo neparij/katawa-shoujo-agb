@@ -32,22 +32,16 @@
 #include "background_metas/school_gate_ni.h"
 #include "background_metas/school_courtyard_ni.h"
 #include "background_metas/school_dormhallway.h"
-#include "background_metas/shizu_shanghai.h"
-#include "background_metas/shizu_shanghai_normallaugh.h"
-#include "background_metas/shizu_shanghai_smirklaugh.h"
-#include "background_metas/shizu_shanghai_smirknormal.h"
-#include "background_metas/shizu_shanghai_borednormal.h"
-#include "background_metas/shizu_shanghai_boredlaugh.h"
 #include "background_metas/school_council.h"
 #include "background_metas/school_council_ss.h"
 #include "background_metas/school_council_ni.h"
 #include "background_metas/school_dormhisao_ni.h"
 #include "background_metas/school_hallway2.h"
 #include "background_metas/school_library.h"
-#include "background_metas/hana_library_read.h"
-#include "background_metas/hana_library.h"
 #include "background_metas/school_library_ss.h"
 #include "background_metas/school_dormext_full_ni.h"
+#include "composite_background_metas/shizu_shanghai.h"
+#include "composite_background_metas/hana_library.h"
 namespace ks {
         void ScriptA1Saturday::a1_saturday_support() {
             if (ks::globals::exit_scenario) return;
@@ -1409,18 +1403,18 @@ namespace ks {
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xCB47B340, ks::definitions::mi, 605);
             ks::SceneManager::show_dialog(0x0CBEE12D, ks::definitions::hi, 606);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_default, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xC07BC435, ks::definitions::no_char, 607);
             ks::SceneManager::show_dialog(0x7B6881CC, ks::definitions::hi, 608);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_normallaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_normallaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x8211E3C9, ks::definitions::mi, 609);
             ks::SceneManager::show_dialog(0x86D0C4E1, ks::definitions::no_char, 610);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x897FB898, ks::definitions::shi, 205);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xE1451651, ks::definitions::mi, 611);
             ks::SceneManager::set_background(ks::background_metas::suburb_shanghaiint, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
@@ -1429,21 +1423,21 @@ namespace ks {
             ks::SceneManager::show_dialog(0xC07CCD67, ks::definitions::no_char, 613);
             ks::SceneManager::show_dialog(0xFC302997, ks::definitions::no_char, 614);
             ks::SceneManager::show_dialog(0xD3CB6EEF, ks::definitions::no_char, 615);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_default, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x658B1375, ks::definitions::hi, 616);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xBC9C4D41, ks::definitions::shi, 205);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x4CFB2356, ks::definitions::mi, 617);
             ks::SceneManager::show_dialog(0x0D70111B, ks::definitions::hi, 618);
             ks::SceneManager::show_dialog(0x185EEB54, ks::definitions::hi, 619);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_normallaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_normallaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x2FAEB439, ks::definitions::shi, 205);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA2194CE4, ks::definitions::mi, 620);
             ks::SceneManager::show_dialog(0x64123F08, ks::definitions::hi, 621);
@@ -1452,54 +1446,54 @@ namespace ks {
             ks::SceneManager::show_dialog(0x07976A2F, ks::definitions::no_char, 624);
             ks::SceneManager::show_dialog(0x94685E0F, ks::definitions::no_char, 625);
             ks::SceneManager::show_dialog(0x3A7CC3A1, ks::definitions::hi, 626);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x3BC09FCA, ks::definitions::shi, 205);
             ks::SceneManager::show_dialog(0x774AC1EC, ks::definitions::mi, 627);
             ks::SceneManager::show_dialog(0x16C196E4, ks::definitions::hi, 628);
             ks::SceneManager::show_dialog(0xEB8915EB, ks::definitions::mi, 629);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x15D91E6C, ks::definitions::shi, 205);
             ks::SceneManager::show_dialog(0xFC724807, ks::definitions::mi, 630);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_normallaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_normallaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xAF08785E, ks::definitions::mi, 568);
             ks::SceneManager::show_dialog(0xE4288174, ks::definitions::no_char, 631);
             ks::SceneManager::show_dialog(0x82755A34, ks::definitions::hi, 632);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x04BA5EEC, ks::definitions::shi, 205);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x9E7E3836, ks::definitions::mi, 633);
             ks::SceneManager::show_dialog(0x27C58B13, ks::definitions::no_char, 634);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_borednormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x9BBA1D47, ks::definitions::shi, 205);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_boredlaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_boredlaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xC71EE5C9, ks::definitions::mi, 635);
             ks::SceneManager::show_dialog(0xF469512A, ks::definitions::no_char, 636);
             ks::SceneManager::show_dialog(0x04D49B74, ks::definitions::hi, 637);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x8A083526, ks::definitions::shi, 205);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirknormal, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xA84FBB27, ks::definitions::mi, 638);
             ks::SceneManager::show_dialog(0xF4BF8C5B, ks::definitions::mi, 639);
             ks::SceneManager::show_dialog(0x7DD59D4E, ks::definitions::mi, 640);
             ks::SceneManager::show_dialog(0x48F2F7DF, ks::definitions::no_char, 641);
             ks::SceneManager::show_dialog(0x7B06D518, ks::definitions::hi, 642);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_smirklaugh, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xE5491E76, ks::definitions::mi, 643);
             ks::SceneManager::show_dialog(0xCD3C426E, ks::definitions::no_char, 644);
             ks::SceneManager::show_dialog(0xD0B9EB9A, ks::definitions::hi, 645);
             ks::SceneManager::show_dialog(0xD2D1DDBA, ks::definitions::hi, 646);
             ks::SceneManager::show_dialog(0x7D396211, ks::definitions::hi, 647);
-            ks::SceneManager::set_background(ks::background_metas::shizu_shanghai, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::shizu_shanghai_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x17547A86, ks::definitions::no_char, 648);
             ks::SceneManager::show_dialog(0xEF19C642, ks::definitions::no_char, 649);
@@ -2321,11 +2315,11 @@ namespace ks {
             ks::SceneManager::show_dialog(0xFE3B4C0A, ks::definitions::no_char, 951);
             ks::SceneManager::show_dialog(0xE0C62448, ks::definitions::no_char, 952);
             ks::SceneManager::show_dialog(0x5FB54AA8, ks::definitions::no_char, 953);
-            ks::SceneManager::set_background(ks::background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_read, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0xDEBF2275, ks::definitions::no_char, 954);
             ks::SceneManager::sfx_play("sfx_pillow.8ad", SOUND_CHANNEL_SOUND);
-            ks::SceneManager::set_background(ks::background_metas::hana_library, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background(ks::composite_background_metas::hana_library_default, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
             ks::SceneManager::update_visuals();
             ks::SceneManager::show_dialog(0x56236746, ks::definitions::no_char, 955);
             ks::SceneManager::show_dialog(0x066C572E, ks::definitions::no_char, 956);

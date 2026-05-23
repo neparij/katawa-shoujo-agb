@@ -3,6 +3,9 @@
 
 #include "custom_background_metas.h"
 
+#include "bn_fixed_point.h"
+#include "bn_optional.h"
+
 namespace ks
 {
     class CustomEvent
@@ -40,6 +43,12 @@ namespace ks
         }
 
         virtual void after_show([[maybe_unused]] void (*on_update)()) {
+        }
+
+        /// When set, `set_event` uses this as the incoming BG position (e.g.
+        /// Dissolvemove target scroll) before `update_visuals` runs dissolve.
+        [[nodiscard]] virtual bn::optional<bn::fixed_point> background_target_position() const {
+            return bn::nullopt;
         }
 
         virtual void set_state(const int state) {

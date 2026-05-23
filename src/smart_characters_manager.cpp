@@ -47,6 +47,7 @@
 #include "smart_characters_manager.h"
 
 #include "displayable_manager.h"
+#include "composite_bg_runtime.h"
 
 #include <cstdint>
 #include <cstring>
@@ -437,16 +438,10 @@ void _apply_palette_variant_to_faces()
 // state needed to produce the upload (body pointer, tile_off, count,
 // visible-tile indices). The snapshot is taken at `_enqueue_char_upload`
 // time — the same `commit()` pass that writes the matching map cells to
-// `stg.cells`. This guarantees the V-Blank that drains the queue uploads
-// tile data consistent with the map cells butano commits at the *same*
-// V-Blank, even if user code mutates `ch.var` between this commit() and
-// the next V-Blank (e.g. a back-to-back `set_variant` swapping pose
-// groups across two `update_visuals` calls without an intervening
-// frame). Without the snapshot, the V-Blank handler would read the
-// freshly-mutated `ch.var` against the *previous* commit's stale
-// `g_char_trim`, producing garbage tile uploads while butano commits
-// the previous map — the classic "map references tile X, tile X is
-// garbage" desync.
+// `stg.cells`. Butano commits those map cells at V-Blank *before* this
+// handler runs (`bn_core`: bg_blocks map commit, then this callback).
+// Body tiles are uploaded round-robin by tile index across every pending
+// character (tile 0 for each, then tile 1 for each, …).
 //
 // `visible[]` is dimensioned at MAX_VISIBLE_TILES_PER_CHAR (=384) so
 // each slot is ~784 bytes; the queue lives in EWRAM_BSS.
@@ -467,18 +462,66 @@ struct pending_upload
 
 BN_DATA_EWRAM_BSS pending_upload g_pending[MAX_CHARS];
 
-void _do_copy_char(const pending_upload& snap);
+void _copy_visible_tile(const pending_upload& snap, int compact_i,
+                        bn::span<bn::tile>& vram)
+{
+    if(compact_i < 0 || compact_i >= snap.count || ! snap.body) return;
+
+    const smart_characters::body&         body    = *snap.body;
+    const smart_characters::tileset_data& ts      = *body.tileset;
+    const int                             seg_off = snap.tile_off;
+    const int      local_in_body = snap.visible[compact_i];
+    const uint16_t global        = body.used_tiles[local_in_body];
+    const int      slab          = global >> 10;
+    const int      local         = int(global & 0x3FFu);
+    const bn::span<const bn::tile>& rom = ts.slabs[slab]->tiles_ref();
+    const int      rom_off  = local * TILES_PER_VISUAL;
+    const int      vram_off = (seg_off + compact_i) * TILES_PER_VISUAL;
+    vram[vram_off + 0] = rom[rom_off + 0];
+    vram[vram_off + 1] = rom[rom_off + 1];
+}
+
+void _flush_smart_char_tile_uploads()
+{
+    if(! g_shared_tiles)
+    {
+        for(pending_upload& p : g_pending) p.char_idx = -1;
+        return;
+    }
+
+    bn::optional<bn::span<bn::tile>> vram_opt = g_shared_tiles->vram();
+    if(! vram_opt) return;
+    bn::span<bn::tile>& vram = *vram_opt;
+
+    int max_layer = 0;
+    for(const pending_upload& p : g_pending)
+    {
+        if(p.char_idx < 0) continue;
+        if(p.count > max_layer) max_layer = p.count;
+    }
+    if(max_layer <= 0) return;
+
+    // Round-robin by tile index: layer 0 for every pending char, then
+    // layer 1 for every pending char, … until the longest queue is done.
+    for(int layer = 0; layer < max_layer; ++layer)
+    {
+        for(const pending_upload& p : g_pending)
+        {
+            if(p.char_idx < 0 || layer >= p.count) continue;
+            _copy_visible_tile(p, layer, vram);
+        }
+    }
+
+    for(pending_upload& p : g_pending)
+        p.char_idx = -1;
+}
 
 void process_pending_uploads()
 {
     displayable_manager::process_pending_tile_uploads();
+    composite_bg_runtime::process_pending_uploads();
 
-    for(pending_upload& p : g_pending)
-    {
-        if(p.char_idx < 0) continue;
-        _do_copy_char(p);
-        p.char_idx = -1;
-    }
+    _flush_smart_char_tile_uploads();
 }
 
 // Brief IRQ-disable guard via REG_IME. Used around the snapshot publish
@@ -664,38 +707,6 @@ void _release_shared_resources()
     g_shared_palette.reset();
     g_shared_tiles.reset();
     g_transparent_ready = false;
-}
-
-void _do_copy_char(const pending_upload& snap)
-{
-    if(! snap.body || ! g_shared_tiles) return;
-
-    bn::optional<bn::span<bn::tile>> vram_opt = g_shared_tiles->vram();
-    if(! vram_opt) return;
-    bn::span<bn::tile>& vram = *vram_opt;
-
-    // Self-contained: every field below is a snapshot taken at
-    // `_enqueue_char_upload` time, so this routine doesn't read any
-    // mutable per-char state and can't desync against `ch.var` /
-    // `g_char_trim` mutations between enqueue and drain.
-    const smart_characters::body&         body    = *snap.body;
-    const smart_characters::tileset_data& ts      = *body.tileset;
-    const int                             seg_off = snap.tile_off;
-    const int                             count   = snap.count;
-    const uint16_t*                       visible = snap.visible;
-
-    for(int i = 0; i < count; ++i)
-    {
-        const int      local_in_body = visible[i];
-        const uint16_t global  = body.used_tiles[local_in_body];
-        const int      slab    = global >> 10;
-        const int      local   = int(global & 0x3FFu);
-        const bn::span<const bn::tile>& rom = ts.slabs[slab]->tiles_ref();
-        const int      rom_off  = local         * TILES_PER_VISUAL;
-        const int      vram_off = (seg_off + i) * TILES_PER_VISUAL;
-        vram[vram_off + 0] = rom[rom_off + 0];
-        vram[vram_off + 1] = rom[rom_off + 1];
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -2130,6 +2141,65 @@ int _find_slot_by_character(character_t character)
     return -1;
 }
 
+void _log_debug_state_impl()
+{
+    BN_LOG("=== smart_characters_manager ===");
+    BN_LOG(" init=", g_initialized,
+           " pool_tiles=", shared_pool_tile_count(), "/",
+           shared_pool_capacity(),
+           " active_bgs=", active_bgs_count(),
+           " palette_variant=", int(g_palette_variant),
+           " animating=", is_animating());
+
+    for(int bi = 0; bi < MAX_BGS; ++bi)
+    {
+        const bg_slot& bg = g_bgs[bi];
+        if(! bg.active) {
+            continue;
+        }
+        BN_LOG(" host_bg[", bi, "]: chars=", bg.char_count,
+               " bucket=(", bg.bucket_x, ",", bg.bucket_y, ")",
+               " priority=", bg.priority,
+               " blending=", bg.blending_enabled,
+               " pos=(", bg.pos_x.right_shift_integer(), ",",
+               bg.pos_y.right_shift_integer(), ")",
+               " hw_bg=", bg.bg.has_value(),
+               " dirty=", bg.dirty);
+        for(int j = 0; j < bg.char_count; ++j)
+        {
+            BN_LOG("   char_slot=", bg.char_indices[j],
+                   " map_cells=(", bg.char_dx_cells[j], ",",
+                   bg.char_dy_cells[j], ")");
+        }
+    }
+
+    for(int i = 0; i < MAX_CHARS; ++i)
+    {
+        const char_state& ch = g_chars[i];
+        if(! ch.alive) {
+            continue;
+        }
+        const unsigned applied_hash =
+                ch.face_var_applied ? ch.face_var_applied->hash : 0;
+        const unsigned var_hash = ch.var ? ch.var->hash : 0;
+        BN_LOG(" mgr_slot[", i, "]: char=", int(ch.character),
+               " var_hash=", var_hash,
+               " pos_px=(", ch.x_int, ",", ch.y_int, ")",
+               " bg_idx=", ch.bg_idx,
+               " tile_off=", ch.tile_off,
+               " prio=", ch.priority,
+               " blend=", ch.blending_enabled,
+               " tiles_dirty=", ch.tiles_dirty,
+               " vis_tiles=", ch.visible_tile_count,
+               " face=", ch.face.has_value(),
+               " face_hash=", applied_hash,
+               " anim=", ch.anim_frames_left);
+        if(ch.var && applied_hash != 0 && applied_hash != var_hash) {
+            BN_LOG("   WARN face_hash != var_hash (stale face?)");
+        }
+    }
+}
+
 }  // namespace
 
 bool exists(character_t character)
@@ -2274,6 +2344,15 @@ void destroy_all()
     // case (e.g. `destroy_all` on an already-empty manager between
     // scenes — keeps the post-condition simple).
     _release_shared_resources();
+}
+
+void log_debug_state()
+{
+    if(! g_initialized) {
+        BN_LOG("=== smart_characters_manager (not initialized) ===");
+        return;
+    }
+    _log_debug_state_impl();
 }
 
 void evict_vram_for_backdrop()

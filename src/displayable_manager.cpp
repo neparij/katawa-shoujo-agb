@@ -1,6 +1,7 @@
 #include "displayable_manager.h"
 
 #include "displayable_asset.h"
+#include "ext_bg_blocks_manager.h"
 #include "bn_common.h"
 #include "bn_bg_palette_items_pal_char_bg.h"
 #include "bn_bg_palette_ptr.h"
@@ -287,6 +288,13 @@ bool _ensure_vram_tiles(const displayable_asset& asset)
                  " bn::tile slots, have ", bn::bg_tiles::available_tiles_count());
         return false;
     }
+
+    // `background_item::create_bg` calls update_and_delay_commit() before
+    // allocating the backdrop; that arms butano's delay_commit until the
+    // next bg_blocks update(). regular_bg_tiles_ptr::allocate() uses
+    // _allocate_impl, which returns -1 while delay_commit is set — even
+    // when free_blocks_count is plenty (see composite_bg_runtime.cpp).
+    bn::bg_blocks_manager::update();
 
     g_slot.vram_tiles = bn::regular_bg_tiles_ptr::allocate(bn_needed, bn::bpp_mode::BPP_8);
     _stamp_transparent_tile();

@@ -81,7 +81,7 @@ namespace ks {
             add_menu_entry(0, 38, ks::tl::screens_main_menu(), 4);
 
             add_text_entry_small(0, ks::device::screen_height_half - 8 - 12,
-                           bn::format<64>("{}: {}",
+                           bn::format<128>("{}: {}",
                                           ks::tl::screens_current_scene(),
                                           ks::tl::label(progress.metadata.label)));
 

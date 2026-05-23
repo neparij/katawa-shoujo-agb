@@ -302,6 +302,9 @@ void set_physical_bg_budget(int count);
 /// pool and rebuild all character BGs in the new VRAM layout.
 void evict_vram_for_backdrop();
 
+/// Debug dump of live manager slots, host BGs, and shared pool usage.
+void log_debug_state();
+
 }  // namespace ks::smart_characters_manager
 
 #endif  // KS_SMART_CHARACTERS_MANAGER_H

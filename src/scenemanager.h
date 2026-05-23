@@ -177,7 +177,19 @@ public:
                            scene_transition_t transition,
                            const int dissolve_time,
                            const palette_variant_t palette_variant);
+    static void set_background(const composite_background_meta& bg,
+                           const int position_x,
+                           const int position_y,
+                           scene_transition_t transition,
+                           const int dissolve_time,
+                           const palette_variant_t palette_variant);
     static void set_huge_background(const huge_background_meta& bg,
+                       int position_x,
+                       int position_y,
+                       scene_transition_t transition,
+                       int dissolve_time,
+                       const palette_variant_t palette_variant);
+    static void set_huge_background(const composite_huge_background_meta& bg,
                        int position_x,
                        int position_y,
                        scene_transition_t transition,
@@ -204,10 +216,22 @@ public:
                           scene_transition_t transition,
                           int dissolve_time);
 
+    static void set_event(const composite_background_meta& bg,
+                          const CustomEvent& event,
+                          scene_transition_t transition,
+                          int dissolve_time);
+
     static void set_event(const huge_background_meta& bg,
                       const CustomEvent& event,
                       scene_transition_t transition,
                       int dissolve_time);
+
+    static void set_event(const composite_huge_background_meta& bg,
+                          const CustomEvent& event,
+                          scene_transition_t transition,
+                          int dissolve_time);
+
+    static void queue_event(const CustomEvent& event);
 
     static void set_event_state(int state);
 
@@ -304,6 +328,8 @@ public:
     static void pause(const int ticks);
 
     static void timeskip();
+
+    static void log_character_debug();
 
     static void apply_palette_variant(const background_ptr &bg,
                                       const bn::span<const bn::color> &original_palette,
