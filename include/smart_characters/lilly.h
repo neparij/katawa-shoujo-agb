@@ -40,6 +40,7 @@ extern const body lilly_behind_che_close_body;
 extern const body lilly_behind_close_body;
 extern const body lilly_cane_cas_close_body;
 extern const body lilly_cane_close_body;
+extern const body lilly_sc_body;
 
 // Per-(group × emotion) variants.
 extern const variant lilly_back_cas_smile;
@@ -253,6 +254,9 @@ extern const variant lilly_cane_close_displeased;
 extern const variant lilly_cane_close_mad;
 extern const variant lilly_cane_close_surprised;
 extern const variant lilly_cane_close_giggle;
+extern const variant lilly_sc_cheerful;
+extern const variant lilly_sc_ouch;
+extern const variant lilly_sc_shock;
 
 }  // namespace ks::smart_characters::lilly
 

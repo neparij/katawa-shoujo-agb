@@ -44,7 +44,9 @@ SOURCES     	:=  ../butano/common/src \
 					allure-agb/src \
 					../tests \
 					../tests/suites \
-		    		src \
+                    src \
+                    src/composite_backgrounds \
+                    src/displayables \
                     src/smart_characters \
                     src/ulcv \
                     src/events \
@@ -64,9 +66,12 @@ INCLUDES    	:=  include \
 					include/fonts \
 					include/definitions \
 					include/background_metas \
+					include/composite_background_metas \
+					include/composite_huge_background_metas \
 					include/vfx_metas \
 					include/sprite_metas \
 					include/smart_characters \
+					include/displayables \
 					allure-agb/include \
 					../libsavgba/include \
 					../butano/common/include \
@@ -111,6 +116,8 @@ GRAPHICS    	:=  graphics \
 					graphics/characters/shopkeep \
 					graphics/characters/yuuko \
 					graphics/characters/yuukoshang \
+					graphics/displayables \
+					graphics/composites \
 					../butano/common/graphics
 HUGE_GRAPHICS   :=  graphics/huge \
 					graphics/huge/$(LANGUAGE)

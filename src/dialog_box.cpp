@@ -63,15 +63,21 @@ namespace ks {
 
             const int chunked_lines_from = (_text_parser.fast_ends_on_line() / LinesPerPage) * LinesPerPage;
             const int chunked_lines_to = _text_parser.fast_ends_on_line();
-            const bool instant_render = user_skip || user_advance || force_render;
-            for (int i = chunked_lines_from; i <= chunked_lines_to; i++) {
-                // Never render per-character when user is skipping or we're forcing render,
-                // otherwise we can exhaust sprite font tiles on long lines.
-                draw_line(i, !instant_render && i == chunked_lines_to);
+            // const bool instant_render = user_skip || user_advance || force_render;
+            // for (int i = chunked_lines_from; i <= chunked_lines_to; i++) {
+            //     // Never render per-character when user is skipping or we're forcing render,
+            //     // otherwise we can exhaust sprite font tiles on long lines.
+            //     draw_line(i, !instant_render && i == chunked_lines_to);
+            // }
+            // current_line_index = chunked_lines_to;
+            // waiting_for_input = instant_render;
+            // BN_LOG("fast done");
+            for (int i = chunked_lines_from; i < chunked_lines_to; i++) {
+                draw_line(i, false);
             }
+            draw_line(chunked_lines_to, true);
 
             current_line_index = chunked_lines_to;
-            waiting_for_input = instant_render;
             BN_LOG("fast done");
         } else {
             if (user_skip || user_advance || force_render) {
@@ -165,22 +171,29 @@ namespace ks {
         bn::sprite_text_generator *tg = &_default_text_generator.value();
         int x_offset = 0;
         bool line_found = false;
+        bool bold_flag = false;
+        bn::sprite_palette_item line_palette = globals::text_palettes::original;
         text_wait_map.clear();
 
         for (const auto &cmd: _text_parser.commands()) {
             if (cmd.command == RC_START_LINE && cmd.param == line_index) {
                 line_found = true;
                 tg = &_default_text_generator.value();
+                bold_flag = false;
+                line_palette = globals::text_palettes::original;
             } else if (line_found) {
                 if (cmd.command == RC_START_LINE) {
                     break;
                 }
                 if (cmd.command == RC_SET_FONT) {
                     if (cmd.param == 0) {
-                        tg->set_palette_item(globals::text_palettes::original);
+                        bold_flag = false;
                     } else if (cmd.param == 1) {
-                        tg->set_palette_item(globals::text_palettes::bold(globals::text_palettes::original));
+                        bold_flag = true;
                     }
+                }
+                if (cmd.command == RC_SET_PALETTE) {
+                    line_palette = globals::text_palettes::colored(static_cast<unsigned char>(cmd.param));
                 }
                 if (cmd.command == RC_FAST) {
                     fast = false;
@@ -198,7 +211,9 @@ namespace ks {
                 if (cmd.command == RC_TEXT_OUT) {
                     tg->set_left_alignment();
                     tg->set_one_sprite_per_character(one_sprite_per_character);
-                    tg->set_palette_item(globals::text_palettes::original);
+                    tg->set_palette_item(bold_flag
+                        ? globals::text_palettes::bold(line_palette)
+                        : line_palette);
                     if (one_sprite_per_character) {
                         if (_infinite_render) {
                             tg->generate(
@@ -221,17 +236,29 @@ namespace ks {
                         }
                     } else {
                         if (_infinite_render) {
-                            tg->generate(
+                            // TODO: SOMEHOW but we need to render all the text. fuck....
+                            tg->generate_optional(
                                 _text_start_position.x() + x_offset,
                                 _text_start_position.y() + render_offset,
                                 cmd.view,
                                 text_chunk_sprites);
+                            // tg->generate(
+                            //     _text_start_position.x() + x_offset,
+                            //     _text_start_position.y() + render_offset,
+                            //     cmd.view,
+                            //     text_chunk_sprites);
                         } else {
-                            tg->generate(
+                            // TODO: SOMEHOW but we need to render all the text. fuck....
+                            tg->generate_optional(
                                 _text_start_position.x() + x_offset,
                                 _text_start_position.y() + (line_index % LinesPerPage) * 12,
                                 cmd.view,
                                 text_chunk_sprites);
+                            // tg->generate(
+                            //     _text_start_position.x() + x_offset,
+                            //     _text_start_position.y() + (line_index % LinesPerPage) * 12,
+                            //     cmd.view,
+                            //     text_chunk_sprites);
                         }
                     }
                     x_offset += tg->width(cmd.view);

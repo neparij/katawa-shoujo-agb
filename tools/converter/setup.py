@@ -13,7 +13,9 @@ setup(
     install_requires=[
         "sentencepiece",
         "Pillow",
-        "pyyaml"
+        "pyyaml",
+        "numpy",
+        "numba",
     ],
     entry_points={
         "console_scripts": [

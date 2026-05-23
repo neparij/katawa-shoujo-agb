@@ -130,7 +130,7 @@ public:
 
 private:
     bn::istring& text = ks::message;
-    ks::text::parser<32> renderer_inst{&text, ks::text_generator};
+    ks::text::parser<64> renderer_inst{&text, ks::text_generator};
     const int max_width = ks::device::screen_width - 20;
 };
 

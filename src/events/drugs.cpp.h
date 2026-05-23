@@ -7,6 +7,7 @@
 #include "bn_bg_palette_ptr.h"
 #include "bn_regular_bg_actions.h"
 #include "custom_event.h"
+#include "huge_bg_coords.h"
 
 namespace ks {
 
@@ -32,18 +33,21 @@ namespace ks {
 
             BN_ASSERT(background_visual.visible_bg_item.has_value(), "Event background is not set");
 
+            const bn::fixed_point start = huge_bg_coords::top_left_to_position(-48, -176);
+            const bn::fixed_point end = huge_bg_coords::top_left_to_position(-240, -176);
+
             BN_LOG("DrugsEvent::init - setpos");
-            background_visual.visible_bg_item->set_position(-48, -176);
+            background_visual.visible_bg_item->set_position(start.x(), start.y());
 
             BN_LOG("DrugsEvent::init - SM setpos");
-            SceneManager::set_background_position(-48, -176);
+            SceneManager::set_background_position(start.x().integer(), start.y().integer());
 
             BN_LOG("DrugsEvent::init - moveact create");
-            _move_action = bn::regular_bg_top_left_move_to_action(
+            _move_action = bn::regular_bg_move_to_action(
                 background_visual.visible_bg_item->regular_ptr(),
                 _updates,
-                -240,
-                -176
+                end.x(),
+                end.y()
             );
 
             BN_LOG("DrugsEvent::init - palette get");
@@ -92,7 +96,7 @@ namespace ks {
         const int _updates_per_color = 31;
         int _palette_color_idx;
         int _palette_color_timer;
-        bn::optional<bn::regular_bg_top_left_move_to_action> _move_action;
+        bn::optional<bn::regular_bg_move_to_action> _move_action;
         bn::optional<bn::bg_palette_ptr> _palette;
     };
 }

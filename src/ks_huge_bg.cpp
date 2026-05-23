@@ -31,21 +31,30 @@ namespace ks {
         auto bg = bn::regular_bg_ptr::create(bg_map);
 
         BN_LOG("Set Position");
-        bg.set_top_left_position(x, y);
+        bg.set_position(x, y);
 
         BN_LOG("<<< return huge_bg >>>");
         return huge_bg(bg, item.map_dimensions(), item.cells_ref(), item.tiles_ref(), bg_map.vram()->begin(), bg_tiles.vram()->begin());
     }
 
     void huge_bg::update() {
-        const int bg_x = -regular_bg_ptr().top_left_position().x().integer();
-        const int bg_y = -regular_bg_ptr().top_left_position().y().integer();
+        const bn::fixed_point top_left = regular_bg_ptr().top_left_position();
+        const int bg_x = (-top_left.x()).right_shift_integer();
+        const int bg_y = (-top_left.y()).right_shift_integer();
         const int map_width = map_dimensions().width();
         const int map_height = map_dimensions().height();
         const bn::bpp_mode bpp = regular_bg_ptr().palette().bpp();
 
-        x_offset = (floor_div(bg_x, 8) % (map_width * (WIDTH_BLOCKS + 1)) + map_width * (WIDTH_BLOCKS + 1)) % (map_width * (WIDTH_BLOCKS + 1));
-        y_offset = (floor_div(bg_y, 8) % (map_height * (HEIGHT_BLOCKS + 1)) + map_height * (HEIGHT_BLOCKS + 1)) % (map_height * (HEIGHT_BLOCKS + 1));
+        const int x_tile = huge_bg_tile_offset_for_axis(bg_x, previous_bg_x, initialized);
+        const int y_tile = huge_bg_tile_offset_for_axis(bg_y, previous_bg_y, initialized);
+
+        x_offset = (x_tile % (map_width * (WIDTH_BLOCKS + 1)) + map_width * (WIDTH_BLOCKS + 1))
+                   % (map_width * (WIDTH_BLOCKS + 1));
+        y_offset = (y_tile % (map_height * (HEIGHT_BLOCKS + 1)) + map_height * (HEIGHT_BLOCKS + 1))
+                   % (map_height * (HEIGHT_BLOCKS + 1));
+
+        previous_bg_x = bg_x;
+        previous_bg_y = bg_y;
 
         if (x_offset != previous_x_offset || y_offset != previous_y_offset || !initialized)
         {
@@ -53,72 +62,54 @@ namespace ks {
             unsigned short ydiff = bn::abs(y_offset - previous_y_offset);
             previous_x_offset = x_offset;
             previous_y_offset = y_offset;
-            //
-            // BN_LOG("X Offset: ", x_offset, " Y Offset: ", y_offset);
-            // BN_LOG("X Diff: ", xdiff, " Y Diff: ", ydiff);
 
             for (int yy = 0; yy < HEIGHT_BLOCKS + 1; yy++)
             {
                 for (int xx = 0; xx < WIDTH_BLOCKS + 1; xx++)
                 {
-                    if (!initialized || xx < xdiff || yy < ydiff || xx > WIDTH_BLOCKS - xdiff || yy > HEIGHT_BLOCKS - ydiff) {
-                        int raw_x = (xx + x_offset) % 64;
-                        int raw_y = (yy + y_offset) % 64;
-                        int map_index = raw_y * 64 + raw_x;
+                    const bool upload_tile = !initialized || xx < xdiff || yy < ydiff
+                            || xx > WIDTH_BLOCKS - xdiff || yy > HEIGHT_BLOCKS - ydiff;
 
-                        auto map_cell = _map_data[map_index];
-                        int tile_index = map_cell & 0b0000111111111111; // -mB16:p4i12 --- Using 4bits for palette, 12bits for tile index
+                    int raw_x = (xx + x_offset) % map_width;
+                    int raw_y = (yy + y_offset) % map_height;
+                    int map_index = raw_y * map_width + raw_x;
 
-                        int vram_tile_x = (xx + x_offset) % (WIDTH_BLOCKS + 1);
-                        int vram_tile_y = (yy + y_offset) % (HEIGHT_BLOCKS + 1);
-                        int vram_tile_index = (vram_tile_y * (WIDTH_BLOCKS + 1) + vram_tile_x) % TILES_COUNT;
+                    auto map_cell = _map_data[map_index];
+                    int tile_index = map_cell & 0b0000111111111111;
 
-                        uint16_t new_map_cell;
-                        if (bpp == bn::bpp_mode::BPP_8) {
-                            memcpy(&_tiles_vram[vram_tile_index * 2], _tiles_data + tile_index * 64, 64); // 8bpp
-                            new_map_cell = (map_cell & 0b1111000000000000) | vram_tile_index;
-                        } else {
-                            memcpy(&_tiles_vram[vram_tile_index], _tiles_data + tile_index * 32, 32); // 4bpp
-                            uint16_t palette = (map_cell >> 12) & 0xF;
-                            palette = (palette + regular_bg_ptr().palette().id()) & 0xF;
-                            uint16_t palette_bits = palette << 12;
-                            new_map_cell = palette_bits | vram_tile_index;
+                    int vram_tile_x = (xx + x_offset) % (WIDTH_BLOCKS + 1);
+                    int vram_tile_y = (yy + y_offset) % (HEIGHT_BLOCKS + 1);
+                    int vram_tile_index = (vram_tile_y * (WIDTH_BLOCKS + 1) + vram_tile_x) % TILES_COUNT;
+
+                    uint16_t new_map_cell;
+                    if (bpp == bn::bpp_mode::BPP_8) {
+                        if (upload_tile) {
+                            memcpy(&_tiles_vram[vram_tile_index * 2], _tiles_data + tile_index * 64, 64);
                         }
-
-                        int vram_map_x = (xx + x_offset) % (32);
-                        int vram_map_y = (yy + y_offset) % (32);
-                        int vram_map_index = vram_map_y * 32 + vram_map_x;
-
-                        _map_vram[vram_map_index] = new_map_cell;
-                        asm __volatile("nop");
-                        asm __volatile("nop");
+                        new_map_cell = (map_cell & 0b1111000000000000) | vram_tile_index;
+                    } else {
+                        if (upload_tile) {
+                            memcpy(&_tiles_vram[vram_tile_index], _tiles_data + tile_index * 32, 32);
+                        }
+                        uint16_t palette = (map_cell >> 12) & 0xF;
+                        palette = (palette + regular_bg_ptr().palette().id()) & 0xF;
+                        uint16_t palette_bits = palette << 12;
+                        new_map_cell = palette_bits | vram_tile_index;
                     }
+
+                    int vram_map_x = (xx + x_offset) % (32);
+                    int vram_map_y = (yy + y_offset) % (32);
+                    int vram_map_index = vram_map_y * 32 + vram_map_x;
+
+                    _map_vram[vram_map_index] = new_map_cell;
+                    asm __volatile("nop");
+                    asm __volatile("nop");
                 }
             }
 
             initialized = true;
         }
     }
-
-    // huge_bg::huge_bg(const huge_bg& other) : _wrapped_bg_ptr(other._wrapped_bg_ptr),
-    //                                          _map_dimensions(other._map_dimensions),
-    //                                          _map_data(other._map_data),
-    //                                          _tiles_data(other._tiles_data),
-    //                                          _map_vram(other._map_vram),
-    //                                          _tiles_vram(other._tiles_vram) {
-    //     BN_LOG("huge_bg::huge_bg(const huge_bg& other)");
-    //     x_offset = other.x_offset;
-    //     y_offset = other.y_offset;
-    //     previous_x_offset = other.previous_x_offset;
-    //     previous_y_offset = other.previous_y_offset;
-    //     initialized = other.initialized;
-    //     huge_bgs_manager::push(this);
-    // }
-    //
-    // huge_bg::huge_bg(const huge_bg& other) {
-    //     BN_LOG("huge_bg::huge_bg(const huge_bg& other)");
-    //     *this = other;
-    // }
 
     huge_bg& huge_bg::operator=(const huge_bg& other) {
         BN_LOG("huge_bg::operator=(const huge_bg& other)");
@@ -137,13 +128,15 @@ namespace ks {
         y_offset = other.y_offset;
         previous_x_offset = other.previous_x_offset;
         previous_y_offset = other.previous_y_offset;
+        previous_bg_x = other.previous_bg_x;
+        previous_bg_y = other.previous_bg_y;
         initialized = other.initialized;
 
         return *this;
     }
 
     bn::fixed_point huge_bg::position() const {
-        return regular_bg_ptr().top_left_position();
+        return regular_bg_ptr().position();
     }
 
     huge_bg::~huge_bg() {

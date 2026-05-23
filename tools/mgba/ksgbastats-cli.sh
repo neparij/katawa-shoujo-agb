@@ -75,7 +75,7 @@ nc $HOST $PORT | while IFS=: read cpu ewram bg_tiles bg_maps bg_pal spr_tiles sp
     draw_bar "$bg_tiles" "$bg_tiles_max" "$WIDTH"
     echo
 
-    bg_maps_max=32768
+    bg_maps_max=4096
     printf "BG Maps:         [%5d/%-5d %3d%%] " "$bg_maps" "$bg_maps_max" "$(( bg_maps * 100 / bg_maps_max ))"
     draw_bar "$bg_maps" "$bg_maps_max" "$WIDTH"
     echo

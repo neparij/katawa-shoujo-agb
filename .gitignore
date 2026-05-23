@@ -16,6 +16,9 @@ site/
 katawa.creator.user
 compile_commands.json
 
+__pycache__/
+*.pyc
+
 # Ignore build info as it is generated on the build
 include/build_info.h
 

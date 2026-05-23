@@ -100,16 +100,16 @@ namespace ks::menu {
         // Page 1
         static void picnic() {
             prepare_scene_manager();
-            show_bg(background_metas::picnic_normal);
-            show_bg(background_metas::picnic_rain);
+            show_bg(composite_background_metas::picnic_normal);
+            show_bg(composite_background_metas::picnic_rain);
         }
 
         static void emi_sleep() {
             prepare_scene_manager();
-            show_bg(background_metas::emi_sleep_unsure);
-            show_bg(background_metas::emi_sleep_normal);
-            show_bg(background_metas::emi_sleep_weep);
-            show_bg(background_metas::emi_sleep_cry);
+            show_bg(composite_background_metas::emi_sleep_unsure);
+            show_bg(composite_background_metas::emi_sleep_normal);
+            show_bg(composite_background_metas::emi_sleep_weep);
+            show_bg(composite_background_metas::emi_sleep_cry);
         }
 
         static void emi_sleepy() {
@@ -189,9 +189,9 @@ namespace ks::menu {
         // Page 2
         static void hana_library() {
             prepare_scene_manager();
-            show_bg(background_metas::hana_library);
-            show_bg(background_metas::hana_library_read);
-            show_bg(background_metas::hana_library_gasp);
+            show_bg(composite_background_metas::hana_library_default);
+            show_bg(composite_background_metas::hana_library_read);
+            show_bg(composite_background_metas::hana_library_gasp);
         }
 
         static void hanako_shanghaiwindow() {
@@ -533,10 +533,11 @@ namespace ks::menu {
         }
 
         static void rin_wet() {
-            // TODO: implement via CustomEvent
             prepare_scene_manager();
-            show_bg(background_metas::rin_wet_pan_down);
-            show_bg(background_metas::rin_wet_arms);
+            show_event(composite_huge_background_metas::rin_wet_pan_down,
+                       RinWetPanDownEvent(), SCENE_TRANSITION_NONE, GALLERY_DISSOLVE_TIME);
+            show_event(composite_huge_background_metas::rin_wet_arms,
+                       RinWetArmsEvent(), SCENE_TRANSITION_NONE, GALLERY_DISSOLVE_TIME);
             show_bg(background_metas::rin_wet_face_up);
             show_bg(background_metas::rin_wet_face_down);
             show_bg(background_metas::rin_wet_towel_up);
@@ -562,10 +563,10 @@ namespace ks::menu {
 
         static void shizu_shanghai() {
             prepare_scene_manager();
-            show_bg(background_metas::shizu_shanghai);
-            show_bg(background_metas::shizu_shanghai_borednormal);
-            show_bg(background_metas::shizu_shanghai_smirknormal);
-            show_bg(background_metas::shizu_shanghai_smirklaugh);
+            show_bg(composite_background_metas::shizu_shanghai_default);
+            show_bg(composite_background_metas::shizu_shanghai_borednormal);
+            show_bg(composite_background_metas::shizu_shanghai_smirknormal);
+            show_bg(composite_background_metas::shizu_shanghai_smirklaugh);
         }
 
         static void showdown() {
@@ -619,16 +620,14 @@ namespace ks::menu {
         }
 
         static void shizune_tied() {
-            // TODO: Implement via CustomEvent
             prepare_scene_manager();
-            show_bg(background_metas::shizune_hcg_tied_blush_small);
-            show_bg(background_metas::shizune_hcg_tied_smile_small);
-            show_bg(background_metas::shizune_hcg_tied_stare_small);
-            show_bg(background_metas::shizune_hcg_tied_close_small);
-            show_bg(background_metas::shizune_hcg_tied_kinky1_small);
-            show_bg(background_metas::shizune_hcg_tied_kinky2_small);
-            show_bg(background_metas::shizune_hcg_tied_kinky3_small);
-            // show_bg(background_metas::shizune_hcg_tied_hisao2_small);
+            show_bg(composite_background_metas::shizune_hcg_tied_blush);
+            show_bg(composite_background_metas::shizune_hcg_tied_smile);
+            show_bg(composite_background_metas::shizune_hcg_tied_stare);
+            show_bg(composite_background_metas::shizune_hcg_tied_close);
+            show_bg(composite_background_metas::shizune_hcg_tied_kinky1_hisao2);
+            show_bg(composite_background_metas::shizune_hcg_tied_kinky2);
+            show_bg(composite_background_metas::shizune_hcg_tied_kinky3);
         }
 
         static void misha_sad() {
@@ -667,13 +666,13 @@ namespace ks::menu {
 
         static void shizu_undressing() {
             prepare_scene_manager();
-            show_bg(background_metas::shizu_undressing_clothed_stare);
-            show_bg(background_metas::shizu_undressing_clothed_kiss);
-            show_bg(background_metas::shizu_undressing_clothed_blush);
-            show_bg(background_metas::shizu_undressing_unclothed_blush);
-            show_bg(background_metas::shizu_undressing_unclothed_closed);
-            show_bg(background_metas::shizu_undressing_unclothed_kiss);
-            show_bg(background_metas::shizu_undressing_unclothed_talk);
+            show_bg(composite_background_metas::shizu_undressing_clothed_stare);
+            show_bg(composite_background_metas::shizu_undressing_clothed_kiss);
+            show_bg(composite_background_metas::shizu_undressing_clothed_blush);
+            show_bg(composite_background_metas::shizu_undressing_unclothed_blush);
+            show_bg(composite_background_metas::shizu_undressing_unclothed_closed);
+            show_bg(composite_background_metas::shizu_undressing_unclothed_kiss);
+            show_bg(composite_background_metas::shizu_undressing_unclothed_talk);
         }
 
         static void shizu_pushdown() {
@@ -682,21 +681,21 @@ namespace ks::menu {
         }
 
         static void shizu_straddle() {
-            // TODO: Implement via CustomEvent
             prepare_scene_manager();
-            show_bg(background_metas::shizu_straddle_open);
-            show_bg(background_metas::shizu_straddle_tease);
-            show_bg(background_metas::shizu_straddle_closed);
-            show_bg(background_metas::shizu_straddle_smile);
-            show_bg(background_metas::shizu_straddle_come);
+            show_event(composite_huge_background_metas::shizu_straddle_open,
+                       ShizuStraddleOpenEvent(), SCENE_TRANSITION_NONE, GALLERY_DISSOLVE_TIME);
+            show_bg(composite_background_metas::shizu_straddle_tease);
+            show_bg(composite_background_metas::shizu_straddle_closed);
+            show_bg(composite_background_metas::shizu_straddle_smile);
+            show_bg(composite_background_metas::shizu_straddle_come);
         }
 
         static void shizu_table() {
             prepare_scene_manager();
-            show_bg(background_metas::shizu_table_smile);
-            show_bg(background_metas::shizu_table_normal);
-            show_bg(background_metas::shizu_table_comeopen);
-            show_bg(background_metas::shizu_table_comeclosed);
+            show_bg(composite_background_metas::shizu_table_smile);
+            show_bg(composite_background_metas::shizu_table_normal);
+            show_bg(composite_background_metas::shizu_table_comeopen);
+            show_bg(composite_background_metas::shizu_table_comeclosed);
         }
 
         static void misha_nightclass() {
@@ -779,7 +778,7 @@ namespace ks::menu {
     };
 
     const gallery_image images_2[12] = {
-        gallery_image(DISPLAYABLE_BITMASK_HANA_LIBRARY, &background_metas::hana_library, gallery_script::hana_library),
+        gallery_image(DISPLAYABLE_BITMASK_HANA_LIBRARY, &background_metas::hana_library_default, gallery_script::hana_library),
         gallery_image(DISPLAYABLE_BITMASK_HANAKO_SHANGHAIWINDOW, &background_metas::hanako_fw_base, gallery_script::hanako_shanghaiwindow),
         gallery_image(DISPLAYABLE_BITMASK_HANAKO_PRESENTS1, &background_metas::hanako_presents1, gallery_script::hanako_presents1),
         gallery_image(DISPLAYABLE_BITMASK_HANAKO_CRAYON1, &background_metas::hanako_crayon1, gallery_script::hanako_crayon),
@@ -842,12 +841,12 @@ namespace ks::menu {
         gallery_image(DISPLAYABLE_BITMASK_RIN_RELIEF_DOWN, &background_metas::rin_relief_down, gallery_script::rin_relief),
         gallery_image(DISPLAYABLE_BITMASK_RIN_GALLERY, &background_metas::rin_gallery, gallery_script::rin_gallery),
         gallery_image(DISPLAYABLE_BITMASK_RIN_TRUEEND_NORMAL, &background_metas::rin_trueend_normal, gallery_script::rin_trueend),
-        gallery_image(DISPLAYABLE_BITMASK_RIN_WET_PAN_DOWN, &background_metas::rin_wet_pan_down, gallery_script::rin_wet), // TODO: implement via CustomEvent
-        gallery_image(DISPLAYABLE_BITMASK_RIN_H2_PAN_SURPRISE, &background_metas::rin_h2_l_pan, gallery_script::rin_h2), // TODO: thumbnail, script, bitmask
-        gallery_image(DISPLAYABLE_BITMASK_RIN_PAIR_BASE, &background_metas::rin_pair_base, gallery_script::rin_pair), // TODO: thumbnail, script
-        gallery_image(DISPLAYABLE_BITMASK_RIN_H_CLOSED, &background_metas::rin_h_closed, gallery_script::rin_h), // TODO: thumbnail, script
-        gallery_image(DISPLAYABLE_BITMASK_RIN_GOODEND_1, &background_metas::rin_goodend_base, gallery_script::rin_goodend), // TODO: thumbnail, script, bitmask
-        gallery_image(DISPLAYABLE_BITMASK_SHIZU_SHANGHAI, &background_metas::shizu_shanghai, gallery_script::shizu_shanghai),
+        gallery_image(DISPLAYABLE_BITMASK_RIN_WET_PAN_DOWN, &background_metas::rin_wet_pan_down, gallery_script::rin_wet),
+        gallery_image(DISPLAYABLE_BITMASK_RIN_H2_PAN_SURPRISE, &background_metas::rin_h2_pan_surprise, gallery_script::rin_h2),
+        gallery_image(DISPLAYABLE_BITMASK_RIN_PAIR_BASE, &background_metas::rin_pair_c_hn_rn, gallery_script::rin_pair),
+        gallery_image(DISPLAYABLE_BITMASK_RIN_H_CLOSED, &background_metas::rin_h_closed, gallery_script::rin_h),
+        gallery_image(DISPLAYABLE_BITMASK_RIN_GOODEND_1, &background_metas::rin_goodend_1, gallery_script::rin_goodend),
+        gallery_image(DISPLAYABLE_BITMASK_SHIZU_SHANGHAI, &background_metas::shizu_shanghai_default, gallery_script::shizu_shanghai),
         gallery_image(DISPLAYABLE_BITMASK_SHOWDOWN, &background_metas::lilly_shizu_showdown, gallery_script::showdown),
         gallery_image(DISPLAYABLE_BITMASK_SHIZU_CHESS_BASE, &background_metas::shizu_chess_base, gallery_script::shizu_chess),
         gallery_image(DISPLAYABLE_BITMASK_KENJI_GLASSES_CLOSED, &background_metas::kenji_glasses_bg, gallery_script::kenji_glasses), // TODO: thumbnail, script, bitmask
@@ -861,7 +860,7 @@ namespace ks::menu {
         gallery_image(DISPLAYABLE_BITMASK_SHIZU_COUCH, &background_metas::shizu_couch, gallery_script::shizu_couch),
         gallery_image(DISPLAYABLE_BITMASK_SHIZUNE_CAR, &background_metas::shizune_car, gallery_script::shizune_car),
         gallery_image(DISPLAYABLE_BITMASK_SHIZU_FISHING_AH, &background_metas::shizu_fishing_ah, gallery_script::shizu_fishing),
-        gallery_image(DISPLAYABLE_BITMASK_SHIZUNE_HCG_TIED_BLUSH_SMALL, &background_metas::shizune_hcg_tied_blush_small, gallery_script::shizune_tied),
+        gallery_image(DISPLAYABLE_BITMASK_SHIZUNE_HCG_TIED_BLUSH, &background_metas::shizune_hcg_tied_blush, gallery_script::shizune_tied),
         gallery_image(DISPLAYABLE_BITMASK_MISHA_SAD, &background_metas::misha_sad, gallery_script::misha_sad),
         gallery_image(DISPLAYABLE_BITMASK_MISHA_NAKED, &background_metas::misha_naked, gallery_script::misha_naked),
         gallery_image(DISPLAYABLE_BITMASK_MISHA_SEX_ASIDE, &background_metas::misha_sex_aside, gallery_script::misha_sex),

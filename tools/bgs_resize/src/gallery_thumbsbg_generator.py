@@ -130,7 +130,7 @@ PAGES = [
         "event/shizu_couch",
         "event/shizune_car",
         "event/shizu_fishing_ah",
-        "event/shizune_hcg_tied/shizune_hcg_tied_blush_small",
+        "event/shizune_hcg_tied/shizune_hcg_tied_blush",
         "event/misha_sad",
         "event/misha_naked",
         "event/misha_sex_aside",

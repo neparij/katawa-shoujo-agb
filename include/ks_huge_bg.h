@@ -83,6 +83,7 @@ namespace ks {
 
         int x_offset, y_offset;
         int previous_x_offset, previous_y_offset;
+        int previous_bg_x, previous_bg_y;
 
         bool initialized;
 
@@ -99,6 +100,7 @@ namespace ks {
                                                                           _tiles_vram(tiles_vram) {
             x_offset = y_offset = 0;
             previous_x_offset = previous_y_offset = 0;
+            previous_bg_x = previous_bg_y = 0;
             initialized = false;
             huge_bgs_manager::push(this);
             update();

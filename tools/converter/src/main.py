@@ -6,12 +6,14 @@ from src.definitions_reader import DefinitionsReader
 from src.definitions_writer import DefinitionsWriter
 from src.font.chars_reader import CharsReader
 from src.fonts_writer import FontsWriter
+from src.image_tools.image_tools import ImageTools
 from src.scenario_reader import ScenarioReader
 from src.scenario_writer import ScenarioWriter
 from src.spm_packer import SPMPacker
 from src.spm_writer import SPMWriter
 from src.translation.translation_container import TranslationContainer
 from src.translation_reader import TranslationReader
+from src.displayable_converter import convert_all_displayables
 
 
 def main():
@@ -123,6 +125,26 @@ def main():
         help="Locale keys, comma separated. Example: en,de,es,fr,ru,zh_hans"
     )
 
+    displayables_parser = subparsers.add_parser(
+        "displayables",
+        help="Scene displayable BG assets (crowd, …); tile opts in displayable_specs.py",
+    )
+    displayables_parser.add_argument(
+        "--source",
+        required=True,
+        help="Path to KS:RE sources",
+    )
+    displayables_parser.add_argument(
+        "--outdir",
+        required=True,
+        help="Path to KS GBA sources",
+    )
+    displayables_parser.add_argument(
+        "--names",
+        required=False,
+        help="Displayable keys, comma separated (default: all in displayable_specs.py)",
+    )
+
     args = parser.parse_args()
 
     if args.command == "script":
@@ -137,6 +159,8 @@ def main():
         tl_path = os.path.join(ksagb_path, "tl")
         output_file = script_name.replace("-", "_")
 
+        bgs_converted_images = ImageTools.list_converted_images_in_directory(os.path.join(ksagb_path, "graphics", "bgs"))
+
         translations : Dict[str, TranslationContainer] = {}
         for locale in locales:
             if locale == "en":
@@ -150,6 +174,7 @@ def main():
 
         print(f"Processing scenario file: {rpy_scenario_file}")
         reader = ScenarioReader(rpy_scenario_file, translations)
+        reader.set_bgs_images_cache(bgs_converted_images)
         scenario = reader.read()
 
         print(f"Writing scenario to {output_file}")
@@ -267,6 +292,11 @@ def main():
         for locale in locales:
             spm_packer = SPMPacker(spm_path, tl_path, locale)
             spm_packer.pack()
+
+    if args.command == "displayables":
+        sprites_dir = os.path.join(args.source, "game")
+        names = args.names.split(",") if args.names else None
+        convert_all_displayables(sprites_dir, args.outdir, names)
 
 
 if __name__ == "__main__":

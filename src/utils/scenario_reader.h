@@ -19,7 +19,11 @@ namespace ks {
 
         void allocate();
 
+        /// Free EWRAM and suppress lazy reload until the next `allocate()`.
         void free();
+
+        /// Temporarily release decompressed TextDB from EWRAM; reload on next `get_tl()`.
+        void request_release();
 
         void get_tl(const unsigned short key, bn::istring &out);
     }

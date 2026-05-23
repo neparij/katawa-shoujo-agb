@@ -1,0 +1,2633 @@
+#include "script_a4_hanako.h"
+#include "a4_hanako_tl.h"
+#include "../scenemanager.h"
+#include "../character.h"
+#include "smart_characters/shizu.h"
+#include "smart_characters/misha.h"
+#include "smart_characters/kenji.h"
+#include "smart_characters/hanako.h"
+#include "smart_characters/miki.h"
+#include "smart_characters/yuuko.h"
+#include "smart_characters/muto.h"
+#include "displayables/crowd.h"
+#include "background_metas/school_scienceroom.h"
+#include "background_metas/hanako_emptyclassroom_bg.h"
+#include "background_metas/school_cafeteria.h"
+#include "background_metas/school_dormhallway.h"
+#include "background_metas/school_dormhanako.h"
+#include "background_metas/school_dormhisao_ni.h"
+#include "background_metas/school_dormhisao.h"
+#include "background_metas/school_dormhisao_blurred.h"
+#include "background_metas/hanako_rage.h"
+#include "background_metas/hanako_rage_sad.h"
+#include "background_metas/school_girlsdormhall.h"
+#include "background_metas/suburb_shanghaiint.h"
+#include "background_metas/hisao_letter_open.h"
+#include "background_metas/school_dormhisao_ss.h"
+#include "background_metas/school_library.h"
+#include "background_metas/hanako_eye.h"
+#include "background_metas/hisao_scar_large.h"
+#include "background_metas/hisao_scar.h"
+#include "background_metas/city_street1.h"
+#include "background_metas/city_street1_blurred.h"
+#include "background_metas/misc_sky.h"
+#include "background_metas/city_karaokeint.h"
+#include "background_metas/city_street2.h"
+#include "background_metas/school_library_ss.h"
+#include "background_metas/school_hallway3.h"
+#include "background_metas/school_staircase2.h"
+#include "background_metas/school_lobby.h"
+#include "background_metas/school_courtyard_ss.h"
+#include "background_metas/school_gardens.h"
+#include "background_metas/school_dormhallground.h"
+#include "background_metas/hanako_scars.h"
+#include "background_metas/hanako_scars_large.h"
+#include "background_metas/hanako_bed_boobs_glance.h"
+#include "background_metas/hanako_bed_boobs_blush.h"
+#include "background_metas/hanako_bed_crotch_blush.h"
+#include "background_metas/hanako_bed_crotch_glance.h"
+#include "background_metas/hanako_missionary_underwear.h"
+#include "background_metas/hanako_missionary_closed.h"
+#include "background_metas/hanako_missionary_open.h"
+#include "background_metas/hanako_missionary_clench.h"
+#include "background_metas/hanako_after_worry.h"
+#include "background_metas/hanako_after_smile.h"
+#include "background_metas/suburb_park.h"
+#include "background_metas/hanako_park_alone.h"
+#include "background_metas/hanako_park_away.h"
+#include "background_metas/hanako_park_look.h"
+#include "background_metas/hanako_park_closed.h"
+#include "background_metas/suburb_roadcenter.h"
+#include "background_metas/hanako_goodend_close.h"
+#include "background_metas/hanako_goodend.h"
+namespace ks {
+        void ScriptA4Hanako::a4_hanako_truancy() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_TRUANCY);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_NORMAL, 180);
+            ks::SceneManager::show_dialog(0x719E2B3C, ks::definitions::no_char, 0);
+            ks::SceneManager::show_dialog(0xA9F3877B, ks::definitions::no_char, 1);
+            ks::SceneManager::show_dialog(0x05F97C52, ks::definitions::no_char, 2);
+            ks::SceneManager::music_stop(600);
+            ks::SceneManager::set_background(ks::background_metas::hanako_emptyclassroom_bg, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x88AE274C, ks::definitions::no_char, 3);
+            ks::SceneManager::show_dialog(0x1F4DC608, ks::definitions::no_char, 4);
+            ks::SceneManager::show_dialog(0xA7487A1D, ks::definitions::no_char, 5);
+            ks::SceneManager::show_dialog(0x667DD74D, ks::definitions::no_char, 6);
+            ks::SceneManager::show_dialog(0x01292463, ks::definitions::no_char, 7);
+            ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 0, 0, SCENE_TRANSITION_SILENTWHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::sfx_play("sfx_normalbell.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDE9F71FE, ks::definitions::no_char, 8);
+            ks::SceneManager::show_dialog(0x6C7B53C4, ks::definitions::no_char, 9);
+            ks::SceneManager::show_dialog(0xA1BDFE1C, ks::definitions::no_char, 10);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_blank, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(0.8), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_MISHA, bn::fixed(0.2), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::set_character_position(CHARACTER_MISHA, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_SHIZUNE, 300);
+            ks::SceneManager::show_dialog(0x8AEEF0DE, ks::definitions::mi, 11);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_adjust_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x73294A20, ks::definitions::shi, 12);
+            ks::SceneManager::show_dialog(0xB66CF0D9, ks::definitions::hi, 13);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_normal2, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCB71EA0F, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_sign_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC306DAAC, ks::definitions::mi, 14);
+            ks::SceneManager::show_dialog(0x86E5CBAA, ks::definitions::hi, 15);
+            ks::SceneManager::set_background(ks::background_metas::school_cafeteria, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_displayable(ks::displayables::crowd, PALETTE_VARIANT_DEFAULT, 0, true);
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(1.0, 0.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_crowd_indoors.8ad", SOUND_CHANNEL_AMBIENT, 60);
+            ks::SceneManager::show_dialog(0x3B733E34, ks::definitions::no_char, 16);
+            ks::SceneManager::show_dialog(0xB96C9254, ks::definitions::no_char, 17);
+            ks::SceneManager::show_dialog(0xDFAF9C2C, ks::definitions::no_char, 18);
+            ks::SceneManager::show_dialog(0x20FB5CD3, ks::definitions::no_char, 19);
+            ks::SceneManager::show_dialog(0x33243654, ks::definitions::no_char, 20);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::hide_displayable();
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(0.4, 7.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0x2BB4C22B, ks::definitions::no_char, 21);
+            ks::SceneManager::show_dialog(0x2B9765D7, ks::definitions::no_char, 22);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x49DBC28A, ks::definitions::mi, 23);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x45BCD71C, ks::definitions::no_char, 24);
+            ks::SceneManager::show_dialog(0xF8B1D214, ks::definitions::no_char, 25);
+            ks::SceneManager::show_dialog(0x4CCE58CB, ks::definitions::no_char, 26);
+            ks::SceneManager::show_dialog(0xE203E541, ks::definitions::hi, 27);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_sign_confused, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA8FC7C48, ks::definitions::mi, 28);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_angry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC78834D7, ks::definitions::no_char, 29);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x1ED73483, ks::definitions::no_char, 30);
+            ks::SceneManager::show_dialog(0x48E93EB9, ks::definitions::hi, 31);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x8211E3C9, ks::definitions::mi, 32);
+            ks::SceneManager::show_dialog(0x5E0A8C24, ks::definitions::hi, 33);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_cross_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5D536DCD, ks::definitions::mi, 34);
+            ks::SceneManager::show_dialog(0xD8AF8EB5, ks::definitions::hi, 35);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_cross_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x829CEE83, ks::definitions::mi, 36);
+            ks::SceneManager::show_dialog(0x22606349, ks::definitions::no_char, 37);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_blank, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF82F0C03, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_sign_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x87CFDD04, ks::definitions::mi, 38);
+            ks::SceneManager::show_dialog(0x3BD87F0E, ks::definitions::hi, 39);
+            ks::SceneManager::show_dialog(0xF3BF5CFF, ks::definitions::no_char, 40);
+            ks::SceneManager::show_dialog(0xE05B0624, ks::definitions::no_char, 41);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_normal2, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7DE77BBC, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x97988BD8, ks::definitions::mi, 42);
+            ks::SceneManager::show_dialog(0x2CE474AB, ks::definitions::hi, 43);
+            ks::SceneManager::show_dialog(0x7ECAE4E2, ks::definitions::hi, 44);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_adjust_frown, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7FA2B9DB, ks::definitions::no_char, 45);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_frown, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x750E8DEF, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_cross_frown, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x88D34F33, ks::definitions::mi, 46);
+            // renpy.music.set_volume(0.0, 3.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0xD4233326, ks::definitions::no_char, 47);
+            ks::SceneManager::show_dialog(0x27BFE5DF, ks::definitions::hi, 48);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x72132345, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_sign_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x72C2B603, ks::definitions::mi, 49);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_adjust_smug, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x8793DC12, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_cross_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC0FBD072, ks::definitions::mi, 50);
+            // renpy.music.set_volume(1.0, 3.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0x3186609B, ks::definitions::no_char, 51);
+            ks::SceneManager::show_dialog(0xA7009B86, ks::definitions::hi, 52);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x233E40A4, ks::definitions::no_char, 53);
+            ks::SceneManager::show_dialog(0xE19A7D1F, ks::definitions::no_char, 54);
+            ks::SceneManager::show_dialog(0x59CAE045, ks::definitions::no_char, 55);
+            ks::SceneManager::show_dialog(0x8C2C4710, ks::definitions::no_char, 56);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x690E521A, ks::definitions::mi, 57);
+            ks::SceneManager::show_dialog(0x5D2D504B, ks::definitions::hi, 58);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC29B5AA0, ks::definitions::mi, 59);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_confused, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_adjust_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x66943FBB, ks::definitions::no_char, 60);
+            ks::SceneManager::show_dialog(0xC80CACA9, ks::definitions::hi, 61);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xFF7CB698, ks::definitions::mi, 62);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x664D3879, ks::definitions::no_char, 63);
+            ks::SceneManager::show_dialog(0xDBFEC564, ks::definitions::hi, 64);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_sad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_sad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCB0C3983, ks::definitions::no_char, 65);
+            ks::SceneManager::show_dialog(0x28AF8140, ks::definitions::hi, 66);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_confused, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_blank, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x937A10A6, ks::definitions::no_char, 67);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_normal2, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3AFF9259, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6593D763, ks::definitions::mi, 68);
+            ks::SceneManager::show_dialog(0xFCB5EEDA, ks::definitions::no_char, 69);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_blank, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA72393F1, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_sign_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC46F9059, ks::definitions::mi, 70);
+            ks::SceneManager::show_dialog(0x63355C0B, ks::definitions::hi, 71);
+            ks::SceneManager::show_dialog(0xBDC5B171, ks::definitions::no_char, 72);
+            ks::SceneManager::show_dialog(0x6EE2155A, ks::definitions::no_char, 73);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_adjust_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9C9455FF, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC46F1121, ks::definitions::mi, 74);
+            ks::SceneManager::show_dialog(0xEA2FC0FE, ks::definitions::no_char, 75);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_confused, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_blank, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xFF7BAFCE, ks::definitions::no_char, 76);
+            ks::SceneManager::show_dialog(0x96A4F927, ks::definitions::mi, 77);
+            ks::SceneManager::show_dialog(0xA7F2AA34, ks::definitions::hi, 78);
+            ks::SceneManager::show_dialog(0x687EF685, ks::definitions::no_char, 79);
+            ks::SceneManager::music_stop(240);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_hips_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x709D6868, ks::definitions::no_char, 80);
+            ks::SceneManager::show_dialog(0x0B9CAAD3, ks::definitions::no_char, 81);
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhallway, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x754C7444, ks::definitions::no_char, 82);
+            ks::SceneManager::show_dialog(0xD9050747, ks::definitions::no_char, 83);
+            ks::SceneManager::show_dialog(0xB0BEDE23, ks::definitions::no_char, 84);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_KENJI, 30);
+            ks::SceneManager::show_dialog(0xD5270339, ks::definitions::ke, 85);
+            ks::SceneManager::show_dialog(0x6FF78B29, ks::definitions::hi, 86);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_tsun, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x83F596C7, ks::definitions::ke, 87);
+            ks::SceneManager::show_dialog(0x42C40666, ks::definitions::no_char, 88);
+            ks::SceneManager::show_dialog(0xCA6D7074, ks::definitions::hi, 89);
+            ks::SceneManager::show_dialog(0xB72E31BD, ks::definitions::ke, 90);
+            ks::SceneManager::show_dialog(0xF18BFC1E, ks::definitions::hi, 91);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF22E81EA, ks::definitions::ke, 92);
+            ks::SceneManager::show_dialog(0x22E9D9CC, ks::definitions::hi, 93);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF835045E, ks::definitions::ke, 94);
+            ks::SceneManager::show_dialog(0x4D72E783, ks::definitions::hi, 95);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_tsun, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x657F1B13, ks::definitions::ke, 96);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x589F27E3, ks::definitions::ke, 97);
+            ks::SceneManager::show_dialog(0x671568CA, ks::definitions::hi, 98);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_tsun, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7037F8AD, ks::definitions::ke, 99);
+            ks::SceneManager::show_dialog(0x4FDC2D87, ks::definitions::hi, 100);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9C92BA52, ks::definitions::ke, 101);
+            ks::SceneManager::show_dialog(0xC25E9DD0, ks::definitions::no_char, 102);
+            ks::SceneManager::show_dialog(0x04E9EF77, ks::definitions::hi, 103);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2E7150A9, ks::definitions::ke, 104);
+            ks::SceneManager::show_dialog(0x5E049801, ks::definitions::hi, 105);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x84091873, ks::definitions::ke, 106);
+            ks::SceneManager::show_dialog(0xEC19D2C4, ks::definitions::hi, 107);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB608268D, ks::definitions::no_char, 108);
+            ks::SceneManager::show_dialog(0x6FD351A7, ks::definitions::hi, 109);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4A932B12, ks::definitions::ke, 110);
+            ks::SceneManager::show_dialog(0x79379AFA, ks::definitions::hi, 111);
+            ks::SceneManager::show_dialog(0x75FE52FB, ks::definitions::ke, 112);
+            ks::SceneManager::show_dialog(0x65407DF0, ks::definitions::no_char, 113);
+            ks::SceneManager::show_dialog(0x4F8DC016, ks::definitions::no_char, 114);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF4376D09, ks::definitions::ke, 115);
+            ks::SceneManager::show_dialog(0xD9B2DB00, ks::definitions::no_char, 116);
+            ks::SceneManager::show_dialog(0xD7503B78, ks::definitions::hi, 117);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_tsun, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x36A8E772, ks::definitions::ke, 118);
+            ks::SceneManager::show_dialog(0xAC50376D, ks::definitions::hi, 119);
+            ks::SceneManager::show_dialog(0x76327650, ks::definitions::ke, 120);
+            ks::SceneManager::show_dialog(0x3873F6A3, ks::definitions::ke, 121);
+            ks::SceneManager::show_dialog(0xB81E3233, ks::definitions::hi, 122);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6338BC81, ks::definitions::ke, 123);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD6E47C55, ks::definitions::ke, 124);
+            ks::SceneManager::show_dialog(0x2858A6E9, ks::definitions::hi, 125);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3958C267, ks::definitions::ke, 126);
+            ks::SceneManager::show_dialog(0xF19A8979, ks::definitions::hi, 127);
+            ks::SceneManager::show_dialog(0xB1FB9DF0, ks::definitions::ke, 128);
+            ks::SceneManager::show_dialog(0xBC5B59F3, ks::definitions::ke, 129);
+            ks::SceneManager::show_dialog(0x9400E039, ks::definitions::no_char, 130);
+            ks::SceneManager::show_dialog(0x8D0BE0B3, ks::definitions::hi, 131);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD63244F6, ks::definitions::ke, 132);
+            ks::SceneManager::show_dialog(0x3FD5361C, ks::definitions::no_char, 133);
+            ks::SceneManager::show_dialog(0x24F36A28, ks::definitions::no_char, 134);
+            ks::SceneManager::show_dialog(0xAE84DDE5, ks::definitions::no_char, 135);
+            ks::SceneManager::show_dialog(0x35605EA0, ks::definitions::hi, 136);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE948DD22, ks::definitions::ke, 137);
+            ks::SceneManager::show_dialog(0xAC99C204, ks::definitions::ke, 138);
+            ks::SceneManager::show_dialog(0x8E4CBC18, ks::definitions::no_char, 139);
+            ks::SceneManager::show_dialog(0x16277668, ks::definitions::hi, 140);
+            ks::SceneManager::show_character(CHARACTER_KENJI, ks::smart_characters::kenji::kenji_basic_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC2876D7A, ks::definitions::ke, 141);
+            ks::SceneManager::music_stop(180);
+            ks::SceneManager::hide_character(CHARACTER_KENJI);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x33ED7879, ks::definitions::no_char, 142);
+            ks::SceneManager::show_dialog(0xF7AF5E02, ks::definitions::no_char, 143);
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_NIGHT);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_HANAGOWN, bn::fixed(0.39), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            // TODO: Show expression
+            // TODO: Show hanako_door_base
+            // TODO: Show hanako_door_door
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xEECDF81F, ks::definitions::no_char, 144);
+            ks::SceneManager::show_dialog(0x14E5031F, ks::definitions::no_char, 145);
+            ks::SceneManager::sfx_play("sfx_doorknock2.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x385C641A, ks::definitions::no_char, 146);
+            ks::SceneManager::show_dialog(0xAD1CEDD0, ks::definitions::no_char, 147);
+            // renpy.music.set_volume(0.5, 0.0, channel="sound"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_hammer.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x2DCCEF66, ks::definitions::no_char, 148);
+            ks::SceneManager::show_dialog(0x7D015DC9, ks::definitions::no_char, 149);
+            ks::SceneManager::show_dialog(0x92793E69, ks::definitions::no_char, 150);
+            ks::SceneManager::show_dialog(0x2187A086, ks::definitions::hi, 151);
+            ks::SceneManager::show_dialog(0xE4B3F32C, ks::definitions::no_char, 152);
+            // renpy.music.set_volume(1.0, 0.0, channel="sound"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_dooropen.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show hanako_door_door
+            // TODO: Show transform hanako_door_door xpos=-0.1 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_MOONLIGHT, 240);
+            ks::SceneManager::show_dialog(0x4D0DB31E, ks::definitions::no_char, 153);
+            ks::SceneManager::show_dialog(0x426D97A2, ks::definitions::no_char, 154);
+            ks::SceneManager::show_dialog(0x68C74B08, ks::definitions::hi, 155);
+            ks::SceneManager::show_dialog(0xFB4AAA84, ks::definitions::no_char, 156);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2B369D03, ks::definitions::no_char, 157);
+            ks::SceneManager::show_dialog(0xEEA53A19, ks::definitions::hi, 158);
+            ks::SceneManager::show_dialog(0xB298DD95, ks::definitions::no_char, 159);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDAC0E977, ks::definitions::no_char, 160);
+            ks::SceneManager::show_dialog(0xF42095C6, ks::definitions::ha, 161);
+            ks::SceneManager::show_dialog(0x459D5E9F, ks::definitions::no_char, 162);
+            ks::SceneManager::show_dialog(0x47EF39AF, ks::definitions::hi, 163);
+            ks::SceneManager::show_dialog(0xB67D5A94, ks::definitions::no_char, 164);
+            ks::SceneManager::show_dialog(0x33F1B8A2, ks::definitions::hi, 165);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3D9F6465, ks::definitions::no_char, 166);
+            ks::SceneManager::show_dialog(0x81332E4E, ks::definitions::hi, 167);
+            ks::SceneManager::show_dialog(0x3F1E3364, ks::definitions::no_char, 168);
+            ks::SceneManager::show_dialog(0xFADEAD73, ks::definitions::hi, 169);
+            ks::SceneManager::music_stop(180);
+            // TODO: Show hanako_door_door
+            // TODO: Show transform hanako_door_door xpos=0.0 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::sfx_play("sfx_doorclose.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x938A5B6C, ks::definitions::no_char, 170);
+            ks::SceneManager::show_dialog(0xE31EE715, ks::definitions::no_char, 171);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhallway, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(0.5, 0.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_footsteps_hard.8ad", SOUND_CHANNEL_AMBIENT);
+            ks::SceneManager::show_dialog(0x0E1432E2, ks::definitions::no_char, 172);
+            ks::SceneManager::show_dialog(0x66EB52AD, ks::definitions::no_char, 173);
+            ks::SceneManager::show_dialog(0x1FBED976, ks::definitions::no_char, 174);
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 18);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhisao_ni, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x755A87B2, ks::definitions::no_char, 175);
+            ks::SceneManager::hide_background(SCENE_TRANSITION_SHUTEYE, 0);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::update_visuals();
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_faraway_presence() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_FARAWAY_PRESENCE);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            bn::vector<ks::answer_ptr, 5> answers;
+            int answer;
+            ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_PEARLY);
+            ks::SceneManager::show_dialog(0x19675511, ks::definitions::no_char, 176);
+            ks::SceneManager::show_dialog(0xF4671DD9, ks::definitions::no_char, 177);
+            ks::SceneManager::show_dialog(0x9AAC06DC, ks::definitions::no_char, 178);
+            ks::SceneManager::show_dialog(0x2BE02688, ks::definitions::no_char, 179);
+            ks::SceneManager::show_dialog(0x19087A1D, ks::definitions::no_char, 180);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x95878497, ks::definitions::no_char, 181);
+            ks::SceneManager::show_dialog(0x63FC2DA9, ks::definitions::no_char, 182);
+            ks::SceneManager::show_dialog(0xD9CEC784, ks::definitions::no_char, 183);
+            ks::SceneManager::show_dialog(0xDC79FF22, ks::definitions::no_char, 184);
+            ks::SceneManager::show_dialog(0xE1B0217D, ks::definitions::no_char, 185);
+            ks::SceneManager::show_dialog(0x705A864C, ks::definitions::no_char, 186);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhisao_blurred, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            // TODO: Show phone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(30);
+            // TODO: Show phone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9043BBC4, ks::definitions::no_char, 187);
+            ks::SceneManager::show_dialog(0x181434F9, ks::definitions::no_char, 188);
+            ks::SceneManager::music_stop(60);
+            ks::SceneManager::show_dialog(0xB1B6CF66, ks::definitions::mystery, 189);
+            ks::SceneManager::show_dialog(0xCFF42758, ks::definitions::no_char, 190);
+            ks::SceneManager::show_dialog(0xB31B5892, ks::definitions::no_char, 191);
+            ks::SceneManager::show_dialog(0xD1D24157, ks::definitions::hi, 192);
+            ks::SceneManager::show_dialog(0x316D7F59, ks::definitions::no_char, 193);
+            ks::SceneManager::show_dialog(0x20BB764F, 195, 194);
+            ks::SceneManager::show_dialog(0x9EAAE275, ks::definitions::no_char, 196);
+            ks::SceneManager::show_dialog(0xC9BC0560, ks::definitions::hi, 197);
+            ks::SceneManager::show_dialog(0xEEFB6F0E, 195, 198);
+            ks::SceneManager::show_dialog(0x8A28DFFF, ks::definitions::no_char, 199);
+            ks::SceneManager::show_dialog(0x9DD3D533, ks::definitions::no_char, 200);
+            ks::SceneManager::show_dialog(0xCAC62FDA, ks::definitions::li, 201);
+            ks::SceneManager::show_dialog(0x478FF9CC, ks::definitions::hi, 202);
+            ks::SceneManager::show_dialog(0x5BD60841, ks::definitions::no_char, 203);
+            ks::SceneManager::show_dialog(0x308B5799, ks::definitions::no_char, 204);
+            ks::SceneManager::show_dialog(0x57D3783B, ks::definitions::hi, 205);
+            ks::SceneManager::show_dialog(0x018E8199, ks::definitions::li, 206);
+            ks::SceneManager::show_dialog(0x9AC01B49, ks::definitions::hi, 207);
+            ks::SceneManager::show_dialog(0x2B88A7BF, ks::definitions::li, 208);
+            ks::SceneManager::music_play(MUSIC_DRAMA);
+            ks::SceneManager::show_dialog(0x062094C0, ks::definitions::no_char, 209);
+            ks::SceneManager::show_dialog(0x55B72AC5, ks::definitions::hi, 210);
+            ks::SceneManager::show_dialog(0xEFB45869, ks::definitions::li, 211);
+            ks::SceneManager::show_dialog(0xC9CB64C5, ks::definitions::li, 212);
+            ks::SceneManager::show_dialog(0xC61595FF, ks::definitions::hi, 213);
+            ks::SceneManager::show_dialog(0xF096BF2A, ks::definitions::hi, 214);
+            ks::SceneManager::show_dialog(0x59D1FFDB, ks::definitions::li, 215);
+            ks::SceneManager::show_dialog(0xDA440F2C, ks::definitions::li, 216);
+            ks::SceneManager::show_dialog(0x9E2330A7, ks::definitions::no_char, 217);
+            ks::SceneManager::show_dialog(0xECA78A93, ks::definitions::no_char, 218);
+            ks::SceneManager::show_dialog(0xE97D8E77, ks::definitions::no_char, 219);
+            ks::SceneManager::show_dialog(0x5BDEB221, ks::definitions::hi, 220);
+            ks::SceneManager::show_dialog(0x53ADBD26, ks::definitions::li, 221);
+            ks::SceneManager::show_dialog(0x8497D45A, ks::definitions::no_char, 222);
+            ks::SceneManager::show_dialog(0x90368893, ks::definitions::hi, 223);
+            ks::SceneManager::show_dialog(0x3D3BFA06, ks::definitions::no_char, 224);
+            ks::SceneManager::show_dialog(0x80EA6DC4, ks::definitions::li, 225);
+            ks::SceneManager::show_dialog(0x55BFF2BA, ks::definitions::hi, 226);
+            ks::SceneManager::show_dialog(0xDECF666A, ks::definitions::no_char, 227);
+            ks::SceneManager::show_dialog(0x7E909F61, ks::definitions::li, 228);
+            ks::SceneManager::show_dialog(0xFA4FC205, ks::definitions::no_char, 229);
+            ks::SceneManager::show_dialog(0x25471BBE, ks::definitions::no_char, 230);
+            ks::SceneManager::show_dialog(0x937D3B83, ks::definitions::hi, 231);
+            ks::SceneManager::show_dialog(0x220D0A8F, ks::definitions::li, 232);
+            ks::SceneManager::show_dialog(0xBD6CDFE2, ks::definitions::hi, 233);
+            ks::SceneManager::show_dialog(0xD4301F4F, ks::definitions::li, 234);
+            ks::SceneManager::show_dialog(0x6C85A4D4, ks::definitions::hi, 235);
+            ks::SceneManager::show_dialog(0xCFEADED9, ks::definitions::li, 236);
+            ks::SceneManager::show_dialog(0x8CF73DF5, ks::definitions::li, 237);
+            answers.clear();
+            if (true) answers.push_back(ks::answer_ptr{0, 238});
+            if (true) answers.push_back(ks::answer_ptr{1, 239});
+            ks::SceneManager::show_dialog_question(answers);
+            answer = answers[ks::SceneManager::get_dialog_question_answer()].index;
+                if (answer == 0) {
+                    ks::progress.agree_with_lilly = true;
+                } else if (answer == 1) {
+                    ks::progress.agree_with_lilly = false;
+                }
+            if (ks::progress.go_to_the_city && ks::progress.agree_with_lilly) {
+                ks::SceneManager::show_dialog(0x023C9CE2, ks::definitions::no_char, 240);
+                ks::SceneManager::show_dialog(0xE048B14F, ks::definitions::hi, 241);
+                ks::SceneManager::show_dialog(0x20CE94EE, ks::definitions::hi, 242);
+                ks::SceneManager::show_dialog(0x6187AF90, ks::definitions::li, 243);
+                ks::SceneManager::show_dialog(0xA6D14E9E, ks::definitions::no_char, 244);
+                ks::SceneManager::show_dialog(0x8821F084, ks::definitions::hi, 245);
+                ks::SceneManager::show_dialog(0x04449F3D, ks::definitions::no_char, 246);
+                ks::SceneManager::show_dialog(0xB7E5E6B8, ks::definitions::li, 247);
+                ks::SceneManager::show_dialog(0x4FA37515, ks::definitions::hi, 248);
+                ks::SceneManager::show_dialog(0x3E47E8E3, ks::definitions::no_char, 249);
+                ks::SceneManager::show_dialog(0x6F79945D, ks::definitions::hi, 250);
+                ks::SceneManager::show_dialog(0x4F711EB9, ks::definitions::li, 251);
+                ks::SceneManager::show_dialog(0x82A9F696, ks::definitions::li, 252);
+                ks::SceneManager::show_dialog(0xE8DA7961, ks::definitions::hi, 253);
+                ks::SceneManager::show_dialog(0xF654A5B9, ks::definitions::li, 254);
+                ks::SceneManager::show_dialog(0x5C102052, ks::definitions::li, 255);
+                ks::SceneManager::show_dialog(0x18B18548, ks::definitions::li, 256);
+                ks::SceneManager::show_dialog(0x5102B59F, ks::definitions::hi, 257);
+                ks::SceneManager::show_dialog(0x4E2A1FA4, ks::definitions::li, 258);
+                ks::SceneManager::show_dialog(0x2A8DB1E3, ks::definitions::li, 259);
+                ks::SceneManager::show_dialog(0x729AC58F, ks::definitions::no_char, 260);
+                ks::SceneManager::show_dialog(0x2B895C1D, ks::definitions::li, 261);
+                ks::SceneManager::show_dialog(0x77B2239C, ks::definitions::hi, 262);
+                ks::SceneManager::show_dialog(0x438E6597, ks::definitions::no_char, 263);
+                ks::SceneManager::music_stop(480);
+                // TODO: Show phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+                // TODO: Show phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::pause(30);
+                // TODO: Hide phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::show_dialog(0xF4D7EC2A, ks::definitions::no_char, 264);
+                ks::SceneManager::show_dialog(0xB587BC9B, ks::definitions::no_char, 265);
+                ks::SceneManager::show_dialog(0xA100339D, ks::definitions::no_char, 266);
+                ks::SceneManager::show_dialog(0x87FB9CE8, ks::definitions::no_char, 267);
+                ks::SceneManager::show_dialog(0x14AC800F, ks::definitions::no_char, 268);
+                ks::SceneManager::show_dialog(0x0AF1280A, ks::definitions::no_char, 269);
+                ks::SceneManager::show_dialog(0x231AC146, ks::definitions::no_char, 270);
+                ks::SceneManager::show_dialog(0x40ADC24B, ks::definitions::no_char, 271);
+                ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30);
+                ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            } else if (ks::progress.go_to_the_city || ks::in_replay) {
+                ks::SceneManager::music_stop(300);
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::show_dialog(0x34A66F0E, ks::definitions::no_char, 272);
+                ks::SceneManager::show_dialog(0xEAE871A0, ks::definitions::no_char, 273);
+                ks::SceneManager::show_dialog(0xD0871BFE, ks::definitions::no_char, 274);
+                ks::SceneManager::show_dialog(0x04BD6A1A, ks::definitions::no_char, 275);
+                ks::SceneManager::show_dialog(0x296B4EAA, ks::definitions::no_char, 276);
+                ks::SceneManager::show_dialog(0x0623ADB6, ks::definitions::no_char, 277);
+                ks::SceneManager::show_dialog(0xA1E07288, ks::definitions::no_char, 278);
+                // TODO: Show phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+                // TODO: Show phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::pause(30);
+                // TODO: Hide phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::show_dialog(0xB9613B95, ks::definitions::no_char, 279);
+            } else {
+                ks::SceneManager::music_stop(300);
+                ks::SceneManager::show_dialog(0x3A1FA37A, ks::definitions::no_char, 280);
+                ks::SceneManager::show_dialog(0x8192B968, ks::definitions::no_char, 281);
+                ks::SceneManager::show_dialog(0x262818EE, ks::definitions::no_char, 282);
+                ks::SceneManager::show_dialog(0x072AEE16, ks::definitions::no_char, 283);
+                ks::SceneManager::show_dialog(0x2538CF21, ks::definitions::no_char, 284);
+                // TODO: Show phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::set_background(ks::background_metas::school_dormhisao, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+                // TODO: Show phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::pause(30);
+                // TODO: Hide phone
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::show_dialog(0xF0B3E756, ks::definitions::no_char, 285);
+            }
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_misstep() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_MISSTEP);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_NIGHT);
+            // TODO: Show hanako_door_base
+            // TODO: Show hanako_door_door
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::sfx_play("sfx_hammer.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::music_play(MUSIC_TRAGIC, 30);
+            ks::SceneManager::show_dialog(0x46042E8C, ks::definitions::no_char, 286);
+            ks::SceneManager::show_dialog(0x99B1D443, ks::definitions::no_char, 287);
+            ks::SceneManager::show_dialog(0x026B1E38, ks::definitions::no_char, 288);
+            ks::SceneManager::show_dialog(0x6FEB5481, ks::definitions::no_char, 289);
+            ks::SceneManager::show_dialog(0xA82FDAC6, ks::definitions::hi, 290);
+            ks::SceneManager::show_dialog(0x38CA8CA5, ks::definitions::no_char, 291);
+            ks::SceneManager::show_dialog(0x89BC4AC3, ks::definitions::hi, 292);
+            ks::SceneManager::show_dialog(0xEAFD93F4, ks::definitions::hi, 293);
+            ks::SceneManager::pause(240);
+            ks::SceneManager::sfx_play("sfx_lock.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x3D6B2B85, ks::definitions::no_char, 294);
+            ks::SceneManager::show_dialog(0x175FE51A, ks::definitions::no_char, 295);
+            ks::SceneManager::show_dialog(0x340F3F6E, ks::definitions::hi, 296);
+            ks::SceneManager::show_dialog(0xEB9F6473, ks::definitions::no_char, 297);
+            ks::SceneManager::sfx_play("sfx_door_creak.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show hanako_door_door
+            // TODO: Show transform hanako_door_door xpos=-0.2 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show hanako_door_base
+            // TODO: Show transform hanako_door_base xpos=1.1 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show bg
+            // TODO: Show transform bg xpos=0.55 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_SILENTWHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2FE2CBA4, ks::definitions::no_char, 298);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_worry, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x138A66BD, ks::definitions::no_char, 299);
+            ks::SceneManager::show_dialog(0x20F34DC4, ks::definitions::no_char, 300);
+            ks::SceneManager::show_dialog(0xAABF2C0C, ks::definitions::ha, 301);
+            ks::SceneManager::show_dialog(0x139B0604, ks::definitions::no_char, 302);
+            ks::SceneManager::show_dialog(0x8A9ADAA6, ks::definitions::hi, 303);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_distantblush, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xFDEAC760, ks::definitions::no_char, 304);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xACC83953, ks::definitions::no_char, 305);
+            ks::SceneManager::show_dialog(0x75AD4588, ks::definitions::no_char, 306);
+            ks::SceneManager::show_dialog(0xDE0C1BC0, ks::definitions::no_char, 307);
+            ks::SceneManager::show_dialog(0x7AE31ACE, ks::definitions::no_char, 308);
+            ks::SceneManager::show_dialog(0xF6BCD578, ks::definitions::no_char, 309);
+            ks::SceneManager::show_dialog(0x14876A8D, ks::definitions::no_char, 310);
+            ks::SceneManager::show_dialog(0x68DFB6B6, ks::definitions::hi, 311);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_worryblush, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCE793A2B, ks::definitions::ha, 312);
+            ks::SceneManager::show_dialog(0x4B0CD94C, ks::definitions::hi, 313);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_distantblush, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA833716E, ks::definitions::no_char, 314);
+            ks::SceneManager::show_dialog(0x4ECF8B5D, ks::definitions::ha, 315);
+            ks::SceneManager::show_dialog(0x955A4730, ks::definitions::hi, 316);
+            ks::SceneManager::show_dialog(0xFDB9566B, ks::definitions::no_char, 317);
+            ks::SceneManager::show_dialog(0xFD9AF784, ks::definitions::hi, 318);
+            ks::SceneManager::show_dialog(0xC9397C6D, ks::definitions::no_char, 319);
+            ks::SceneManager::show_dialog(0x42A6165C, ks::definitions::no_char, 320);
+            ks::SceneManager::show_dialog(0xE89B7683, ks::definitions::no_char, 321);
+            ks::SceneManager::show_dialog(0x09CAA54B, ks::definitions::hi, 322);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB7D9173D, ks::definitions::no_char, 323);
+            ks::SceneManager::show_dialog(0xC44C4323, ks::definitions::hi, 324);
+            ks::SceneManager::show_dialog(0xFED3E814, ks::definitions::ha, 325);
+            ks::SceneManager::show_dialog(0x89BDF37C, ks::definitions::no_char, 326);
+            ks::SceneManager::show_dialog(0x16790BED, ks::definitions::hi, 327);
+            ks::SceneManager::show_dialog(0xE16536AB, ks::definitions::no_char, 328);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x06B163B9, ks::definitions::ha, 329);
+            ks::SceneManager::show_dialog(0xAFAE0A7E, ks::definitions::hi, 330);
+            ks::SceneManager::show_dialog(0x1829AF0D, ks::definitions::ha, 331);
+            ks::SceneManager::show_dialog(0xDE1C9813, ks::definitions::hi, 332);
+            ks::SceneManager::show_dialog(0x2B561E27, ks::definitions::ha, 333);
+            ks::SceneManager::show_dialog(0x19671AA5, ks::definitions::hi, 334);
+            ks::SceneManager::show_dialog(0x0D34EBEA, ks::definitions::hi, 335);
+            ks::SceneManager::show_dialog(0xB50CCBE4, ks::definitions::ha, 336);
+            ks::SceneManager::show_dialog(0x05C322E6, ks::definitions::hi, 337);
+            ks::SceneManager::show_dialog(0xFC7D1405, ks::definitions::hi, 338);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9AB63751, ks::definitions::ha, 339);
+            ks::SceneManager::show_dialog(0x2054AD8A, ks::definitions::hi, 340);
+            ks::SceneManager::show_dialog(0xB39A33FD, ks::definitions::no_char, 341);
+            ks::SceneManager::show_dialog(0xE693BF12, ks::definitions::hi, 342);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5B2639BB, ks::definitions::ha, 343);
+            ks::SceneManager::show_dialog(0x504A0595, ks::definitions::hi, 344);
+            ks::SceneManager::show_dialog(0x01F37627, ks::definitions::ha, 345);
+            ks::SceneManager::show_dialog(0xC7B9AA7C, ks::definitions::hi, 346);
+            ks::SceneManager::show_dialog(0x0928B23F, ks::definitions::no_char, 347);
+            ks::SceneManager::show_dialog(0xAAABBFC0, ks::definitions::hi, 348);
+            ks::SceneManager::show_dialog(0xFE3517A8, ks::definitions::ha, 349);
+            ks::SceneManager::show_dialog(0xE8198A7C, ks::definitions::hi, 350);
+            ks::SceneManager::show_dialog(0x38924176, ks::definitions::ha, 351);
+            ks::SceneManager::show_dialog(0xE54AB26A, ks::definitions::hi, 352);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_worryblush, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x30E1DD0C, ks::definitions::ha, 353);
+            ks::SceneManager::show_dialog(0x83D9DAAC, ks::definitions::hi, 354);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_irritated, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD6F5AF5B, ks::definitions::no_char, 355);
+            ks::SceneManager::show_dialog(0x81332E4E, ks::definitions::hi, 167);
+            ks::SceneManager::show_dialog(0xFAFE2F63, ks::definitions::ha, 356);
+            ks::SceneManager::show_dialog(0x66B79D60, ks::definitions::hi, 357);
+            ks::SceneManager::show_dialog(0x2AE5530C, ks::definitions::ha, 358);
+            ks::SceneManager::show_dialog(0x0A5DF344, ks::definitions::hi, 359);
+            ks::SceneManager::music_stop(120);
+            ks::SceneManager::show_dialog(0xBC3FE7EA, ks::definitions::no_char, 360);
+            ks::SceneManager::show_dialog(0x7CDCC352, ks::definitions::hi, 361);
+            ks::SceneManager::set_background(ks::background_metas::hanako_rage, 0, 0, SCENE_TRANSITION_FLASH, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_RAIN);
+            ks::SceneManager::show_dialog(0x583D8A64, ks::definitions::no_char, 362);
+            ks::SceneManager::show_dialog(0x30EA6BD8, ks::definitions::no_char, 363);
+            ks::SceneManager::show_dialog(0x952C0916, ks::definitions::hi, 364);
+            ks::SceneManager::show_dialog(0x7B90C2AB, ks::definitions::hi, 365);
+            ks::SceneManager::show_dialog(0x9B45EFD0, ks::definitions::no_char, 366);
+            ks::SceneManager::show_dialog(0xBBAF87B3, ks::definitions::no_char, 367);
+            ks::SceneManager::show_dialog(0xBD28AA12, ks::definitions::no_char, 368);
+            ks::SceneManager::show_dialog(0xCDF861F8, ks::definitions::no_char, 369);
+            ks::SceneManager::show_dialog(0x512C1EC8, ks::definitions::no_char, 370);
+            ks::SceneManager::show_dialog(0x7A4EF7D7, ks::definitions::no_char, 371);
+            ks::SceneManager::show_dialog(0x657A747F, ks::definitions::no_char, 372);
+            ks::SceneManager::set_background(ks::background_metas::hanako_rage_sad, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7F6974AB, ks::definitions::no_char, 373);
+            ks::SceneManager::show_dialog(0xAF26B1BD, ks::definitions::no_char, 374);
+            // TODO: Show bg
+            // TODO: Show transform bg xpos=0.55 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show hanako_door_door
+            // TODO: Show transform hanako_door_door xpos=-0.2 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show hanako_door_base
+            // TODO: Show transform hanako_door_base xpos=1.1 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::set_background_transition(SCENE_TRANSITION_FLASH);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_stop(240);
+            ks::SceneManager::show_dialog(0xB909B53D, ks::definitions::no_char, 375);
+            ks::SceneManager::sfx_play("sfx_doorclose.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show bg
+            // TODO: Show hanako_door_door
+            // TODO: Show hanako_door_base
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9ED8ECEF, ks::definitions::no_char, 376);
+            ks::SceneManager::set_background(ks::background_metas::school_girlsdormhall, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF5F1D0AC, ks::definitions::no_char, 377);
+            ks::SceneManager::show_dialog(0x84C79564, ks::definitions::no_char, 378);
+            ks::SceneManager::show_dialog(0x6B30F4FC, ks::definitions::no_char, 379);
+            // ach("hanakobad_achieve"); TODO: unknown assignment
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_cut_petals() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_CUT_PETALS);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::school_girlsdormhall, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_NIGHT, 240);
+            ks::SceneManager::show_dialog(0xBD0827C5, ks::definitions::no_char, 380);
+            ks::SceneManager::show_dialog(0xF203533D, ks::definitions::no_char, 381);
+            ks::SceneManager::show_dialog(0x291FD91B, ks::definitions::no_char, 382);
+            ks::SceneManager::show_dialog(0x4D713B16, ks::definitions::no_char, 383);
+            ks::SceneManager::show_dialog(0xF53A7AE5, ks::definitions::no_char, 384);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_NIGHT);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_HANAGOWN, bn::fixed(0.39), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            // TODO: Show hanako_door_base
+            // TODO: Show hanako_door_door
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::sfx_play("sfx_doorknock2.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x71928284, ks::definitions::no_char, 385);
+            ks::SceneManager::show_dialog(0x785BEFBE, ks::definitions::hi, 386);
+            ks::SceneManager::show_dialog(0x38E0BADE, ks::definitions::no_char, 387);
+            ks::SceneManager::show_dialog(0x771E3BB2, ks::definitions::hi, 388);
+            ks::SceneManager::show_dialog(0x179EC00A, ks::definitions::no_char, 389);
+            ks::SceneManager::sfx_play("sfx_lock.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0xA5B7294A, ks::definitions::no_char, 390);
+            ks::SceneManager::sfx_play("sfx_dooropen.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show hanako_door_door
+            // TODO: Show transform hanako_door_door xpos=-0.1 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x34BE6C0A, ks::definitions::no_char, 391);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xFFED8882, ks::definitions::no_char, 392);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9B448F80, ks::definitions::no_char, 393);
+            ks::SceneManager::hide_character(CHARACTER_HANAGOWN);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB7BC0092, ks::definitions::no_char, 394);
+            ks::SceneManager::sfx_play("sfx_door_creak.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show hanako_door_door
+            // TODO: Show transform hanako_door_door xpos=-0.2 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show hanako_door_base
+            // TODO: Show transform hanako_door_base xpos=1.1 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show bg
+            // TODO: Show transform bg xpos=0.55 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_SILENTWHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x8CB116A1, ks::definitions::no_char, 395);
+            ks::SceneManager::show_dialog(0xB41BC9F9, ks::definitions::no_char, 396);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC3DA0168, ks::definitions::no_char, 397);
+            ks::SceneManager::show_dialog(0x64378015, ks::definitions::hi, 398);
+            ks::SceneManager::show_dialog(0x7722F39A, ks::definitions::no_char, 399);
+            ks::SceneManager::show_dialog(0xE1D34D99, ks::definitions::no_char, 400);
+            ks::SceneManager::show_dialog(0x48106DB5, ks::definitions::no_char, 401);
+            ks::SceneManager::show_dialog(0x4B8B6A8E, ks::definitions::hi, 402);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF7131DF6, ks::definitions::no_char, 403);
+            ks::SceneManager::show_dialog(0xB181C01E, ks::definitions::hi, 404);
+            ks::SceneManager::show_dialog(0x754B000E, ks::definitions::no_char, 405);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6375A407, ks::definitions::no_char, 406);
+            ks::SceneManager::show_dialog(0x51432934, ks::definitions::ha, 407);
+            ks::SceneManager::show_dialog(0x61B2AD13, ks::definitions::hi, 408);
+            ks::SceneManager::show_dialog(0xE2622935, ks::definitions::hi, 409);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB3FB4AFC, ks::definitions::no_char, 410);
+            ks::SceneManager::show_dialog(0xE44C2ECF, ks::definitions::no_char, 411);
+            ks::SceneManager::show_dialog(0x5F9D6845, ks::definitions::no_char, 412);
+            ks::SceneManager::show_dialog(0x41A1912B, ks::definitions::no_char, 413);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_worryblush, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x311AC392, ks::definitions::ha, 414);
+            ks::SceneManager::show_dialog(0xF6F9B12C, ks::definitions::no_char, 415);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5383A14B, ks::definitions::ha, 416);
+            ks::SceneManager::show_dialog(0x92E22F01, ks::definitions::no_char, 417);
+            ks::SceneManager::hide_character(CHARACTER_HANAGOWN);
+            ks::SceneManager::update_visuals();
+            // TODO: Show bg
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4AFF9197, ks::definitions::no_char, 418);
+            ks::SceneManager::show_dialog(0x3EBF78DD, ks::definitions::no_char, 419);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_basic_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_HANAGOWN, bn::fixed(0.55), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_HANAGOWN, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB53B6D95, ks::definitions::no_char, 420);
+            ks::SceneManager::show_dialog(0x76B9DE79, ks::definitions::no_char, 421);
+            ks::SceneManager::show_dialog(0x77120468, ks::definitions::no_char, 422);
+            ks::SceneManager::show_dialog(0xC4F54038, ks::definitions::no_char, 423);
+            ks::SceneManager::show_dialog(0xC9474F2F, ks::definitions::no_char, 424);
+            ks::SceneManager::show_dialog(0x9EE58C56, ks::definitions::no_char, 425);
+            // ach("hanakoneutral_achieve"); TODO: unknown assignment
+            ks::SceneManager::music_stop(120);
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_continuing_melody() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_CONTINUING_MELODY);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::school_scienceroom, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCB589392, ks::definitions::no_char, 426);
+            ks::SceneManager::show_dialog(0x81B15CB6, ks::definitions::no_char, 427);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_smile, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5A9D5AFD, ks::definitions::no_char, 428);
+            ks::SceneManager::show_dialog(0xC5962686, ks::definitions::hi, 429);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_grinclosed, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE5A3ED81, ks::definitions::mk, 430);
+            ks::SceneManager::music_play(MUSIC_HAPPINESS);
+            ks::SceneManager::show_dialog(0xD3046A14, ks::definitions::no_char, 431);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x26D6B5E7, ks::definitions::mk, 432);
+            ks::SceneManager::show_dialog(0x30C720A1, ks::definitions::hi, 433);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_whistle, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x674537B4, ks::definitions::mk, 434);
+            ks::SceneManager::show_dialog(0x84C9FFFB, ks::definitions::no_char, 435);
+            ks::SceneManager::show_dialog(0x3097BDFC, ks::definitions::no_char, 436);
+            ks::SceneManager::show_dialog(0x86018509, ks::definitions::no_char, 437);
+            ks::SceneManager::show_dialog(0x4C614CCA, ks::definitions::no_char, 438);
+            ks::SceneManager::show_dialog(0x58E6B22C, ks::definitions::no_char, 439);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x537D1BAA, ks::definitions::no_char, 440);
+            ks::SceneManager::show_dialog(0x6349F484, ks::definitions::hi, 441);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_angry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x98BC2587, ks::definitions::mk, 442);
+            ks::SceneManager::show_dialog(0xF2E58BED, ks::definitions::no_char, 443);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_confused, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2A98DC0D, ks::definitions::mk, 444);
+            ks::SceneManager::show_dialog(0xA0531847, ks::definitions::hi, 445);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_wink, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC9FF8789, ks::definitions::mk, 446);
+            ks::SceneManager::show_dialog(0x1029DE79, ks::definitions::hi, 447);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE7886B66, ks::definitions::mk, 448);
+            ks::SceneManager::show_dialog(0xA05DF696, ks::definitions::hi, 449);
+            ks::SceneManager::show_dialog(0xE1F25CF1, ks::definitions::hi, 450);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_grinclosed, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xEFFB6467, ks::definitions::mk, 451);
+            ks::SceneManager::show_dialog(0x08D7002E, ks::definitions::no_char, 452);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_serious, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x77DBEB8F, ks::definitions::no_char, 453);
+            ks::SceneManager::show_dialog(0x67C3FCD3, ks::definitions::mk, 454);
+            ks::SceneManager::show_dialog(0xDC48DBB5, ks::definitions::hi, 455);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_wink, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x169289BE, ks::definitions::mk, 456);
+            ks::SceneManager::show_dialog(0xE221F0B6, ks::definitions::hi, 457);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_serious, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x84B97BA8, ks::definitions::mk, 458);
+            ks::SceneManager::show_dialog(0x55447F67, ks::definitions::no_char, 459);
+            ks::SceneManager::show_dialog(0xF8BE6632, ks::definitions::no_char, 460);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_whistle, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD072A975, ks::definitions::mk, 461);
+            if (ks::progress.like_hanako || ks::in_replay) {
+                ks::SceneManager::show_dialog(0xB218A259, ks::definitions::hi, 462);
+                ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_serious, PALETTE_VARIANT_DEFAULT);
+                ks::SceneManager::update_visuals();
+                ks::SceneManager::show_dialog(0x3ABCCA5F, ks::definitions::mk, 463);
+                ks::SceneManager::show_dialog(0xDB767D2A, ks::definitions::no_char, 464);
+            }
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE21F0855, ks::definitions::mk, 465);
+            ks::SceneManager::show_dialog(0x7BBE2A87, ks::definitions::no_char, 466);
+            ks::SceneManager::show_dialog(0x6497C415, ks::definitions::no_char, 467);
+            ks::SceneManager::show_dialog(0x0984910F, ks::definitions::no_char, 468);
+            // TODO: Show bg
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_smile, PALETTE_VARIANT_DEFAULT, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_stop(180);
+            ks::SceneManager::show_dialog(0xB85251D2, ks::definitions::no_char, 469);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_HANAKO, bn::fixed(1.1), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_HANAKO, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x40CE152F, ks::definitions::no_char, 470);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9DAC72B7, ks::definitions::no_char, 471);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_ANOTHER, 240);
+            ks::SceneManager::set_background_position(-8, 0);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_grinclosed, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC696AD49, ks::definitions::no_char, 472);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_close_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x807A5ACC, ks::definitions::mk, 473);
+            ks::SceneManager::show_dialog(0x1F3EA13A, ks::definitions::hi, 474);
+            ks::SceneManager::show_dialog(0x54FD687E, ks::definitions::no_char, 475);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x1990CC5C, ks::definitions::no_char, 476);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_grin, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x8AEAC6AC, ks::definitions::mk, 477);
+            ks::SceneManager::show_dialog(0x0D0FBB77, ks::definitions::hi, 478);
+            ks::SceneManager::hide_character(CHARACTER_MIKI);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x162AD8F8, ks::definitions::no_char, 479);
+            ks::SceneManager::set_background_position(-8, 0);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x965C9D0B, ks::definitions::no_char, 480);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD59406F6, ks::definitions::ha, 481);
+            ks::SceneManager::show_dialog(0xBC7175B0, ks::definitions::hi, 482);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x444F911A, ks::definitions::ha, 483);
+            ks::SceneManager::show_dialog(0x63DCBED0, ks::definitions::no_char, 484);
+            ks::SceneManager::show_dialog(0x5205C2B7, ks::definitions::hi, 485);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x09124EBD, ks::definitions::ha, 486);
+            ks::SceneManager::show_dialog(0x24FCBE35, ks::definitions::no_char, 487);
+            ks::SceneManager::show_dialog(0xF61B8045, ks::definitions::no_char, 488);
+            ks::SceneManager::show_dialog(0xA9F42214, ks::definitions::hi, 489);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_bashful, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCF403BC3, ks::definitions::no_char, 490);
+            ks::SceneManager::music_stop(120);
+            ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::update_visuals();
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_shanghai_studiousness() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_SHANGHAI_STUDIOUSNESS);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::suburb_shanghaiint, -8, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_DREAMY, 120);
+            ks::SceneManager::show_dialog(0xF1EB5797, ks::definitions::no_char, 491);
+            ks::SceneManager::show_dialog(0x3D2A3EB7, ks::definitions::no_char, 492);
+            ks::SceneManager::show_dialog(0xD8E72506, ks::definitions::no_char, 493);
+            ks::SceneManager::show_dialog(0x0069CFDA, ks::definitions::no_char, 494);
+            ks::SceneManager::show_dialog(0x22B7EF15, ks::definitions::no_char, 495);
+            ks::SceneManager::show_dialog(0x17586824, ks::definitions::no_char, 496);
+            ks::SceneManager::show_dialog(0x19BDFAFB, ks::definitions::no_char, 497);
+            ks::SceneManager::show_dialog(0x14908395, ks::definitions::hi, 498);
+            ks::SceneManager::show_dialog(0xE421A093, ks::definitions::no_char, 499);
+            ks::SceneManager::show_dialog(0x3958801F, ks::definitions::yu, 500);
+            ks::SceneManager::show_dialog(0xAA7A7AE9, ks::definitions::no_char, 501);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_worried, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCD1A012A, ks::definitions::no_char, 502);
+            ks::SceneManager::show_dialog(0xD7C04C1F, ks::definitions::hi, 503);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_worried, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5FED8314, ks::definitions::yu, 504);
+            ks::SceneManager::show_dialog(0x145533A9, ks::definitions::hi, 505);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE8FAEDF6, ks::definitions::no_char, 506);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_closedhappy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x770B56E4, ks::definitions::yu, 507);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_worried, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x90FDF896, ks::definitions::yu, 508);
+            ks::SceneManager::show_dialog(0xD215BEFC, ks::definitions::no_char, 509);
+            ks::SceneManager::show_dialog(0x30B93F75, ks::definitions::hi, 510);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_closedhappy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::hide_character(CHARACTER_YUUKOSHANG);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6D0F1A16, ks::definitions::no_char, 511);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x98AD833F, ks::definitions::no_char, 512);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x24D2B2E6, ks::definitions::yu, 513);
+            ks::SceneManager::show_dialog(0x873C58E0, ks::definitions::hi, 514);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_worried, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4ABBC810, ks::definitions::no_char, 515);
+            ks::SceneManager::show_dialog(0xA97493FC, ks::definitions::hi, 516);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_worried, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x351B6207, ks::definitions::yu, 517);
+            ks::SceneManager::show_dialog(0x81388AFA, ks::definitions::no_char, 518);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA4E0A22E, ks::definitions::yu, 519);
+            ks::SceneManager::show_dialog(0xB041462A, ks::definitions::hi, 520);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            ks::SceneManager::show_dialog(0x2B5BBEF2, ks::definitions::no_char, 521);
+            ks::SceneManager::show_dialog(0x17DBDD85, ks::definitions::no_char, 522);
+            ks::SceneManager::show_dialog(0x82C47E38, ks::definitions::no_char, 523);
+            ks::SceneManager::show_dialog(0x79AE9AE3, ks::definitions::no_char, 524);
+            ks::SceneManager::show_dialog(0x27B64B65, ks::definitions::no_char, 525);
+            ks::SceneManager::show_dialog(0x7EA02FBA, ks::definitions::no_char, 526);
+            ks::SceneManager::show_dialog(0x62E14435, ks::definitions::no_char, 527);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x218A75AD, ks::definitions::no_char, 528);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_worried, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2799261F, ks::definitions::yu, 529);
+            ks::SceneManager::show_dialog(0x3991C4F5, ks::definitions::hi, 530);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBBB1DFC4, ks::definitions::yu, 531);
+            ks::SceneManager::show_dialog(0xB43E5BB4, ks::definitions::hi, 532);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x0F06585B, ks::definitions::hi, 533);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_closedhappy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC196360B, ks::definitions::no_char, 534);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_neurotic, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x600D9BB5, ks::definitions::yu, 535);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE8EEAA3D, ks::definitions::yu, 536);
+            ks::SceneManager::show_dialog(0x32206573, ks::definitions::no_char, 537);
+            ks::SceneManager::show_dialog(0xF4CAD074, ks::definitions::no_char, 538);
+            ks::SceneManager::show_dialog(0xBD561585, ks::definitions::no_char, 539);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_closedhappy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x73697066, ks::definitions::no_char, 540);
+            ks::SceneManager::show_dialog(0x3951F45A, ks::definitions::no_char, 541);
+            ks::SceneManager::show_dialog(0x6FE611B7, ks::definitions::no_char, 542);
+            // renpy.music.set_volume(0.3, 0.0, channel="sound"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_storebell.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background_position(0, 0);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_HANAKO, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7ED83A1C, ks::definitions::no_char, 543);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD59406F6, ks::definitions::ha, 544);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x464FBB0E, ks::definitions::yu, 545);
+            ks::SceneManager::show_dialog(0xBC7175B0, ks::definitions::hi, 546);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x57F3195A, ks::definitions::ha, 547);
+            ks::SceneManager::show_dialog(0xD7D9B2FD, ks::definitions::hi, 548);
+            ks::SceneManager::show_dialog(0x778BB6C1, ks::definitions::no_char, 549);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x32272CF9, ks::definitions::yu, 550);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_neurotic, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x712A5497, ks::definitions::yu, 551);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_neutral, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA52E594E, ks::definitions::no_char, 552);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4963B9E3, ks::definitions::ha, 553);
+            ks::SceneManager::show_dialog(0x55A6D9D4, ks::definitions::hi, 554);
+            ks::SceneManager::show_dialog(0xFB8FA17B, ks::definitions::hi, 555);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCD6F5D0A, ks::definitions::yu, 556);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x0AB4FE7D, ks::definitions::ha, 557);
+            ks::SceneManager::show_dialog(0xD7287635, ks::definitions::no_char, 558);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_closedhappy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x1A7892FF, ks::definitions::yu, 559);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_happy, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x069291D2, ks::definitions::yu, 560);
+            ks::SceneManager::show_dialog(0x4615C1E6, ks::definitions::no_char, 561);
+            ks::SceneManager::sfx_play("sfx_storebell.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_shock, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_up_panic, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6B68289E, ks::definitions::no_char, 562);
+            ks::SceneManager::show_character(CHARACTER_YUUKOSHANG, ks::smart_characters::yuuko::yuukoshang_down_worried, PALETTE_VARIANT_DEFAULT, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(12);
+            ks::SceneManager::hide_character(CHARACTER_YUUKOSHANG);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE4FC91AF, ks::definitions::no_char, 563);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_def_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6E654183, ks::definitions::no_char, 564);
+            ks::SceneManager::set_background_position(8, 0);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBF638797, ks::definitions::no_char, 565);
+            ks::SceneManager::show_dialog(0xD7C46F22, ks::definitions::hi, 566);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x13C17140, ks::definitions::ha, 567);
+            ks::SceneManager::show_dialog(0x3127AD38, ks::definitions::hi, 568);
+            ks::SceneManager::show_dialog(0x42CA0530, ks::definitions::no_char, 569);
+            ks::SceneManager::show_dialog(0x03E06AD7, ks::definitions::hi, 570);
+            ks::SceneManager::show_dialog(0xA880DFD5, ks::definitions::no_char, 571);
+            ks::SceneManager::show_dialog(0xCD86110B, ks::definitions::hi, 572);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6217D917, ks::definitions::ha, 573);
+            ks::SceneManager::show_dialog(0xA1415C5E, ks::definitions::hi, 574);
+            ks::SceneManager::show_dialog(0xA01E9FB2, ks::definitions::no_char, 575);
+            ks::SceneManager::show_dialog(0x2CA7D592, ks::definitions::no_char, 576);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x383490D7, ks::definitions::no_char, 577);
+            // renpy.music.set_volume(1.0, 0.0, channel="sound"); TODO: unknown assignment
+            ks::SceneManager::music_stop(180);
+            ks::SceneManager::show_dialog(0x34E66811, ks::definitions::no_char, 578);
+            ks::SceneManager::set_background(ks::background_metas::hisao_letter_open, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_NIGHT, 60);
+            ks::SceneManager::show_dialog(0xC8651B55, ks::definitions::no_char, 579);
+            ks::SceneManager::show_dialog(0xDF69A289, ks::definitions::no_char, 580);
+            ks::SceneManager::show_dialog(0x9DA0898F, ks::definitions::no_char, 581);
+            ks::SceneManager::show_dialog(0x9956FFD9, ks::definitions::no_char, 582);
+            ks::SceneManager::show_dialog(0x6239367B, ks::definitions::no_char, 583);
+            ks::SceneManager::show_dialog(0xCB221107, ks::definitions::no_char, 584);
+            ks::SceneManager::show_dialog(0x45D0BFFA, ks::definitions::no_char, 585);
+            ks::SceneManager::show_dialog(0x2DFD003D, ks::definitions::no_char, 586);
+            ks::SceneManager::show_dialog(0x8CF343D0, ks::definitions::no_char, 587);
+            ks::SceneManager::show_dialog(0x43BD8BD1, ks::definitions::no_char, 588);
+            ks::SceneManager::show_dialog(0x5A40CE60, ks::definitions::no_char, 589);
+            ks::SceneManager::show_dialog(0x8E959C06, ks::definitions::no_char, 590);
+            ks::SceneManager::music_stop(240);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhisao_ss, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xABE3179D, ks::definitions::no_char, 591);
+            ks::SceneManager::show_dialog(0xEBF98EE2, ks::definitions::no_char, 592);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhallway, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x027F14E2, ks::definitions::no_char, 593);
+            ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::update_visuals();
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_his_past() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_HIS_PAST);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::school_library, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_HAPPINESS);
+            ks::SceneManager::show_dialog(0x6E657BC6, ks::definitions::no_char, 594);
+            ks::SceneManager::show_dialog(0xA96F2F4D, ks::definitions::no_char, 595);
+            ks::SceneManager::show_dialog(0x7CD69612, ks::definitions::no_char, 596);
+            ks::SceneManager::show_dialog(0x87E8A45C, ks::definitions::no_char, 597);
+            ks::SceneManager::show_dialog(0x9584A9A5, ks::definitions::no_char, 598);
+            ks::SceneManager::show_dialog(0x5499A8A5, ks::definitions::no_char, 599);
+            ks::SceneManager::show_dialog(0x70E93E05, ks::definitions::no_char, 600);
+            ks::SceneManager::show_dialog(0xA4B899EB, ks::definitions::no_char, 601);
+            ks::SceneManager::show_dialog(0x680EF6A0, ks::definitions::no_char, 602);
+            ks::SceneManager::show_dialog(0xD33DCBB3, ks::definitions::no_char, 603);
+            ks::SceneManager::music_stop(300);
+            ks::SceneManager::set_background(ks::background_metas::school_girlsdormhall, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB69B888B, ks::definitions::no_char, 604);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_NIGHT);
+            // TODO: Show hanako_door_base
+            // TODO: Show hanako_door_door
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDBC944E1, ks::definitions::no_char, 605);
+            ks::SceneManager::show_dialog(0x55B6E623, ks::definitions::no_char, 606);
+            ks::SceneManager::sfx_play("sfx_door_creak.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show hanako_door_door
+            // TODO: Show transform hanako_door_door xpos=-0.2 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show hanako_door_base
+            // TODO: Show transform hanako_door_base xpos=1.1 xanchor=0.5 ypos=1.0 yanchor=1.0
+            // TODO: Show bg
+            // TODO: Show transform bg xpos=0.55 xanchor=0.5 ypos=1.0 yanchor=1.0
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_SILENTWHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB970294F, ks::definitions::no_char, 607);
+            ks::SceneManager::show_dialog(0xCCEF806D, ks::definitions::no_char, 608);
+            ks::SceneManager::show_dialog(0x77CA3265, ks::definitions::no_char, 609);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBC431FC4, ks::definitions::no_char, 610);
+            ks::SceneManager::show_dialog(0x4ED634BD, ks::definitions::hi, 611);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x43361E98, ks::definitions::no_char, 612);
+            ks::SceneManager::show_dialog(0x1FCD2B9C, ks::definitions::hi, 613);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4EA09FC2, ks::definitions::no_char, 614);
+            ks::SceneManager::show_dialog(0xB5F6DD84, ks::definitions::no_char, 615);
+            ks::SceneManager::set_background(ks::background_metas::hanako_eye, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xEF3206F8, ks::definitions::no_char, 616);
+            ks::SceneManager::show_dialog(0x14416A7F, ks::definitions::no_char, 617);
+            ks::SceneManager::show_dialog(0x5C397337, ks::definitions::no_char, 618);
+            ks::SceneManager::show_dialog(0x81332E4E, ks::definitions::hi, 167);
+            ks::SceneManager::show_dialog(0xD1F9662E, ks::definitions::no_char, 619);
+            ks::SceneManager::show_dialog(0x97960C2C, ks::definitions::no_char, 620);
+            ks::SceneManager::show_dialog(0xF50C341E, ks::definitions::no_char, 621);
+            ks::SceneManager::show_dialog(0xC1C18F73, ks::definitions::no_char, 622);
+            ks::SceneManager::show_dialog(0x6C41884E, ks::definitions::ha, 623);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD6EA273D, ks::definitions::no_char, 624);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_close_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x47F14FAB, ks::definitions::no_char, 625);
+            ks::SceneManager::show_dialog(0xFD61BAF0, ks::definitions::no_char, 626);
+            ks::SceneManager::show_dialog(0xD3915B65, ks::definitions::no_char, 627);
+            ks::SceneManager::show_dialog(0xD3F1B5B7, ks::definitions::no_char, 628);
+            ks::SceneManager::show_dialog(0xCEADB217, ks::definitions::no_char, 629);
+            ks::SceneManager::show_dialog(0x34C9FEC1, ks::definitions::hi, 630);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_close_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5A9EC43D, ks::definitions::no_char, 631);
+            ks::SceneManager::show_dialog(0x0E4EB626, ks::definitions::hi, 632);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_def_close_shock, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5588BCF8, ks::definitions::no_char, 633);
+            ks::SceneManager::sfx_play("sfx_rustling.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0xEB476660, ks::definitions::no_char, 634);
+            ks::SceneManager::show_dialog(0x8170A7B7, ks::definitions::no_char, 635);
+            ks::SceneManager::show_dialog(0x896F6205, ks::definitions::no_char, 636);
+            ks::SceneManager::set_background(ks::background_metas::hisao_scar_large, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_HEART, 30);
+            ks::SceneManager::show_dialog(0xE449E23F, ks::definitions::no_char, 637);
+            ks::SceneManager::set_background(ks::background_metas::hisao_scar_large, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBE2B76C7, ks::definitions::no_char, 638);
+            ks::SceneManager::show_dialog(0x4D6FD1CC, ks::definitions::ha, 639);
+            ks::SceneManager::show_dialog(0x204E63BA, ks::definitions::hi, 640);
+            ks::SceneManager::set_background(ks::background_metas::hisao_scar_large, 0, 0, SCENE_TRANSITION_NONE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5AF3505D, ks::definitions::ha, 641);
+            ks::SceneManager::show_dialog(0x5D14AFC0, ks::definitions::no_char, 642);
+            ks::SceneManager::show_dialog(0x51FE3F43, ks::definitions::hi, 643);
+            ks::SceneManager::set_background(ks::background_metas::hisao_scar, 0, 0, SCENE_TRANSITION_FLASH, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x25064BDB, ks::definitions::ha, 644);
+            ks::SceneManager::show_dialog(0x0709D122, ks::definitions::hi, 645);
+            ks::SceneManager::show_dialog(0x23E44CE8, ks::definitions::no_char, 646);
+            ks::SceneManager::show_dialog(0x4789554F, ks::definitions::no_char, 647);
+            ks::SceneManager::show_dialog(0x27F71285, ks::definitions::no_char, 648);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_SILENTWHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_normal, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x68427B81, ks::definitions::no_char, 649);
+            ks::SceneManager::show_dialog(0xBFB0E0D5, ks::definitions::no_char, 650);
+            ks::SceneManager::show_dialog(0x54818F3C, ks::definitions::hi, 651);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x06E4936E, ks::definitions::no_char, 652);
+            ks::SceneManager::show_dialog(0x33680338, ks::definitions::ha, 653);
+            ks::SceneManager::show_dialog(0x0D254543, ks::definitions::no_char, 654);
+            ks::SceneManager::show_dialog(0x68D1C5FE, ks::definitions::no_char, 655);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDCDC2388, ks::definitions::no_char, 656);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA2537550, ks::definitions::ha, 657);
+            ks::SceneManager::show_dialog(0xC86043B9, ks::definitions::hi, 658);
+            ks::SceneManager::show_dialog(0xC5CBF7EF, ks::definitions::hi, 659);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x785A3054, ks::definitions::ha, 660);
+            ks::SceneManager::music_stop(180);
+            ks::SceneManager::set_background(ks::background_metas::school_girlsdormhall, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9F1B8936, ks::definitions::no_char, 661);
+            ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::update_visuals();
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_city_rendezvous() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_CITY_RENDEZVOUS);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::city_street1, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_DAILY, 120);
+            // renpy.music.set_volume(0.5, 0.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_traffic.8ad", SOUND_CHANNEL_AMBIENT, 120);
+            ks::SceneManager::show_dialog(0x5CF78CA7, ks::definitions::no_char, 662);
+            ks::SceneManager::show_dialog(0x4C5BF7CC, ks::definitions::no_char, 663);
+            ks::SceneManager::show_dialog(0x7DFE976A, ks::definitions::no_char, 664);
+            ks::SceneManager::show_dialog(0x84CF4FA4, ks::definitions::no_char, 665);
+            ks::SceneManager::show_dialog(0x6FF72D07, ks::definitions::no_char, 666);
+            ks::SceneManager::show_dialog(0xAA1BC87A, ks::definitions::no_char, 667);
+            ks::SceneManager::show_dialog(0x3CBD4065, ks::definitions::no_char, 668);
+            ks::SceneManager::show_dialog(0xF17763B6, ks::definitions::no_char, 669);
+            // renpy.music.set_volume(0.2, 0.0, channel="sound"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_phone.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0xD85F79CF, ks::definitions::no_char, 670);
+            ks::SceneManager::show_dialog(0x23B8064E, ks::definitions::no_char, 671);
+            // renpy.music.set_volume(0.1, 2.0, channel="ambient"); TODO: unknown assignment
+            // renpy.music.set_volume(0.5, 2.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::set_background(ks::background_metas::city_street1_blurred, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            // TODO: Show phone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(30);
+            // TODO: Show phone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4E0DE446, ks::definitions::no_char, 672);
+            ks::SceneManager::show_dialog(0x2C2A0B95, ks::definitions::hi, 673);
+            ks::SceneManager::show_dialog(0xAD48C4F0, ks::definitions::mystery, 12);
+            ks::SceneManager::show_dialog(0x1C7D5C7D, ks::definitions::no_char, 674);
+            ks::SceneManager::show_dialog(0xC87FBCF4, ks::definitions::hi, 675);
+            ks::SceneManager::show_dialog(0x1729F6AE, ks::definitions::ha, 676);
+            ks::SceneManager::show_dialog(0xBDD83972, ks::definitions::no_char, 677);
+            ks::SceneManager::show_dialog(0x12CB9176, ks::definitions::hi, 678);
+            ks::SceneManager::show_dialog(0x0C6E533B, ks::definitions::ha, 679);
+            ks::SceneManager::show_dialog(0xEA9016EA, ks::definitions::ha, 680);
+            ks::SceneManager::show_dialog(0xF4479A08, ks::definitions::hi, 681);
+            ks::SceneManager::show_dialog(0x16F17612, ks::definitions::ha, 682);
+            ks::SceneManager::show_dialog(0xD7D0D7A1, ks::definitions::no_char, 683);
+            ks::SceneManager::show_dialog(0x351CFECC, ks::definitions::hi, 684);
+            ks::SceneManager::show_dialog(0xD1D7D329, ks::definitions::ha, 685);
+            ks::SceneManager::show_dialog(0xB202B19E, ks::definitions::no_char, 686);
+            ks::SceneManager::show_dialog(0x371DCCA1, ks::definitions::hi, 687);
+            ks::SceneManager::show_dialog(0x30C17432, ks::definitions::no_char, 688);
+            // renpy.music.set_volume(1.0, 0.0, channel="sound"); TODO: unknown assignment
+            // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 120);
+            // TODO: Show phone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_background(ks::background_metas::misc_sky, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            // TODO: Show phone
+            ks::SceneManager::update_visuals();
+            // TODO: Hide phone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_stop(300);
+            ks::SceneManager::show_dialog(0x2F18D9D6, ks::definitions::no_char, 689);
+            ks::SceneManager::show_dialog(0x3D9121C0, ks::definitions::no_char, 690);
+            ks::SceneManager::set_background(ks::background_metas::city_karaokeint, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(1.0, 0.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::music_play(MUSIC_SOOTHING, 120);
+            // renpy.music.set_volume(0.4, 0.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_crowd_outdoors.8ad", SOUND_CHANNEL_AMBIENT, 120);
+            ks::SceneManager::show_dialog(0x498CFEB1, ks::definitions::no_char, 691);
+            ks::SceneManager::show_dialog(0x705BF42B, ks::definitions::no_char, 692);
+            ks::SceneManager::show_dialog(0xEA64CE3C, ks::definitions::no_char, 693);
+            ks::SceneManager::show_dialog(0x68BBF357, ks::definitions::no_char, 694);
+            ks::SceneManager::show_dialog(0x775B2196, ks::definitions::no_char, 695);
+            ks::SceneManager::show_dialog(0xCFDE2273, ks::definitions::no_char, 696);
+            // renpy.music.set_volume(0.2, 4.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0x11D94478, ks::definitions::no_char, 697);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x8CC76F53, ks::definitions::ha, 698);
+            ks::SceneManager::show_dialog(0x7B761076, ks::definitions::no_char, 699);
+            ks::SceneManager::show_dialog(0x88F6E813, ks::definitions::hi, 700);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x40EEB2AA, ks::definitions::no_char, 701);
+            ks::SceneManager::show_dialog(0xBEA860D0, ks::definitions::no_char, 702);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x0B7096CA, ks::definitions::no_char, 703);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE69756F6, ks::definitions::no_char, 704);
+            ks::SceneManager::show_dialog(0x31F0D0F2, ks::definitions::no_char, 705);
+            ks::SceneManager::show_dialog(0x5BFE9D92, ks::definitions::hi, 706);
+            ks::SceneManager::show_dialog(0x39B18C5C, ks::definitions::no_char, 707);
+            ks::SceneManager::show_dialog(0x1F055917, ks::definitions::hi, 708);
+            ks::SceneManager::show_dialog(0x3BA3AACF, ks::definitions::no_char, 709);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9E2808D6, ks::definitions::no_char, 710);
+            ks::SceneManager::show_dialog(0x9FB07D68, ks::definitions::ha, 711);
+            ks::SceneManager::show_dialog(0x12F627C8, ks::definitions::hi, 712);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x72099F2F, ks::definitions::no_char, 713);
+            ks::SceneManager::show_dialog(0xDC0F6F56, ks::definitions::no_char, 714);
+            ks::SceneManager::show_dialog(0x294CDBEF, ks::definitions::no_char, 715);
+            ks::SceneManager::show_dialog(0x20B1865E, ks::definitions::no_char, 716);
+            ks::SceneManager::show_dialog(0xD0CA18EB, ks::definitions::no_char, 717);
+            ks::SceneManager::show_dialog(0x47E307D2, ks::definitions::no_char, 718);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_sad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x1EBE84D5, ks::definitions::ha, 719);
+            ks::SceneManager::show_dialog(0x49EC2E53, ks::definitions::no_char, 720);
+            ks::SceneManager::show_dialog(0x160F8E67, ks::definitions::hi, 721);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x18D43FA0, ks::definitions::ha, 722);
+            ks::SceneManager::show_dialog(0x50EDAF02, ks::definitions::hi, 723);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF8BD0B4C, ks::definitions::ha, 724);
+            ks::SceneManager::show_dialog(0x575054DD, ks::definitions::no_char, 725);
+            ks::SceneManager::show_dialog(0x4D3F4D95, ks::definitions::hi, 726);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE9D19359, ks::definitions::ha, 727);
+            ks::SceneManager::show_dialog(0xEFD92A7E, ks::definitions::no_char, 728);
+            ks::SceneManager::show_dialog(0xEEFCEBB6, ks::definitions::hi, 729);
+            ks::SceneManager::show_dialog(0x0CA1AB2A, ks::definitions::hi, 730);
+            ks::SceneManager::show_dialog(0xF654DD92, ks::definitions::no_char, 731);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x86F81CDE, ks::definitions::no_char, 732);
+            ks::SceneManager::show_dialog(0x38C238BF, ks::definitions::no_char, 733);
+            ks::SceneManager::show_dialog(0xAB697520, ks::definitions::hi, 734);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9EDB8148, ks::definitions::no_char, 735);
+            ks::SceneManager::show_dialog(0x794AE93B, ks::definitions::hi, 736);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6966D878, ks::definitions::ha, 737);
+            ks::SceneManager::show_dialog(0xC59B0F73, ks::definitions::no_char, 738);
+            ks::SceneManager::show_dialog(0x8A090843, ks::definitions::hi, 739);
+            ks::SceneManager::show_dialog(0x2670BE75, ks::definitions::hi, 740);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2975F4C3, ks::definitions::no_char, 741);
+            // renpy.music.set_volume(0.5, 1.0, channel="music"); TODO: unknown assignment
+            // TODO: Show hanaphone
+            ks::SceneManager::update_visuals();
+            // TODO: Show hanaphone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x00400A79, ks::definitions::no_char, 742);
+            ks::SceneManager::show_dialog(0x9845C619, ks::definitions::hi, 743);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
+            // TODO: Show hanaphone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            // TODO: Hide hanaphone
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x888E42E6, ks::definitions::no_char, 744);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x0EE0DC08, ks::definitions::ha, 745);
+            ks::SceneManager::show_dialog(0x55BFF2BA, ks::definitions::hi, 226);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDFC08DC4, ks::definitions::ha, 746);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_emb, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4123AD0E, ks::definitions::ha, 747);
+            ks::SceneManager::show_dialog(0x7957886F, ks::definitions::no_char, 748);
+            ks::SceneManager::show_dialog(0x3A91F1AF, ks::definitions::no_char, 749);
+            ks::SceneManager::show_dialog(0xB8E0E222, ks::definitions::hi, 750);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downsmile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6E4C0A6A, ks::definitions::ha, 751);
+            ks::SceneManager::show_dialog(0x99A81290, ks::definitions::no_char, 752);
+            ks::SceneManager::show_dialog(0x1DEB7C61, ks::definitions::no_char, 753);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x30C82E53, ks::definitions::ha, 754);
+            ks::SceneManager::show_dialog(0x3B1633F4, ks::definitions::hi, 755);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x76FAB0F2, ks::definitions::ha, 756);
+            ks::SceneManager::show_dialog(0xFBC4CCEE, ks::definitions::hi, 757);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2CA16D15, ks::definitions::ha, 758);
+            ks::SceneManager::show_dialog(0x0E6B3489, ks::definitions::hi, 759);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downsmile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x97FC478A, ks::definitions::no_char, 760);
+            ks::SceneManager::show_dialog(0xD6832AE8, ks::definitions::ha, 761);
+            ks::SceneManager::show_dialog(0xA26ACE73, ks::definitions::hi, 762);
+            ks::SceneManager::show_dialog(0x5231A56F, ks::definitions::no_char, 763);
+            ks::SceneManager::show_dialog(0x3DFE95FE, ks::definitions::hi, 764);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC510E262, ks::definitions::no_char, 765);
+            ks::SceneManager::show_dialog(0xA044ACF5, ks::definitions::hi, 766);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3090278F, ks::definitions::no_char, 767);
+            ks::SceneManager::show_dialog(0x612CF569, ks::definitions::hi, 768);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD541AA55, ks::definitions::ha, 769);
+            ks::SceneManager::show_dialog(0xEEDA22EF, ks::definitions::no_char, 770);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x23CC6FC1, ks::definitions::ha, 771);
+            ks::SceneManager::show_dialog(0x00A41B52, ks::definitions::no_char, 772);
+            ks::SceneManager::show_dialog(0xAB74F136, ks::definitions::ha, 773);
+            ks::SceneManager::show_dialog(0xF806CBF2, ks::definitions::hi, 774);
+            ks::SceneManager::show_dialog(0xEE252920, ks::definitions::no_char, 775);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x16A099BD, ks::definitions::ha, 776);
+            ks::SceneManager::show_dialog(0xD3B20E7C, ks::definitions::no_char, 777);
+            ks::SceneManager::show_dialog(0x42E06E93, ks::definitions::no_char, 778);
+            ks::SceneManager::show_dialog(0xA77C23D3, ks::definitions::no_char, 779);
+            ks::SceneManager::music_stop(300);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD4264D3E, ks::definitions::no_char, 780);
+            ks::SceneManager::show_dialog(0x976457D2, ks::definitions::no_char, 781);
+            ks::SceneManager::show_dialog(0x869C1EC9, ks::definitions::no_char, 782);
+            ks::SceneManager::show_dialog(0x07593F3C, ks::definitions::hi, 783);
+            // renpy.music.set_volume(0.4, 4.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0x7156483C, ks::definitions::no_char, 784);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC9A7A39D, ks::definitions::ha, 785);
+            ks::SceneManager::show_dialog(0xD27AE667, ks::definitions::hi, 786);
+            // renpy.music.set_volume(0.0, 1.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_background(ks::background_metas::city_karaokeint, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(0.2, 0.3, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0x218C1620, ks::definitions::no_char, 787);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_ANOTHER, 180);
+            ks::SceneManager::show_dialog(0x5C5CF8AF, ks::definitions::no_char, 788);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2D0AE569, ks::definitions::ha, 789);
+            ks::SceneManager::show_dialog(0xBAE0B2BE, ks::definitions::hi, 790);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7841E788, ks::definitions::ha, 791);
+            ks::SceneManager::show_dialog(0xA464D0ED, ks::definitions::hi, 792);
+            ks::SceneManager::show_dialog(0x3B99647D, ks::definitions::no_char, 793);
+            // TODO: Show phonestrap
+            ks::SceneManager::update_visuals();
+            // TODO: Show phonestrap
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(0.5, 1.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0x7C12F222, ks::definitions::no_char, 794);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x28978A34, ks::definitions::no_char, 795);
+            ks::SceneManager::show_dialog(0xBBA7C5AC, ks::definitions::no_char, 796);
+            // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
+            // TODO: Show phonestrap
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            // TODO: Hide phonestrap
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x32227910, ks::definitions::no_char, 797);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4AA8013B, ks::definitions::ha, 798);
+            ks::SceneManager::show_dialog(0x3300134C, ks::definitions::hi, 799);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x21DD0A2D, ks::definitions::ha, 800);
+            ks::SceneManager::show_dialog(0xF89D39E1, ks::definitions::hi, 801);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downsmile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x82B0A529, ks::definitions::ha, 802);
+            ks::SceneManager::show_dialog(0x55BE81C6, ks::definitions::no_char, 803);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(0.5, 1.0, channel="music"); TODO: unknown assignment
+            // TODO: Show hanaphonestrap
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            // TODO: Show hanaphonestrap
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5FB7494D, ks::definitions::no_char, 804);
+            ks::SceneManager::show_dialog(0x37BD7541, ks::definitions::ha, 805);
+            // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
+            // TODO: Show hanaphonestrap
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            // TODO: Hide hanaphonestrap
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDECD650B, ks::definitions::no_char, 806);
+            ks::SceneManager::show_dialog(0xA740410C, ks::definitions::no_char, 807);
+            ks::SceneManager::show_dialog(0x50481372, ks::definitions::hi, 808);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_def_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x03C3C717, ks::definitions::ha, 809);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC08DD511, ks::definitions::no_char, 810);
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
+            ks::SceneManager::music_stop(180);
+            ks::SceneManager::set_background(ks::background_metas::city_street2, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downsmile, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            // renpy.music.set_volume(0.5, 0.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_traffic.8ad", SOUND_CHANNEL_AMBIENT, 60);
+            ks::SceneManager::show_dialog(0xEE34D130, ks::definitions::no_char, 811);
+            ks::SceneManager::show_dialog(0x6C8B084D, ks::definitions::no_char, 812);
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 120);
+            ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::update_visuals();
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_whispered_touch() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_WHISPERED_TOUCH);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_NORMAL, 120);
+            ks::SceneManager::show_dialog(0x6B00CE90, ks::definitions::no_char, 813);
+            ks::SceneManager::show_dialog(0x47B0579F, ks::definitions::no_char, 814);
+            ks::SceneManager::show_dialog(0xD6A51C07, ks::definitions::no_char, 815);
+            ks::SceneManager::show_dialog(0x73E0B9D2, ks::definitions::no_char, 816);
+            ks::SceneManager::show_dialog(0x885D9978, ks::definitions::no_char, 817);
+            ks::SceneManager::show_dialog(0x97156091, ks::definitions::no_char, 818);
+            ks::SceneManager::show_dialog(0x20D2AFB1, ks::definitions::no_char, 819);
+            // renpy.music.set_volume(1.0, 0.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_footsteps_hard.8ad", SOUND_CHANNEL_AMBIENT, 240);
+            ks::SceneManager::show_dialog(0x34AABEC5, ks::definitions::no_char, 820);
+            ks::SceneManager::show_dialog(0xC7E41C2A, ks::definitions::no_char, 821);
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 18);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_whistle, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_MIKI, bn::fixed(1.1), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_MIKI, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA100A854, ks::definitions::no_char, 822);
+            ks::SceneManager::show_character(CHARACTER_MIKI, ks::smart_characters::miki::miki_basic_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_MIKI, bn::fixed(0.9), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            ks::SceneManager::hide_character(CHARACTER_MIKI);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD0934340, ks::definitions::no_char, 823);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_HANAKO, bn::fixed(1.1), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_HANAKO, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_stop(120);
+            ks::SceneManager::show_dialog(0xF24B16F4, ks::definitions::no_char, 824);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2E1DDAEB, ks::definitions::no_char, 825);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_HANAKO, bn::fixed(0.9), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCE1DC413, ks::definitions::no_char, 826);
+            ks::SceneManager::set_background(ks::background_metas::school_library_ss, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_TRANQUIL, 180);
+            ks::SceneManager::show_dialog(0x990434A5, ks::definitions::no_char, 827);
+            ks::SceneManager::show_dialog(0xDC9091F1, ks::definitions::no_char, 828);
+            ks::SceneManager::show_dialog(0x0FAF553E, ks::definitions::no_char, 829);
+            ks::SceneManager::show_dialog(0xB36E9553, ks::definitions::no_char, 830);
+            ks::SceneManager::show_dialog(0xA937DDB0, ks::definitions::no_char, 831);
+            ks::SceneManager::show_dialog(0x3BB71C84, ks::definitions::ha, 832);
+            // renpy.music.set_volume(0.0, 0.3, channel="music"); TODO: unknown assignment
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_shock, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x818CE808, ks::definitions::hi, 833);
+            ks::SceneManager::show_dialog(0x1C485C79, ks::definitions::no_char, 834);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downsad, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBAF8496E, ks::definitions::no_char, 835);
+            // renpy.music.set_volume(1.0, 5.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::show_dialog(0xCD0BF2DA, ks::definitions::hi, 836);
+            ks::SceneManager::show_dialog(0xA9342114, ks::definitions::no_char, 837);
+            ks::SceneManager::show_dialog(0x96A266B1, ks::definitions::no_char, 838);
+            ks::SceneManager::show_dialog(0x1FCD2B9C, ks::definitions::hi, 839);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_sad, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x23A40A75, ks::definitions::ha, 840);
+            ks::SceneManager::show_dialog(0x179C1F7B, ks::definitions::no_char, 841);
+            ks::SceneManager::show_dialog(0x2DB1E2C5, ks::definitions::hi, 842);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_normal, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xFB1C066C, ks::definitions::ha, 843);
+            ks::SceneManager::show_dialog(0x0649F11D, ks::definitions::hi, 844);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_smile, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x36D56A93, ks::definitions::no_char, 845);
+            ks::SceneManager::show_dialog(0x7119CD66, ks::definitions::no_char, 846);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_worry, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4B21C46D, ks::definitions::ha, 847);
+            ks::SceneManager::music_stop(300);
+            ks::SceneManager::show_dialog(0xB27255EB, ks::definitions::no_char, 848);
+            ks::SceneManager::show_dialog(0x8F5481B9, ks::definitions::no_char, 849);
+            ks::SceneManager::show_dialog(0x34053A31, ks::definitions::hi, 850);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_worry, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE2CCDB66, ks::definitions::ha, 851);
+            ks::SceneManager::show_dialog(0x800AE323, ks::definitions::hi, 852);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_blushing, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5CA13EE6, ks::definitions::no_char, 853);
+            ks::SceneManager::show_dialog(0x9026ABBC, ks::definitions::no_char, 854);
+            ks::SceneManager::show_dialog(0x2FC191DA, ks::definitions::no_char, 855);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_worry, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE7469313, ks::definitions::ha, 856);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x237879BD, ks::definitions::no_char, 857);
+            ks::SceneManager::set_background(ks::background_metas::school_hallway3, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_normal, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_SERENE, 30);
+            ks::SceneManager::show_dialog(0x3ED72F18, ks::definitions::no_char, 858);
+            ks::SceneManager::show_dialog(0xFCFD9E37, ks::definitions::hi, 859);
+            ks::SceneManager::show_dialog(0x4C8000EF, ks::definitions::hi, 860);
+            ks::SceneManager::show_dialog(0x18EA7014, ks::definitions::hi, 861);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD34A79F6, ks::definitions::ha, 862);
+            ks::SceneManager::show_dialog(0x506D9AE3, ks::definitions::hi, 863);
+            ks::SceneManager::show_dialog(0x8C1EC1CB, ks::definitions::hi, 864);
+            ks::SceneManager::set_background(ks::background_metas::school_staircase2, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_close_downtimid, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x33768FB1, ks::definitions::no_char, 865);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_close_downsad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x23FF5231, ks::definitions::ha, 866);
+            ks::SceneManager::show_dialog(0x9357ACDD, ks::definitions::ha, 867);
+            ks::SceneManager::set_background(ks::background_metas::school_lobby, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7CD4F855, ks::definitions::no_char, 868);
+            ks::SceneManager::show_dialog(0x2E26B5D0, ks::definitions::hi, 869);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_timid, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB61069B7, ks::definitions::ha, 870);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downsmile, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB395FD05, ks::definitions::ha, 871);
+            ks::SceneManager::show_dialog(0x3B7B126E, ks::definitions::hi, 872);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_worry, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x633A0B14, ks::definitions::ha, 873);
+            ks::SceneManager::show_dialog(0x9741EDBD, ks::definitions::no_char, 874);
+            ks::SceneManager::set_background(ks::background_metas::school_courtyard_ss, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF5495670, ks::definitions::no_char, 875);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_timid, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x679E801E, ks::definitions::no_char, 876);
+            ks::SceneManager::show_dialog(0xD6D107D8, ks::definitions::ha, 877);
+            ks::SceneManager::show_dialog(0x0FC65C79, ks::definitions::no_char, 878);
+            ks::SceneManager::show_dialog(0xE4D88D19, ks::definitions::no_char, 879);
+            ks::SceneManager::show_dialog(0xD31E9146, ks::definitions::hi, 880);
+            ks::SceneManager::show_dialog(0x8EE8E480, ks::definitions::hi, 881);
+            ks::SceneManager::show_dialog(0xF6D128DC, ks::definitions::hi, 882);
+            ks::SceneManager::show_dialog(0xB1CD4BC7, ks::definitions::hi, 883);
+            ks::SceneManager::show_dialog(0xDFAD6CF4, ks::definitions::no_char, 884);
+            ks::SceneManager::show_dialog(0x35228B21, ks::definitions::hi, 885);
+            ks::SceneManager::set_background(ks::background_metas::school_gardens, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF1CF4EDE, ks::definitions::no_char, 886);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_worry, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB3647516, ks::definitions::ha, 887);
+            ks::SceneManager::show_dialog(0x73B01F75, ks::definitions::hi, 888);
+            ks::SceneManager::show_dialog(0x4D1A0316, ks::definitions::hi, 889);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_def_worry, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF6C63902, ks::definitions::ha, 890);
+            ks::SceneManager::show_dialog(0xBCA4C797, ks::definitions::no_char, 891);
+            ks::SceneManager::show_dialog(0x6E960D14, ks::definitions::hi, 892);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_smile, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC3D84DAC, ks::definitions::ha, 893);
+            ks::SceneManager::show_dialog(0xAD496FDD, ks::definitions::hi, 894);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_worry, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x8AE43ECD, ks::definitions::ha, 895);
+            ks::SceneManager::show_dialog(0x861887D7, ks::definitions::no_char, 896);
+            ks::SceneManager::show_dialog(0xA42AB70D, ks::definitions::hi, 897);
+            ks::SceneManager::show_dialog(0x0A982C89, ks::definitions::no_char, 898);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhallground, 0, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_close_downtimid, PALETTE_VARIANT_DEFAULT, bn::fixed(1), bn::fixed(1), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xFB96620B, ks::definitions::no_char, 899);
+            ks::SceneManager::music_stop(300);
+            ks::SceneManager::show_dialog(0x93E604E0, ks::definitions::no_char, 900);
+            ks::SceneManager::set_background(ks::background_metas::school_girlsdormhall, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7D7BEA1F, ks::definitions::no_char, 901);
+            ks::SceneManager::show_dialog(0xD53D5B25, ks::definitions::hi, 902);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_distant, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD8CAE94D, ks::definitions::no_char, 903);
+            ks::SceneManager::show_dialog(0xC44C4323, ks::definitions::hi, 324);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x27B0236E, ks::definitions::no_char, 904);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::sfx_play("sfx_dooropen.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0xD37DF683, ks::definitions::no_char, 905);
+            ks::SceneManager::show_dialog(0x84AC867A, ks::definitions::no_char, 906);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_SUNSET);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_normal, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7266770D, ks::definitions::no_char, 907);
+            ks::SceneManager::show_dialog(0x8876ACE2, ks::definitions::ha, 908);
+            ks::SceneManager::show_dialog(0x2817A64B, ks::definitions::no_char, 909);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::sfx_play("sfx_doorclose.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::pause(48);
+            ks::SceneManager::sfx_play("sfx_lock.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x17702935, ks::definitions::no_char, 910);
+            ks::SceneManager::show_dialog(0x257D6682, ks::definitions::no_char, 911);
+            ks::SceneManager::show_dialog(0xB9BFFF99, ks::definitions::no_char, 912);
+            ks::SceneManager::show_dialog(0x79349163, ks::definitions::no_char, 913);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC1E24C80, ks::definitions::ha, 914);
+            ks::SceneManager::show_dialog(0x63B93342, ks::definitions::no_char, 915);
+            ks::SceneManager::show_dialog(0xDB3D4B6B, ks::definitions::hi, 916);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_timid, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD4EBCEBA, ks::definitions::ha, 917);
+            ks::SceneManager::show_dialog(0x58BAA53F, ks::definitions::no_char, 918);
+            ks::SceneManager::show_dialog(0x3A33D62C, ks::definitions::no_char, 919);
+            ks::SceneManager::music_play(MUSIC_HANAKO, 60);
+            ks::SceneManager::set_background(ks::background_metas::hanako_scars, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x0EE82831, ks::definitions::no_char, 920);
+            ks::SceneManager::show_dialog(0x3CBA605E, ks::definitions::ha, 921);
+            ks::SceneManager::set_background(ks::background_metas::hanako_scars_large, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x205A4E09, ks::definitions::no_char, 922);
+            ks::SceneManager::show_dialog(0x4AB84E9D, ks::definitions::no_char, 923);
+            ks::SceneManager::show_dialog(0xC959F534, ks::definitions::no_char, 924);
+            ks::SceneManager::show_dialog(0xDA52720A, ks::definitions::no_char, 925);
+            ks::SceneManager::show_dialog(0x8B6CBCB8, ks::definitions::ha, 926);
+            ks::SceneManager::show_dialog(0x856F93F7, ks::definitions::no_char, 927);
+            ks::SceneManager::show_dialog(0x8FE68D6F, ks::definitions::ha, 928);
+            ks::SceneManager::show_dialog(0x280166A5, ks::definitions::no_char, 929);
+            ks::SceneManager::show_dialog(0xEC870CB9, ks::definitions::no_char, 930);
+            ks::SceneManager::show_dialog(0x7415314E, ks::definitions::ha, 931);
+            ks::SceneManager::show_dialog(0xAFC6E6FB, ks::definitions::no_char, 932);
+            ks::SceneManager::show_dialog(0x86B16946, ks::definitions::hi, 933);
+            ks::SceneManager::show_dialog(0xED0CDFB1, ks::definitions::no_char, 934);
+            ks::SceneManager::show_dialog(0xEAA0F574, ks::definitions::no_char, 935);
+            ks::SceneManager::show_dialog(0xE01A066F, ks::definitions::no_char, 936);
+            ks::SceneManager::show_dialog(0x65C6F990, ks::definitions::no_char, 937);
+            ks::SceneManager::show_dialog(0x9D09275D, ks::definitions::ha, 938);
+            ks::SceneManager::show_dialog(0x0952A8C4, ks::definitions::hi, 939);
+            if (ks::globals::settings.disable_disturbing_content) {
+                ks::SceneManager::show_dialog(0xF4EB2FD8, ks::definitions::no_char, 940);
+                ks::SceneManager::music_stop(120);
+                ks::SceneManager::hide_background(SCENE_TRANSITION_SHUTEYE, 0);
+                ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+                ks::SceneManager::update_visuals();
+                if (ks::in_replay) {
+                    return;
+                }
+                ks::SceneManager::timeskip();
+            }
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_SUNSET);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_stock_close_worryblush, PALETTE_VARIANT_SPRITE_SUNSET, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC357008F, ks::definitions::no_char, 941);
+            ks::SceneManager::show_dialog(0x8DF62DE3, ks::definitions::no_char, 942);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_stock_distantblush, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x77701982, ks::definitions::no_char, 943);
+            ks::SceneManager::show_dialog(0x897B2039, ks::definitions::no_char, 944);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_stock_normalblush, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x0087EF38, ks::definitions::no_char, 945);
+            ks::SceneManager::show_dialog(0xBB185266, ks::definitions::no_char, 946);
+            ks::SceneManager::show_dialog(0x3F171CC2, ks::definitions::no_char, 947);
+            ks::SceneManager::show_character(CHARACTER_HANAGOWN, ks::smart_characters::hanako::hanagown_stock_distantblush, PALETTE_VARIANT_SPRITE_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA82FDAC6, ks::definitions::hi, 290);
+            ks::SceneManager::hide_character(CHARACTER_HANAGOWN);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x276FF000, ks::definitions::no_char, 948);
+            ks::SceneManager::show_dialog(0x135DACDE, ks::definitions::no_char, 949);
+            ks::SceneManager::set_background(ks::background_metas::hanako_bed_boobs_glance, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x45F036F0, ks::definitions::no_char, 950);
+            ks::SceneManager::show_dialog(0x82B66A11, ks::definitions::no_char, 951);
+            ks::SceneManager::show_dialog(0x38EC94A5, ks::definitions::no_char, 952);
+            ks::SceneManager::set_background(ks::background_metas::hanako_bed_boobs_blush, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x333AEF22, ks::definitions::no_char, 953);
+            ks::SceneManager::show_dialog(0x4C80EF60, ks::definitions::hi, 954);
+            ks::SceneManager::show_dialog(0x7A5078E0, ks::definitions::no_char, 955);
+            ks::SceneManager::show_dialog(0xE302DEFC, ks::definitions::no_char, 956);
+            ks::SceneManager::show_dialog(0xC6A7F202, ks::definitions::no_char, 957);
+            ks::SceneManager::show_dialog(0xFBCEF8FE, ks::definitions::no_char, 958);
+            ks::SceneManager::set_background(ks::background_metas::hanako_bed_crotch_blush, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF40312D4, ks::definitions::no_char, 959);
+            ks::SceneManager::show_dialog(0x6018327F, ks::definitions::no_char, 960);
+            ks::SceneManager::show_dialog(0x51321E28, ks::definitions::no_char, 961);
+            ks::SceneManager::set_background(ks::background_metas::hanako_bed_crotch_glance, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3F60C5A4, ks::definitions::no_char, 962);
+            ks::SceneManager::show_dialog(0x9870CC56, ks::definitions::no_char, 963);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_SUNSET);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6780A81F, ks::definitions::no_char, 964);
+            ks::SceneManager::set_background(ks::background_metas::hanako_missionary_underwear, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x783E8B70, ks::definitions::no_char, 965);
+            ks::SceneManager::show_dialog(0xE646A054, ks::definitions::no_char, 966);
+            ks::SceneManager::show_dialog(0x34FBDA1B, ks::definitions::no_char, 967);
+            ks::SceneManager::show_dialog(0xB0A52E26, ks::definitions::no_char, 968);
+            ks::SceneManager::show_dialog(0x884E8FE5, ks::definitions::no_char, 969);
+            ks::SceneManager::show_dialog(0x8003F204, ks::definitions::no_char, 970);
+            ks::SceneManager::show_dialog(0x2536546B, ks::definitions::no_char, 971);
+            ks::SceneManager::show_dialog(0x6162FCF8, ks::definitions::no_char, 972);
+            ks::SceneManager::show_dialog(0x76D16CBC, ks::definitions::ha, 973);
+            ks::SceneManager::show_dialog(0xC777745A, ks::definitions::no_char, 974);
+            ks::SceneManager::show_dialog(0x6A44CF71, ks::definitions::hi, 975);
+            ks::SceneManager::show_dialog(0x73DF8F2A, ks::definitions::no_char, 976);
+            ks::SceneManager::show_dialog(0x3963A3AA, ks::definitions::no_char, 977);
+            ks::SceneManager::show_dialog(0xCB422637, ks::definitions::no_char, 978);
+            ks::SceneManager::show_dialog(0xFB8BF0A0, ks::definitions::no_char, 979);
+            ks::SceneManager::show_dialog(0x8400CAD6, ks::definitions::no_char, 980);
+            ks::SceneManager::show_dialog(0x49DD0BC9, ks::definitions::no_char, 981);
+            ks::SceneManager::show_dialog(0xB64F6D2A, ks::definitions::no_char, 982);
+            ks::SceneManager::show_dialog(0x0C524DAC, ks::definitions::no_char, 983);
+            ks::SceneManager::set_background(ks::background_metas::hanako_missionary_closed, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBC97BD6B, ks::definitions::ha, 984);
+            ks::SceneManager::show_dialog(0x53CD1B78, ks::definitions::no_char, 985);
+            ks::SceneManager::show_dialog(0xCF9D89DA, ks::definitions::no_char, 986);
+            ks::SceneManager::set_background(ks::background_metas::hanako_missionary_open, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3ABAFF94, ks::definitions::no_char, 987);
+            ks::SceneManager::show_dialog(0xE7751264, ks::definitions::no_char, 988);
+            ks::SceneManager::show_dialog(0xBE83130F, ks::definitions::no_char, 989);
+            ks::SceneManager::show_dialog(0xB3C92D47, ks::definitions::no_char, 990);
+            ks::SceneManager::show_dialog(0xC52F9034, ks::definitions::no_char, 991);
+            ks::SceneManager::set_background(ks::background_metas::hanako_missionary_clench, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x59E467C9, ks::definitions::no_char, 992);
+            ks::SceneManager::show_dialog(0x65C82D8E, ks::definitions::no_char, 993);
+            ks::SceneManager::show_dialog(0x1D6503AD, ks::definitions::no_char, 994);
+            ks::SceneManager::show_dialog(0xDF04A9EC, ks::definitions::no_char, 995);
+            ks::SceneManager::show_dialog(0x3FB551D5, ks::definitions::no_char, 996);
+            ks::SceneManager::show_dialog(0x87BEE3CE, ks::definitions::no_char, 997);
+            ks::SceneManager::show_dialog(0xD9B8E911, ks::definitions::no_char, 998);
+            ks::SceneManager::show_dialog(0x20AF10C6, ks::definitions::no_char, 999);
+            ks::SceneManager::show_dialog(0xDF4072AB, ks::definitions::hi, 1000);
+            ks::SceneManager::set_background(ks::background_metas::hanako_missionary_closed, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x79D6A55F, ks::definitions::no_char, 1001);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 0, 0, SCENE_TRANSITION_NONE, 90, PALETTE_VARIANT_NIGHT);
+            ks::SceneManager::enable_fill(ks::globals::colors::WHITE);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x539DE469, ks::definitions::no_char, 1002);
+            ks::SceneManager::show_dialog(0xB082FBAA, ks::definitions::no_char, 1003);
+            ks::SceneManager::music_stop(600);
+            ks::SceneManager::enable_fill(ks::globals::colors::WHITE);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xFF7E204E, ks::definitions::no_char, 1004);
+            ks::SceneManager::show_dialog(0x72206054, ks::definitions::no_char, 1005);
+            ks::SceneManager::show_dialog(0x32259243, ks::definitions::no_char, 1006);
+            ks::SceneManager::sfx_play("sfx_heartslow.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show heartattack
+            ks::SceneManager::update_visuals();
+            // TODO: Hide heartattack
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x36EB4119, ks::definitions::no_char, 1007);
+            ks::SceneManager::sfx_play("sfx_heartslow.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show heartattack
+            ks::SceneManager::update_visuals();
+            // TODO: Hide heartattack
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF4B55EB8, ks::definitions::no_char, 1008);
+            ks::SceneManager::sfx_play("sfx_heartslow.8ad", SOUND_CHANNEL_SOUND);
+            // TODO: Show heartattack
+            ks::SceneManager::update_visuals();
+            // TODO: Hide heartattack
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x437B813A, ks::definitions::no_char, 1009);
+            ks::SceneManager::show_dialog(0xE86401D6, ks::definitions::no_char, 1010);
+            ks::SceneManager::set_background(ks::background_metas::hanako_after_worry, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_TWINKLE, 60);
+            ks::SceneManager::show_dialog(0xDFBDC788, ks::definitions::no_char, 1011);
+            ks::SceneManager::show_dialog(0x761B7C9F, ks::definitions::hi, 1012);
+            ks::SceneManager::show_dialog(0x1B20BF1F, ks::definitions::no_char, 1013);
+            ks::SceneManager::set_background(ks::background_metas::hanako_after_smile, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xE52C7DA7, ks::definitions::no_char, 1014);
+            ks::SceneManager::show_dialog(0x73502CFA, ks::definitions::no_char, 1015);
+            ks::SceneManager::show_dialog(0xF092A0B9, ks::definitions::no_char, 1016);
+            ks::SceneManager::music_stop(120);
+            ks::SceneManager::hide_background(SCENE_TRANSITION_SHUTEYE, 0);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::update_visuals();
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_indeterminate_future() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_INDETERMINATE_FUTURE);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::hide_background(SCENE_TRANSITION_NONE, 30);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6E8E61D4, ks::definitions::hi, 1017);
+            ks::SceneManager::music_play(MUSIC_PEARLY);
+            ks::SceneManager::set_background(ks::background_metas::school_dormhanako, 8, 0, SCENE_TRANSITION_OPENEYE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC236FE5A, ks::definitions::no_char, 1018);
+            ks::SceneManager::show_dialog(0xA297ECE4, ks::definitions::no_char, 1019);
+            ks::SceneManager::show_dialog(0x8A32BA81, ks::definitions::no_char, 1020);
+            ks::SceneManager::show_dialog(0x9AAEC5DE, ks::definitions::no_char, 1021);
+            ks::SceneManager::show_dialog(0x0E393098, ks::definitions::no_char, 1022);
+            ks::SceneManager::show_dialog(0x8F5BFCEB, ks::definitions::no_char, 1023);
+            ks::SceneManager::show_dialog(0xBFAB6F05, ks::definitions::no_char, 1024);
+            ks::SceneManager::set_background_position(-8, 0);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x25707BF3, ks::definitions::no_char, 1025);
+            ks::SceneManager::show_dialog(0xF5A517E5, ks::definitions::no_char, 1026);
+            ks::SceneManager::show_dialog(0x7C016056, ks::definitions::no_char, 1027);
+            ks::SceneManager::show_dialog(0xB4859478, ks::definitions::no_char, 1028);
+            ks::SceneManager::show_dialog(0x7F2DEDE5, ks::definitions::no_char, 1029);
+            ks::SceneManager::show_dialog(0x36330FAC, ks::definitions::no_char, 1030);
+            ks::SceneManager::sfx_play("sfx_rumble.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0xCDC831ED, ks::definitions::no_char, 1031);
+            ks::SceneManager::show_dialog(0x1C10D8C1, ks::definitions::no_char, 1032);
+            ks::SceneManager::show_dialog(0x231B04D0, ks::definitions::no_char, 1033);
+            ks::SceneManager::show_dialog(0x2D087E29, ks::definitions::no_char, 1034);
+            ks::SceneManager::show_dialog(0xF365B26A, ks::definitions::no_char, 1035);
+            ks::SceneManager::show_dialog(0xBF10BE00, ks::definitions::no_char, 1036);
+            ks::SceneManager::sfx_play("sfx_dooropen.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x0F83FCE1, ks::definitions::no_char, 1037);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_normal, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x75F67A83, ks::definitions::no_char, 1038);
+            ks::SceneManager::show_dialog(0x11278270, ks::definitions::hi, 1039);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3EF90A0B, ks::definitions::ha, 1040);
+            ks::SceneManager::show_dialog(0x5F8BF54B, ks::definitions::no_char, 1041);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x10871C74, ks::definitions::no_char, 1042);
+            ks::SceneManager::show_dialog(0xD77C1ABD, ks::definitions::no_char, 1043);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x0A688E3A, ks::definitions::no_char, 1044);
+            ks::SceneManager::show_dialog(0x8499E917, ks::definitions::no_char, 1045);
+            ks::SceneManager::show_dialog(0x0E62B8E4, ks::definitions::no_char, 1046);
+            ks::SceneManager::set_background(ks::background_metas::school_girlsdormhall, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x465D0CCB, ks::definitions::no_char, 1047);
+            ks::SceneManager::show_dialog(0x3A51D288, ks::definitions::no_char, 1048);
+            ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_LOCATIONSKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA9D2014B, ks::definitions::no_char, 1049);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_distant, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCD1307CD, ks::definitions::no_char, 1050);
+            ks::SceneManager::show_dialog(0xBEB00A16, ks::definitions::hi, 1051);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x224A1C19, ks::definitions::ha, 1052);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x267F56FA, ks::definitions::no_char, 1053);
+            ks::SceneManager::show_dialog(0xABD85D86, ks::definitions::no_char, 1054);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(-0.1), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(0), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::show_character(CHARACTER_MUTO, ks::smart_characters::muto::muto_basic_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_MUTO, bn::fixed(0.75), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(120);
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(0), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::set_character_position(CHARACTER_MUTO, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x8441B003, ks::definitions::no_char, 1055);
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(-0.1), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(60);
+            ks::SceneManager::hide_character(CHARACTER_SHIZU);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCF35BB8B, ks::definitions::no_char, 1056);
+            ks::SceneManager::show_dialog(0xE75DDFA1, ks::definitions::no_char, 1057);
+            ks::SceneManager::show_dialog(0xE6273F7A, ks::definitions::no_char, 1058);
+            ks::SceneManager::music_stop(120);
+            ks::SceneManager::set_background(ks::background_metas::school_scienceroom, 8, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::sfx_play("sfx_normalbell.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x1E3C3B02, ks::definitions::no_char, 1059);
+            ks::SceneManager::show_dialog(0xC098F301, ks::definitions::no_char, 1060);
+            ks::SceneManager::show_dialog(0xE08BF580, ks::definitions::no_char, 1061);
+            ks::SceneManager::show_dialog(0x90722660, ks::definitions::no_char, 1062);
+            ks::SceneManager::set_background_position(8, 0);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB674E4DA, ks::definitions::no_char, 1063);
+            ks::SceneManager::music_play(MUSIC_RAIN, 240);
+            ks::SceneManager::show_dialog(0x87EEB093, ks::definitions::no_char, 1064);
+            ks::SceneManager::show_dialog(0x44CD0AF4, ks::definitions::no_char, 1065);
+            ks::SceneManager::show_dialog(0xF9145BC0, ks::definitions::no_char, 1066);
+            ks::SceneManager::show_dialog(0x3D13E06C, ks::definitions::no_char, 1067);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_def_strain, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x692A8847, ks::definitions::ha, 1068);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_strain, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5B739ECE, ks::definitions::ha, 1069);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_strain, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(30);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x95AD834D, ks::definitions::no_char, 1070);
+            ks::SceneManager::show_dialog(0xE094EDDC, ks::definitions::no_char, 1071);
+            ks::SceneManager::show_dialog(0x98AA494C, ks::definitions::no_char, 1072);
+            ks::SceneManager::show_dialog(0x5081FFA5, ks::definitions::no_char, 1073);
+            ks::SceneManager::show_dialog(0x64836751, ks::definitions::no_char, 1074);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_close_blank, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(0.8), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_perky_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_character_position(CHARACTER_MISHA, bn::fixed(0.2), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_character_position(CHARACTER_SHIZU, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::set_character_position(CHARACTER_MISHA, bn::fixed(0.3), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x22E576DB, ks::definitions::no_char, 1075);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_basic_close_normal2, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x73294A20, ks::definitions::shi, 12);
+            ks::SceneManager::show_character(CHARACTER_MISHA, ks::smart_characters::misha::misha_sign_close_confused, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x04180316, ks::definitions::mi, 1076);
+            ks::SceneManager::show_dialog(0x28D32CC1, ks::definitions::no_char, 1077);
+            ks::SceneManager::show_character(CHARACTER_SHIZU, ks::smart_characters::shizu::shizu_behind_close_blank, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::pause(18);
+            ks::SceneManager::hide_character(CHARACTER_MISHA);
+            ks::SceneManager::hide_character(CHARACTER_SHIZU);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB21970A9, ks::definitions::no_char, 1078);
+            ks::SceneManager::show_dialog(0xCDAF41D6, ks::definitions::no_char, 1079);
+            // renpy.music.set_volume(0.5, 1.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::nvl_clear();
+            ks::SceneManager::nvl_show(0x50B4E0C8, 1080);
+            ks::SceneManager::nvl_show(0xD3A3A383, 1081);
+            ks::SceneManager::nvl_show(0x53000561, 1082);
+            ks::SceneManager::nvl_show(0x22C96A36, 1083);
+            ks::SceneManager::nvl_show(0x462F1AD0, 1084);
+            ks::SceneManager::nvl_clear();
+            ks::SceneManager::nvl_show(0xED923B80, 1085);
+            ks::SceneManager::nvl_show(0xE16C66E4, 1086);
+            ks::SceneManager::nvl_show(0x4E078990, 1087);
+            ks::SceneManager::nvl_show(0x98B5A4F5, 1088);
+            ks::SceneManager::nvl_show(0x986EBC17, 1089);
+            // renpy.music.set_volume(1.0, 1.0, channel="music"); TODO: unknown assignment
+            ks::SceneManager::nvl_hide();
+            ks::SceneManager::nvl_clear();
+            ks::SceneManager::show_dialog(0xF1C9ACCD, ks::definitions::no_char, 1090);
+            ks::SceneManager::music_stop(120);
+            ks::SceneManager::show_dialog(0x1AA067E0, ks::definitions::no_char, 1091);
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako_adulthood() {
+            if (ks::globals::exit_scenario) return;
+            ks::SceneManager::set_label(LABEL_A4_HANAKO_ADULTHOOD);
+            ks::SceneManager::set_textdb(a4_hanako_tl);
+            ks::SceneManager::set_background(ks::background_metas::suburb_park, 0, 0, SCENE_TRANSITION_SHORTTIMESKIP, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_MOONLIGHT, 30);
+            // renpy.music.set_volume(0.5, 0.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_parkambience.8ad", SOUND_CHANNEL_AMBIENT, 120);
+            ks::SceneManager::show_dialog(0xFF8CB88B, ks::definitions::no_char, 1092);
+            ks::SceneManager::show_dialog(0xF444B3FC, ks::definitions::no_char, 1093);
+            ks::SceneManager::show_dialog(0x005B9323, ks::definitions::no_char, 1094);
+            ks::SceneManager::show_dialog(0x9E6BAA2E, ks::definitions::no_char, 1095);
+            ks::SceneManager::show_dialog(0xD6AB272F, ks::definitions::no_char, 1096);
+            ks::SceneManager::show_dialog(0xA8E9623B, ks::definitions::no_char, 1097);
+            ks::SceneManager::show_dialog(0x163E8717, ks::definitions::no_char, 1098);
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 240);
+            ks::SceneManager::set_background_transition(SCENE_TRANSITION_SHORTTIMESKIP);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x34E40F10, ks::definitions::no_char, 1099);
+            ks::SceneManager::show_dialog(0x7A5ED327, ks::definitions::no_char, 1100);
+            ks::SceneManager::show_dialog(0x7827420B, ks::definitions::no_char, 1101);
+            ks::SceneManager::show_dialog(0x1AAB1E5F, ks::definitions::no_char, 1102);
+            ks::SceneManager::show_dialog(0x3921CB2E, ks::definitions::no_char, 1103);
+            ks::SceneManager::show_dialog(0xE19E204F, ks::definitions::no_char, 1104);
+            ks::SceneManager::show_dialog(0xC775837E, ks::definitions::ha, 1105);
+            ks::SceneManager::show_dialog(0x50D943DC, ks::definitions::no_char, 1106);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_worry, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA82FDAC6, ks::definitions::hi, 290);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5CA46964, ks::definitions::no_char, 1107);
+            ks::SceneManager::show_dialog(0x07682116, ks::definitions::no_char, 1108);
+            ks::SceneManager::show_dialog(0x26B57326, ks::definitions::no_char, 1109);
+            ks::SceneManager::music_stop(240);
+            ks::SceneManager::show_dialog(0x21D5DA84, ks::definitions::hi, 1110);
+            ks::SceneManager::show_dialog(0xE5957738, ks::definitions::hi, 1111);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x509A4325, ks::definitions::no_char, 1112);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::music_play(MUSIC_INNOCENCE, 240);
+            ks::SceneManager::show_dialog(0xA14B9F79, ks::definitions::ha, 1113);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_sad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4814F40C, ks::definitions::ha, 1114);
+            ks::SceneManager::show_dialog(0x3F1AB29E, ks::definitions::no_char, 1115);
+            ks::SceneManager::show_dialog(0x1767F5E0, ks::definitions::no_char, 1116);
+            ks::SceneManager::show_dialog(0x2FA83C32, ks::definitions::no_char, 1117);
+            ks::SceneManager::show_dialog(0x8C5EF340, ks::definitions::no_char, 1118);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_downsad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB5172020, ks::definitions::ha, 1119);
+            ks::SceneManager::show_dialog(0x8B927C8F, ks::definitions::no_char, 1120);
+            ks::SceneManager::show_dialog(0x08162E34, ks::definitions::hi, 1121);
+            ks::SceneManager::show_dialog(0xDA3282A5, ks::definitions::ha, 1122);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xAB7A2293, ks::definitions::ha, 1123);
+            ks::SceneManager::show_dialog(0x26015CC7, ks::definitions::no_char, 1124);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x23E96FCB, ks::definitions::ha, 1125);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCA9220D8, ks::definitions::ha, 1126);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x687D9727, ks::definitions::ha, 1127);
+            ks::SceneManager::show_dialog(0xFACB9D5F, ks::definitions::no_char, 1128);
+            ks::SceneManager::show_dialog(0xCBE1F928, ks::definitions::hi, 1129);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xC8229E0A, ks::definitions::ha, 1130);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_downsad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x86BEC9EF, ks::definitions::ha, 1131);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_sad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xA05DE7EB, ks::definitions::ha, 1132);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_downsad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD9B9A47C, ks::definitions::ha, 1133);
+            ks::SceneManager::show_dialog(0x09F38ABD, ks::definitions::ha, 1134);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF7D8A441, ks::definitions::ha, 1135);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBB15A098, ks::definitions::ha, 1136);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xF9CB2559, ks::definitions::ha, 1137);
+            ks::SceneManager::show_dialog(0xDA324FAC, ks::definitions::no_char, 1138);
+            ks::SceneManager::show_dialog(0x8E4A2EF7, ks::definitions::no_char, 1139);
+            ks::SceneManager::show_dialog(0xEB17A545, ks::definitions::no_char, 1140);
+            ks::SceneManager::show_dialog(0x1684E8B4, ks::definitions::no_char, 1141);
+            ks::SceneManager::show_dialog(0xB501158A, ks::definitions::hi, 1142);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7BA802BB, ks::definitions::ha, 1143);
+            ks::SceneManager::show_dialog(0x7A979322, ks::definitions::hi, 1144);
+            ks::SceneManager::show_dialog(0xECD36ACB, ks::definitions::no_char, 1145);
+            ks::SceneManager::show_dialog(0x3A08E9D0, ks::definitions::no_char, 1146);
+            ks::SceneManager::show_dialog(0x3D8A982D, ks::definitions::hi, 1147);
+            ks::SceneManager::show_dialog(0xEDB698AF, ks::definitions::hi, 1148);
+            ks::SceneManager::show_dialog(0x8D3E5787, ks::definitions::hi, 1149);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_cas_strain, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x803E5738, ks::definitions::ha, 1150);
+            ks::SceneManager::show_dialog(0x3FDB659D, ks::definitions::no_char, 1151);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDAF98C1E, ks::definitions::ha, 1152);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x136180C2, ks::definitions::ha, 1153);
+            ks::SceneManager::show_dialog(0x41ECD98A, ks::definitions::ha, 1154);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_sad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB0674C26, ks::definitions::ha, 1155);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_downsad, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4CCC7FD7, ks::definitions::ha, 1156);
+            ks::SceneManager::show_dialog(0x8B2F9279, ks::definitions::ha, 1157);
+            ks::SceneManager::show_dialog(0x54C79536, ks::definitions::no_char, 1158);
+            ks::SceneManager::show_dialog(0xC07D3BEE, ks::definitions::hi, 1159);
+            ks::SceneManager::show_dialog(0x9EE3B9FB, ks::definitions::hi, 1160);
+            ks::SceneManager::hide_character(CHARACTER_HANAKO);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB7C65A2D, ks::definitions::no_char, 1161);
+            ks::SceneManager::show_dialog(0x4A5BED76, ks::definitions::no_char, 1162);
+            ks::SceneManager::set_background(ks::background_metas::hanako_park_alone, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7967CCDB, ks::definitions::no_char, 1163);
+            ks::SceneManager::set_background(ks::background_metas::hanako_park_away, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x4A4E01A6, ks::definitions::no_char, 1164);
+            ks::SceneManager::show_dialog(0xA07F169B, ks::definitions::ha, 1165);
+            ks::SceneManager::show_dialog(0xC7CC70F8, ks::definitions::hi, 1166);
+            ks::SceneManager::show_dialog(0x1DFD3CF6, ks::definitions::no_char, 1167);
+            ks::SceneManager::show_dialog(0x9D9C2BCB, ks::definitions::hi, 1168);
+            ks::SceneManager::set_background(ks::background_metas::hanako_park_look, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDF7AD5DA, ks::definitions::ha, 1169);
+            ks::SceneManager::show_dialog(0xC481E0A1, ks::definitions::hi, 1170);
+            ks::SceneManager::show_dialog(0x4BBEBFB7, ks::definitions::hi, 1171);
+            ks::SceneManager::set_background(ks::background_metas::hanako_park_away, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x2E8F2B98, ks::definitions::ha, 1172);
+            ks::SceneManager::show_dialog(0x79C32F6A, ks::definitions::hi, 1173);
+            ks::SceneManager::show_dialog(0x184D51D0, ks::definitions::hi, 1174);
+            ks::SceneManager::show_dialog(0x7C85C943, ks::definitions::no_char, 1175);
+            ks::SceneManager::set_background(ks::background_metas::hanako_park_look, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x5270C36F, ks::definitions::ha, 1176);
+            ks::SceneManager::show_dialog(0x06E64F63, ks::definitions::ha, 1177);
+            ks::SceneManager::set_background(ks::background_metas::hanako_park_closed, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xDE16F737, ks::definitions::no_char, 1178);
+            ks::SceneManager::show_dialog(0x94D8E5BD, ks::definitions::no_char, 1179);
+            ks::SceneManager::music_stop(120);
+            ks::SceneManager::set_background(ks::background_metas::suburb_park, 0, 0, SCENE_TRANSITION_SHORTTIMESKIPSILENT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::sfx_play("sfx_parkambience.8ad", SOUND_CHANNEL_AMBIENT, 120);
+            ks::SceneManager::sfx_play("sfx_can_clatter.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::show_dialog(0x40A35E7C, ks::definitions::no_char, 1180);
+            ks::SceneManager::show_dialog(0x4671BE76, ks::definitions::no_char, 1181);
+            ks::SceneManager::show_dialog(0x7B17FD6D, ks::definitions::hi, 1182);
+            ks::SceneManager::music_play(MUSIC_COMFORT, 240);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7BD576CF, ks::definitions::ha, 1183);
+            ks::SceneManager::show_dialog(0xCA07C743, ks::definitions::no_char, 1184);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_smile, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD4E7C3FC, ks::definitions::ha, 1185);
+            ks::SceneManager::show_dialog(0xD0E55EA3, ks::definitions::hi, 1186);
+            ks::SceneManager::enable_fill(ks::globals::colors::BLACK);
+            ks::SceneManager::set_background_transition(SCENE_TRANSITION_SHUTEYE);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xB038A6D8, ks::definitions::no_char, 1187);
+            ks::SceneManager::show_dialog(0x8974DBD2, ks::definitions::hi, 1188);
+            ks::SceneManager::disable_fill();
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::set_background_transition(SCENE_TRANSITION_OPENEYE);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x10CF4339, ks::definitions::no_char, 1189);
+            ks::SceneManager::show_dialog(0x99E717CB, ks::definitions::no_char, 1190);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_worry, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x197DC295, ks::definitions::ha, 1191);
+            ks::SceneManager::show_dialog(0x3D4F5111, ks::definitions::hi, 1192);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xD1E4A1F5, ks::definitions::ha, 1193);
+            ks::SceneManager::show_dialog(0xB68E9E15, ks::definitions::hi, 1194);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3600975B, ks::definitions::ha, 1195);
+            ks::SceneManager::show_dialog(0xE355D768, ks::definitions::no_char, 1196);
+            ks::SceneManager::show_dialog(0xCA1EDF7B, ks::definitions::hi, 1197);
+            ks::SceneManager::show_dialog(0x0B050508, ks::definitions::hi, 1198);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_defarms_cas_close_strain, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x6A994607, ks::definitions::ha, 1199);
+            ks::SceneManager::show_dialog(0xEEBD6ED7, ks::definitions::hi, 1200);
+            ks::SceneManager::show_dialog(0xE0B938B5, ks::definitions::hi, 1201);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_bashful, PALETTE_VARIANT_DEFAULT, bn::fixed(0.7), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x7A7EFB38, ks::definitions::no_char, 1202);
+            ks::SceneManager::show_dialog(0xE956BC11, ks::definitions::hi, 1203);
+            ks::SceneManager::show_dialog(0x51A900DE, ks::definitions::no_char, 1204);
+            // renpy.music.set_volume(0.6, 1.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::set_background(ks::background_metas::suburb_roadcenter, 0, 0, SCENE_TRANSITION_LOCATIONCHANGE, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x14B321CD, ks::definitions::no_char, 1205);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_emb, PALETTE_VARIANT_DEFAULT, bn::fixed(0.5), bn::fixed(0.5), bn::fixed(1), bn::fixed(1));
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3EF35B24, ks::definitions::ha, 1206);
+            ks::SceneManager::show_dialog(0xBB936017, ks::definitions::hi, 1207);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x3BDA4403, ks::definitions::ha, 1208);
+            ks::SceneManager::show_dialog(0xCE683B7B, ks::definitions::hi, 1209);
+            ks::SceneManager::show_dialog(0xA13F5D39, ks::definitions::no_char, 1210);
+            ks::SceneManager::show_dialog(0xD50BC002, ks::definitions::no_char, 1211);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_timid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_emb_cas_close_downtimid, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xBA936BA8, ks::definitions::no_char, 1212);
+            ks::SceneManager::show_dialog(0xE3EA4FB1, ks::definitions::hi, 1213);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_normal, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x221B3B6F, ks::definitions::no_char, 1214);
+            ks::SceneManager::show_dialog(0x013077A4, ks::definitions::ha, 1215);
+            ks::SceneManager::show_dialog(0xD805BBCC, ks::definitions::hi, 1216);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_cover_cas_close_distant, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0xCE267090, ks::definitions::ha, 1217);
+            ks::SceneManager::show_dialog(0x33C08DB3, ks::definitions::hi, 1218);
+            ks::SceneManager::show_character(CHARACTER_HANAKO, ks::smart_characters::hanako::hanako_basic_cas_close_bashful, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::show_dialog(0x9A587186, ks::definitions::no_char, 1219);
+            ks::SceneManager::show_dialog(0x95262655, ks::definitions::ha, 1220);
+            ks::SceneManager::show_dialog(0x81332E4E, ks::definitions::hi, 167);
+            // ach("hanakogood_achieve"); TODO: unknown assignment
+            ks::SceneManager::sfx_stop(SOUND_CHANNEL_AMBIENT, 60);
+            // TODO: Show unlock_ev
+            // TODO: Show unlock_ev
+            ks::SceneManager::update_visuals();
+            ks::SceneManager::set_background(ks::background_metas::hanako_goodend_close, 0, 0, SCENE_TRANSITION_WHITEOUT, 0, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            // renpy.pause(4.0, hard=True); TODO: unknown assignment
+            ks::SceneManager::sfx_play("sfx_whiteout.8ad", SOUND_CHANNEL_SOUND);
+            ks::SceneManager::set_background(ks::background_metas::hanako_goodend, 0, 0, SCENE_TRANSITION_NONE, 30, PALETTE_VARIANT_DEFAULT);
+            ks::SceneManager::update_visuals();
+            // renpy.pause(12.0, hard=True); TODO: unknown assignment
+            // renpy.music.set_volume(1.0, 2.0, channel="ambient"); TODO: unknown assignment
+            ks::SceneManager::music_stop(240);
+            if (ks::in_replay) {
+                return;
+            }
+        }
+        void ScriptA4Hanako::a4_hanako() {
+            if (ks::globals::exit_scenario) return;
+            SKIP_IF_LOAD_ANOTHER_SCENE(SCRIPT_A4_HANAKO);
+            ks::SceneManager::set_script(SCRIPT_A4_HANAKO);
+            ks::SceneManager::init_savedata(ks::progress);
+            ks::SceneManager::set(ks::SceneManager("script_a4_hanako"));
+        
+            ScriptA4Hanako::a4_hanako_truancy(); // INLINE CALL
+            ks::SceneManager::timeskip();
+            ScriptA4Hanako::a4_hanako_faraway_presence(); // INLINE CALL
+            if (!ks::progress.go_to_the_city) {
+                ScriptA4Hanako::a4_hanako_misstep(); // INLINE CALL
+            }
+            if (ks::progress.go_to_the_city && !ks::progress.agree_with_lilly) {
+                ScriptA4Hanako::a4_hanako_cut_petals(); // INLINE CALL
+            }
+            if (!ks::progress.go_to_the_city || !ks::progress.agree_with_lilly) {
+                return;
+            }
+            ks::SceneManager::timeskip();
+            ScriptA4Hanako::a4_hanako_continuing_melody(); // INLINE CALL
+            ks::SceneManager::timeskip();
+            ScriptA4Hanako::a4_hanako_shanghai_studiousness(); // INLINE CALL
+            ks::SceneManager::timeskip();
+            ScriptA4Hanako::a4_hanako_his_past(); // INLINE CALL
+            ks::SceneManager::timeskip();
+            ScriptA4Hanako::a4_hanako_city_rendezvous(); // INLINE CALL
+            ks::SceneManager::timeskip();
+            ScriptA4Hanako::a4_hanako_whispered_touch(); // INLINE CALL
+            ks::SceneManager::timeskip();
+            ScriptA4Hanako::a4_hanako_indeterminate_future(); // INLINE CALL
+            ScriptA4Hanako::a4_hanako_adulthood(); // INLINE CALL
+        }
+}

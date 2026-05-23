@@ -43,6 +43,16 @@ CTL_COLOR_START = b'\x08'
 CTL_COLOR_END = b'\x09'
 CTL_NEWLINE = b'\x0A'
 
+# Index 0 = default (main). Must match ks::globals::text_palettes::colored() on GBA.
+RENPY_COLOR_TO_PALETTE_INDEX = {
+  # TODO: verify #fff matches default dialog text on every background (centered_b, NVL, etc.)
+    'fff': 0,
+    'ffffff': 0,
+    'ff0000': 2,
+    'f00': 2,
+    'ff2aaa': 3,
+}
+
 def sanitize_function_name(text):
     return re.sub(r"[^a-zA-Z0-9_]", "", text.replace(" ", "_").lower())
 
@@ -70,13 +80,35 @@ def fixed_literal(value: float) -> str:
     """
     return f"bn::fixed({value:g})"
 
-def get_paletted_variant(variant: str) -> (str, str):
+def get_bg_paletted_variant(bg_name: str, bg_names : None|List[str] = None) -> (str, str):
+    # This is a common logic.
+    if bg_names is None:
+        bg_names = []
+    if bg_name in bg_names:
+        return bg_name, "PALETTE_VARIANT_DEFAULT"
+    elif bg_name.endswith("_ss"):
+        return bg_name.removesuffix("_ss"), "PALETTE_VARIANT_SUNSET"
+    elif bg_name.endswith("_ni"):
+        return bg_name.removesuffix("_ni"), "PALETTE_VARIANT_NIGHT"
+    elif bg_name.endswith("_rn"):
+        return bg_name.removesuffix("_rn"), "PALETTE_VARIANT_RAIN"
+    else:
+        print(f"Warning: Unknown bg_name: {bg_name}")
+        return bg_name, "PALETTE_VARIANT_DEFAULT"
+
+
+def get_sprite_paletted_variant(variant: str) -> (str, str):
+    if variant is None:
+        print(f"Warning: Unknown variant: {variant}")
+        return variant, "PALETTE_VARIANT_DEFAULT"
     if variant.endswith("_ss"):
         return variant.removesuffix("_ss"), "PALETTE_VARIANT_SPRITE_SUNSET"
     elif variant.endswith("_ni"):
         return variant.removesuffix("_ni"), "PALETTE_VARIANT_SPRITE_NIGHT"
     elif variant.endswith("_rn"):
         return variant.removesuffix("_rn"), "PALETTE_VARIANT_SPRITE_RAIN"
+    elif variant.endswith("_fb"):
+        return variant.removesuffix("_fb"), "PALETTE_VARIANT_SPRITE_PAST"
     else:
         return variant, "PALETTE_VARIANT_DEFAULT"
 
@@ -113,6 +145,22 @@ def add_translations_optional(tl_list: List[Dict[str,str]], values: Dict[str,str
 def get_textdb_name(script_filename: str) -> str:
     return script_filename.split(".")[0].removeprefix("script_")
 
+def _normalize_renpy_color(color_spec: str) -> str:
+    normalized = color_spec.strip().lower().removeprefix('#')
+    if len(normalized) == 3:
+        normalized = ''.join(ch * 2 for ch in normalized)
+    return normalized
+
+
+def _renpy_color_palette_index(color_spec: str) -> int:
+    normalized = _normalize_renpy_color(color_spec)
+    index = RENPY_COLOR_TO_PALETTE_INDEX.get(normalized)
+    if index is None:
+        print(f"Warning: unknown Ren'Py text color {color_spec!r}, using default palette")
+        return 0
+    return index
+
+
 def bytecode_format(text: str, cmd_start_bytes: int = 1) -> bytes:
     """
     :param text: The input text.
@@ -120,6 +168,12 @@ def bytecode_format(text: str, cmd_start_bytes: int = 1) -> bytes:
     :return: The text formatted with control characters as bytes.
     """
     cmd = CMD_START * cmd_start_bytes
+
+    if text.startswith('{color=') and text.endswith('}'):
+        palette_index = _renpy_color_palette_index(text[7:-1])
+        return cmd + CTL_COLOR_START + bytes([palette_index])
+    if text == '{/color}':
+        return cmd + CTL_COLOR_END
 
     data = text.encode("utf-8")
     data = data.replace(b"{fast}", cmd + CTL_FAST)
@@ -135,7 +189,6 @@ def bytecode_format(text: str, cmd_start_bytes: int = 1) -> bytes:
     )
     data = data.replace(b"{nw}", cmd + CTL_NOWAIT)
     data = data.replace(b"{newline}", cmd + CTL_NEWLINE)
-    # TODO: Support colors
 
     return data
 
@@ -175,22 +228,32 @@ def unpack_from_12bits(data: bytes) -> bytes:
 
 def encode_token_biased(token_id: int) -> bytes:
     """
-    Aggressive variable-length encoding for SPM token IDs (1..2047).
+    Aggressive variable-length encoding for SPM token IDs (1..65535).
 
     - 1 byte:  token_id in [1..191]  -> [0x01..0xBF]
     - 2 bytes: token_id in [192..2047] encoded like 2-byte UTF-8:
         b0 = 0xC0 | (token_id >> 6)          (0xC0..0xDF)
         b1 = 0x80 | (token_id & 0x3F)        (0x80..0xBF)
+    - 3 bytes: token_id in [2048..65535] encoded like 3-byte UTF-8:
+        b0 = 0xE0 | (token_id >> 12)         (0xE0..0xEF)
+        b1 = 0x80 | ((token_id >> 6) & 0x3F) (0x80..0xBF)
+        b2 = 0x80 | (token_id & 0x3F)        (0x80..0xBF)
 
     This guarantees the first byte is never 0xFF, so `0xFF 0xFF` remains
     a unique command prefix in the stream.
     """
-    if token_id <= 0 or token_id > 2047:
+    if token_id <= 0 or token_id > 0xFFFF:
         raise ValueError(f"token_id out of range: {token_id}")
     if token_id < 0xC0:
         return bytes([token_id])
+    if token_id <= 0x07FF:
+        return bytes([
+            0xC0 | ((token_id >> 6) & 0x1F),
+            0x80 | (token_id & 0x3F),
+        ])
     return bytes([
-        0xC0 | ((token_id >> 6) & 0x1F),
+        0xE0 | ((token_id >> 12) & 0x0F),
+        0x80 | ((token_id >> 6) & 0x3F),
         0x80 | (token_id & 0x3F),
     ])
 

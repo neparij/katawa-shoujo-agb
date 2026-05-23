@@ -146,11 +146,16 @@ typedef unsigned char palette_variant_t;
 #define PALETTE_VARIANT_NIGHT ((palette_variant_t)1)
 #define PALETTE_VARIANT_SUNSET ((palette_variant_t)2)
 #define PALETTE_VARIANT_RAIN ((palette_variant_t)3)
-#define PALETTE_VARIANT_SPRITE_NIGHT ((palette_variant_t)4)
-#define PALETTE_VARIANT_SPRITE_SUNSET ((palette_variant_t)5)
-#define PALETTE_VARIANT_SPRITE_RAIN ((palette_variant_t)6)
-#define PALETTE_VARIANT_PAST ((palette_variant_t)7)
-#define PALETTE_VARIANT_PAST_RAIN ((palette_variant_t)8)
+#define PALETTE_VARIANT_PAST ((palette_variant_t)4)
+#define PALETTE_VARIANT_PAST_NIGHT ((palette_variant_t)5)
+#define PALETTE_VARIANT_BLACK_AND_WHITE ((palette_variant_t)6)
+
+#define PALETTE_VARIANT_SPRITE_NIGHT ((palette_variant_t)11)
+#define PALETTE_VARIANT_SPRITE_SUNSET ((palette_variant_t)12)
+#define PALETTE_VARIANT_SPRITE_RAIN ((palette_variant_t)13)
+#define PALETTE_VARIANT_SPRITE_PAST ((palette_variant_t)14)
+
+#define PALETTE_VARIANT_ADULT ((palette_variant_t)255)
 
 typedef unsigned char character_t;
 #define CHARACTER_NONE ((character_t)0)

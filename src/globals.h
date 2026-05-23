@@ -11,6 +11,12 @@
 #include <bn_sprite_items_fontpalette_beige_selected_bold.h>
 #include <bn_sprite_items_fontpalette_beige_disabled.h>
 #include <bn_sprite_items_fontpalette_beige_disabled_bold.h>
+#include <bn_sprite_items_fontpalette_alive.h>
+#include <bn_sprite_items_fontpalette_alive_bold.h>
+#include <bn_sprite_items_fontpalette_red.h>
+#include <bn_sprite_items_fontpalette_red_bold.h>
+#include <bn_sprite_items_fontpalette_mi.h>
+#include <bn_sprite_items_fontpalette_mi_bold.h>
 #include <bn_sprite_palette_item.h>
 #include <bn_unique_ptr.h>
 
@@ -23,6 +29,9 @@
 #define KS_SHOW_4LS_INTRO true
 
 namespace ks::globals {
+    /// When true, composite BG decompress always calls `textdb::request_release()` first.
+    inline constexpr bool ALWAYS_REDUCE_TEXTDB = true;
+
     struct system_stats_t {
         char magic[16] = { 'K', 'S', 'G', 'B', 'A', 'S', 'Y', 'S', 'S', 'T', 'A', 'T', 'S', 0, 0, 0 };
         uint32_t last_used_cpu;
@@ -111,9 +120,35 @@ namespace ks::globals {
             if (text_item_palette == beige_disabled) {
                 return bn::sprite_items::fontpalette_beige_disabled_bold.palette_item();
             }
+            if (text_item_palette == bn::sprite_items::fontpalette_alive.palette_item()) {
+                return bn::sprite_items::fontpalette_alive_bold.palette_item();
+            }
+            if (text_item_palette == bn::sprite_items::fontpalette_red.palette_item()) {
+                return bn::sprite_items::fontpalette_red_bold.palette_item();
+            }
+            if (text_item_palette == bn::sprite_items::fontpalette_mi.palette_item()) {
+                return bn::sprite_items::fontpalette_mi_bold.palette_item();
+            }
 
             BN_ERROR("Unknown palette type for bold variant");
             return bn::sprite_items::fontpalette_main_bold.palette_item();
+        }
+
+        // Ren'Py {color=#...} indices from tools/converter/src/utils.py RENPY_COLOR_TO_PALETTE_INDEX.
+        [[nodiscard]] inline bn::sprite_palette_item colored(const unsigned char index) {
+            switch(index) {
+                case 0:
+                    // TODO: verify #fff / default palette on every background
+                    return original;
+                case 1:
+                    return bn::sprite_items::fontpalette_alive.palette_item();
+                case 2:
+                    return bn::sprite_items::fontpalette_red.palette_item();
+                case 3:
+                    return bn::sprite_items::fontpalette_mi.palette_item();
+                default:
+                    return original;
+            }
         }
     }
 }

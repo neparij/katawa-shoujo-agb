@@ -135,13 +135,27 @@ class CharacterDisplayableReplacements:
 
     @staticmethod
     def emicas(displayable_name: str) -> str:
-        # TODO: check for _close notation
-        if displayable_name.removesuffix(".png").endswith("_up") or displayable_name.removesuffix("_close.png").endswith("_up"):
-            displayable_name = (displayable_name
-                                .replace("_up", "")
-                                .replace("emicas_", "emicas_up_"))
-        else:
-            displayable_name = displayable_name.replace("emicas_", "emicas_basic_")
+        # Normalize legacy forms:
+        # - emicas_<emotion>                -> emicas_basic_<emotion>
+        # - emicas_<emotion>_close          -> emicas_basic_<emotion>_close
+        # - emicas_<emotion>_up             -> emicas_up_<emotion>
+        # - emicas_<emotion>_up_close       -> emicas_up_<emotion>_close
+        # Keep already-normalized names as-is.
+        if displayable_name.startswith("emicas_basic_") or displayable_name.startswith("emicas_up_"):
+            return displayable_name
+
+        close = displayable_name.endswith("_close")
+        base = displayable_name.removesuffix("_close") if close else displayable_name
+        suffix = "_close" if close else ""
+
+        if base.startswith("emicas_") and base.endswith("_up"):
+            emotion = base.removeprefix("emicas_").removesuffix("_up")
+            return f"emicas_up_{emotion}{suffix}"
+
+        if base.startswith("emicas_"):
+            emotion = base.removeprefix("emicas_")
+            return f"emicas_basic_{emotion}{suffix}"
+
         return displayable_name
 
     @staticmethod
@@ -160,6 +174,12 @@ class CharacterDisplayableReplacements:
             displayable_name = displayable_name.replace("hanagown_", "hanagown_basic_")
         displayable_name = displayable_name.replace("_blush", "blush")
         return displayable_name
+
+    @staticmethod
+    def hanako(displayable_name: str) -> str:
+        return (displayable_name
+                .replace("silhouette", "basic_bashful_silhouette")
+                )
 
     @staticmethod
     def hideaki(displayable_name: str) -> str:
@@ -182,12 +202,18 @@ class CharacterDisplayableReplacements:
 
     @staticmethod
     def kenji(displayable_name: str) -> str:
+        if "silhouette" in displayable_name:
+            if displayable_name.endswith("_naked"):
+                # TODO: check the naked flag
+                return "kenji_basicnaked_neutral_silhouette"
+            else:
+                return "kenji_basic_neutral_silhouette"
+
         return (displayable_name
                 .replace("happy", "basic_happy")
                 .replace("neutral", "basic_neutral")
                 .replace("tsun", "basic_tsun")
                 .replace("rage", "rage_rage")
-                .replace("silhouette_naked", "basic_neutral_naked") # TODO: remove silhouette_naked, its WORKAROUND for kenji sprite
                 )
 
     @staticmethod
@@ -210,6 +236,9 @@ class CharacterDisplayableReplacements:
                 .replace("basic_satisfied_paj", "basic1_satisfied_paj")  # hands behind
                 .replace("basic_satisfied", "basic3_satisfied")  # hands breast
                 .replace("basic_surprised", "basic3_surprised" if not "_paj" in displayable_name else "basic_surprised")
+                .replace("superclose_ouch", "sc_ouch_paj_close")
+                .replace("superclose_shock", "sc_shock_paj_close")
+                .replace("superclose", "sc_cheerful_paj_close")
                 # hands breast if not in _paj outfit
                 )
 
@@ -237,6 +266,16 @@ class CharacterDisplayableReplacements:
     def rin(displayable_name: str) -> str:
         return (displayable_name
                 .replace("silhouette", "relaxed_surprised_silhouette")
+                .replace("back_cas_superclose", "scback_cas_close")
+                .replace("basic_deadpan_superclose", "scbasic_deadpan_close")
+                .replace("basic_deadpannormal_superclose", "scbasic_deadpannormal_close")
+                .replace("basic_lucid_superclose", "scbasic_lucid_close")
+                .replace("basic_crying_superclose", "scbasic_crying_close")
+                .replace("relaxed_doubt_superclose", "screlaxed_doubt_close")
+                .replace("relaxed_sleepy_superclose", "screlaxed_sleepy_close")
+                .replace("relaxed_surprised_superclose", "screlaxed_surprised_close")
+                .replace("negative_crying_superclose", "scnegative_crying_close")
+                .replace("negative_crying_superclose_ss", "scnegative_crying_close_ss")
                 )
 
     @staticmethod

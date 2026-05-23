@@ -6,6 +6,7 @@
 #include <bn_regular_bg_items_ui_bg_menu_main.h>
 
 #include "bn_blending_actions.h"
+#include "bn_format.h"
 #include "bn_sprite_actions.h"
 #include "bn_sprite_items_ui_icon_00_tc1_hisao.h"
 #include "bn_sprite_items_ui_icon_01_tc2_hanako.h"
@@ -44,7 +45,7 @@ namespace ks {
             draw_progress_icons();
             globals::main_update();
 
-            add_text_entry_small(-device::screen_width_half + 4, device::screen_height_half - 6, version);
+            add_text_entry_small(-device::screen_width_half + 4, device::screen_height_half - 6, bn::format<64>("{} ({})", version, tl::locale()));
 
             add_menu_entry(-device::screen_width_half + 22, device::screen_height_half - 22 - (16 * 3),
                            tl::menu_start(), 0);

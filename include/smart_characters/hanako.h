@@ -32,6 +32,7 @@ extern const body hanako_defarms_cas_close_body;
 extern const body hanako_defarms_close_body;
 extern const body hanako_emb_cas_close_body;
 extern const body hanako_emb_close_body;
+extern const body hanako_basic_silhouette_body;
 
 // Per-(group × emotion) variants.
 extern const variant hanagown_basic_drunkgiggle;
@@ -148,6 +149,7 @@ extern const variant hanako_emb_close_downtimid;
 extern const variant hanako_emb_close_smile;
 extern const variant hanako_emb_close_timid;
 extern const variant hanako_emb_close_emb;
+extern const variant hanako_basic_silhouette_bashful;
 
 }  // namespace ks::smart_characters::hanako
 

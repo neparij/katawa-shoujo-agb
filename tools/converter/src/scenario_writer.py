@@ -31,14 +31,18 @@ from src.dto.return_item import ReturnItem
 from src.dto.run_label_item import RunLabelItem
 from src.dto.sequence_item import SequenceItem, SequenceType
 from src.dto.show_item import ShowItem, ShowPosition
+from src.dto.show_displayable_item import ShowDisplayableItem
 from src.dto.show_transform_item import ShowTransformItem
+from src.displayable_utils import crowd_frame_index, crowd_animate, is_displayable_sprite
+from src.composite_specs import composite_meta_symbol_for, composite_huge_meta_symbol_for
 from src.dto.show_video_item import ShowVideoItem
 from src.dto.sound_item import SoundItem, SoundAction, SoundEffect
 from src.dto.update_visuals_item import UpdateVisualsItem
 from src.scenario.sequence_group import SequenceGroup, SequenceGroupType, ConditionWrapper
-from src.utils import get_paletted_variant, is_color_filled_bg, \
-    add_translations_optional, get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode, \
-    fixed_literal
+from src.utils import is_color_filled_bg, add_translations_optional, \
+    get_textdb_name, sanitize_ingame_text, spm_with_bytecode_encode, fixed_literal
+
+LABEL_EXIT_CHECK = 'if (ks::globals::exit_scenario) return;'
 
 CHARACTERS = [
     "akira",
@@ -164,11 +168,14 @@ class ScenarioWriter:
         self.tl_dict: List[Dict[str, str]] = []
 
         self.backgrounds = []
+        self.composite_backgrounds: List[str] = []
+        self.composite_huge_backgrounds: List[str] = []
         # Tileset buckets used by smart_characters in this script. Each entry
         # corresponds to one `#include "smart_characters/<tileset>.h"` and
         # contains every (character × pose × outfit × close) group + emotion
         # used by this script that maps to that tileset.
         self.smart_character_tilesets: List[str] = []
+        self.displayables: List[str] = []
         self.events = []
         self.music = []
         self.videos = []
@@ -180,27 +187,32 @@ class ScenarioWriter:
         self.write_header()
         self.write_scenario_tl()
 
+    def collect_implementation_includes(self) -> List[str]:
+        includes = [
+            include_header(self.filename),
+            include_header(f"{get_textdb_name(self.filename)}_tl"),
+            include_header("../scenemanager"),
+            include_header("../character"),
+        ]
+        for tileset in self.smart_character_tilesets:
+            includes.append(include_header(tileset, "smart_characters/"))
+        for name in self.displayables:
+            includes.append(include_header(name, "displayables/"))
+        for background in self.backgrounds:
+            includes.append(include_header(background, "background_metas/"))
+        for symbol in self.composite_backgrounds:
+            includes.append(include_header(symbol, "composite_background_metas/"))
+        for symbol in self.composite_huge_backgrounds:
+            includes.append(include_header(symbol, "composite_huge_background_metas/"))
+        for event in self.events:
+            includes.append(include_header(f"{to_snake_case(event).removesuffix("_event")}.cpp", "../events/"))
+        for video in self.videos:
+            includes.append(include_header(video, "video_", "_dxtv"))
+        return includes
+
     def write_header(self):
         define_name = f"{self.filename.split(".")[0].upper().replace("-", "_")}"
-        h_code = [
-            # Define the INLINE modifier:
-            '#define SCENE_INLINE static inline __attribute__((always_inline))',
-            # Include common stuff
-            include_header("../scenemanager"),
-            include_header("../character")
-        ]
-
-        for tileset in self.smart_character_tilesets:
-            h_code.append(include_header(tileset, "smart_characters/"))
-
-        for background in self.backgrounds:
-            h_code.append(include_header(background, "background_metas/"))
-
-        for event in self.events:
-            h_code.append(include_header(f"{to_snake_case(event).removesuffix("_event")}.cpp", "../events/"))
-
-        for video in self.videos:
-            h_code.append(include_header(video, "video_", "_dxtv"))
+        h_code: List[str] = []
 
         function_declarations = [
             f'virtual ~{self.get_interface_name()}() = default;',
@@ -208,23 +220,7 @@ class ScenarioWriter:
 
         function_declarations.append(comment("Labels"))
         for label in self.get_labels():
-            if label.is_initial:
-                function_declarations.append(f"static {label_signature(label)};")
-            else:
-                function_declarations.append(f"SCENE_INLINE {label_signature(label)};")
-
-        function_declarations.append(comment("Choice functions"))
-        for menu in self.get_menus():
-            function_declarations.append(f"SCENE_INLINE {menu_signature(menu)};")
-            for answer in menu.conditions:
-                function_declarations.append(f"SCENE_INLINE {answer_signature(menu, answer)};")
-
-        function_declarations.append(comment("Conditions"))
-        for condition in self.get_conditions():
-            cnum = 0
-            for variant in condition.conditions:
-                function_declarations.append(f"SCENE_INLINE {condition_signature(condition, cnum)};")
-                cnum += 1
+            function_declarations.append(f"static {label_signature(label)};")
 
         public_functions = as_public("\n".join(function_declarations))
         class_code = as_class(public_functions, self.get_interface_name())
@@ -235,26 +231,25 @@ class ScenarioWriter:
             h_file.write(defined("\n".join(h_code), define_name, "KS"))
 
     def write_source(self):
-        cpp_code = [
-            include_header(f"{self.filename}"),
-            include_header(f"{get_textdb_name(self.filename)}_tl"),
-        ]
         functions = []
 
         for label in self.get_labels():
-            sequences = []
+            sequences = [LABEL_EXIT_CHECK]
             if label.is_called_inline and not label.is_initial:
                 sequences.append(f'ks::SceneManager::set_label(LABEL_{label.name.upper()});')
-                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::set_textdb({get_textdb_name(self.filename)}_tl));')
+                sequences.append(f'ks::SceneManager::set_textdb({get_textdb_name(self.filename)}_tl);')
                 # sequences.append(f'if (!ks::in_replay) {{')
-                # sequences.append(f'    IF_NOT_EXIT(ks::SceneManager::autosave());')
+                # sequences.append(f'    ks::SceneManager::autosave();')
                 # sequences.append(f'}}')
             elif label.is_initial:
                 sequences.append(f'SKIP_IF_LOAD_ANOTHER_SCENE(SCRIPT_{label.name.upper()});')
                 sequences.append(f'ks::SceneManager::set_script(SCRIPT_{label.name.upper()});')
-                sequences.append(f'IF_NOT_EXIT(ks::SceneManager::init_savedata(ks::progress));')
+                sequences.append(f'ks::SceneManager::init_savedata(ks::progress);')
                 sequences.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));\n')
+                    f'ks::SceneManager::set(ks::SceneManager("{self.filename}"));\n')
+            if self.sequence_contains_menu(label.sequence):
+                sequences.append('bn::vector<ks::answer_ptr, 5> answers;')
+                sequences.append('int answer;')
             for sequence in label.sequence:
                 sequence_code = self.process_sequence(label, sequence)
                 if sequence_code:
@@ -271,56 +266,10 @@ class ScenarioWriter:
                 functions.append(f"{label_signature(label, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
             else:
                 functions.append(f"{label_signature(label, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
-            # functions.append(f"static {label_signature(label)} {{\n{indented_l(sequences)}\n}}")
-
-        for menu in self.get_menus():
-            sequences = []
-            for sequence in menu.sequence:
-                sequence_code = self.process_sequence(menu, sequence)
-                if sequence_code:
-                    sequences.extend(sequence_code)
-
-            sequences.append(f'bn::vector<ks::answer_ptr, 5> answers;')
-            answer_index = 0
-            for answer in menu.conditions:
-                tl_index = add_translations_optional(self.tl_dict, answer.answer)
-                sequences.append(f'answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});') if not answer.condition else sequences.append(
-                    f'if ({to_ks_progress_variables(to_cpp_condition(answer.condition))}) answers.push_back({{{answer_index}, {tl_index}}});')
-                answer_index += 1
-
-            sequences.append(f'IF_NOT_EXIT(ks::SceneManager::show_dialog_question(answers));')
-            sequences.append(f'const int answer = answers[ks::SceneManager::get_dialog_question_answer()].index;')
-
-            answer_callbacks = []
-            for answer in menu.conditions:
-                answer_callbacks.append(f'if (answer == {len(answer_callbacks)}) {{\n'
-                                        f'    {self.get_class_name()}::{answer.function_callback}();\n'
-                                        f'}}')
-
-            sequences.extend(" else ".join(answer_callbacks).split("\n"))
-
-            functions.append(f"{menu_signature(menu, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
-
-            for answer in menu.conditions:
-                sequences = []
-                for seq in answer.sequence:
-                    sequences.extend(self.process_sequence(menu, seq))
-                functions.append(f"{answer_signature(menu, answer, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
-
-        for condition in self.get_conditions():
-            cnum = 0
-            for variant in condition.conditions:
-                sequences = []
-                for seq in variant.sequence:
-                    sequence_code = self.process_sequence(condition, seq)
-                    if sequence_code:
-                        sequences.extend(sequence_code)
-                functions.append(f"{condition_signature(condition, cnum, ns = self.get_class_name())} {{\n{indented_l(sequences)}\n}}")
-                cnum += 1
 
         class_code = indented("\n".join(functions))
 
-        cpp_code.append(namespace(class_code, "ks"))
+        cpp_code = self.collect_implementation_includes() + [namespace(class_code, "ks")]
 
         with open(f"{os.path.join(self.output_dir, self.filename)}.cpp", "w") as cpp_file:
             cpp_file.write("\n".join(cpp_code))
@@ -389,6 +338,92 @@ class ScenarioWriter:
     def get_conditions(self) -> List[SequenceGroup]:
         return [group for group in self.scenario if group.type == SequenceGroupType.CONDITION]
 
+    def find_group_by_name(self, name: str, group_type: SequenceGroupType) -> SequenceGroup:
+        for group in self.scenario:
+            if group.type == group_type and group.name == name:
+                return group
+        raise KeyError(f"No {group_type.value} group named {name!r} in {self.filename}")
+
+    def sequence_contains_menu(self, items: List[SequenceItem]) -> bool:
+        for item in items:
+            if item.type == SequenceType.MENU:
+                return True
+            if item.type == SequenceType.CONDITION:
+                condition = cast(ConditionItem, item)
+                matching = self.find_group_by_name(
+                    condition.function_callback, SequenceGroupType.CONDITION
+                )
+                for variant in matching.conditions:
+                    if self.sequence_contains_menu(variant.sequence):
+                        return True
+        return False
+
+    def emit_sequence_lines(self, ctx_group: SequenceGroup, items: List[SequenceItem], indent: int) -> List[str]:
+        lines: List[str] = []
+        pad = ' ' * indent
+        for item in items:
+            for line in self.process_sequence(ctx_group, item) or []:
+                lines.append(f'{pad}{line}')
+        return lines
+
+    def emit_condition_block(self, ctx_group: SequenceGroup, condition: ConditionItem, indent: int) -> List[str]:
+        matching = self.find_group_by_name(condition.function_callback, SequenceGroupType.CONDITION)
+        code: List[str] = []
+        pad = ' ' * indent
+        body_indent = indent + 4
+        variants = matching.conditions
+        for cnum, variant in enumerate(variants):
+            if variant.condition and cnum == 0:
+                head = f'if ({to_ks_progress_variables(to_cpp_condition(variant.condition))}) {{'
+            elif variant.condition and cnum > 0:
+                head = f'}} else if ({to_ks_progress_variables(to_cpp_condition(variant.condition))}) {{'
+            elif cnum == len(variants) - 1 and not variant.condition:
+                head = '} else {'
+            else:
+                raise TypeError("Unknown Condition type")
+            code.append(f'{pad}{head}')
+            code.extend(self.emit_sequence_lines(matching, variant.sequence, body_indent))
+        if variants:
+            code.append(f'{pad}}}')
+        return code
+
+    def emit_menu_block(self, ctx_group: SequenceGroup, menu: MenuItem, indent: int) -> List[str]:
+        matching = self.find_group_by_name(menu.function_callback, SequenceGroupType.MENU)
+        code: List[str] = []
+        pad = ' ' * indent
+        branch_pad = ' ' * (indent + 4)
+
+        code.extend(self.emit_sequence_lines(matching, matching.sequence, indent))
+        code.append(f'{pad}answers.clear();')
+        answer_index = 0
+        for choice in matching.conditions:
+            tl_index = add_translations_optional(self.tl_dict, choice.answer)
+            if not choice.condition:
+                code.append(f'{pad}answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});')
+            else:
+                code.append(
+                    f'{pad}if ({to_ks_progress_variables(to_cpp_condition(choice.condition))}) '
+                    f'answers.push_back(ks::answer_ptr{{{answer_index}, {tl_index}}});'
+                )
+            answer_index += 1
+
+        code.append(f'{pad}ks::SceneManager::show_dialog_question(answers);')
+        code.append(f'{pad}answer = answers[ks::SceneManager::get_dialog_question_answer()].index;')
+
+        branch_index = 0
+        for choice in matching.conditions:
+            branch_lines = self.emit_sequence_lines(matching, choice.sequence, indent + 8)
+            if branch_index == 0:
+                code.append(f'{branch_pad}if (answer == {branch_index}) {{')
+            else:
+                code.append(f'{branch_pad}}} else if (answer == {branch_index}) {{')
+            code.extend(branch_lines)
+            branch_index += 1
+        if matching.conditions:
+            code.append(f'{branch_pad}}}')
+
+        return code
+
     def process_sequence(self, group: SequenceGroup, sequence: SequenceItem) -> List[str]:
         if sequence.type == SequenceType.ASSIGNMENT:
             return self.process_sequence_assignment(group, cast(AssignmentItem, sequence))
@@ -420,6 +455,8 @@ class ScenarioWriter:
             return self.process_sequence_run_label(group, cast(RunLabelItem, sequence))
         elif sequence.type == SequenceType.SHOW:
             return self.process_sequence_show(group, cast(ShowItem, sequence))
+        elif sequence.type == SequenceType.SHOW_DISPLAYABLE:
+            return self.process_sequence_show_displayable(group, cast(ShowDisplayableItem, sequence))
         elif sequence.type == SequenceType.HIDE:
             return self.process_sequence_hide(group, cast(HideItem, sequence))
         elif sequence.type == SequenceType.BACKGROUND_TRANSFORM:
@@ -447,21 +484,39 @@ class ScenarioWriter:
             return [f'// {assignment.content}; TODO: unknown assignment']
         # return [f'// scene.add_sequence(ks::AssignmentItem("{assignment.content}"));']
 
+    def _background_meta_namespace(self, meta_name: str) -> str:
+        huge_symbol = composite_huge_meta_symbol_for(meta_name)
+        if huge_symbol is not None:
+            if huge_symbol not in self.composite_huge_backgrounds:
+                self.composite_huge_backgrounds.append(huge_symbol)
+            return f"ks::composite_huge_background_metas::{meta_name}"
+        composite_symbol = composite_meta_symbol_for(meta_name)
+        if composite_symbol is not None:
+            if composite_symbol not in self.composite_backgrounds:
+                self.composite_backgrounds.append(composite_symbol)
+            return f"ks::composite_background_metas::{meta_name}"
+        if meta_name not in self.backgrounds and not is_color_filled_bg(meta_name):
+            self.backgrounds.append(meta_name)
+        return f"ks::background_metas::{meta_name}"
+
     def process_sequence_custom_event(self, group: SequenceGroup, ev: CustomEventItem) -> List[str]:
-        # if not ev.background in self.backgrounds:
-        #     self.backgrounds.append(ev.background)
         if not ev.event in self.events:
             self.events.append(ev.event)
+        if not ev.background:
+            return [f'ks::SceneManager::queue_event({ev.event}());']
+        meta_ref = self._background_meta_namespace(ev.background)
+        huge_symbol = composite_huge_meta_symbol_for(ev.background)
+        if huge_symbol is not None:
+            return [
+                f'ks::SceneManager::set_event({meta_ref}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)});']
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::set_event(ks::background_metas::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
-            # f'IF_NOT_EXIT(ks::SceneManager::set_event(bn::regular_bg_items::{ev.background}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)}));']
+            f'ks::SceneManager::set_event({meta_ref}, {ev.event}(), {ev.transition.value}, {int(ev.dissolve_time * 30)});']
 
     def process_sequence_custom_event_state(self, group: SequenceGroup, ev: CustomEventStateItem) -> List[str]:
-        return [f'IF_NOT_EXIT(ks::SceneManager::set_event_state({ev.state}));']
+        return [f'ks::SceneManager::set_event_state({ev.state});']
 
     def process_sequence_background(self, group: SequenceGroup, bg: BackgroundItem) -> List[str]:
-        if not bg.background in self.backgrounds and not is_color_filled_bg(bg.background):
-            self.backgrounds.append(bg.background)
+        meta_ref = self._background_meta_namespace(bg.background)
 
         if bg.position == BgShowPosition.BGLEFT:
             position = (8, 0)
@@ -476,33 +531,16 @@ class ScenarioWriter:
 
         if is_color_filled_bg(bg.background):
             return [
-                f'IF_NOT_EXIT(ks::SceneManager::hide_background({bg.transition.value}, {int(bg.dissolve_time * 30)}));',
-                f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{bg.background.upper()}));'
+                f'ks::SceneManager::hide_background({bg.transition.value}, {int(bg.dissolve_time * 30)});',
+                f'ks::SceneManager::enable_fill(ks::globals::colors::{bg.background.upper()});'
             ]
         else:
-            return [f'IF_NOT_EXIT(ks::SceneManager::set_background(ks::background_metas::{bg.background}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, PALETTE_VARIANT_DEFAULT));']
+            huge_symbol = composite_huge_meta_symbol_for(bg.background)
+            setter = "set_huge_background" if huge_symbol is not None else "set_background"
+            return [f'ks::SceneManager::{setter}({meta_ref}, {position[0]}, {position[1]}, {bg.transition.value}, {int(bg.dissolve_time * 30)}, {bg.palette_variant});']
 
     def process_sequence_condition(self, group: SequenceGroup, condition: ConditionItem) -> List[str]:
-        matching_scenario_item = next((item for item in self.scenario if item.name == condition.function_callback),
-                                      None)
-        code = []
-        cnum = 0
-        for variant in matching_scenario_item.conditions:
-            if variant.condition and cnum == 0:
-                condition_variant = f"if ({to_ks_progress_variables(to_cpp_condition(variant.condition))})"
-            elif variant.condition and cnum > 0:
-                condition_variant = f"else if ({to_ks_progress_variables(to_cpp_condition(variant.condition))})"
-            elif cnum == len(matching_scenario_item.conditions) - 1 and not variant.condition:
-                condition_variant = "else"
-            else:
-                raise TypeError("Unknown Condition type")
-            code.extend([f'{condition_variant} {{',
-                         f'    {self.get_class_name()}::{condition.function_callback}_{cnum}();',
-                         f'}} '])
-            cnum += 1
-
-        code.append("\n")
-        return code
+        return self.emit_condition_block(group, condition, indent=0)
 
     def process_sequence_dialogue(self, group: SequenceGroup, dialog: DialogItem) -> List[str]:
         # TODO: add character symbol to font
@@ -512,7 +550,9 @@ class ScenarioWriter:
 
         hashed_id = hashlib.md5(dialog.id.encode()).hexdigest()[:8].upper()
         if dialog.actor_ref:
-            if dialog.actor_ref == "n":
+            if dialog.actor_ref == "n" or dialog.actor_ref == "nb" or dialog.actor_ref == "rinbabble":
+                # TODO: fix the Rinbabble dialogs
+                # TODO: NVL bold/Black? (nb)
                 for locale, text in dialog.message.items():
                     fixed_text = text
                     # Remove vspace from the beginning of the line
@@ -520,14 +560,14 @@ class ScenarioWriter:
                     # Remove \n sequences from the beginning of the line
                     fixed_text = re.sub(r'^\n+', '', fixed_text)
                     dialog.message[locale] = fixed_text
-                return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::nvl_show({tl_index}));']
+                return [f'ks::SceneManager::nvl_show(0x{hashed_id}, {tl_index});']
             else:
-                return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::{dialog.actor_ref}, {tl_index}));']
+                return [f'ks::SceneManager::show_dialog(0x{hashed_id}, ks::definitions::{dialog.actor_ref}, {tl_index});']
         elif dialog.actor:
             actor_tl_index = add_translations_optional(self.tl_dict, dialog.actor)
-            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog({actor_tl_index}, {tl_index}));']
+            return [f'ks::SceneManager::show_dialog(0x{hashed_id}, {actor_tl_index}, {tl_index});']
         else:
-            return [f'ks::SceneManager::set_line_hash(0x{hashed_id});', f'IF_NOT_EXIT(ks::SceneManager::show_dialog(ks::definitions::no_char, {tl_index}));']
+            return [f'ks::SceneManager::show_dialog(0x{hashed_id}, ks::definitions::no_char, {tl_index});']
 
     def process_sequence_doublespeak(self, group: SequenceGroup, ds: DoubleSpeakItem) -> List[str]:
         for locale, text in ds.message_left.items():
@@ -539,47 +579,42 @@ class ScenarioWriter:
 
         hashed_id = hashlib.md5(ds.id.encode()).hexdigest()[:8].upper()
         return [
-            f'ks::SceneManager::set_line_hash(0x{hashed_id});',
-            f'IF_NOT_EXIT(ks::SceneManager::show_doublespeak(ks::definitions::{ds.actor_left_ref}, {tl_index_left}, ks::definitions::{ds.actor_right_ref}, {tl_index_right}));'
+            f'ks::SceneManager::show_doublespeak(0x{hashed_id}, ks::definitions::{ds.actor_left_ref}, {tl_index_left}, ks::definitions::{ds.actor_right_ref}, {tl_index_right});'
         ]
 
     def process_sequence_nvl_clear(self, group: SequenceGroup, nvl_clear: NovelClearItem) -> List[str]:
-        return [f'IF_NOT_EXIT(ks::SceneManager::nvl_clear());']
+        return [f'ks::SceneManager::nvl_clear();']
 
     def process_sequence_nvl_hide(self, group: SequenceGroup, nvl_hide: NovelHideItem) -> List[str]:
-        return [f'IF_NOT_EXIT(ks::SceneManager::nvl_hide());']
+        return [f'ks::SceneManager::nvl_hide();']
 
     def process_sequence_menu(self, group: SequenceGroup, menu: MenuItem) -> List[str]:
-        return [
-            f'{self.get_class_name()}::{menu.function_callback}();']
-        # f'{menu.function_callback}();']
-        # return [
-        #     f'// scene.add_sequence(ks::RunLabelItem([](ks::SceneManager& scene){{{self.get_class_name()}::{menu.function_callback}(scene);}}));']
+        return self.emit_menu_block(group, menu, indent=0)
 
     def process_sequence_music(self, group: SequenceGroup, music: MusicItem) -> List[str]:
         if music.action == MusicAction.PLAY:
             if music.effect == MusicEffect.FADEIN:
-                return [f'IF_NOT_EXIT(ks::SceneManager::music_play({music.music.upper()}, {int(music.value * 60)}));']
+                return [f'ks::SceneManager::music_play({music.music.upper()}, {int(music.value * 60)});']
             else:
-                return [f'IF_NOT_EXIT(ks::SceneManager::music_play({music.music.upper()}));']
+                return [f'ks::SceneManager::music_play({music.music.upper()});']
         elif music.action == MusicAction.STOP:
             if music.effect == MusicEffect.FADEOUT:
-                return [f'IF_NOT_EXIT(ks::SceneManager::music_stop({int(music.value * 60)}));']
+                return [f'ks::SceneManager::music_stop({int(music.value * 60)});']
             else:
-                return [f'IF_NOT_EXIT(ks::SceneManager::music_stop());']
+                return [f'ks::SceneManager::music_stop();']
         return []
 
     def process_sequence_sound(self, group: SequenceGroup, sound: SoundItem) -> List[str]:
         if sound.action == SoundAction.PLAY:
             if sound.effect == SoundEffect.FADEIN:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad", {sound.channel.value}, {int(sound.value * 60)}));']
+                return [f'ks::SceneManager::sfx_play("{sound.sound}.8ad", {sound.channel.value}, {int(sound.value * 60)});']
             else:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_play("{sound.sound}.8ad", {sound.channel.value}));']
+                return [f'ks::SceneManager::sfx_play("{sound.sound}.8ad", {sound.channel.value});']
         elif sound.action == SoundAction.STOP:
             if sound.effect == SoundEffect.FADEOUT:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop({sound.channel.value}, {int(sound.value * 60)}));']
+                return [f'ks::SceneManager::sfx_stop({sound.channel.value}, {int(sound.value * 60)});']
             else:
-                return [f'IF_NOT_EXIT(ks::SceneManager::sfx_stop({sound.channel.value}));']
+                return [f'ks::SceneManager::sfx_stop({sound.channel.value});']
         return []
 
     def process_sequence_return(self, group, ret: ReturnItem) -> List[str]:
@@ -588,15 +623,65 @@ class ScenarioWriter:
         return [f'return;']
 
     def process_sequence_run_label(self, group: SequenceGroup, run_label: RunLabelItem) -> List[str]:
+        class_name = self.get_class_name()
+        callback = run_label.function_callback
+        # e.g. ks::SceneManager::timeskip — already fully qualified
+        if '::' in callback and not callback.startswith(f'{class_name}::'):
+            return [f'{callback}();']
         if run_label.inline_call:
-            print(f"{group.name} >>> Run Label (inline) {run_label.function_callback}")
+            print(f"{group.name} >>> Run Label (inline) {callback}")
+            return [f'{class_name}::{callback}(); // INLINE CALL']
+        print(f"{group.name} ({group.type}) >>> Run Label (direct) {callback}")
+        return [f'{class_name}::{callback}(); // DIRECT CALL']
+
+    def _renpy_show_position(self, position: ShowPosition) -> Tuple[float, float, float, float] | None:
+        if position == ShowPosition.TWOLEFT:
+            return (0.3, 0.5, 1.0, 1.0)
+        if position == ShowPosition.TWORIGHT:
+            return (0.7, 0.5, 1.0, 1.0)
+        if position == ShowPosition.CLOSELEFT:
+            return (0.25, 0.5, 1.0, 1.0)
+        if position == ShowPosition.CLOSERIGHT:
+            return (0.75, 0.5, 1.0, 1.0)
+        if position == ShowPosition.OFFSCREENLEFT:
+            return (-0.25, 1.0, 1.0, 1.0)
+        if position == ShowPosition.OFFSCREENRIGHT:
+            return (1.25, 0.0, 1.0, 1.0)
+        if position == ShowPosition.LEFT:
+            return (0.0, 0.0, 1.0, 1.0)
+        if position == ShowPosition.RIGHT:
+            return (1.0, 1.0, 1.0, 1.0)
+        if position == ShowPosition.CENTER:
+            return (0.5, 0.5, 1.0, 1.0)
+        if position == ShowPosition.DEFAULT:
+            return None
+        raise TypeError("Unknown ShowPosition type")
+
+    def process_sequence_show_displayable(self, group: SequenceGroup,
+                                          show: ShowDisplayableItem) -> List[str]:
+        if show.name != "crowd":
+            raise TypeError(f"Unknown displayable: {show.name}")
+
+        if show.name not in self.displayables:
+            self.displayables.append(show.name)
+
+        meta = "ks::displayables::crowd"
+        frame_index = crowd_frame_index(show.subvariant)
+        animate = "true" if crowd_animate(show.subvariant) else "false"
+        pal = show.palette_variant
+        renpy_pos = self._renpy_show_position(show.position)
+
+        if renpy_pos is not None:
+            xpos, xanchor, ypos, yanchor = renpy_pos
             return [
-                f'IF_NOT_EXIT({run_label.function_callback}()); // INLINE CALL',
+                f"ks::SceneManager::show_displayable({meta}, {pal}, "
+                f"{fixed_literal(xpos)}, {fixed_literal(xanchor)}, "
+                f"{fixed_literal(ypos)}, {fixed_literal(yanchor)}, "
+                f"{frame_index}, {animate});"
             ]
-        else:
-            print(f"{group.name} ({group.type}) >>> Run Label (direct) {run_label.function_callback}")
-            code = [f'IF_NOT_EXIT({self.get_class_name()}::{run_label.function_callback}()); // DIRECT CALL']
-            return code
+        return [
+            f"ks::SceneManager::show_displayable({meta}, {pal}, {frame_index}, {animate});"
+        ]
 
     def process_sequence_show(self, group: SequenceGroup, show: ShowItem) -> List[str]:
         # if not show.sprite in self.sprites:
@@ -605,7 +690,7 @@ class ScenarioWriter:
         # if show.sprite == "black":
         if is_color_filled_bg(show.sprite):
             # TODO: show black behind bg
-            return [f'IF_NOT_EXIT(ks::SceneManager::enable_fill(ks::globals::colors::{show.sprite.upper()}));']
+            return [f'ks::SceneManager::enable_fill(ks::globals::colors::{show.sprite.upper()});']
         elif show.sprite not in CHARACTERS:
             return [f'// TODO: Show {show.sprite}']
         elif show.variant == "behind":
@@ -625,39 +710,11 @@ class ScenarioWriter:
             # screen-mapping). All resolution to actual pixels happens
             # in `SceneManager::_resolve_pixel_position` against the
             # variant's body width — see scenemanager.cpp comments.
-            renpy_pos: Tuple[float, float, float, float] | None = None
-            if show.position == ShowPosition.TWOLEFT:
-                renpy_pos = (0.3, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.TWORIGHT:
-                renpy_pos = (0.7, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.CLOSELEFT:
-                renpy_pos = (0.25, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.CLOSERIGHT:
-                renpy_pos = (0.75, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.OFFSCREENLEFT:
-                # Far off the left edge: anchor at right edge of body
-                # so the whole body is offscreen.
-                renpy_pos = (-0.25, 1.0, 1.0, 1.0)
-            elif show.position == ShowPosition.OFFSCREENRIGHT:
-                renpy_pos = (1.25, 0.0, 1.0, 1.0)
-            elif show.position == ShowPosition.LEFT:
-                # Inside the screen, anchored at left edge of body.
-                renpy_pos = (0.0, 0.0, 1.0, 1.0)
-            elif show.position == ShowPosition.RIGHT:
-                renpy_pos = (1.0, 1.0, 1.0, 1.0)
-            elif show.position == ShowPosition.CENTER:
-                renpy_pos = (0.5, 0.5, 1.0, 1.0)
-            elif show.position == ShowPosition.DEFAULT:
-                renpy_pos = None  # keep slot's current transform
-            else:
-                raise TypeError("Unknown ShowPosition type")
+            renpy_pos = self._renpy_show_position(show.position)
 
             result = []
 
             if show.variant:
-                show.variant, show.palette_variant = get_paletted_variant(show.variant)
-                # show.sprite = show.sprite.replace("_ss", "").replace("_ni", "")
-
                 displayable = f"{show.sprite}_{show.variant}"
                 if show.sprite == "akira":
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
@@ -684,6 +741,7 @@ class ScenarioWriter:
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.hanagown(displayable))
                 elif show.sprite == "hanako":
+                    displayable = CharacterDisplayableReplacements.hanako(displayable)
                     character = CharacterSprite.from_displayable(displayable, CharacterRegex.default(),
                                                                  CharacterNudeIf.default(displayable))
                 elif show.sprite == "hideaki":
@@ -768,26 +826,26 @@ class ScenarioWriter:
 
                 if renpy_pos is None:
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character('
+                        f'ks::SceneManager::show_character('
                         f'CHARACTER_{show.sprite.upper()}, {variant_ref}, '
-                        f'{show.palette_variant}));')
+                        f'{show.palette_variant});')
                 else:
                     xpos, xanchor, ypos, yanchor = renpy_pos
                     result.append(
-                        f'IF_NOT_EXIT(ks::SceneManager::show_character('
+                        f'ks::SceneManager::show_character('
                         f'CHARACTER_{show.sprite.upper()}, {variant_ref}, '
                         f'{show.palette_variant}, '
                         f'{fixed_literal(xpos)}, {fixed_literal(xanchor)}, '
-                        f'{fixed_literal(ypos)}, {fixed_literal(yanchor)}));')
+                        f'{fixed_literal(ypos)}, {fixed_literal(yanchor)});')
                 return result
             # Move if not default position and variant is not provided
             if renpy_pos is not None:
                 xpos, xanchor, ypos, yanchor = renpy_pos
                 result.append(
-                    f'IF_NOT_EXIT(ks::SceneManager::set_character_position('
+                    f'ks::SceneManager::set_character_position('
                     f'CHARACTER_{show.sprite.upper()}, '
                     f'{fixed_literal(xpos)}, {fixed_literal(xanchor)}, '
-                    f'{fixed_literal(ypos)}, {fixed_literal(yanchor)}));')
+                    f'{fixed_literal(ypos)}, {fixed_literal(yanchor)});')
 
             return result
 
@@ -803,11 +861,13 @@ class ScenarioWriter:
     def process_sequence_hide(self, group: SequenceGroup, hide: HideItem) -> List[str]:
         # if hide.sprite == "black":
         if is_color_filled_bg(hide.sprite):
-            return [f'IF_NOT_EXIT(ks::SceneManager::disable_fill());']
+            return [f'ks::SceneManager::disable_fill();']
+        elif is_displayable_sprite(hide.sprite):
+            return ["ks::SceneManager::hide_displayable();"]
         elif hide.sprite not in CHARACTERS:
             return [f'// TODO: Hide {hide.sprite}']
         else:
-            return [f'IF_NOT_EXIT(ks::SceneManager::hide_character(CHARACTER_{hide.sprite.upper()}));']
+            return [f'ks::SceneManager::hide_character(CHARACTER_{hide.sprite.upper()});']
 
     def process_sequence_bg_transform(self, group: SequenceGroup, bg_transform: BackgroundTransformItem) -> List[str]:
         # TODO: remove deuplicated positions code!!!!!!
@@ -821,15 +881,21 @@ class ScenarioWriter:
         else:
             raise TypeError("Unknown BgShowPosition type")
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::set_background_position({position[0]}, {position[1]}));']
+            f'ks::SceneManager::set_background_position({position[0]}, {position[1]});']
 
     def process_sequence_bg_transition(self, group: SequenceGroup, bg_transition: BackgroundTransitionItem) -> List[str]:
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::set_background_transition({bg_transition.transition.value}));'
+            f'ks::SceneManager::set_background_transition({bg_transition.transition.value});'
         ]
 
     def process_sequence_show_transform(self, group: SequenceGroup, show_transform: ShowTransformItem) -> List[str]:
         print(show_transform)
+        if is_displayable_sprite(show_transform.sprite):
+            return [
+                f'ks::SceneManager::set_displayable_position('
+                f'{fixed_literal(show_transform.xpos)}, {fixed_literal(show_transform.xanchor)}, '
+                f'{fixed_literal(show_transform.ypos)}, {fixed_literal(show_transform.yanchor)});'
+            ]
         if show_transform.sprite not in CHARACTERS:
             return [
                 f'// TODO: Show transform {show_transform.sprite} '
@@ -837,36 +903,36 @@ class ScenarioWriter:
                 f'ypos={show_transform.ypos} yanchor={show_transform.yanchor}'
             ]
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::set_character_position('
+            f'ks::SceneManager::set_character_position('
             f'CHARACTER_{show_transform.sprite.upper()}, '
             f'{fixed_literal(show_transform.xpos)}, {fixed_literal(show_transform.xanchor)}, '
-            f'{fixed_literal(show_transform.ypos)}, {fixed_literal(show_transform.yanchor)}));'
+            f'{fixed_literal(show_transform.ypos)}, {fixed_literal(show_transform.yanchor)});'
         ]
 
     def process_sequence_pause(self, group: SequenceGroup, pause: PauseItem) -> List[str]:
-        return [f'IF_NOT_EXIT(ks::SceneManager::pause({int(pause.value * 60)}));']
+        return [f'ks::SceneManager::pause({int(pause.value * 60)});']
 
     def process_sequence_update_visuals(self, group: SequenceGroup, update_visuals: UpdateVisualsItem) -> List[str]:
-        return [f'IF_NOT_EXIT(ks::SceneManager::update_visuals());']
+        return [f'ks::SceneManager::update_visuals();']
 
     def process_sequence_show_video(self, group: SequenceGroup, show_video: ShowVideoItem) -> List[str]:
         if show_video.video.startswith("tc_"):
             return [
-                f'IF_NOT_EXIT(ks::SceneManager::show_title({show_video.video.upper()}));',
-                f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
+                f'ks::SceneManager::show_title({show_video.video.upper()});',
+                f'ks::SceneManager::set(ks::SceneManager("{self.filename}"));',
             ]
 
         if show_video.video == "op_1":
             return [
-                f'IF_NOT_EXIT(ks::SceneManager::show_op1());',
-                f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
+                f'ks::SceneManager::show_op1();',
+                f'ks::SceneManager::set(ks::SceneManager("{self.filename}"));',
             ]
 
         if not show_video.video in self.videos:
             self.videos.append(show_video.video)
         return [
-            f'IF_NOT_EXIT(ks::SceneManager::show_video(video_{show_video.video}_dxtv, "video_{show_video.video}.ulc"));',
-            f'IF_NOT_EXIT(ks::SceneManager::set(ks::SceneManager("{self.filename}")));',
+            f'ks::SceneManager::show_video(video_{show_video.video}_dxtv, "video_{show_video.video}.ulc");',
+            f'ks::SceneManager::set(ks::SceneManager("{self.filename}"));',
         ]
 
     def get_class_name(self):
@@ -910,10 +976,7 @@ def indented_l(code: List[str], indent=4):
 
 def label_signature(group: SequenceGroup, ns: str | None = None):
     print(f"   >>> Label: {f"{ns}::" if ns else ""}{group.name}, is_called_inline: {group.is_called_inline}")
-    if group.is_called_inline:
-        return f"void {f"{ns}::" if ns else ""}{group.name}()"
-    else:
-        return f"void {f"{ns}::" if ns else ""}{group.name}()"
+    return f"void {f"{ns}::" if ns else ""}{group.name}()"
 
 
 def menu_signature(group: SequenceGroup, ns: str | None = None):
@@ -960,6 +1023,8 @@ def to_ks_progress_variables(s: str) -> str:
             return variable
         elif variable in ["FR_NONE", "FR_EMI", "FR_HANAKO", "FR_LILLY", "FR_RIN", "FR_SHIZU", "FR_KENJI"]:
             return variable
+        elif variable.startswith("settings___"):
+            return f"ks::globals::settings.{variable.removeprefix("settings___")}"
         return f"ks::progress.{variable}"
 
     # Regex to match variable names (assumes they are composed of letters, numbers, and underscores)

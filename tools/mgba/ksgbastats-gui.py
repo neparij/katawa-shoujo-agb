@@ -44,7 +44,7 @@ metrics = {
     "CPU": Metric(0, 100, "%", False),
     "EWRAM": Metric(0, 262_144, "Bytes", True),
     "BG Tiles": Metric(0, 2048, "", True),
-    "BG Maps": Metric(0, 32_768, "", True),
+    "BG Maps": Metric(0, 4096, "", True),
     "BG Palettes": Metric(0, 256, "", True),
     "SPR Tiles": Metric(0, 1024, "", True),
     "SPR Palettes": Metric(0, 256, "", True),

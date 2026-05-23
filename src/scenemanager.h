@@ -19,6 +19,7 @@
 #include "gba_types.h"
 #include "savefile/save_file.h"
 #include "ext_bg_blocks_manager.h"
+#include "displayable_meta.h"
 #include "smart_characters_manager.h"
 #include "vfx_meta.h"
 #include "events/custom_event.h"
@@ -26,12 +27,6 @@
 
 #include "smart_character_bg.h"  // for ks::smart_characters::variant
 
-
-#define IF_NOT_EXIT(step)                         \
-if (ks::globals::exit_scenario) {                 \
-    return;                                       \
-}                                                 \
-step;
 
 #define SKIP_IF_LOAD_ANOTHER_SCENE(val)           \
 if (ks::is_loading) {                             \
@@ -115,6 +110,39 @@ struct character_visuals_ptr
     bool will_hide;
 };
 
+/// Scene-layer VFX (crowd, …). Hardware lives in `displayable_manager`.
+struct displayable_visuals_ptr
+{
+    const displayable_meta* meta;
+    palette_variant_t       palette_variant;
+    bn::fixed               xpos;
+    bn::fixed               xanchor;
+    bn::fixed               ypos;
+    bn::fixed               yanchor;
+    int                     frame_index;
+    bool                    animate;
+    bool                    active;
+    bool                    will_show;
+    bool                    will_hide;
+};
+
+inline displayable_visuals_ptr make_default_displayable_visual()
+{
+    displayable_visuals_ptr v{};
+    v.meta            = nullptr;
+    v.palette_variant = PALETTE_VARIANT_DEFAULT;
+    v.xpos            = bn::fixed(0.5);
+    v.xanchor         = bn::fixed(0.5);
+    v.ypos            = bn::fixed(1.0);
+    v.yanchor         = bn::fixed(1.0);
+    v.frame_index     = 0;
+    v.animate         = true;
+    v.active          = false;
+    v.will_show       = false;
+    v.will_hide       = false;
+    return v;
+}
+
 struct answer_ptr
 {
     const unsigned char index;
@@ -149,7 +177,19 @@ public:
                            scene_transition_t transition,
                            const int dissolve_time,
                            const palette_variant_t palette_variant);
+    static void set_background(const composite_background_meta& bg,
+                           const int position_x,
+                           const int position_y,
+                           scene_transition_t transition,
+                           const int dissolve_time,
+                           const palette_variant_t palette_variant);
     static void set_huge_background(const huge_background_meta& bg,
+                       int position_x,
+                       int position_y,
+                       scene_transition_t transition,
+                       int dissolve_time,
+                       const palette_variant_t palette_variant);
+    static void set_huge_background(const composite_huge_background_meta& bg,
                        int position_x,
                        int position_y,
                        scene_transition_t transition,
@@ -176,22 +216,35 @@ public:
                           scene_transition_t transition,
                           int dissolve_time);
 
+    static void set_event(const composite_background_meta& bg,
+                          const CustomEvent& event,
+                          scene_transition_t transition,
+                          int dissolve_time);
+
     static void set_event(const huge_background_meta& bg,
                       const CustomEvent& event,
                       scene_transition_t transition,
                       int dissolve_time);
 
+    static void set_event(const composite_huge_background_meta& bg,
+                          const CustomEvent& event,
+                          scene_transition_t transition,
+                          int dissolve_time);
+
+    static void queue_event(const CustomEvent& event);
+
     static void set_event_state(int state);
 
-    static void show_dialog(const ks::character_definition& actor, unsigned int tl_key);
-    static void show_dialog(unsigned int actor_tl_key, unsigned int tl_key);
-    static void show_doublespeak(const ks::character_definition& actor_left, unsigned int tl_key_left,
-                                 const ks::character_definition& actor_right, unsigned int tl_key_right);
+    static void show_dialog(unsigned int line_hash, const ks::character_definition& actor, unsigned int tl_key);
+    static void show_dialog(unsigned int line_hash, unsigned int actor_tl_key, unsigned int tl_key);
+    static void show_doublespeak(unsigned int line_hash, const ks::character_definition& actor_left,
+                                 unsigned int tl_key_left, const ks::character_definition& actor_right,
+                                 unsigned int tl_key_right);
     static void show_dialog_question(const bn::vector<ks::answer_ptr, 5>& answers);
     static int get_dialog_question_answer();
     static void nvl_clear();
     static void nvl_hide();
-    static void nvl_show(unsigned int tl_key);
+    static void nvl_show(unsigned int line_hash, unsigned int tl_key);
     /// Show / change a character. The variant carries the `body` (BG) and
     /// `face` (OBJ) pair plus the group hash used by save thumbnails.
     /// The 3-arg overload preserves the slot's current position (Ren'Py
@@ -233,6 +286,24 @@ public:
     static void hide_character(character_t character);
     static void hide_character(character_t character, bool need_update, bool remove);
 
+    static void show_displayable(const displayable_meta& meta,
+                                 palette_variant_t palette_variant,
+                                 int frame_index = 0,
+                                 bool animate = true);
+    static void show_displayable(const displayable_meta& meta,
+                                 palette_variant_t palette_variant,
+                                 bn::fixed xpos,
+                                 bn::fixed xanchor,
+                                 bn::fixed ypos,
+                                 bn::fixed yanchor,
+                                 int frame_index = 0,
+                                 bool animate = true);
+    static void hide_displayable();
+    static void set_displayable_position(bn::fixed xpos,
+                                         bn::fixed xanchor,
+                                         bn::fixed ypos,
+                                         bn::fixed yanchor);
+
     static void perform_transition(scene_transition_t transition, const bn::optional<ks::background_item>& to);
     static void perform_transition(scene_transition_t transition);
 
@@ -258,7 +329,9 @@ public:
 
     static void timeskip();
 
-    static void apply_palette_variant(const bn::regular_bg_ptr &bg,
+    static void log_character_debug();
+
+    static void apply_palette_variant(const background_ptr &bg,
                                       const bn::span<const bn::color> &original_palette,
                                       const palette_variant_t palette_variant);
     static void apply_palette_variant(const bn::sprite_ptr &spr,
@@ -284,7 +357,7 @@ private:
     const char* _scenario;
 };
 
-extern bn::string<1024> message;
+extern bn::string<4096> message;
 extern bn::string<128> message_doublespeak_a;
 extern bn::string<128> message_doublespeak_b;
 extern bn::vector<bn::string<128>, 5> answers_messages;
@@ -302,6 +375,7 @@ extern bn::optional<bn::affine_bg_ptr> transition_bg;
 extern bn::optional<bn::color> fill_color;
 extern bn::optional<bn::unique_ptr<CustomEvent>> next_event;
 extern bn::vector<character_visuals_ptr, smart_characters_manager::MAX_CHARS> character_visuals;
+extern displayable_visuals_ptr displayable_visual;
 extern background_visuals_ptr background_visual;
 extern bn::rect_window left_window;
 extern bn::rect_window right_window;

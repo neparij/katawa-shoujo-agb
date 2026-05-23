@@ -1,26 +1,50 @@
 -- ===============================
 --  KS GBA System Stats Logger
+--  (canvas overlay — throttled redraw)
 -- ===============================
 
 local MAGIC = "KSGBASYSSTATS\0\0\0"
+local MAGIC_U32 = 0x4247534B -- "KSGB" as little-endian u32
 
-local RESET_MAX_CPU_PERIOD = 30
-local MAX_CPU_SAMPLES = 240
+local UPDATE_INTERVAL = 3      -- redraw overlay every N emulated frames
+local MAX_CPU_SAMPLES = 120
 local EWRAM_TOTAL = 262144
 local BG_TILES_TOTAL = 2048
-local BG_MAPS_TOTAL = 32768
+local BG_MAPS_TOTAL = 4096
 local BG_PALS_TOTAL = 256
 local SPR_TILES_TOTAL = 1024
 local SPR_PALS_TOTAL = 256
 
+-- HUD layout (overlay is only this tall — not full 160px screen)
+local HUD_W = 240
+local TEXT_LINES = 7
+local LINE_H = 10
+local TEXT_H = TEXT_LINES * LINE_H
+local GRAPH_Y = TEXT_H + 2
+local GRAPH_H = 28
+local HUD_H = GRAPH_Y + GRAPH_H + 2
+
 local state = {
     stats = nil,
     callback_id = -1,
-    width = canvas:screenWidth(),
-    height = canvas:screenHeight(),
     overlay = nil,
     painter = nil,
-    cpu_usages = {},
+    cpu_ring = {},
+    cpu_head = 0,
+    cpu_count = 0,
+    frame_tick = 0,
+    line_widths = {},
+}
+
+-- Widest plausible strings — measured once at boot, not each redraw.
+local LINE_WIDTH_PROBES = {
+    "CPU: 100%",
+    "EWRAM: 262144/262144 (100%)",
+    "BG Tiles: 2048/2048 (100%)",
+    "BG Maps: 32768/32768 (100%)",
+    "BG Palettes: 256/256 (100%)",
+    "SPR Tiles: 1024/1024 (100%)",
+    "SPR Palettes: 256/256 (100%)",
 }
 
 -- =========================================
@@ -29,8 +53,10 @@ local state = {
 
 local function findStatsStruct(region)
     local size = region:size()
-    for addr = 0, size - #MAGIC do
-        if region:readRange(addr, #MAGIC) == MAGIC then
+    -- Align to 4 bytes; cheap u32 prefilter before readRange().
+    for addr = 0, size - #MAGIC, 4 do
+        if region:read32(addr) == MAGIC_U32
+            and region:readRange(addr, #MAGIC) == MAGIC then
             return {
                 abs = region:bound() + addr,
                 region = region,
@@ -49,91 +75,97 @@ local function read32(offset)
     return state.stats.region:read32(state.stats.offset + offset)
 end
 
+local function pushCpuSample(value)
+    state.cpu_head = (state.cpu_head % MAX_CPU_SAMPLES) + 1
+    state.cpu_ring[state.cpu_head] = value
+    if state.cpu_count < MAX_CPU_SAMPLES then
+        state.cpu_count = state.cpu_count + 1
+    end
+end
+
 -- =========================================
 --  Stats rendering
 -- =========================================
 
 local function drawTextLine(line, index)
-    local metrics = state.painter:textRunMetrics(line)
-    local y = (index - 1) * 10
+    local y = (index - 1) * LINE_H
+    local w = state.line_widths[index] or 0
 
-    -- Disable stroke
     state.painter:setStrokeWidth(0)
     state.painter:setStrokeColor(0x00000000)
-
-    -- Background
     state.painter:setFillColor(0x80000000)
-    state.painter:drawRectangle(0, y, metrics:width() + 4, 10)
+    state.painter:drawRectangle(0, y, w + 4, LINE_H)
 
-    -- Text
     state.painter:setFillColor(0xFFFFFFFF)
     state.painter:drawText(line, 2, y - 2, C.ALIGN.TOP | C.ALIGN.LEFT)
 end
 
-local function drawCpuGraph()
-    local samples = state.cpu_usages
-    if #samples < 2 then return end
-
-    state.painter:setStrokeWidth(1)
-    state.painter:setStrokeColor(0x80FF8080)
-    state.painter:drawLine(240 - MAX_CPU_SAMPLES, 60, 240, 60)
-
-    for i = 1, #samples - 1 do
-        local x1 = 240 - #samples + i - 1
-        local x2 = x1 + 1
-        local y1 = 160 - samples[i]
-        local y2 = 160 - samples[i + 1]
-
-        local usage = math.min(math.max(math.max(samples[i], samples[i + 1]), 0), 100)
-        local r = math.floor((usage / 100) * 255)
-        local g = math.floor(((100 - usage) / 100) * 255)
-        local color = (r << 16) | (g << 8)
-
-        state.painter:setStrokeColor(0xA0000000 | color)
-        state.painter:drawLine(x1, y1, x2, y2)
+local function drawTextBlock(lines)
+    for i, line in ipairs(lines) do
+        drawTextLine(line, i)
     end
 end
 
--- =========================================
---  Frame update
--- =========================================
+local function cpuBarColor(usage)
+    if usage < 0 then
+        usage = 0
+    end
+    local u = usage
+    if u > 100 then
+        u = 100
+    end
+    local r = math.floor((u / 100) * 255)
+    local g = math.floor(((100 - u) / 100) * 255)
+    return 0xFF000000 | (r << 16) | (g << 8)
+end
 
-function state.update()
-    if not state.stats then
-        -- Uncomment this line and comment the next to search both WRAM and IWRAM
-        -- state.stats = findStatsStruct(emu.memory.iwram) or findStatsStruct(emu.memory.wram)
-        state.stats = findStatsStruct(emu.memory.iwram)
-        if state.stats then
-            console:log(("✅ system_stats_t found at 0x%08X in %s")
-                :format(state.stats.abs, state.stats.region:name()))
-        end
+local function drawCpuGraph()
+    local count = state.cpu_count
+    if count < 2 then
         return
     end
 
-    local last_cpu   = read32(0x10)
-    local ewram_used = read32(0x14)
-    local bg_tiles   = read16(0x18)
-    local bg_maps    = read16(0x1A)
-    local bg_pals    = read16(0x1C)
-    local spr_tiles  = read16(0x1E)
-    local spr_pals   = read16(0x20)
+    local graph_w = MAX_CPU_SAMPLES
+    local base_y = GRAPH_Y + GRAPH_H
 
-    -- Update CPU usage list
-    if #state.cpu_usages >= MAX_CPU_SAMPLES then
-        table.remove(state.cpu_usages, 1)
+    -- Background + baseline (2 rects instead of a line)
+    state.painter:setFillColor(0x40000000)
+    state.painter:drawRectangle(0, GRAPH_Y, graph_w, GRAPH_H)
+    state.painter:setFillColor(0x80404040)
+    state.painter:drawRectangle(0, base_y - 1, graph_w, 1)
+
+    local max_bar_h = GRAPH_H - 2
+    for i = 1, count do
+        local idx = state.cpu_head - count + i
+        if idx <= 0 then
+            idx = idx + MAX_CPU_SAMPLES
+        end
+        local usage = state.cpu_ring[idx] or 0
+
+        local bar_h
+        if usage <= 0 then
+            bar_h = 0
+        elseif usage >= 100 then
+            bar_h = max_bar_h
+        else
+            bar_h = math.floor((usage / 100) * max_bar_h + 0.5)
+        end
+
+        if bar_h > 0 then
+            state.painter:setFillColor(cpuBarColor(usage))
+            state.painter:drawRectangle(i - 1, base_y - bar_h, 1, bar_h)
+        end
     end
-    table.insert(state.cpu_usages, last_cpu)
+end
 
-    -- Clear overlay
+local function redrawOverlay(last_cpu, ewram_used, bg_tiles, bg_maps, bg_pals, spr_tiles, spr_pals)
     state.painter:setStrokeWidth(0)
     state.painter:setFillColor(0x00000000)
-    state.painter:drawRectangle(0, 0, state.width, state.height)
+    state.painter:drawRectangle(0, 0, HUD_W, HUD_H)
 
-    -- Draw CPU usage graph
+    state.painter:setBlend(true)
     drawCpuGraph()
 
-    -- Draw text stats
-    state.painter:setBlend(true)
     local lines = {
         string.format("CPU: %d%%", last_cpu),
         string.format("EWRAM: %d/%d (%.0f%%)", ewram_used, EWRAM_TOTAL, ewram_used / EWRAM_TOTAL * 100),
@@ -143,14 +175,43 @@ function state.update()
         string.format("SPR Tiles: %d/%d (%.0f%%)", spr_tiles, SPR_TILES_TOTAL, spr_tiles / SPR_TILES_TOTAL * 100),
         string.format("SPR Palettes: %d/%d (%.0f%%)", spr_pals, SPR_PALS_TOTAL, spr_pals / SPR_PALS_TOTAL * 100),
     }
-
-    for i, line in ipairs(lines) do
-        drawTextLine(line, i)
-    end
+    drawTextBlock(lines)
     state.painter:setBlend(false)
 
-    -- Update overlay
     state.overlay:update()
+end
+
+-- =========================================
+--  Frame update
+-- =========================================
+
+function state.update()
+    if not state.stats then
+        state.stats = findStatsStruct(emu.memory.iwram)
+        if state.stats then
+            console:log(("✅ system_stats_t found at 0x%08X in %s")
+                :format(state.stats.abs, state.stats.region:name()))
+        end
+        return
+    end
+
+    local last_cpu = read32(0x10)
+    pushCpuSample(last_cpu)
+
+    state.frame_tick = state.frame_tick + 1
+    if state.frame_tick % UPDATE_INTERVAL ~= 0 then
+        return
+    end
+
+    redrawOverlay(
+        last_cpu,
+        read32(0x14),
+        read16(0x18),
+        read16(0x1A),
+        read16(0x1C),
+        read16(0x1E),
+        read16(0x20)
+    )
 end
 
 -- =========================================
@@ -160,6 +221,9 @@ end
 local function clearStats()
     console:log("Clear stats struct...")
     state.stats = nil
+    state.cpu_head = 0
+    state.cpu_count = 0
+    state.frame_tick = 0
 end
 
 callbacks:add("reset", clearStats)
@@ -170,10 +234,15 @@ callbacks:add("shutdown", clearStats)
 --  Boot setup
 -- =========================================
 
-state.overlay = canvas:newLayer(state.width, state.height)
+state.overlay = canvas:newLayer(HUD_W, HUD_H)
 state.painter = image.newPainter(state.overlay.image)
 state.painter:loadFont(script.dir .. "/NFPixels-Regular.otf")
 state.painter:setFontSize(7)
 state.painter:setFill(true)
 state.painter:setBlend(false)
+
+for i, probe in ipairs(LINE_WIDTH_PROBES) do
+    state.line_widths[i] = state.painter:textRunMetrics(probe):width()
+end
+
 state.callback_id = callbacks:add("frame", state.update)

@@ -15,6 +15,17 @@
 namespace ks {
     namespace
     {
+        inline void _cache_push_front(bn::vector<bn::sprite_ptr, 8 * 15>& cache_sprites, bn::sprite_ptr sprite)
+        {
+            // Keep newest text near the front; evict oldest when cache is full.
+            constexpr int cache_capacity = 8 * 15;
+            if(cache_sprites.size() >= cache_capacity)
+            {
+                cache_sprites.pop_back();
+            }
+            cache_sprites.insert(cache_sprites.begin(), bn::move(sprite));
+        }
+
         inline void _trim_cache_for_vram(bn::vector<bn::sprite_ptr, 8 * 15>& cache_sprites)
         {
             // Keep NVL stable during long fast-forward on CJK-heavy text:
@@ -36,6 +47,24 @@ namespace ks {
     void dialog_box_novel::update() {
         const bool skip_render = bn::keypad::b_held() || bn::keypad::a_pressed();
         if (camera.has_value()) {
+
+            auto cleanup_offscreen_sprites = [&](bn::ivector<bn::sprite_ptr>& sprites) {
+                for (auto it = sprites.begin(); it != sprites.end(); ) {
+                    // Проверяем, ушел ли спрайт слишком далеко вверх за пределы экрана
+                    if (it->y() - camera->y() < -80) {
+                        // erase удаляет объект из вектора, вызывая деструктор bn::sprite_ptr.
+                        // Butano автоматически освободит тайлы в VRAM!
+                        it = sprites.erase(it);
+                    } else {
+                        // Если спрайт на экране, убеждаемся, что у него включена камера
+                        if(!it->camera().has_value()) {
+                            it->set_camera(camera);
+                        }
+                        ++it;
+                    }
+                }
+            };
+
             if (skip_render) {
                 // instantly set:
                 int target_render_offset = render_offset; // - (12 * (current_line_index + 1)) + (12 * lines_count());
@@ -44,29 +73,17 @@ namespace ks {
                 // const int target_render_offset = render_offset + 12 * (lines_count());
                 if (camera->y() < target_render_offset - 144) {
                     camera->set_y(target_render_offset - 144);
-                    for (int i = 0; i < text_cache_sprites.size(); i++) {
-                        auto sprite = text_cache_sprites.back();
-                        text_cache_sprites.pop_back();
-                        if (sprite.y() - camera->y() >= -80) {
-                            sprite.set_camera(camera);
-                            text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
-                        }
-                    }
-                    _trim_cache_for_vram(text_cache_sprites);
+                    BN_LOG("Should delete text cache and chunk sprites! (skip_render)");
+                    cleanup_offscreen_sprites(text_cache_sprites);
+                    cleanup_offscreen_sprites(text_chunk_sprites);
                 }
             } else {
                 if (camera->y() < render_offset - 144) {
                     camera->set_y(camera->y() + 2);
                     if (camera->y() >= render_offset - 144) {
-                        for (int i = 0; i < text_cache_sprites.size(); i++) {
-                            auto sprite = text_cache_sprites.back();
-                            text_cache_sprites.pop_back();
-                            if (sprite.y() - camera->y() >= -80) {
-                                sprite.set_camera(camera);
-                                text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
-                            }
-                        }
-                        _trim_cache_for_vram(text_cache_sprites);
+                        BN_LOG("Should delete text cache and chunk sprites!");
+                        cleanup_offscreen_sprites(text_cache_sprites);
+                        cleanup_offscreen_sprites(text_chunk_sprites);
                     }
                 }
             }
@@ -97,7 +114,7 @@ namespace ks {
             auto sprite = text_chunk_sprites.back();
             text_chunk_sprites.pop_back();
             if (sprite.y() - camera->y() >= -80) {
-                text_cache_sprites.insert(text_cache_sprites.begin(), bn::move(sprite));
+                _cache_push_front(text_cache_sprites, bn::move(sprite));
             }
         }
         _trim_cache_for_vram(text_cache_sprites);

@@ -1637,6 +1637,23 @@ sprites:
           emb:
             filename: hanako/close/hanako_emb_emb_close.png
             naked: false
+      basic_silhouette:
+        pose: basic
+        outfit: silhouette
+        close: false
+        base_emotion: bashful
+        base_emotion_offset:
+          - 14
+          - 8
+        base_emotion_size:
+          - 4
+          - 4
+        base_origin_offset: 0
+        silhouette_tint: 0
+        sprites:
+          bashful:
+            filename: hanako/hanako_basic_bashful.png
+            naked: false
   hideaki:
     displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
     tileset: hideaki
@@ -1868,6 +1885,40 @@ sprites:
         sprites:
           rage:
             filename: kenji/close/kenji_rage_close.png
+            naked: false
+      basic_silhouette:
+        pose: basic
+        outfit: silhouette
+        close: false
+        base_emotion: neutral
+        base_emotion_offset:
+          - 15
+          - 8
+        base_emotion_size:
+          - 4
+          - 4
+        base_origin_offset: 0
+        silhouette_tint: 0
+        sprites:
+          neutral:
+            filename: kenji/kenji_neutral.png
+            naked: false
+      basicnaked_silhouette:
+        pose: basicnaked
+        outfit: silhouette
+        close: false
+        base_emotion: neutral
+        base_emotion_offset:
+          - 15
+          - 9
+        base_emotion_size:
+          - 4
+          - 4
+        base_origin_offset: 0
+        silhouette_tint: 0
+        sprites:
+          neutral:
+            filename: kenji/kenji_neutral_naked.png
             naked: false
   lilly:
     displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
@@ -2953,6 +3004,27 @@ sprites:
             naked: false
           giggle:
             filename: lilly/close/lilly_cane_giggle_close.png
+            naked: false
+      sc:
+        pose: sc
+        outfit: paj
+        close: true
+        base_emotion: cheerful
+        base_emotion_offset:
+          - 12
+          - 10
+        base_emotion_size:
+          - 8
+          - 8
+        sprites:
+          cheerful:
+            filename: ../vfx/lilly_superclose.png
+            naked: false
+          ouch:
+            filename: ../vfx/lilly_superclose_ouch.png
+            naked: false
+          shock:
+            filename: ../vfx/lilly_superclose_shock.png
             naked: false
   meiko:
     displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$
@@ -4364,6 +4436,84 @@ sprites:
         sprites:
           surprised:
             filename: rin/rin_relaxed_surprised.png
+            naked: false
+      scback:
+        pose: scback
+        outfit: null
+        close: true
+        base_emotion: cas
+        base_emotion_offset:
+          - 12
+          - 6
+        base_emotion_size:
+          - 8
+          - 8
+        sprites:
+          cas:
+            filename: rin/superclose/rin_back_cas_superclose.png
+            naked: false
+      scbasic:
+        pose: scbasic
+        outfit: null
+        close: true
+        base_origin_ycrop: 0
+        base_emotion: deadpannormal
+        base_emotion_offset:
+          - 10
+          - 10
+        base_emotion_size:
+          - 8
+          - 8
+        sprites:
+          deadpannormal:
+            filename: rin/superclose/rin_basic_deadpannormal_superclose.png
+            naked: false
+          deadpan:
+            filename: rin/superclose/rin_basic_deadpan_superclose.png
+            naked: false
+          lucid:
+            filename: rin/superclose/rin_basic_lucid_superclose.png
+            naked: false
+          crying:
+            filename: rin/superclose/rin_basic_crying_superclose.png
+            naked: false
+      screlaxed:
+        pose: screlaxed
+        outfit: null
+        close: true
+        base_origin_ycrop: 0
+        base_emotion: sleepy
+        base_emotion_offset:
+          - 14
+          - 10
+        base_emotion_size:
+          - 8
+          - 8
+        sprites:
+          sleepy:
+            filename: rin/superclose/rin_relaxed_sleepy_superclose.png
+            naked: false
+          doubt:
+            filename: rin/superclose/rin_relaxed_doubt_superclose.png
+            naked: false
+          surprised:
+            filename: rin/superclose/rin_relaxed_surprised_superclose.png
+            naked: false
+      scnegative:
+        pose: scnegative
+        outfit: null
+        close: true
+        base_origin_ycrop: 0
+        base_emotion: crying
+        base_emotion_offset:
+          - 8
+          - 12
+        base_emotion_size:
+          - 8
+          - 8
+        sprites:
+          crying:
+            filename: rin/superclose/rin_negative_crying_superclose.png
             naked: false
   rinpan:
     displayable_regex: (?P<name>[^_]+)_(?P<pose>[^_]+)_(?P<emotion>[^_]+)(_(?P<outfit>[^_]+))?$

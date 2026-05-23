@@ -13,14 +13,28 @@ IMGDITHER_DITHER_METHOD = "floyd"
 IMGDITHER_DITHER_LEVEL = 0.5
 IMGDITHER_COLOR_0_IS_CLEAR = True
 
+SCREEN_WIDTH = 240
+SCREEN_HEIGHT = 160
+
 class ImageTools:
     TRANSPARENT_COLOR = (255, 0, 253)
+
+    @staticmethod
+    def list_converted_images_in_directory(directory: str) -> List[str]:
+        # return [f.removesuffix(".bmp") for f in os.listdir(directory) if f.endswith(".bmp")]
+        images = []
+        for f in os.listdir(directory):
+            if f.endswith(".json") and os.path.exists(os.path.join(directory, f.removesuffix(".json") + ".bmp")):
+                images.append(f.removesuffix(".json"))
+        return images
 
     @staticmethod
     def resize(input_filename: str, output_filename: str, palettes: int, colors: int,
                y_crop: int = 0,
                y_offset: int = 0,
                dithering: float = 1.0,
+               dither_method: str | None = None,
+               dither_level: float | None = None,
                remove_size: tuple[int, int] | None = None,
                remove_offset: tuple[int, int] | None = None,
                sprite_offset: tuple[int, int] | None = None,
@@ -28,7 +42,7 @@ class ImageTools:
                num_color_cluster_passes: int = 256,
                num_tile_cluster_passes: int = 256,
                use_sample_palette: str | None = None,
-               add_boundary_pixels: bool = False,
+               crop_to_screen: bool = False,
                target_height: int = 160,
                target_size: tuple[int, int] = (256, 256),
                tint: tuple[int, int, int] | None = None):
@@ -47,6 +61,14 @@ class ImageTools:
         print(f"Resize: {input_filename}")
         # source_resized = cropped.resize((target_width, target_height), Image.Resampling.LANCZOS)
         source_resized = cropped.resize((target_width, target_height), Image.Resampling.HAMMING)
+
+        if crop_to_screen:
+            print(f"Crop to screen: {input_filename}")
+            # Crop to screen. Centered.
+            source_resized = source_resized.crop((max(0, int((source_resized.size[0] - SCREEN_WIDTH) / 2)),
+                                                 max(0, int((source_resized.size[1] - SCREEN_HEIGHT) / 2)),
+                                                 min(source_resized.size[0], int((source_resized.size[0] + SCREEN_WIDTH) / 2)),
+                                                 min(source_resized.size[1], int((source_resized.size[1] + SCREEN_HEIGHT) / 2))))
 
         source_tinted = source_resized
         if tint is not None:
@@ -108,7 +130,12 @@ class ImageTools:
             command = [IMGDITHER, input_filename_path_bmp, palette_file, output_filename]
             command.append(f"-col0isclear:{"y" if IMGDITHER_COLOR_0_IS_CLEAR else "n"}")
             command.append(f"-colspace:{IMGDITHER_COLOURSPACE}")
-            command.append(f"-dither:{IMGDITHER_DITHER_METHOD},{IMGDITHER_DITHER_LEVEL}")
+            method = dither_method if dither_method is not None else IMGDITHER_DITHER_METHOD
+            level = dither_level if dither_level is not None else IMGDITHER_DITHER_LEVEL
+            if method == "none" or level <= 0:
+                command.append("-dither:none,0")
+            else:
+                command.append(f"-dither:{method},{level}")
             print(f"Running command: {' '.join(command)}")
 
             try:
@@ -120,7 +147,8 @@ class ImageTools:
 
             # Delete the BMP file after conversion
             os.remove(input_filename_path_bmp)
-            print(f"Resized, Converted with sample palette, dithered({IMGDITHER_DITHER_METHOD},{IMGDITHER_DITHER_LEVEL}) and saved: {output_filename}")
+            dither_note = "none" if method == "none" or level <= 0 else f"{method},{level}"
+            print(f"Resized, Converted with sample palette, dithered({dither_note}) and saved: {output_filename}")
 
     @staticmethod
     def create_8x8_tiles(input_filename: str, output_filename: str) -> List[str]:
@@ -148,10 +176,13 @@ class ImageTools:
         ImageTools.resize(input_filename, output_filename, palettes, colors)
 
     @staticmethod
-    def resize_character_background(input_filename: str, output_filename: str, y_offset: int = 0,
+    def resize_character_background(input_filename: str, output_filename: str,
+                                    y_offset: int = 0, y_crop: int = 120,
                                     face_cutout_offset: tuple[int, int] | None = None,
                                     face_cutout_size: tuple[int, int] | None = None,
-                                    tint: list | None = None):
+                                    tint: list | None = None,
+                                    dither_method: str | None = None,
+                                    dither_level: float | None = None):
         """Generate the body-BG bitmap. If `face_cutout_*` are given (canvas-px,
         already 8-px aligned), the face region is filled with the magic
         transparent color so it's a clean rectangle of empty BG cells —
@@ -159,28 +190,32 @@ class ImageTools:
         """
         palettes = 2
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=y_crop, y_offset=y_offset,
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
-                          add_boundary_pixels=True, tint=tint,
-                          remove_offset=face_cutout_offset, remove_size=face_cutout_size)
+                          crop_to_screen=True, tint=tint,
+                          remove_offset=face_cutout_offset, remove_size=face_cutout_size,
+                          dither_method=dither_method, dither_level=dither_level)
 
     @staticmethod
-    def resize_character_thumbnail(input_filename: str, output_filename: str, y_offset=0, tint: tuple[int, int, int] | None = None):
+    def resize_character_thumbnail(input_filename: str, output_filename: str,
+                                   y_offset=0, y_crop: int = 120,
+                                   tint: tuple[int, int, int] | None = None):
         palettes = 2
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=y_crop, y_offset=y_offset,
                           target_height=32, target_size=(32, 32),
                           num_color_cluster_passes=256, num_tile_cluster_passes=256,
                           use_sample_palette="../../graphics/common_palettes/pal_char_bg.bmp",
-                          add_boundary_pixels=True, tint=tint)
+                          crop_to_screen=True, tint=tint)
 
     @staticmethod
     def resize_character_emotion_sprite(input_filename: str, output_filename: str, sprite_offset: tuple[int, int],
-                                        sprite_size: tuple[int, int], y_offset = 0, use_sample_palette = None, tint: tuple[int, int, int] | None = None):
+                                        sprite_size: tuple[int, int], y_offset = 0, y_crop: int = 120,
+                                        use_sample_palette = None, tint: tuple[int, int, int] | None = None):
         palettes = 1
         colors = 16
-        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=120, y_offset=y_offset,
+        ImageTools.resize(input_filename, output_filename, palettes, colors, y_crop=y_crop, y_offset=y_offset,
                           dithering=0.0,
                           sprite_offset=sprite_offset, sprite_size=sprite_size,
                           num_color_cluster_passes=16, num_tile_cluster_passes=256,
